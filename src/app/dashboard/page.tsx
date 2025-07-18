@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -13,13 +14,11 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, CheckCircle2, ListTodo, Ruler, BarChart3 } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, CheckCircle2, ListTodo, Ruler, BarChart3, Eye } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -56,12 +55,12 @@ const generateSurveyData = (count: number): Survey[] => {
     const taluka = ["Baramati", "Indapur", "Daund", "Haveli"][i % 4];
     data.push({
       surveyId: `SURV-${String(i).padStart(3, '0')}`,
-      surveyDate: `2023-10-${String(i % 30 + 1).padStart(2, '0')}`,
+      surveyDate: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
       surveyStatus: status,
       surveyStage: i % 2 === 0 ? "Data Entry" : "Completed",
       surveyedBy: ["Sunil", "Anil", "Rajesh", "Kavita"][i % 4],
       reassignedTo: i % 5 === 0 ? ["Sunil", "Anil", "Rajesh", "Kavita"][(i + 1) % 4] : "-",
-      lastUpdated: `2023-10-${String(i % 30 + 2).padStart(2, '0')}`,
+      lastUpdated: `2023-10-${String((i % 30) + 2).padStart(2, '0')}`,
       farmerName: `Farmer ${i}`,
       farmerContact: `9876543${String(i).padStart(3, '0')}`,
       state: "Maharashtra",
@@ -69,7 +68,7 @@ const generateSurveyData = (count: number): Survey[] => {
       division: "Pune Division",
       taluka: taluka,
       village: village,
-      shiwar: `Shiwar ${i % 5 + 1}`,
+      shiwar: `Shiwar ${(i % 5) + 1}`,
       gatGroupNumber: `GAT-${String(123 + i)}`,
       surveyNumber: `SN-${String(456 + i)}`,
       areaAcre: Number((Math.random() * 5 + 1).toFixed(1)),
@@ -82,14 +81,14 @@ const generateSurveyData = (count: number): Survey[] => {
       approvalStatus: status,
       rejectionReason: status === "Rejected" ? "Incorrect data" : "-",
       tokenNumber: status === "Approved" ? `TKN-${String(789 + i)}` : "-",
-      tokenDate: status === "Approved" ? `2023-10-${String(i % 30 + 3).padStart(2, '0')}` : "-",
+      tokenDate: status === "Approved" ? `2023-10-${String((i % 30) + 3).padStart(2, '0')}` : "-",
       otpVerified: i % 2 === 0 ? "Yes" : "No",
       cuttingPhotoUploaded: i % 2 === 0 ? "Yes" : "No",
       tonnageReceived: status === "Approved" ? Math.floor(Math.random() * 100 + 150) : 0,
-      gatePassEntryDate: status === "Approved" ? `2023-11-${String(i % 28 + 1).padStart(2, '0')}` : "-",
+      gatePassEntryDate: status === "Approved" ? `2023-11-${String((i % 28) + 1).padStart(2, '0')}` : "-",
       submittedFrom: i % 2 === 0 ? "Mobile" : "Web",
       offlineSync: i % 3 === 0 ? "Yes" : "No",
-      createdOn: `2023-10-${String(i % 30 + 1).padStart(2, '0')}`,
+      createdOn: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
       updatedBy: ["Sunil", "Anil", "Admin"][i % 3],
       voiceNoteUploaded: i % 4 === 0 ? "Yes" : "No",
     });
@@ -139,58 +138,8 @@ export type Survey = {
 
 export const columns: ColumnDef<Survey>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "surveyId",
-    header: "Survey ID",
-  },
-  {
     accessorKey: "surveyDate",
     header: "Survey Date",
-  },
-  {
-    accessorKey: "surveyStatus",
-    header: "Survey Status",
-    cell: ({ row }) => {
-        const status = row.getValue("surveyStatus") as string;
-        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
-    }
-  },
-  {
-    accessorKey: "surveyStage",
-    header: "Survey Stage",
-  },
-  {
-    accessorKey: "surveyedBy",
-    header: "Surveyed By",
-  },
-  {
-    accessorKey: "reassignedTo",
-    header: "Reassigned To",
-  },
-  {
-    accessorKey: "lastUpdated",
-    header: "Last Updated",
   },
   {
     accessorKey: "farmerName",
@@ -203,210 +152,52 @@ export const columns: ColumnDef<Survey>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-     cell: ({ row }) => {
-      const survey = row.original
-      return (
-        <Button variant="link" asChild className="p-0 h-auto">
-            <Link href={`/dashboard/farmer/${survey.surveyId}`}>
-                {survey.farmerName}
-            </Link>
-        </Button>
-      )
-    },
-  },
-  {
-    accessorKey: "farmerContact",
-    header: "Farmer Contact",
-  },
-  {
-    accessorKey: "state",
-    header: "State",
-  },
-  {
-    accessorKey: "district",
-    header: "District",
-  },
-  {
-    accessorKey: "division",
-    header: "Division",
-  },
-  {
-    accessorKey: "taluka",
-    header: "Taluka",
   },
   {
     accessorKey: "village",
     header: "Village",
   },
   {
-    accessorKey: "shiwar",
-    header: "Shiwar",
-  },
-  {
-    accessorKey: "gatGroupNumber",
-    header: "Gat/Group Number",
-  },
-  {
-    accessorKey: "surveyNumber",
-    header: "Survey Number",
-  },
-  {
-    accessorKey: "areaAcre",
-    header: "Area (Acre)",
-  },
-  {
-    accessorKey: "gpsCoordinates",
-    header: "GPS Coordinates",
-  },
-  {
-    accessorKey: "caneType",
-    header: "Cane Type",
-  },
-  {
-    accessorKey: "caneVariety",
-    header: "Cane Variety",
-  },
-  {
-    accessorKey: "cropCondition",
-    header: "Crop Condition",
-  },
-  {
-    accessorKey: "photoCount",
-    header: "Photo Count",
-  },
-  {
-    accessorKey: "approvedBy",
-    header: "Approved By",
+    accessorKey: "surveyStatus",
+    header: "Survey Status",
+    cell: ({ row }) => {
+        const status = row.getValue("surveyStatus") as string;
+        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
+    }
   },
   {
     accessorKey: "approvalStatus",
     header: "Approval Status",
+    cell: ({ row }) => {
+        const status = row.getValue("approvalStatus") as string;
+        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
+    }
   },
   {
-    accessorKey: "rejectionReason",
-    header: "Rejection Reason",
+    accessorKey: "surveyedBy",
+    header: "Field Boy",
   },
   {
-    accessorKey: "tokenNumber",
-    header: "Token Number",
-  },
-  {
-    accessorKey: "tokenDate",
-    header: "Token Date",
-  },
-  {
-    accessorKey: "otpVerified",
-    header: "OTP Verified",
-  },
-  {
-    accessorKey: "cuttingPhotoUploaded",
-    header: "Cutting Photo Uploaded",
-  },
-  {
-    accessorKey: "tonnageReceived",
-    header: "Tonnage Received",
-  },
-  {
-    accessorKey: "gatePassEntryDate",
-    header: "Gate Pass Entry Date",
-  },
-  {
-    accessorKey: "submittedFrom",
-    header: "Submitted From",
-  },
-  {
-    accessorKey: "offlineSync",
-    header: "Offline Sync",
-  },
-  {
-    accessorKey: "createdOn",
-    header: "Created On",
-  },
-  {
-    accessorKey: "updatedBy",
-    header: "Updated By",
-  },
-  {
-    accessorKey: "voiceNoteUploaded",
-    header: "Voice Note Uploaded",
+      accessorKey: "shiwar",
+      header: "Warshir",
   },
   {
     id: "actions",
-    enableHiding: false,
+    header: "Actions",
     cell: ({ row }) => {
       const survey = row.original
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(survey.surveyId)}
-            >
-              Copy survey ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View details</DropdownMenuItem>
-            <DropdownMenuItem>Edit survey</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button asChild variant="outline" size="sm">
+            <Link href={`/dashboard/farmer/${survey.surveyId}`}>
+                <Eye className="mr-2 h-4 w-4" />
+                View Details
+            </Link>
+        </Button>
       )
     },
   },
 ]
-
-function ColumnToggleDropdown({ table }: { table: ReturnType<typeof useReactTable<Survey>> }) {
-  const [stagedColumnVisibility, setStagedColumnVisibility] = React.useState(table.getState().columnVisibility);
-
-  React.useEffect(() => {
-    setStagedColumnVisibility(table.getState().columnVisibility);
-  }, [table.getState().columnVisibility]);
-  
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="ml-auto">
-          Columns <ChevronDown className="ml-2 h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64">
-        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <ScrollArea className="h-72">
-        {table
-          .getAllColumns()
-          .filter((column) => column.getCanHide())
-          .map((column) => {
-            const id = column.id.replace(/([A-Z])/g, ' $1').trim()
-            return (
-              <DropdownMenuCheckboxItem
-                key={column.id}
-                className="capitalize"
-                checked={stagedColumnVisibility[column.id] ?? false}
-                onCheckedChange={(value) => {
-                   setStagedColumnVisibility(prev => ({ ...prev, [column.id]: !!value }));
-                }}
-              >
-                {id}
-              </DropdownMenuCheckboxItem>
-            )
-          })}
-        </ScrollArea>
-        <DropdownMenuSeparator />
-        <div className="flex justify-end gap-2 p-2">
-            <Button variant="ghost" size="sm" onClick={() => table.resetColumnVisibility()}>Reset</Button>
-            <Button size="sm" onClick={() => table.setColumnVisibility(stagedColumnVisibility)}>Apply</Button>
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
 
 function SurveyDataTable() {
   const [data, setData] = React.useState<Survey[]>([]);
@@ -419,37 +210,8 @@ function SurveyDataTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
-
-  const defaultColumnVisibility = {
-    'reassignedTo': false,
-    'lastUpdated': false,
-    'farmerContact': false,
-    'gatGroupNumber': false,
-    'surveyNumber': false,
-    'gpsCoordinates': false,
-    'cropCondition': false,
-    'approvedBy': false,
-    'rejectionReason': false,
-    'tokenNumber': false,
-    'tokenDate': false,
-    'otpVerified': false,
-    'cuttingPhotoUploaded': false,
-    'tonnageReceived': false,
-    'gatePassEntryDate': false,
-    'submittedFrom': false,
-    'offlineSync': false,
-    'createdOn': false,
-    'updatedBy': false,
-    'voiceNoteUploaded': false,
-    'state': false,
-    'division': false,
-    'shiwar': false,
-  };
-
-
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>(defaultColumnVisibility)
-  
+    React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
@@ -473,7 +235,6 @@ function SurveyDataTable() {
         pagination: {
             pageSize: 10,
         },
-        columnVisibility: defaultColumnVisibility
     }
   })
 
@@ -487,7 +248,7 @@ function SurveyDataTable() {
       </CardHeader>
       <CardContent>
         <div className="w-full">
-            <div className="flex items-center py-4">
+            <div className="flex items-center gap-4 py-4">
                 <Input
                 placeholder="Filter by farmer name..."
                 value={(table.getColumn("farmerName")?.getFilterValue() as string) ?? ""}
@@ -496,8 +257,13 @@ function SurveyDataTable() {
                 }
                 className="max-w-sm"
                 />
-                <ColumnToggleDropdown 
-                    table={table}
+                <Input
+                placeholder="Filter by village..."
+                value={(table.getColumn("village")?.getFilterValue() as string) ?? ""}
+                onChange={(event) =>
+                    table.getColumn("village")?.setFilterValue(event.target.value)
+                }
+                className="max-w-sm"
                 />
             </div>
             <div className="rounded-md border">
@@ -678,3 +444,5 @@ export default function DashboardPage() {
     </div>
   )
 }
+
+    

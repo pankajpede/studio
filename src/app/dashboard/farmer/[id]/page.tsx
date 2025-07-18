@@ -77,8 +77,6 @@ const generateSurveyData = (count: number): Survey[] => {
   return data;
 };
 
-const allSurveys = generateSurveyData(10); // Generate 10 surveys for history
-
 const DetailItem = ({ label, value }: { label: string; value?: React.ReactNode }) => (
     <div>
         <p className="text-sm text-muted-foreground">{label}</p>
@@ -89,19 +87,25 @@ const DetailItem = ({ label, value }: { label: string; value?: React.ReactNode }
 export default function FarmerDetailPage() {
   const params = useParams();
   const { id } = params;
+  const [surveyData, setSurveyData] = React.useState<Survey | undefined>(undefined);
+  const [allSurveys, setAllSurveys] = React.useState<Survey[]>([]);
 
   // In a real app, you would fetch this data from Firestore based on the farmer/survey ID
-  const surveyData = React.useMemo(() => {
-    return allSurveys.find(s => s.surveyId === id);
+  React.useEffect(() => {
+    const generatedSurveys = generateSurveyData(10);
+    setAllSurveys(generatedSurveys);
+    const currentSurvey = generatedSurveys.find(s => s.surveyId === id);
+    setSurveyData(currentSurvey);
   }, [id]);
+
 
   if (!surveyData) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center p-4">
         <FileText className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-2xl font-bold mb-2">Survey Not Found</h2>
+        <h2 className="text-2xl font-bold mb-2">Loading Survey Data...</h2>
         <p className="text-muted-foreground mb-4">
-          The survey with ID "{id}" could not be found.
+          If the survey with ID "{id}" does not load, it may not exist.
         </p>
         <Button asChild>
           <Link href="/dashboard">
@@ -349,6 +353,3 @@ export default function FarmerDetailPage() {
     </div>
   );
 }
-
-
-    

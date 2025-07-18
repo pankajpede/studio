@@ -46,80 +46,51 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-const surveyData: Survey[] = [
-  {
-    surveyId: "SURV-001",
-    surveyDate: "2023-10-01",
-    surveyStatus: "Approved",
-    surveyStage: "Completed",
-    surveyedBy: "Sunil",
-    reassignedTo: "-",
-    lastUpdated: "2023-10-02",
-    farmerName: "Ramesh Kumar",
-    farmerContact: "9876543210",
-    village: "Kothari",
-    taluka: "Baramati",
-    district: "Pune",
-    gatGroupNumber: "GAT-123",
-    surveyNumber: "SN-456",
-    areaAcre: 5.2,
-    gpsCoordinates: "18.15, 74.58",
-    caneType: "Adsali",
-    caneVariety: "Co-86032",
-    cropCondition: "Good",
-    photoCount: 5,
-    approvedBy: "Admin",
-    approvalStatus: "Approved",
-    rejectionReason: "-",
-    tokenNumber: "TKN-789",
-    tokenDate: "2023-10-03",
-    otpVerified: "Yes",
-    cuttingPhotoUploaded: "Yes",
-    tonnageReceived: 250,
-    gatePassEntryDate: "2023-11-15",
-    submittedFrom: "Mobile",
-    offlineSync: "Yes",
-    createdOn: "2023-10-01",
-    updatedBy: "Admin",
-    voiceNoteUploaded: "No",
-  },
-  {
-    surveyId: "SURV-002",
-    surveyDate: "2023-10-02",
-    surveyStatus: "Pending",
-    surveyStage: "Data Entry",
-    surveyedBy: "Anil",
-    reassignedTo: "Sunil",
-    lastUpdated: "2023-10-03",
-    farmerName: "Suresh Patil",
-    farmerContact: "9876543211",
-    village: "Wadgaon",
-    taluka: "Indapur",
-    district: "Pune",
-    gatGroupNumber: "GAT-124",
-    surveyNumber: "SN-457",
-    areaAcre: 3.1,
-    gpsCoordinates: "18.11, 74.99",
-    caneType: "Preseasonal",
-    caneVariety: "CoM-0265",
-    cropCondition: "Average",
-    photoCount: 3,
-    approvedBy: "-",
-    approvalStatus: "Pending",
-    rejectionReason: "-",
-    tokenNumber: "-",
-    tokenDate: "-",
-    otpVerified: "No",
-    cuttingPhotoUploaded: "No",
-    tonnageReceived: 0,
-    gatePassEntryDate: "-",
-    submittedFrom: "Web",
-    offlineSync: "No",
-    createdOn: "2023-10-02",
-    updatedBy: "Anil",
-    voiceNoteUploaded: "Yes",
-  },
-];
+const generateSurveyData = (count: number): Survey[] => {
+  const data: Survey[] = [];
+  for (let i = 1; i <= count; i++) {
+    const status = i % 3 === 0 ? "Rejected" : i % 2 === 0 ? "Pending" : "Approved";
+    data.push({
+      surveyId: `SURV-${String(i).padStart(3, '0')}`,
+      surveyDate: `2023-10-${String(i % 30 + 1).padStart(2, '0')}`,
+      surveyStatus: status,
+      surveyStage: i % 2 === 0 ? "Data Entry" : "Completed",
+      surveyedBy: ["Sunil", "Anil", "Rajesh", "Kavita"][i % 4],
+      reassignedTo: i % 5 === 0 ? ["Sunil", "Anil", "Rajesh", "Kavita"][(i + 1) % 4] : "-",
+      lastUpdated: `2023-10-${String(i % 30 + 2).padStart(2, '0')}`,
+      farmerName: `Farmer ${i}`,
+      farmerContact: `9876543${String(i).padStart(3, '0')}`,
+      village: ["Kothari", "Wadgaon", "Sangvi", "Malegaon"][i % 4],
+      taluka: ["Baramati", "Indapur", "Daund", "Haveli"][i % 4],
+      district: "Pune",
+      gatGroupNumber: `GAT-${String(123 + i)}`,
+      surveyNumber: `SN-${String(456 + i)}`,
+      areaAcre: Number((Math.random() * 5 + 1).toFixed(1)),
+      gpsCoordinates: `${(18.15 + Math.random() * 0.1).toFixed(4)}, ${(74.58 + Math.random() * 0.1).toFixed(4)}`,
+      caneType: ["Adsali", "Preseasonal", "Sursali"][i % 3],
+      caneVariety: ["Co-86032", "CoM-0265", "MS-10001"][i % 3],
+      cropCondition: ["Good", "Average", "Poor"][i % 3],
+      photoCount: Math.floor(Math.random() * 5) + 1,
+      approvedBy: status === "Approved" ? "Admin" : "-",
+      approvalStatus: status,
+      rejectionReason: status === "Rejected" ? "Incorrect data" : "-",
+      tokenNumber: status === "Approved" ? `TKN-${String(789 + i)}` : "-",
+      tokenDate: status === "Approved" ? `2023-10-${String(i % 30 + 3).padStart(2, '0')}` : "-",
+      otpVerified: i % 2 === 0 ? "Yes" : "No",
+      cuttingPhotoUploaded: i % 2 === 0 ? "Yes" : "No",
+      tonnageReceived: status === "Approved" ? Math.floor(Math.random() * 100 + 150) : 0,
+      gatePassEntryDate: status === "Approved" ? `2023-11-${String(i % 28 + 1).padStart(2, '0')}` : "-",
+      submittedFrom: i % 2 === 0 ? "Mobile" : "Web",
+      offlineSync: i % 3 === 0 ? "Yes" : "No",
+      createdOn: `2023-10-${String(i % 30 + 1).padStart(2, '0')}`,
+      updatedBy: ["Sunil", "Anil", "Admin"][i % 3],
+      voiceNoteUploaded: i % 4 === 0 ? "Yes" : "No",
+    });
+  }
+  return data;
+};
+
+const surveyData: Survey[] = generateSurveyData(100);
 
 export type Survey = {
   surveyId: string;
@@ -383,7 +354,7 @@ function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<t
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {column.id.replace(/([A-Z])/g, ' $1').trim()}
               </DropdownMenuCheckboxItem>
             )
           })}
@@ -445,12 +416,12 @@ function SurveyDataTable() {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setStagedColumnVisibility,
+    onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
-      columnVisibility: stagedColumnVisibility,
+      columnVisibility,
       rowSelection,
     },
     initialState: {
@@ -465,6 +436,9 @@ function SurveyDataTable() {
   }
 
   const handleReset = () => {
+    // We need to pass the new state to onColumnVisibilityChange
+    table.setColumnVisibility(defaultColumnVisibility);
+    // And also update our internal staged state
     setStagedColumnVisibility(defaultColumnVisibility)
   }
 
@@ -487,17 +461,24 @@ function SurveyDataTable() {
                 }
                 className="max-w-sm"
                 />
-                <ColumnToggleDropdown table={table} onApply={handleApply} onReset={handleReset} />
+                <ColumnToggleDropdown 
+                    table={table} 
+                    onApply={() => table.setColumnVisibility(stagedColumnVisibility)} 
+                    onReset={() => {
+                        table.setColumnVisibility(defaultColumnVisibility);
+                        setStagedColumnVisibility(defaultColumnVisibility);
+                    }} 
+                />
             </div>
             <div className="rounded-md border">
-              <ScrollArea className="w-full whitespace-nowrap">
+              <div className="relative w-full overflow-auto">
                 <Table>
-                <TableHeader className="sticky top-0 bg-card">
+                <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id}>
                         {headerGroup.headers.map((header) => {
                         return (
-                            <TableHead key={header.id}>
+                            <TableHead key={header.id} className="whitespace-nowrap">
                             {header.isPlaceholder
                                 ? null
                                 : flexRender(
@@ -518,7 +499,7 @@ function SurveyDataTable() {
                         data-state={row.getIsSelected() && "selected"}
                         >
                         {row.getVisibleCells().map((cell) => (
-                            <TableCell key={cell.id}>
+                            <TableCell key={cell.id} className="whitespace-nowrap">
                             {flexRender(
                                 cell.column.columnDef.cell,
                                 cell.getContext()
@@ -539,8 +520,7 @@ function SurveyDataTable() {
                     )}
                 </TableBody>
                 </Table>
-                <div className="h-4" />
-              </ScrollArea>
+              </div>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">

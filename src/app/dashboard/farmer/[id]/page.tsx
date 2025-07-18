@@ -21,10 +21,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ArrowLeft, Edit, FileText, Image as ImageIcon, Mic, Share2, ThumbsUp } from 'lucide-react';
+import { ArrowLeft, Edit, FileText, Image as ImageIcon, Map, Mic, Share2, User, Landmark, Fingerprint, Tractor, Droplets, BookUser, Wheat, Percent, Receipt, Truck } from 'lucide-react';
 import Image from 'next/image';
 import SurveyMap from '@/components/survey-map';
 import type { Survey } from '../../page';
+import { Separator } from '@/components/ui/separator';
 
 // Mock data generation - in a real app, this would come from your backend/DB
 const generateSurveyData = (count: number): Survey[] => {
@@ -41,7 +42,7 @@ const generateSurveyData = (count: number): Survey[] => {
       surveyedBy: ['Sunil', 'Anil', 'Rajesh', 'Kavita'][i % 4],
       reassignedTo: i % 5 === 0 ? ['Sunil', 'Anil', 'Rajesh', 'Kavita'][(i + 1) % 4] : '-',
       lastUpdated: `2023-10-${String((i % 30) + 2).padStart(2, '0')}`,
-      farmerName: `Farmer ${i}`,
+      farmerName: `Ramesh Kumar`, // Keep farmer name consistent for history
       farmerContact: `9876543${String(i).padStart(3, '0')}`,
       state: 'Maharashtra',
       district: 'Pune',
@@ -76,23 +77,23 @@ const generateSurveyData = (count: number): Survey[] => {
   return data;
 };
 
-const allSurveys = generateSurveyData(100);
+const allSurveys = generateSurveyData(10); // Generate 10 surveys for history
+
+const DetailItem = ({ label, value }: { label: string; value?: React.ReactNode }) => (
+    <div>
+        <p className="text-sm text-muted-foreground">{label}</p>
+        <p className="font-medium text-sm">{value || '-'}</p>
+    </div>
+);
 
 export default function FarmerDetailPage() {
   const params = useParams();
   const { id } = params;
 
-  // Fetch farmer data based on ID. Using mock data for now.
+  // In a real app, you would fetch this data from Firestore based on the farmer/survey ID
   const surveyData = React.useMemo(() => {
     return allSurveys.find(s => s.surveyId === id);
   }, [id]);
-  
-  // In a real app, you would fetch all surveys for this farmer's real ID
-  const surveyHistory = React.useMemo(() => {
-    if (!surveyData) return [];
-    return allSurveys.filter(s => s.farmerName === surveyData.farmerName).slice(0, 5);
-  }, [surveyData])
-
 
   if (!surveyData) {
     return (
@@ -111,65 +112,128 @@ export default function FarmerDetailPage() {
       </div>
     );
   }
+  
+  // Mock detailed farmer data based on the survey
+  const farmerData = {
+      profile: {
+          farmerName: surveyData.farmerName,
+          fatherHusbandName: "Suresh Kumar",
+          dob: "1985-05-20",
+          mobile: surveyData.farmerContact,
+          altMobile: "9876543211",
+          email: "ramesh.kumar@example.com",
+          address: "123, Main Road, Kothari",
+          village: surveyData.village,
+          taluka: surveyData.taluka,
+          district: surveyData.district,
+          state: surveyData.state,
+          pincode: "413102",
+      },
+      identification: {
+          aadhaar: "XXXX-XXXX-5678",
+          electionId: "ABC1234567",
+          pan: "ABCDE1234F",
+          rationCard: "1234567890",
+          farmerRegId: "FARMER-PUNE-123",
+          bankAccount: "XXXX-XXXX-XX-12345",
+          ifsc: "SBIN0000123",
+      },
+      farmDetails: {
+          surveyNumber: surveyData.surveyNumber,
+          gatGroupNumber: surveyData.gatGroupNumber,
+          area: `${surveyData.areaAcre} Acres`,
+          gpsCoordinates: surveyData.gpsCoordinates,
+          caneType: surveyData.caneType,
+          caneVariety: surveyData.caneVariety,
+          cropCondition: surveyData.cropCondition,
+          irrigationSource: "Canal",
+          soilType: "Black Cotton",
+      },
+      cuttingToken: {
+          tokenNumber: surveyData.tokenNumber,
+          tokenDate: surveyData.tokenDate,
+          approvedBy: surveyData.approvedBy,
+          cuttingPhotoUploaded: surveyData.cuttingPhotoUploaded,
+          tonnageReceived: `${surveyData.tonnageReceived} Tons`,
+          gatePassEntryDate: surveyData.gatePassEntryDate,
+      },
+      media: {
+          voiceNotes: [
+              { name: "During Survey 1", file: "voice_note_survey_1.mp3" },
+              { name: "During Cutting", file: "voice_note_cutting.mp3" },
+          ],
+          photos: [
+            { category: "Farm Photos", url: `https://placehold.co/400x300.png`, hint: "sugarcane farm" },
+            { category: "Cane Variety", url: `https://placehold.co/400x300.png`, hint: "sugarcane plant" },
+            { category: "Cutting Token", url: `https://placehold.co/400x300.png`, hint: "document paper" },
+            { category: "Cutting In-Progress", url: `https://placehold.co/400x300.png`, hint: "farm harvest" },
+            { category: "Gate Pass Entry", url: `https://placehold.co/400x300.png`, hint: "truck sugarcane" },
+          ]
+      }
+  }
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
        <div className="flex items-center justify-between">
         <Button variant="outline" asChild>
           <Link href="/dashboard">
-            <ArrowLeft className="mr-2" />
-            Back to Dashboard
+            <ArrowLeft />
+            <span className="ml-2 hidden sm:inline">Back to Dashboard</span>
           </Link>
         </Button>
         <div className="flex gap-2">
-            <Button variant="outline"><Edit className="mr-2" /> Edit</Button>
-            <Button><Share2 className="mr-2" /> Reassign</Button>
-            <Button><ThumbsUp className="mr-2" /> Approve</Button>
+            <Button variant="outline"><Edit /> <span className="ml-2 hidden sm:inline">Edit</span></Button>
+            <Button variant="outline"><Share2 /> <span className="ml-2 hidden sm:inline">Reassign</span></Button>
+            <Button><Map /> <span className="ml-2 hidden sm:inline">View Map</span></Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left Column */}
         <div className="lg:col-span-2 flex flex-col gap-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="font-headline text-xl">{surveyData.farmerName}</CardTitle>
-              <CardDescription>Farmer Profile & Location</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Contact</p>
-                  <p className="font-medium">{surveyData.farmerContact}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Village</p>
-                  <p className="font-medium">{surveyData.village}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Taluka</p>
-                  <p className="font-medium">{surveyData.taluka}</p>
-                </div>
-                 <div>
-                  <p className="text-muted-foreground">District</p>
-                  <p className="font-medium">{surveyData.district}</p>
-                </div>
-                 <div>
-                  <p className="text-muted-foreground">Last Updated</p>
-                  <p className="font-medium">{surveyData.lastUpdated}</p>
-                </div>
-                 <div>
-                  <p className="text-muted-foreground">Surveyor</p>
-                  <p className="font-medium">{surveyData.surveyedBy}</p>
-                </div>
+            <CardHeader className="flex flex-row items-center gap-4">
+              <User className="w-8 h-8 text-primary" />
+              <div>
+                <CardTitle className="font-headline text-xl">{farmerData.profile.farmerName}</CardTitle>
+                <CardDescription>Farmer Profile & Contact Information</CardDescription>
               </div>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <DetailItem label="Father/Husband Name" value={farmerData.profile.fatherHusbandName} />
+              <DetailItem label="Date of Birth" value={farmerData.profile.dob} />
+              <DetailItem label="Mobile Number" value={farmerData.profile.mobile} />
+              <DetailItem label="Alternate Number" value={farmerData.profile.altMobile} />
+              <DetailItem label="Email ID" value={farmerData.profile.email} />
+              <DetailItem label="Full Address" value={`${farmerData.profile.address}, ${farmerData.profile.taluka}, ${farmerData.profile.district} - ${farmerData.profile.pincode}`} />
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle className="font-headline">Survey History</CardTitle>
-              <CardDescription>Recent surveys conducted for this farmer.</CardDescription>
+            <CardHeader className="flex flex-row items-center gap-4">
+                <Fingerprint className="w-8 h-8 text-primary" />
+                <div>
+                    <CardTitle className="font-headline">Identification</CardTitle>
+                    <CardDescription>Farmer identification and bank details.</CardDescription>
+                </div>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <DetailItem label="Aadhaar Number" value={farmerData.identification.aadhaar} />
+                <DetailItem label="Election ID" value={farmerData.identification.electionId} />
+                <DetailItem label="PAN Card" value={farmerData.identification.pan} />
+                <DetailItem label="Farmer Reg. ID" value={farmerData.identification.farmerRegId} />
+                <DetailItem label="Bank Account No." value={farmerData.identification.bankAccount} />
+                <DetailItem label="IFSC Code" value={farmerData.identification.ifsc} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-4">
+                <BookUser className="w-8 h-8 text-primary" />
+                <div>
+                    <CardTitle className="font-headline">Survey History</CardTitle>
+                    <CardDescription>Record of all surveys conducted for this farmer.</CardDescription>
+                </div>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -178,11 +242,12 @@ export default function FarmerDetailPage() {
                             <TableHead>Survey ID</TableHead>
                             <TableHead>Date</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead>Token No.</TableHead>
+                            <TableHead>Surveyor</TableHead>
+                            <TableHead>Area</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {surveyHistory.map(survey => (
+                        {allSurveys.map(survey => (
                             <TableRow key={survey.surveyId}>
                                 <TableCell className="font-medium">{survey.surveyId}</TableCell>
                                 <TableCell>{survey.surveyDate}</TableCell>
@@ -191,99 +256,92 @@ export default function FarmerDetailPage() {
                                         {survey.surveyStatus}
                                     </Badge>
                                 </TableCell>
-                                <TableCell>{survey.tokenNumber}</TableCell>
+                                <TableCell>{survey.surveyedBy}</TableCell>
+                                <TableCell>{survey.areaAcre} Ac</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </CardContent>
           </Card>
-           <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline">Approval & Token Information</CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                    <div>
-                        <p className="text-muted-foreground">Approval Status</p>
-                        <div className="font-medium flex items-center">
-                            <Badge variant={surveyData.approvalStatus === "Approved" ? "default" : surveyData.approvalStatus === "Pending" ? "secondary" : "destructive"}>
-                                {surveyData.approvalStatus}
-                            </Badge>
-                        </div>
-                    </div>
-                     <div>
-                        <p className="text-muted-foreground">Approved By</p>
-                        <p className="font-medium">{surveyData.approvedBy}</p>
-                    </div>
-                     <div>
-                        <p className="text-muted-foreground">Token Number</p>
-                        <p className="font-medium">{surveyData.tokenNumber}</p>
-                    </div>
-                     <div>
-                        <p className="text-muted-foreground">Tonnage Received</p>
-                        <p className="font-medium">{surveyData.tonnageReceived > 0 ? `${surveyData.tonnageReceived} Tons` : '-'}</p>
-                    </div>
-                     <div>
-                        <p className="text-muted-foreground">Cutting Photo</p>
-                        <p className="font-medium">{surveyData.cuttingPhotoUploaded}</p>
-                    </div>
-                      <div>
-                        <p className="text-muted-foreground">Rejection Reason</p>
-                        <p className="font-medium">{surveyData.rejectionReason}</p>
-                    </div>
-                </CardContent>
-           </Card>
         </div>
 
         {/* Right Column */}
         <div className="flex flex-col gap-6">
             <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline">Farm Details</CardTitle>
-                </CardHeader>
-                 <CardContent className="grid grid-cols-2 gap-4 text-sm">
+                <CardHeader className="flex flex-row items-center gap-4">
+                    <Tractor className="w-8 h-8 text-primary" />
                     <div>
-                        <p className="text-muted-foreground">Area</p>
-                        <p className="font-medium">{surveyData.areaAcre} Acres</p>
+                        <CardTitle className="font-headline">Farm Details</CardTitle>
+                        <CardDescription>Plot and crop specific information.</CardDescription>
                     </div>
-                     <div>
-                        <p className="text-muted-foreground">Survey No.</p>
-                        <p className="font-medium">{surveyData.surveyNumber}</p>
-                    </div>
-                     <div>
-                        <p className="text-muted-foreground">Cane Type</p>
-                        <p className="font-medium">{surveyData.caneType}</p>
-                    </div>
-                      <div>
-                        <p className="text-muted-foreground">Cane Variety</p>
-                        <p className="font-medium">{surveyData.caneVariety}</p>
-                    </div>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 gap-4">
+                    <DetailItem label="Survey No." value={farmerData.farmDetails.surveyNumber} />
+                    <DetailItem label="Gat/Group No." value={farmerData.farmDetails.gatGroupNumber} />
+                    <DetailItem label="Area" value={farmerData.farmDetails.area} />
+                    <DetailItem label="Cane Type" value={farmerData.farmDetails.caneType} />
+                    <DetailItem label="Cane Variety" value={farmerData.farmDetails.caneVariety} />
+                    <DetailItem label="Crop Condition" value={farmerData.farmDetails.cropCondition} />
+                    <DetailItem label="Irrigation" value={farmerData.farmDetails.irrigationSource} />
+                    <DetailItem label="Soil Type" value={farmerData.farmDetails.soilType} />
                 </CardContent>
                 <CardContent>
-                    <div className="w-full h-64 rounded-lg overflow-hidden relative bg-muted flex items-center justify-center">
+                    <div className="w-full h-48 rounded-lg overflow-hidden relative bg-muted flex items-center justify-center">
                         <SurveyMap surveys={[surveyData]} />
                     </div>
                 </CardContent>
             </Card>
 
             <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline">Photos & Voice Notes</CardTitle>
+                <CardHeader className="flex flex-row items-center gap-4">
+                    <Receipt className="w-8 h-8 text-primary" />
+                    <div>
+                        <CardTitle className="font-headline">Cutting Token & Gate Pass</CardTitle>
+                        <CardDescription>Harvest and delivery information.</CardDescription>
+                    </div>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 gap-4">
+                    <DetailItem label="Token Number" value={farmerData.cuttingToken.tokenNumber} />
+                    <DetailItem label="Token Date" value={farmerData.cuttingToken.tokenDate} />
+                    <DetailItem label="Approved By" value={farmerData.cuttingToken.approvedBy} />
+                    <DetailItem label="Tonnage Received" value={farmerData.cuttingToken.tonnageReceived} />
+                    <DetailItem label="Cutting Photo" value={farmerData.cuttingToken.cuttingPhotoUploaded} />
+                    <DetailItem label="Gate Pass Date" value={farmerData.cuttingToken.gatePassEntryDate} />
+                </CardContent>
+            </Card>
+             <Card>
+                <CardHeader className="flex flex-row items-center gap-4">
+                    <ImageIcon className="w-8 h-8 text-primary" />
+                    <div>
+                        <CardTitle className="font-headline">Media</CardTitle>
+                        <CardDescription>Uploaded photos and voice notes.</CardDescription>
+                    </div>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
+                    <h4 className="font-semibold text-sm">Photos</h4>
                     <div className="grid grid-cols-3 gap-2">
-                        {Array.from({ length: surveyData.photoCount }).map((_, i) => (
-                             <Image key={i} src={`https://placehold.co/400x400.png`} data-ai-hint="sugarcane farm" alt={`Farm photo ${i+1}`} width={100} height={100} className="rounded-md object-cover w-full aspect-square" />
+                        {farmerData.media.photos.map((photo, i) => (
+                             <div key={i} className="relative group">
+                                <Image src={photo.url} data-ai-hint={photo.hint} alt={photo.category} width={100} height={100} className="rounded-md object-cover w-full aspect-square" />
+                                <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs text-center p-1 rounded-b-md opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {photo.category}
+                                </div>
+                             </div>
                         ))}
-                         {surveyData.photoCount === 0 && <p className="text-sm text-muted-foreground col-span-3">No photos uploaded.</p>}
                     </div>
-                    {surveyData.voiceNoteUploaded === "Yes" ? (
-                        <div className="flex items-center gap-2 p-2 rounded-md border bg-muted/50">
+                    <Separator />
+                    <h4 className="font-semibold text-sm">Voice Notes</h4>
+                     {farmerData.media.voiceNotes.map((note, i) => (
+                        <div key={i} className="flex items-center gap-2 p-2 rounded-md border bg-muted/50">
                             <Mic className="text-primary" />
-                            <span className="text-sm font-medium">Voice Note.mp3</span>
+                            <div className="flex flex-col">
+                                <span className="text-sm font-medium">{note.file}</span>
+                                <span className="text-xs text-muted-foreground">{note.name}</span>
+                            </div>
                             <Button size="sm" variant="ghost" className="ml-auto">Play</Button>
                         </div>
-                    ) : <p className="text-sm text-muted-foreground">No voice notes uploaded.</p>}
+                    ))}
                 </CardContent>
             </Card>
         </div>
@@ -291,3 +349,6 @@ export default function FarmerDetailPage() {
     </div>
   );
 }
+
+
+    

@@ -41,6 +41,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useToast } from "@/hooks/use-toast"
 
 type MasterDataItem = {
   id: string
@@ -253,10 +254,12 @@ function MasterDataModal({
   isOpen,
   onClose,
   entityType,
+  onSave,
 }: {
   isOpen: boolean
   onClose: () => void
   entityType: string | null
+  onSave: () => void;
 }) {
   if (!isOpen || !entityType) return null;
 
@@ -368,7 +371,7 @@ function MasterDataModal({
             <DialogClose asChild>
                 <Button type="button" variant="secondary">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit" onClick={onSave}>Save changes</Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>
@@ -376,6 +379,7 @@ function MasterDataModal({
 }
 
 export default function SettingsPage() {
+  const { toast } = useToast();
   const masterDataTabs = [
     { value: "states", label: "State", dataKey: "states" as MasterDataKey },
     { value: "districts", label: "District", dataKey: "districts" as MasterDataKey },
@@ -396,6 +400,16 @@ export default function SettingsPage() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setCurrentEntityType(null);
+  };
+
+  const handleSave = () => {
+    if (currentEntityType) {
+      toast({
+        title: "Success!",
+        description: `${currentEntityType} has been saved successfully.`,
+      });
+    }
+    handleCloseModal();
   };
 
   return (
@@ -421,6 +435,7 @@ export default function SettingsPage() {
             isOpen={isModalOpen}
             onClose={handleCloseModal}
             entityType={currentEntityType}
+            onSave={handleSave}
         />
       </CardContent>
     </Card>

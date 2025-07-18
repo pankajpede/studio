@@ -3,6 +3,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,11 +25,31 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { useToast } from "@/hooks/use-toast";
 
 type UserRole = "none" | "agri-head" | "warshir" | "field-boy" | "farmer";
+type UserRoleLabel = "Agri Head" | "Warshir" | "Field Boy" | "Farmer" | "User";
 
 export default function NewUserPage() {
+  const router = useRouter();
+  const { toast } = useToast();
   const [role, setRole] = React.useState<UserRole>("none");
+
+  const roleLabels: Record<UserRole, UserRoleLabel> = {
+      "none": "User",
+      "agri-head": "Agri Head",
+      "warshir": "Warshir",
+      "field-boy": "Field Boy",
+      "farmer": "Farmer",
+  }
+
+  const handleCreateUser = () => {
+    toast({
+      title: "Success!",
+      description: `${roleLabels[role]} created successfully.`,
+    });
+    router.push('/dashboard/users');
+  };
 
   const renderFormFields = () => {
     switch (role) {
@@ -243,7 +264,7 @@ export default function NewUserPage() {
             <Button variant="outline" asChild>
                 <Link href="/dashboard/users">Cancel</Link>
             </Button>
-            <Button disabled={role === "none"}>
+            <Button disabled={role === "none"} onClick={handleCreateUser}>
                 <UserPlus className="mr-2" />
                 Create User
             </Button>
@@ -252,5 +273,3 @@ export default function NewUserPage() {
     </div>
   );
 }
-
-    

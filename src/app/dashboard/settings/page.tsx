@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { MoreHorizontal, PlusCircle, Upload } from "lucide-react"
+import { MoreHorizontal, PlusCircle, Upload, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -38,6 +38,9 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 type MasterDataItem = {
   id: string
@@ -82,12 +85,12 @@ const soilTypes: MasterDataItem[] = [
 ]
 
 const masterDataMap = {
-  states: { data: states, linkedEntity: null, category: null },
-  districts: { data: districts, linkedEntity: "State", category: null },
-  talukas: { data: talukas, linkedEntity: "District", category: null },
-  villages: { data: villages, linkedEntity: "Taluka", category: null },
-  caneTypes: { data: caneTypes, linkedEntity: null, category: "Maturity Category" },
-  soilTypes: { data: soilTypes, linkedEntity: null, category: null },
+  states: { data: states, linkedEntity: null, category: null, entityName: "State" },
+  districts: { data: districts, linkedEntity: "State", category: null, entityName: "District" },
+  talukas: { data: talukas, linkedEntity: "District", category: null, entityName: "Taluka" },
+  villages: { data: villages, linkedEntity: "Taluka", category: null, entityName: "Village" },
+  caneTypes: { data: caneTypes, linkedEntity: null, category: "Maturity Category", entityName: "Cane Type" },
+  soilTypes: { data: soilTypes, linkedEntity: null, category: null, entityName: "Soil Type" },
 }
 
 type MasterDataKey = keyof typeof masterDataMap
@@ -143,12 +146,12 @@ const getColumns = (
 
 function MasterDataTable({
   dataKey,
-  entityName,
+  onAddNew,
 }: {
   dataKey: MasterDataKey
-  entityName: string
+  onAddNew: (entityName: string) => void
 }) {
-  const { data, linkedEntity, category } = masterDataMap[dataKey]
+  const { data, linkedEntity, category, entityName } = masterDataMap[dataKey]
   const columns = React.useMemo(() => getColumns(entityName, linkedEntity, category), [entityName, linkedEntity, category])
 
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -182,7 +185,7 @@ function MasterDataTable({
         />
         <div className="ml-auto flex gap-2">
           <Button variant="outline"><Upload className="mr-2" /> Bulk Upload</Button>
-          <Button><PlusCircle className="mr-2" /> Add New</Button>
+          <Button onClick={() => onAddNew(entityName)}><PlusCircle className="mr-2" /> Add New</Button>
         </div>
       </div>
       <div className="rounded-md border">
@@ -246,6 +249,132 @@ function MasterDataTable({
   )
 }
 
+function MasterDataModal({
+  isOpen,
+  onClose,
+  entityType,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  entityType: string | null
+}) {
+  if (!isOpen || !entityType) return null;
+
+  const renderFormFields = () => {
+    switch (entityType) {
+      case "State":
+        return (
+          <div className="grid gap-2">
+            <Label htmlFor="state-name">State Name</Label>
+            <Input id="state-name" placeholder="Enter state name" />
+          </div>
+        );
+      case "District":
+        return (
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="district-name">District Name</Label>
+              <Input id="district-name" placeholder="Enter district name" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="parent-state">Linked State</Label>
+              <Select>
+                <SelectTrigger id="parent-state"><SelectValue placeholder="Select state" /></SelectTrigger>
+                <SelectContent>
+                  {states.map(s => <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+      case "Taluka":
+        return (
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="taluka-name">Taluka Name</Label>
+              <Input id="taluka-name" placeholder="Enter taluka name" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="parent-district">Linked District</Label>
+              <Select>
+                <SelectTrigger id="parent-district"><SelectValue placeholder="Select district" /></SelectTrigger>
+                <SelectContent>
+                  {districts.map(d => <SelectItem key={d.id} value={d.name}>{d.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+       case "Village":
+        return (
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="village-name">Village Name</Label>
+              <Input id="village-name" placeholder="Enter village name" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="parent-taluka">Linked Taluka</Label>
+              <Select>
+                <SelectTrigger id="parent-taluka"><SelectValue placeholder="Select taluka" /></SelectTrigger>
+                <SelectContent>
+                  {talukas.map(t => <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+      case "Cane Type":
+        return (
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="cane-type-name">Cane Type Name</Label>
+              <Input id="cane-type-name" placeholder="Enter cane type name" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="maturity-category">Maturity Category</Label>
+              <Select>
+                <SelectTrigger id="maturity-category"><SelectValue placeholder="Select category" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Early">Early</SelectItem>
+                  <SelectItem value="Mid-late">Mid-late</SelectItem>
+                  <SelectItem value="Late">Late</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+      case "Soil Type":
+        return (
+          <div className="grid gap-2">
+            <Label htmlFor="soil-type-name">Soil Type Name</Label>
+            <Input id="soil-type-name" placeholder="Enter soil type name" />
+          </div>
+        );
+      default:
+        return <p>Invalid entity type selected.</p>;
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+            <DialogTitle>Add New {entityType}</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              {renderFormFields()}
+            </div>
+            <DialogFooter>
+            <DialogClose asChild>
+                <Button type="button" variant="secondary">Cancel</Button>
+            </DialogClose>
+            <Button type="submit">Save changes</Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function SettingsPage() {
   const masterDataTabs = [
     { value: "states", label: "State", dataKey: "states" as MasterDataKey },
@@ -255,6 +384,19 @@ export default function SettingsPage() {
     { value: "caneTypes", label: "Cane Type", dataKey: "caneTypes" as MasterDataKey },
     { value: "soilTypes", label: "Soil Type", dataKey: "soilTypes" as MasterDataKey },
   ]
+
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [currentEntityType, setCurrentEntityType] = React.useState<string | null>(null);
+
+  const handleAddNew = (entityName: string) => {
+    setCurrentEntityType(entityName);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setCurrentEntityType(null);
+  };
 
   return (
     <Card>
@@ -271,11 +413,18 @@ export default function SettingsPage() {
           </TabsList>
           {masterDataTabs.map(tab => (
             <TabsContent key={tab.value} value={tab.value}>
-              <MasterDataTable dataKey={tab.dataKey} entityName={tab.label} />
+              <MasterDataTable dataKey={tab.dataKey} onAddNew={handleAddNew} />
             </TabsContent>
           ))}
         </Tabs>
+        <MasterDataModal 
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            entityType={currentEntityType}
+        />
       </CardContent>
     </Card>
   )
 }
+
+    

@@ -2,6 +2,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -123,7 +124,7 @@ export const columns: ColumnDef<User>[] = [
       return (
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.avatarUrl} alt={user.name} />
+            <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint="avatar" />
             <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
@@ -242,7 +243,11 @@ export default function UserManagementPage() {
             </div>
             <div className="flex gap-2">
                 <Button variant="outline"><Upload className="mr-2"/> Bulk Upload</Button>
-                <Button><PlusCircle className="mr-2"/> Add User</Button>
+                <Button asChild>
+                  <Link href="/dashboard/users/new">
+                    <PlusCircle className="mr-2"/> Add User
+                  </Link>
+                </Button>
             </div>
         </div>
       </CardHeader>
@@ -381,3 +386,5 @@ export default function UserManagementPage() {
     </Card>
   )
 }
+
+    

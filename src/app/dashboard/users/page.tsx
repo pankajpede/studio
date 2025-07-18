@@ -223,6 +223,11 @@ export default function UserManagementPage() {
       columnFilters,
       columnVisibility,
     },
+     initialState: {
+        pagination: {
+            pageSize: 10,
+        },
+    }
   })
 
   return (
@@ -327,6 +332,30 @@ export default function UserManagementPage() {
           <div className="flex items-center justify-end space-x-2 py-4">
             <div className="flex-1 text-sm text-muted-foreground">
               {table.getFilteredRowModel().rows.length} user(s) found.
+            </div>
+            <div className="space-x-2 flex items-center">
+                <span className="text-sm text-muted-foreground">Rows per page</span>
+                 <Select
+                    onValueChange={(value) => {
+                        table.setPageSize(Number(value))
+                    }}
+                    defaultValue={table.getState().pagination.pageSize.toString()}
+                    >
+                    <SelectTrigger className="h-8 w-[70px]">
+                        <SelectValue placeholder={table.getState().pagination.pageSize} />
+                    </SelectTrigger>
+                    <SelectContent side="top">
+                        {[10, 25, 50, 100].map((pageSize) => (
+                        <SelectItem key={pageSize} value={`${pageSize}`}>
+                            {pageSize}
+                        </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
+            <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+                Page {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount()}
             </div>
             <div className="space-x-2">
               <Button

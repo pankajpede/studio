@@ -11,7 +11,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar"
 import { UserNav } from "@/components/user-nav"
-import { Bell, BarChart3, ChevronLeft, ClipboardList, LayoutGrid, Leaf, Settings } from "lucide-react"
+import { Bell, BarChart3, ChevronLeft, ClipboardList, LayoutGrid, Leaf, Settings, Users } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
@@ -51,6 +51,14 @@ export default function DashboardLayout({
                 <Link href="/dashboard/surveys">
                   <ClipboardList />
                   <span>Surveys</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="User Management">
+                <Link href="/dashboard/users">
+                  <Users />
+                  <span>User Management</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

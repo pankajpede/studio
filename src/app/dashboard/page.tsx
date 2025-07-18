@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Calendar } from "@/components/ui/calendar"
-import { BarChart3, CheckCircle2, ListTodo, Rulers } from "lucide-react"
+import { BarChart3, CheckCircle2, ListTodo, Ruler } from "lucide-react"
 
 const stats = [
   {
@@ -34,7 +34,7 @@ const stats = [
   {
     title: "Hectares Covered",
     value: "4,521",
-    icon: <Rulers className="h-6 w-6 text-muted-foreground" />,
+    icon: <Ruler className="h-6 w-6 text-muted-foreground" />,
     change: "+8.1%",
   },
   {

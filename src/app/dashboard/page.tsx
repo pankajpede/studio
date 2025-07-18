@@ -90,8 +90,6 @@ const generateSurveyData = (count: number): Survey[] => {
   return data;
 };
 
-const surveyData: Survey[] = generateSurveyData(100);
-
 export type Survey = {
   surveyId: string;
   surveyDate: string;
@@ -331,7 +329,13 @@ export const columns: ColumnDef<Survey>[] = [
   },
 ]
 
-function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<typeof useReactTable>, onApply: () => void, onReset: () => void }) {
+function ColumnToggleDropdown({ table }: { table: ReturnType<typeof useReactTable> }) {
+  const [stagedColumnVisibility, setStagedColumnVisibility] = React.useState(table.getState().columnVisibility);
+
+  React.useEffect(() => {
+    setStagedColumnVisibility(table.getState().columnVisibility);
+  }, [table.getState().columnVisibility]);
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -351,8 +355,10 @@ function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<t
               <DropdownMenuCheckboxItem
                 key={column.id}
                 className="capitalize"
-                checked={column.getIsVisible()}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                checked={stagedColumnVisibility[column.id] ?? false}
+                onCheckedChange={(value) => {
+                   setStagedColumnVisibility(prev => ({ ...prev, [column.id]: !!value }));
+                }}
               >
                 {column.id.replace(/([A-Z])/g, ' $1').trim()}
               </DropdownMenuCheckboxItem>
@@ -361,8 +367,8 @@ function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<t
         </ScrollArea>
         <DropdownMenuSeparator />
         <div className="flex justify-end gap-2 p-2">
-            <Button variant="ghost" size="sm" onClick={onReset}>Reset</Button>
-            <Button size="sm" onClick={onApply}>Apply</Button>
+            <Button variant="ghost" size="sm" onClick={() => table.resetColumnVisibility()}>Reset</Button>
+            <Button size="sm" onClick={() => table.setColumnVisibility(stagedColumnVisibility)}>Apply</Button>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -370,6 +376,14 @@ function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<t
 }
 
 function SurveyDataTable() {
+  const [data, setData] = React.useState<Survey[]>([]);
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+      setData(generateSurveyData(100));
+      setIsClient(true);
+  }, []);
+
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -402,13 +416,10 @@ function SurveyDataTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>(defaultColumnVisibility)
   
-  const [stagedColumnVisibility, setStagedColumnVisibility] =
-    React.useState<VisibilityState>(defaultColumnVisibility)
-
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    data: surveyData,
+    data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -428,18 +439,12 @@ function SurveyDataTable() {
         pagination: {
             pageSize: 10,
         },
+        columnVisibility: defaultColumnVisibility
     }
   })
 
-  const handleApply = () => {
-    setColumnVisibility(stagedColumnVisibility)
-  }
-
-  const handleReset = () => {
-    // We need to pass the new state to onColumnVisibilityChange
-    table.setColumnVisibility(defaultColumnVisibility);
-    // And also update our internal staged state
-    setStagedColumnVisibility(defaultColumnVisibility)
+  if (!isClient) {
+    return null; // Or a loading spinner
   }
 
   return (
@@ -462,12 +467,7 @@ function SurveyDataTable() {
                 className="max-w-sm"
                 />
                 <ColumnToggleDropdown 
-                    table={table} 
-                    onApply={() => table.setColumnVisibility(stagedColumnVisibility)} 
-                    onReset={() => {
-                        table.setColumnVisibility(defaultColumnVisibility);
-                        setStagedColumnVisibility(defaultColumnVisibility);
-                    }} 
+                    table={table}
                 />
             </div>
             <div className="rounded-md border">
@@ -635,7 +635,7 @@ export default function DashboardPage() {
         <CardContent>
             <div className="w-full h-96 rounded-lg overflow-hidden relative bg-muted flex items-center justify-center">
                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d242118.8028710328!2d76.47187313360707!3d18.4087932319087!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcf83bd7676b91d%3A0x63d9737526224343!2sLatur%2C%20Maharashtra%2C%20India!5e0!3m2!1sen!2sus!4v1700000000000"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d242118.8028710328!2d76.47187313360707!3d18.4087932319087!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcf83bd7676b91d%3A0x63d9737526224343!2sLatur%2C%20Maharashtra%2C%20India!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus&q=data=!4m5!3m4!1s0x3bcf83bd7676b91d:0x63d9737526224343!8m2!3d18.4087932!4d76.5701832"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

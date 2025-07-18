@@ -66,8 +66,12 @@ export default function NewSurveyPage() {
                         <SelectContent><SelectItem value="kothari">Kothari</SelectItem></SelectContent>
                         </Select>
                     </div>
-                    <div className="grid gap-2 md:col-span-2">
-                        <Label htmlFor="survey_no">Survey No / Gat No</Label>
+                     <div className="grid gap-2">
+                        <Label htmlFor="gat-no">Gat/Group Number</Label>
+                        <Input id="gat-no" placeholder="Enter Gat/Group number" />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="survey_no">Survey No</Label>
                         <Input id="survey_no" placeholder="Enter survey number" />
                     </div>
                 </CardContent>
@@ -79,6 +83,14 @@ export default function NewSurveyPage() {
                 <CardDescription>Provide details about the farm and crop.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div className="grid gap-2">
+                        <Label htmlFor="farmer-name">Farmer Name</Label>
+                        <Input id="farmer-name" placeholder="Enter farmer's name" />
+                    </div>
+                     <div className="grid gap-2">
+                        <Label htmlFor="farmer-contact">Farmer Contact</Label>
+                        <Input id="farmer-contact" type="tel" placeholder="Enter contact number" />
+                    </div>
                     <div className="grid gap-2">
                         <Label htmlFor="area">Area (in Acres)</Label>
                         <Input id="area" type="number" placeholder="e.g., 5.2" />
@@ -91,6 +103,17 @@ export default function NewSurveyPage() {
                             <SelectItem value="adsali">Adsali</SelectItem>
                             <SelectItem value="preseasonal">Preseasonal</SelectItem>
                             <SelectItem value="sursali">Sursali</SelectItem>
+                        </SelectContent>
+                        </Select>
+                    </div>
+                     <div className="grid gap-2">
+                        <Label htmlFor="cane-variety">Cane Variety</Label>
+                        <Select>
+                        <SelectTrigger id="cane-variety"><SelectValue placeholder="Select cane variety" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="co-86032">Co-86032</SelectItem>
+                            <SelectItem value="com-0265">CoM-0265</SelectItem>
+                             <SelectItem value="ms-10001">MS-10001</SelectItem>
                         </SelectContent>
                         </Select>
                     </div>

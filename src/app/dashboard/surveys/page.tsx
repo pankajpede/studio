@@ -1,20 +1,32 @@
-import { Button } from "@/components/ui/button";
+"use client"
+
+import * as React from "react"
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
 import {
   Table,
   TableBody,
@@ -22,106 +34,518 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { ListFilter, PlusCircle, Search } from "lucide-react";
-import Link from "next/link";
+} from "@/components/ui/table"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
-const allSurveys = [
-  { id: "SURV-001", farmer: "Ramesh Kumar", village: "Kothari", area: "5.2 Acres", status: "Approved", date: "2023-10-01" },
-  { id: "SURV-002", farmer: "Suresh Patil", village: "Wadgaon", area: "3.1 Acres", status: "Pending", date: "2023-10-02" },
-  { id: "SURV-003", farmer: "Geeta Singh", village: "Sonai", area: "10.5 Acres", status: "Approved", date: "2023-10-03" },
-  { id: "SURV-004", farmer: "Amit Deshmukh", village: "Manjari", area: "2.8 Acres", status: "Rejected", date: "2023-10-04" },
-  { id: "SURV-005", farmer: "Priya Sharma", village: "Kothari", area: "7.0 Acres", status: "Approved", date: "2023-10-05" },
-  { id: "SURV-006", farmer: "Anjali Gupta", village: "Wadgaon", area: "4.5 Acres", status: "Pending", date: "2023-10-06" },
-  { id: "SURV-007", farmer: "Vikram Rathod", village: "Sonai", area: "8.2 Acres", status: "Approved", date: "2023-10-07" },
+const data: Survey[] = [
+  {
+    surveyId: "SURV-001",
+    surveyDate: "2023-10-01",
+    surveyStatus: "Approved",
+    surveyStage: "Completed",
+    surveyedBy: "Sunil",
+    reassignedTo: "-",
+    lastUpdated: "2023-10-02",
+    farmerName: "Ramesh Kumar",
+    farmerContact: "9876543210",
+    village: "Kothari",
+    taluka: "Baramati",
+    district: "Pune",
+    gatGroupNumber: "GAT-123",
+    surveyNumber: "SN-456",
+    areaAcre: 5.2,
+    gpsCoordinates: "18.15, 74.58",
+    caneType: "Adsali",
+    caneVariety: "Co-86032",
+    cropCondition: "Good",
+    photoCount: 5,
+    approvedBy: "Admin",
+    approvalStatus: "Approved",
+    rejectionReason: "-",
+    tokenNumber: "TKN-789",
+    tokenDate: "2023-10-03",
+    otpVerified: "Yes",
+    cuttingPhotoUploaded: "Yes",
+    tonnageReceived: 250,
+    gatePassEntryDate: "2023-11-15",
+    submittedFrom: "Mobile",
+    offlineSync: "Yes",
+    createdOn: "2023-10-01",
+    updatedBy: "Admin",
+    voiceNoteUploaded: "No",
+  },
+  {
+    surveyId: "SURV-002",
+    surveyDate: "2023-10-02",
+    surveyStatus: "Pending",
+    surveyStage: "Data Entry",
+    surveyedBy: "Anil",
+    reassignedTo: "Sunil",
+    lastUpdated: "2023-10-03",
+    farmerName: "Suresh Patil",
+    farmerContact: "9876543211",
+    village: "Wadgaon",
+    taluka: "Indapur",
+    district: "Pune",
+    gatGroupNumber: "GAT-124",
+    surveyNumber: "SN-457",
+    areaAcre: 3.1,
+    gpsCoordinates: "18.11, 74.99",
+    caneType: "Preseasonal",
+    caneVariety: "CoM-0265",
+    cropCondition: "Average",
+    photoCount: 3,
+    approvedBy: "-",
+    approvalStatus: "Pending",
+    rejectionReason: "-",
+    tokenNumber: "-",
+    tokenDate: "-",
+    otpVerified: "No",
+    cuttingPhotoUploaded: "No",
+    tonnageReceived: 0,
+    gatePassEntryDate: "-",
+    submittedFrom: "Web",
+    offlineSync: "No",
+    createdOn: "2023-10-02",
+    updatedBy: "Anil",
+    voiceNoteUploaded: "Yes",
+  },
+  // Add more mock data entries here to test pagination
 ];
 
-export default function SurveysListPage() {
+
+export type Survey = {
+  surveyId: string;
+  surveyDate: string;
+  surveyStatus: "Pending" | "Approved" | "Rejected";
+  surveyStage: string;
+  surveyedBy: string;
+  reassignedTo: string;
+  lastUpdated: string;
+  farmerName: string;
+  farmerContact: string;
+  village: string;
+  taluka: string;
+  district: string;
+  gatGroupNumber: string;
+  surveyNumber: string;
+  areaAcre: number;
+  gpsCoordinates: string;
+  caneType: string;
+  caneVariety: string;
+  cropCondition: string;
+  photoCount: number;
+  approvedBy: string;
+  approvalStatus: "Pending" | "Approved" | "Rejected";
+  rejectionReason: string;
+  tokenNumber: string;
+  tokenDate: string;
+  otpVerified: "Yes" | "No";
+  cuttingPhotoUploaded: "Yes" | "No";
+  tonnageReceived: number;
+  gatePassEntryDate: string;
+  submittedFrom: "Web" | "Mobile";
+  offlineSync: "Yes" | "No";
+  createdOn: string;
+  updatedBy: string;
+  voiceNoteUploaded: "Yes" | "No";
+}
+
+export const columns: ColumnDef<Survey>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "surveyId",
+    header: "Survey ID",
+  },
+  {
+    accessorKey: "surveyDate",
+    header: "Survey Date",
+  },
+  {
+    accessorKey: "surveyStatus",
+    header: "Survey Status",
+    cell: ({ row }) => {
+        const status = row.getValue("surveyStatus") as string;
+        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
+    }
+  },
+  {
+    accessorKey: "surveyStage",
+    header: "Survey Stage",
+  },
+  {
+    accessorKey: "surveyedBy",
+    header: "Surveyed By",
+  },
+  {
+    accessorKey: "reassignedTo",
+    header: "Reassigned To",
+  },
+  {
+    accessorKey: "lastUpdated",
+    header: "Last Updated",
+  },
+  {
+    accessorKey: "farmerName",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Farmer Name
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+  },
+  {
+    accessorKey: "farmerContact",
+    header: "Farmer Contact",
+  },
+  {
+    accessorKey: "village",
+    header: "Village",
+  },
+  {
+    accessorKey: "taluka",
+    header: "Taluka",
+  },
+  {
+    accessorKey: "district",
+    header: "District",
+  },
+  {
+    accessorKey: "gatGroupNumber",
+    header: "Gat/Group Number",
+  },
+  {
+    accessorKey: "surveyNumber",
+    header: "Survey Number",
+  },
+  {
+    accessorKey: "areaAcre",
+    header: "Area (Acre)",
+  },
+  {
+    accessorKey: "gpsCoordinates",
+    header: "GPS Coordinates",
+  },
+  {
+    accessorKey: "caneType",
+    header: "Cane Type",
+  },
+  {
+    accessorKey: "caneVariety",
+    header: "Cane Variety",
+  },
+  {
+    accessorKey: "cropCondition",
+    header: "Crop Condition",
+  },
+  {
+    accessorKey: "photoCount",
+    header: "Photo Count",
+  },
+  {
+    accessorKey: "approvedBy",
+    header: "Approved By",
+  },
+  {
+    accessorKey: "approvalStatus",
+    header: "Approval Status",
+  },
+  {
+    accessorKey: "rejectionReason",
+    header: "Rejection Reason",
+  },
+  {
+    accessorKey: "tokenNumber",
+    header: "Token Number",
+  },
+  {
+    accessorKey: "tokenDate",
+    header: "Token Date",
+  },
+  {
+    accessorKey: "otpVerified",
+    header: "OTP Verified",
+  },
+  {
+    accessorKey: "cuttingPhotoUploaded",
+    header: "Cutting Photo Uploaded",
+  },
+  {
+    accessorKey: "tonnageReceived",
+    header: "Tonnage Received",
+  },
+  {
+    accessorKey: "gatePassEntryDate",
+    header: "Gate Pass Entry Date",
+  },
+  {
+    accessorKey: "submittedFrom",
+    header: "Submitted From",
+  },
+  {
+    accessorKey: "offlineSync",
+    header: "Offline Sync",
+  },
+  {
+    accessorKey: "createdOn",
+    header: "Created On",
+  },
+  {
+    accessorKey: "updatedBy",
+    header: "Updated By",
+  },
+  {
+    accessorKey: "voiceNoteUploaded",
+    header: "Voice Note Uploaded",
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const survey = row.original
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(survey.surveyId)}
+            >
+              Copy survey ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>View details</DropdownMenuItem>
+            <DropdownMenuItem>Edit survey</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
+  },
+]
+
+export default function SurveyDataTable() {
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = React.useState({})
+
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+    initialState: {
+        pagination: {
+            pageSize: 10,
+        },
+    }
+  })
+
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between gap-4">
-            <div>
-                <CardTitle className="font-headline">Farm Surveys</CardTitle>
-                <CardDescription>Manage and track all farm surveys.</CardDescription>
-            </div>
-            <div className="flex items-center gap-2">
-                <div className="relative">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input type="search" placeholder="Search surveys..." className="pl-8 sm:w-[300px]" />
-                </div>
-                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-9 gap-1">
-                        <ListFilter className="h-3.5 w-3.5" />
-                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Filter
-                        </span>
-                    </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem checked>
-                        Approved
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>Pending</DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>Rejected</DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                <Button asChild size="sm" className="h-9 gap-1">
-                    <Link href="/dashboard/surveys/new">
-                        <PlusCircle className="h-3.5 w-3.5" />
-                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">New Survey</span>
-                    </Link>
-                </Button>
-            </div>
-        </div>
+        <CardTitle className="font-headline">Surveys</CardTitle>
+        <CardDescription>
+          A comprehensive list of all farm surveys in the system.
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Survey ID</TableHead>
-              <TableHead>Farmer</TableHead>
-              <TableHead>Village</TableHead>
-              <TableHead>Area</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Date</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {allSurveys.map((survey) => (
-              <TableRow key={survey.id} className="cursor-pointer hover:bg-muted/50">
-                <TableCell className="font-medium">{survey.id}</TableCell>
-                <TableCell>{survey.farmer}</TableCell>
-                <TableCell>{survey.village}</TableCell>
-                <TableCell>{survey.area}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={
-                      survey.status === "Approved"
-                        ? "default"
-                        : survey.status === "Pending"
-                        ? "secondary"
-                        : "destructive"
-                    }
-                    className={
-                        survey.status === "Approved" ? "bg-green-600/20 text-green-800 border-green-600/30 hover:bg-green-600/30" 
-                        : survey.status === "Pending" ? "bg-amber-500/20 text-amber-800 border-amber-500/30 hover:bg-amber-500/30" 
-                        : "bg-red-500/20 text-red-800 border-red-500/30 hover:bg-red-500/30"
-                      }
-                  >
-                    {survey.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>{survey.date}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <div className="w-full">
+            <div className="flex items-center py-4">
+                <Input
+                placeholder="Filter by farmer name..."
+                value={(table.getColumn("farmerName")?.getFilterValue() as string) ?? ""}
+                onChange={(event) =>
+                    table.getColumn("farmerName")?.setFilterValue(event.target.value)
+                }
+                className="max-w-sm"
+                />
+                <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="ml-auto">
+                    Columns <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    {table
+                    .getAllColumns()
+                    .filter((column) => column.getCanHide())
+                    .map((column) => {
+                        return (
+                        <DropdownMenuCheckboxItem
+                            key={column.id}
+                            className="capitalize"
+                            checked={column.getIsVisible()}
+                            onCheckedChange={(value) =>
+                            column.toggleVisibility(!!value)
+                            }
+                        >
+                            {column.id}
+                        </DropdownMenuCheckboxItem>
+                        )
+                    })}
+                </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+            <div className="rounded-md border">
+                <Table>
+                <TableHeader className="sticky top-0 bg-card">
+                    {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => {
+                        return (
+                            <TableHead key={header.id}>
+                            {header.isPlaceholder
+                                ? null
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                )}
+                            </TableHead>
+                        )
+                        })}
+                    </TableRow>
+                    ))}
+                </TableHeader>
+                <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                        <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                        >
+                        {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                            {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                            )}
+                            </TableCell>
+                        ))}
+                        </TableRow>
+                    ))
+                    ) : (
+                    <TableRow>
+                        <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                        >
+                        No results.
+                        </TableCell>
+                    </TableRow>
+                    )}
+                </TableBody>
+                </Table>
+            </div>
+            <div className="flex items-center justify-end space-x-2 py-4">
+                <div className="flex-1 text-sm text-muted-foreground">
+                {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                {table.getFilteredRowModel().rows.length} row(s) selected.
+                </div>
+                <div className="space-x-2 flex items-center">
+                    <span className="text-sm text-muted-foreground">Rows per page</span>
+                     <Select
+                        onValueChange={(value) => {
+                            table.setPageSize(Number(value))
+                        }}
+                        defaultValue={table.getState().pagination.pageSize.toString()}
+                        >
+                        <SelectTrigger className="h-8 w-[70px]">
+                            <SelectValue placeholder={table.getState().pagination.pageSize} />
+                        </SelectTrigger>
+                        <SelectContent side="top">
+                            {[10, 25, 50, 100].map((pageSize) => (
+                            <SelectItem key={pageSize} value={`${pageSize}`}>
+                                {pageSize}
+                            </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+                    Page {table.getState().pagination.pageIndex + 1} of{" "}
+                    {table.getPageCount()}
+                </div>
+                <div className="space-x-2">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                >
+                    Previous
+                </Button>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                >
+                    Next
+                </Button>
+                </div>
+            </div>
+        </div>
       </CardContent>
     </Card>
-  );
+  )
 }
+
+// Dummy components to avoid type errors. You can replace with actual ShadCN imports
+const Select: React.FC<any> = ({ children, ...props }) => <div {...props}>{children}</div>;
+const SelectTrigger: React.FC<any> = ({ children, ...props }) => <div {...props}>{children}</div>;
+const SelectValue: React.FC<any> = (props) => <div {...props} />;
+const SelectContent: React.FC<any> = ({ children, ...props }) => <div {...props}>{children}</div>;
+const SelectItem: React.FC<any> = ({ children, ...props }) => <div {...props}>{children}</div>;

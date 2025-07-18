@@ -8,17 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { BarChart3, CheckCircle2, ListTodo, Ruler } from "lucide-react"
+import { BarChart3, CheckCircle2, ListTodo, Ruler, ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 const stats = [
   {
@@ -47,43 +40,6 @@ const stats = [
   },
 ]
 
-const recentSurveys = [
-  {
-    id: "SURV-001",
-    farmer: "Ramesh Kumar",
-    village: "Kothari",
-    area: "5.2 Acres",
-    status: "Approved",
-  },
-  {
-    id: "SURV-002",
-    farmer: "Suresh Patil",
-    village: "Wadgaon",
-    area: "3.1 Acres",
-    status: "Pending",
-  },
-  {
-    id: "SURV-003",
-    farmer: "Geeta Singh",
-    village: "Sonai",
-    area: "10.5 Acres",
-    status: "Approved",
-  },
-  {
-    id: "SURV-004",
-    farmer: "Amit Deshmukh",
-    village: "Manjari",
-    area: "2.8 Acres",
-    status: "Rejected",
-  },
-    {
-    id: "SURV-005",
-    farmer: "Priya Sharma",
-    village: "Kothari",
-    area: "7.0 Acres",
-    status: "Approved",
-  },
-]
 
 export default function DashboardPage() {
   return (
@@ -105,50 +61,21 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="font-headline">Recent Surveys</CardTitle>
-            <CardDescription>An overview of the latest farm surveys.</CardDescription>
+           <CardHeader>
+            <CardTitle className="font-headline">All Surveys</CardTitle>
+            <CardDescription>
+              Browse, filter, and manage all 34 survey data points.
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Survey ID</TableHead>
-                  <TableHead>Farmer</TableHead>
-                  <TableHead>Village</TableHead>
-                  <TableHead>Area</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentSurveys.map((survey) => (
-                  <TableRow key={survey.id}>
-                    <TableCell className="font-medium">{survey.id}</TableCell>
-                    <TableCell>{survey.farmer}</TableCell>
-                    <TableCell>{survey.village}</TableCell>
-                    <TableCell>{survey.area}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          survey.status === "Approved"
-                            ? "default"
-                            : survey.status === "Pending"
-                            ? "secondary"
-                            : "destructive"
-                        }
-                        className={
-                          survey.status === "Approved" ? "bg-green-600/20 text-green-800 border-green-600/30 hover:bg-green-600/30" 
-                          : survey.status === "Pending" ? "bg-amber-500/20 text-amber-800 border-amber-500/30 hover:bg-amber-500/30" 
-                          : "bg-red-500/20 text-red-800 border-red-500/30 hover:bg-red-500/30"
-                        }
-                      >
-                        {survey.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <div className="flex flex-col items-start gap-4">
+                <p className="text-muted-foreground">The full survey table with advanced filtering and sorting is now available on the dedicated surveys page.</p>
+                <Button asChild>
+                    <Link href="/dashboard/surveys">
+                        Go to Surveys Page <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                </Button>
+            </div>
           </CardContent>
         </Card>
 
@@ -162,6 +89,7 @@ export default function DashboardPage() {
               mode="single"
               selected={new Date()}
               className="rounded-md"
+              onSelect={() => {}}
               disabled={(date) => date < new Date("1900-01-01")}
             />
           </CardContent>

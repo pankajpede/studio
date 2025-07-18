@@ -1,0 +1,85 @@
+"use client"
+
+import React, { useState } from 'react';
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import type { Survey } from '@/app/dashboard/page';
+import { Skeleton } from './ui/skeleton';
+
+const containerStyle = {
+  width: '100%',
+  height: '100%'
+};
+
+// Latur, Maharashtra
+const center = {
+  lat: 18.4088,
+  lng: 76.5702
+};
+
+interface SurveyMapProps {
+    surveys: Survey[];
+}
+
+export default function SurveyMap({ surveys }: SurveyMapProps) {
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
+  });
+
+  const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
+
+  const markers = surveys.map((survey) => {
+    const [lat, lng] = survey.gpsCoordinates.split(',').map(Number);
+    if(isNaN(lat) || isNaN(lng)) return null;
+
+    return {
+        ...survey,
+        position: { lat, lng }
+    }
+  }).filter(Boolean) as (Survey & { position: { lat: number, lng: number }})[];
+
+  if (loadError) {
+    return <div>Error loading maps. Please check your API key.</div>;
+  }
+  
+  if (!isLoaded) {
+    return <Skeleton className="w-full h-full" />;
+  }
+  
+  return (
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={10}
+      >
+        {markers.map((marker) => (
+          <Marker
+            key={marker.surveyId}
+            position={marker.position}
+            onClick={() => {
+              setSelectedSurvey(marker);
+            }}
+          />
+        ))}
+
+        {selectedSurvey && (
+          <InfoWindow
+            position={selectedSurvey.gpsCoordinates.split(',').map(Number) as unknown as { lat: number; lng: number; }}
+            onCloseClick={() => {
+              setSelectedSurvey(null);
+            }}
+          >
+            <div className="p-2 max-w-xs">
+              <h3 className="font-bold text-lg mb-2">{selectedSurvey.farmerName}</h3>
+              <p className="text-sm"><strong>Survey ID:</strong> {selectedSurvey.surveyId}</p>
+              <p className="text-sm"><strong>Location:</strong> {selectedSurvey.village}, {selectedSurvey.taluka}</p>
+              <p className="text-sm"><strong>Gat/Survey No:</strong> {selectedSurvey.gatGroupNumber}/{selectedSurvey.surveyNumber}</p>
+              <p className="text-sm"><strong>Area:</strong> {selectedSurvey.areaAcre} Acres</p>
+            </div>
+          </InfoWindow>
+        )}
+      </GoogleMap>
+  );
+}
+
+    

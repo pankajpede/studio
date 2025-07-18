@@ -45,11 +45,14 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import SurveyMap from "@/components/survey-map"
 
 const generateSurveyData = (count: number): Survey[] => {
   const data: Survey[] = [];
   for (let i = 1; i <= count; i++) {
     const status = i % 3 === 0 ? "Rejected" : i % 2 === 0 ? "Pending" : "Approved";
+    const village = ["Kothari", "Wadgaon", "Sangvi", "Malegaon"][i % 4];
+    const taluka = ["Baramati", "Indapur", "Daund", "Haveli"][i % 4];
     data.push({
       surveyId: `SURV-${String(i).padStart(3, '0')}`,
       surveyDate: `2023-10-${String(i % 30 + 1).padStart(2, '0')}`,
@@ -60,9 +63,12 @@ const generateSurveyData = (count: number): Survey[] => {
       lastUpdated: `2023-10-${String(i % 30 + 2).padStart(2, '0')}`,
       farmerName: `Farmer ${i}`,
       farmerContact: `9876543${String(i).padStart(3, '0')}`,
-      village: ["Kothari", "Wadgaon", "Sangvi", "Malegaon"][i % 4],
-      taluka: ["Baramati", "Indapur", "Daund", "Haveli"][i % 4],
+      state: "Maharashtra",
       district: "Pune",
+      division: "Pune Division",
+      taluka: taluka,
+      village: village,
+      shiwar: `Shiwar ${i % 5 + 1}`,
       gatGroupNumber: `GAT-${String(123 + i)}`,
       surveyNumber: `SN-${String(456 + i)}`,
       areaAcre: Number((Math.random() * 5 + 1).toFixed(1)),
@@ -100,9 +106,12 @@ export type Survey = {
   lastUpdated: string;
   farmerName: string;
   farmerContact: string;
-  village: string;
-  taluka: string;
+  state: string;
   district: string;
+  division: string;
+  taluka: string;
+  village: string;
+  shiwar: string;
   gatGroupNumber: string;
   surveyNumber: string;
   areaAcre: number;
@@ -199,16 +208,28 @@ export const columns: ColumnDef<Survey>[] = [
     header: "Farmer Contact",
   },
   {
-    accessorKey: "village",
-    header: "Village",
+    accessorKey: "state",
+    header: "State",
+  },
+  {
+    accessorKey: "district",
+    header: "District",
+  },
+  {
+    accessorKey: "division",
+    header: "Division",
   },
   {
     accessorKey: "taluka",
     header: "Taluka",
   },
   {
-    accessorKey: "district",
-    header: "District",
+    accessorKey: "village",
+    header: "Village",
+  },
+  {
+    accessorKey: "shiwar",
+    header: "Shiwar",
   },
   {
     accessorKey: "gatGroupNumber",
@@ -329,7 +350,7 @@ export const columns: ColumnDef<Survey>[] = [
   },
 ]
 
-function ColumnToggleDropdown({ table }: { table: ReturnType<typeof useReactTable> }) {
+function ColumnToggleDropdown({ table }: { table: ReturnType<typeof useReactTable<Survey>> }) {
   const [stagedColumnVisibility, setStagedColumnVisibility] = React.useState(table.getState().columnVisibility);
 
   React.useEffect(() => {
@@ -351,6 +372,7 @@ function ColumnToggleDropdown({ table }: { table: ReturnType<typeof useReactTabl
           .getAllColumns()
           .filter((column) => column.getCanHide())
           .map((column) => {
+            const id = column.id.replace(/([A-Z])/g, ' $1').trim()
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
@@ -360,7 +382,7 @@ function ColumnToggleDropdown({ table }: { table: ReturnType<typeof useReactTabl
                    setStagedColumnVisibility(prev => ({ ...prev, [column.id]: !!value }));
                 }}
               >
-                {column.id.replace(/([A-Z])/g, ' $1').trim()}
+                {id}
               </DropdownMenuCheckboxItem>
             )
           })}
@@ -377,11 +399,9 @@ function ColumnToggleDropdown({ table }: { table: ReturnType<typeof useReactTabl
 
 function SurveyDataTable() {
   const [data, setData] = React.useState<Survey[]>([]);
-  const [isClient, setIsClient] = React.useState(false);
 
   React.useEffect(() => {
-      setData(generateSurveyData(100));
-      setIsClient(true);
+    setData(generateSurveyData(100));
   }, []);
 
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -410,6 +430,9 @@ function SurveyDataTable() {
     'createdOn': false,
     'updatedBy': false,
     'voiceNoteUploaded': false,
+    'state': false,
+    'division': false,
+    'shiwar': false,
   };
 
 
@@ -443,10 +466,6 @@ function SurveyDataTable() {
     }
   })
 
-  if (!isClient) {
-    return null; // Or a loading spinner
-  }
-
   return (
     <Card className="w-full">
       <CardHeader>
@@ -471,7 +490,7 @@ function SurveyDataTable() {
                 />
             </div>
             <div className="rounded-md border">
-              <div className="relative w-full overflow-auto">
+              <ScrollArea className="w-full whitespace-nowrap">
                 <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -520,7 +539,8 @@ function SurveyDataTable() {
                     )}
                 </TableBody>
                 </Table>
-              </div>
+                <div className="h-4" />
+              </ScrollArea>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">
@@ -606,6 +626,12 @@ const stats = [
 
 
 export default function DashboardPage() {
+  const [surveys, setSurveys] = React.useState<Survey[]>([]);
+
+  React.useEffect(() => {
+    setSurveys(generateSurveyData(100));
+  }, []);
+
   return (
     <div className="flex flex-col gap-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -622,10 +648,13 @@ export default function DashboardPage() {
           </Card>
         ))}
       </div>
-
-      <div className="grid grid-cols-1 gap-4">
-        <SurveyDataTable />
+      
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-3">
+            <SurveyDataTable />
+        </div>
       </div>
+
 
       <Card>
         <CardHeader>
@@ -634,19 +663,12 @@ export default function DashboardPage() {
         </CardHeader>
         <CardContent>
             <div className="w-full h-96 rounded-lg overflow-hidden relative bg-muted flex items-center justify-center">
-                 <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d242118.8028710328!2d76.47187313360707!3d18.4087932319087!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcf83bd7676b91d%3A0x63d9737526224343!2sLatur%2C%20Maharashtra%2C%20India!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus&q=data=!4m5!3m4!1s0x3bcf83bd7676b91d:0x63d9737526224343!8m2!3d18.4087932!4d76.5701832"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen={false}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Survey Area Heatmap Latur"
-                  ></iframe>
+                 <SurveyMap surveys={surveys} />
             </div>
         </CardContent>
       </Card>
     </div>
   )
 }
+
+    

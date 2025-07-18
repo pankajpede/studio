@@ -468,10 +468,7 @@ export default function SurveyDataTable() {
   }
 
   const handleReset = () => {
-    const allVisible = Object.fromEntries(
-        table.getAllColumns().filter(c => c.getCanHide()).map(c => [c.id, true])
-    );
-    setStagedColumnVisibility(allVisible)
+    setStagedColumnVisibility(defaultColumnVisibility)
   }
 
   return (
@@ -496,6 +493,7 @@ export default function SurveyDataTable() {
                 <ColumnToggleDropdown table={table} onApply={handleApply} onReset={handleReset} />
             </div>
             <div className="rounded-md border">
+              <ScrollArea className="w-full whitespace-nowrap">
                 <Table>
                 <TableHeader className="sticky top-0 bg-card">
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -544,6 +542,8 @@ export default function SurveyDataTable() {
                     )}
                 </TableBody>
                 </Table>
+                <div className="h-4" />
+              </ScrollArea>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">

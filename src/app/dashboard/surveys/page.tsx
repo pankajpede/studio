@@ -43,6 +43,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 const data: Survey[] = [
   {
@@ -360,13 +362,81 @@ export const columns: ColumnDef<Survey>[] = [
   },
 ]
 
+function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<typeof useReactTable>, onApply: () => void, onReset: () => void }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" className="ml-auto">
+          Columns <ChevronDown className="ml-2 h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <ScrollArea className="h-72">
+        {table
+          .getAllColumns()
+          .filter((column) => column.getCanHide())
+          .map((column) => {
+            return (
+              <DropdownMenuCheckboxItem
+                key={column.id}
+                className="capitalize"
+                checked={column.getIsVisible()}
+                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+              >
+                {column.id}
+              </DropdownMenuCheckboxItem>
+            )
+          })}
+        </ScrollArea>
+        <DropdownMenuSeparator />
+        <div className="flex justify-end gap-2 p-2">
+            <Button variant="ghost" size="sm" onClick={onReset}>Reset</Button>
+            <Button size="sm" onClick={onApply}>Apply</Button>
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+
 export default function SurveyDataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
+
+  const defaultColumnVisibility = {
+    'reassignedTo': false,
+    'lastUpdated': false,
+    'farmerContact': false,
+    'gatGroupNumber': false,
+    'surveyNumber': false,
+    'gpsCoordinates': false,
+    'cropCondition': false,
+    'approvedBy': false,
+    'rejectionReason': false,
+    'tokenNumber': false,
+    'tokenDate': false,
+    'otpVerified': false,
+    'cuttingPhotoUploaded': false,
+    'tonnageReceived': false,
+    'gatePassEntryDate': false,
+    'submittedFrom': false,
+    'offlineSync': false,
+    'createdOn': false,
+    'updatedBy': false,
+    'voiceNoteUploaded': false,
+  };
+
+
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+    React.useState<VisibilityState>(defaultColumnVisibility)
+  
+  const [stagedColumnVisibility, setStagedColumnVisibility] =
+    React.useState<VisibilityState>(defaultColumnVisibility)
+
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
@@ -378,12 +448,12 @@ export default function SurveyDataTable() {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
+    onColumnVisibilityChange: setStagedColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
+      columnVisibility: stagedColumnVisibility,
       rowSelection,
     },
     initialState: {
@@ -392,6 +462,17 @@ export default function SurveyDataTable() {
         },
     }
   })
+
+  const handleApply = () => {
+    setColumnVisibility(stagedColumnVisibility)
+  }
+
+  const handleReset = () => {
+    const allVisible = Object.fromEntries(
+        table.getAllColumns().filter(c => c.getCanHide()).map(c => [c.id, true])
+    );
+    setStagedColumnVisibility(allVisible)
+  }
 
   return (
     <Card>
@@ -412,32 +493,7 @@ export default function SurveyDataTable() {
                 }
                 className="max-w-sm"
                 />
-                <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="ml-auto">
-                    Columns <ChevronDown className="ml-2 h-4 w-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    {table
-                    .getAllColumns()
-                    .filter((column) => column.getCanHide())
-                    .map((column) => {
-                        return (
-                        <DropdownMenuCheckboxItem
-                            key={column.id}
-                            className="capitalize"
-                            checked={column.getIsVisible()}
-                            onCheckedChange={(value) =>
-                            column.toggleVisibility(!!value)
-                            }
-                        >
-                            {column.id}
-                        </DropdownMenuCheckboxItem>
-                        )
-                    })}
-                </DropdownMenuContent>
-                </DropdownMenu>
+                <ColumnToggleDropdown table={table} onApply={handleApply} onReset={handleReset} />
             </div>
             <div className="rounded-md border">
                 <Table>
@@ -542,10 +598,3 @@ export default function SurveyDataTable() {
     </Card>
   )
 }
-
-// Dummy components to avoid type errors. You can replace with actual ShadCN imports
-const Select: React.FC<any> = ({ children, ...props }) => <div {...props}>{children}</div>;
-const SelectTrigger: React.FC<any> = ({ children, ...props }) => <div {...props}>{children}</div>;
-const SelectValue: React.FC<any> = (props) => <div {...props} />;
-const SelectContent: React.FC<any> = ({ children, ...props }) => <div {...props}>{children}</div>;
-const SelectItem: React.FC<any> = ({ children, ...props }) => <div {...props}>{children}</div>;

@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
 import { BarChart3, CheckCircle2, ListTodo, Ruler, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
@@ -59,8 +58,8 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+      <div className="grid gap-4">
+        <Card>
            <CardHeader>
             <CardTitle className="font-headline">All Surveys</CardTitle>
             <CardDescription>
@@ -76,22 +75,6 @@ export default function DashboardPage() {
                     </Link>
                 </Button>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="font-headline">Cutting Schedule</CardTitle>
-            <CardDescription>Upcoming cane cutting dates.</CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Calendar
-              mode="single"
-              selected={new Date()}
-              className="rounded-md"
-              onSelect={() => {}}
-              disabled={(date) => date < new Date("1900-01-01")}
-            />
           </CardContent>
         </Card>
       </div>

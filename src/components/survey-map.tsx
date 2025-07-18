@@ -26,7 +26,7 @@ export default function SurveyMap({ surveys }: SurveyMapProps) {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
   });
 
-  const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
+  const [activeMarker, setActiveMarker] = useState<string | null>(null);
 
   const markers = surveys.map((survey) => {
     const [lat, lng] = survey.gpsCoordinates.split(',').map(Number);
@@ -37,6 +37,14 @@ export default function SurveyMap({ surveys }: SurveyMapProps) {
         position: { lat, lng }
     }
   }).filter(Boolean) as (Survey & { position: { lat: number, lng: number }})[];
+
+  const handleMouseOver = (markerId: string) => {
+    setActiveMarker(markerId);
+  };
+
+  const handleMouseOut = () => {
+    setActiveMarker(null);
+  };
 
   if (loadError) {
     return <div>Error loading maps. Please check your API key.</div>;
@@ -56,30 +64,23 @@ export default function SurveyMap({ surveys }: SurveyMapProps) {
           <Marker
             key={marker.surveyId}
             position={marker.position}
-            onClick={() => {
-              setSelectedSurvey(marker);
-            }}
-          />
-        ))}
-
-        {selectedSurvey && (
-          <InfoWindow
-            position={selectedSurvey.gpsCoordinates.split(',').map(Number) as unknown as { lat: number; lng: number; }}
-            onCloseClick={() => {
-              setSelectedSurvey(null);
-            }}
+            onMouseOver={() => handleMouseOver(marker.surveyId)}
+            onMouseOut={handleMouseOut}
           >
-            <div className="p-2 max-w-xs">
-              <h3 className="font-bold text-lg mb-2">{selectedSurvey.farmerName}</h3>
-              <p className="text-sm"><strong>Survey ID:</strong> {selectedSurvey.surveyId}</p>
-              <p className="text-sm"><strong>Location:</strong> {selectedSurvey.village}, {selectedSurvey.taluka}</p>
-              <p className="text-sm"><strong>Gat/Survey No:</strong> {selectedSurvey.gatGroupNumber}/{selectedSurvey.surveyNumber}</p>
-              <p className="text-sm"><strong>Area:</strong> {selectedSurvey.areaAcre} Acres</p>
-            </div>
-          </InfoWindow>
-        )}
+            {activeMarker === marker.surveyId && (
+              <InfoWindow
+                onCloseClick={() => setActiveMarker(null)}
+              >
+                <div className="p-1 max-w-xs">
+                  <h3 className="font-bold text-md mb-1">{marker.farmerName}</h3>
+                  <p className="text-sm"><strong>Area:</strong> {marker.areaAcre} Acres</p>
+                  <p className="text-sm"><strong>Cane Type:</strong> {marker.caneType}</p>
+                  <p className="text-sm"><strong>Survey Date:</strong> {marker.surveyDate}</p>
+                </div>
+              </InfoWindow>
+            )}
+          </Marker>
+        ))}
       </GoogleMap>
   );
 }
-
-    

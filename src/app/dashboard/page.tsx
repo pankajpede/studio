@@ -49,6 +49,9 @@ import Link from "next/link"
 
 const generateSurveyData = (count: number): Survey[] => {
   const data: Survey[] = [];
+  const fieldBoys = ["Sunil", "Anil", "Rajesh", "Kavita"];
+  const warshirs = ["Mahesh", "Sanjay", "Vikram", "Pooja"];
+
   for (let i = 1; i <= count; i++) {
     const status = i % 3 === 0 ? "Rejected" : i % 2 === 0 ? "Pending" : "Approved";
     const village = ["Kothari", "Wadgaon", "Sangvi", "Malegaon"][i % 4];
@@ -58,8 +61,9 @@ const generateSurveyData = (count: number): Survey[] => {
       surveyDate: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
       surveyStatus: status,
       surveyStage: i % 2 === 0 ? "Data Entry" : "Completed",
-      surveyedBy: ["Sunil", "Anil", "Rajesh", "Kavita"][i % 4],
-      reassignedTo: i % 5 === 0 ? ["Sunil", "Anil", "Rajesh", "Kavita"][(i + 1) % 4] : "-",
+      surveyedBy: fieldBoys[i % 4],
+      warshir: warshirs[i % 4],
+      reassignedTo: i % 5 === 0 ? fieldBoys[(i + 1) % 4] : "-",
       lastUpdated: `2023-10-${String((i % 30) + 2).padStart(2, '0')}`,
       farmerName: `Farmer ${i}`,
       farmerContact: `9876543${String(i).padStart(3, '0')}`,
@@ -101,7 +105,8 @@ export type Survey = {
   surveyDate: string;
   surveyStatus: "Pending" | "Approved" | "Rejected";
   surveyStage: string;
-  surveyedBy: string;
+  surveyedBy: string; // This will be used for 'Field Boy'
+  warshir: string; // This will be used for 'Warshir'
   reassignedTo: string;
   lastUpdated: string;
   farmerName: string;
@@ -138,30 +143,6 @@ export type Survey = {
 
 export const columns: ColumnDef<Survey>[] = [
   {
-    accessorKey: "surveyId",
-    header: "Survey ID",
-  },
-  {
-    accessorKey: "surveyDate",
-    header: "Survey Date",
-  },
-  {
-    accessorKey: "surveyStatus",
-    header: "Survey Status",
-    cell: ({ row }) => {
-        const status = row.getValue("surveyStatus") as string;
-        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
-    }
-  },
-  {
-    accessorKey: "surveyStage",
-    header: "Survey Stage",
-  },
-  {
-    accessorKey: "surveyedBy",
-    header: "Surveyed By",
-  },
-  {
     accessorKey: "farmerName",
     header: ({ column }) => (
       <Button
@@ -180,6 +161,26 @@ export const columns: ColumnDef<Survey>[] = [
             </Link>
         )
     }
+  },
+  {
+    accessorKey: "surveyDate",
+    header: "Survey Date",
+  },
+  {
+    accessorKey: "surveyStatus",
+    header: "Survey Status",
+    cell: ({ row }) => {
+        const status = row.getValue("surveyStatus") as string;
+        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
+    }
+  },
+  {
+    accessorKey: "surveyedBy",
+    header: "Field Boy",
+  },
+   {
+    accessorKey: "warshir",
+    header: "Warshir",
   },
   {
     accessorKey: "village",
@@ -469,3 +470,5 @@ export default function DashboardPage() {
     </div>
   )
 }
+
+    

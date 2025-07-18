@@ -46,6 +46,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import SurveyMap from "@/components/survey-map"
+import Link from "next/link"
 
 const generateSurveyData = (count: number): Survey[] => {
   const data: Survey[] = [];
@@ -202,6 +203,16 @@ export const columns: ColumnDef<Survey>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+     cell: ({ row }) => {
+      const survey = row.original
+      return (
+        <Button variant="link" asChild className="p-0 h-auto">
+            <Link href={`/dashboard/farmer/${survey.surveyId}`}>
+                {survey.farmerName}
+            </Link>
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "farmerContact",
@@ -364,7 +375,7 @@ function ColumnToggleDropdown({ table }: { table: ReturnType<typeof useReactTabl
           Columns <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <ScrollArea className="h-72">
@@ -490,7 +501,7 @@ function SurveyDataTable() {
                 />
             </div>
             <div className="rounded-md border">
-              <ScrollArea className="w-full whitespace-nowrap">
+              <div className="relative w-full overflow-auto">
                 <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -539,8 +550,7 @@ function SurveyDataTable() {
                     )}
                 </TableBody>
                 </Table>
-                <div className="h-4" />
-              </ScrollArea>
+              </div>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">

@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, CheckCircle2, ListTodo, Ruler, BarChart3, Eye } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, CheckCircle2, ListTodo, Ruler, BarChart3 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -138,8 +138,28 @@ export type Survey = {
 
 export const columns: ColumnDef<Survey>[] = [
   {
+    accessorKey: "surveyId",
+    header: "Survey ID",
+  },
+  {
     accessorKey: "surveyDate",
     header: "Survey Date",
+  },
+  {
+    accessorKey: "surveyStatus",
+    header: "Survey Status",
+    cell: ({ row }) => {
+        const status = row.getValue("surveyStatus") as string;
+        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
+    }
+  },
+  {
+    accessorKey: "surveyStage",
+    header: "Survey Stage",
+  },
+  {
+    accessorKey: "surveyedBy",
+    header: "Surveyed By",
   },
   {
     accessorKey: "farmerName",
@@ -152,48 +172,61 @@ export const columns: ColumnDef<Survey>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+    cell: ({ row }) => {
+        const survey = row.original
+        return (
+            <Link href={`/dashboard/farmer/${survey.surveyId}`} className="hover:underline">
+                {row.getValue("farmerName")}
+            </Link>
+        )
+    }
   },
   {
     accessorKey: "village",
     header: "Village",
   },
   {
-    accessorKey: "surveyStatus",
-    header: "Survey Status",
-    cell: ({ row }) => {
-        const status = row.getValue("surveyStatus") as string;
-        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
-    }
+    accessorKey: "taluka",
+    header: "Taluka",
   },
   {
-    accessorKey: "approvalStatus",
-    header: "Approval Status",
-    cell: ({ row }) => {
-        const status = row.getValue("approvalStatus") as string;
-        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
-    }
+    accessorKey: "district",
+    header: "District",
   },
   {
-    accessorKey: "surveyedBy",
-    header: "Field Boy",
-  },
-  {
-      accessorKey: "shiwar",
-      header: "Warshir",
+    accessorKey: "areaAcre",
+    header: "Area (Acre)",
   },
   {
     id: "actions",
-    header: "Actions",
+    enableHiding: false,
     cell: ({ row }) => {
       const survey = row.original
 
       return (
-        <Button asChild variant="outline" size="sm">
-            <Link href={`/dashboard/farmer/${survey.surveyId}`}>
-                <Eye className="mr-2 h-4 w-4" />
-                View Details
-            </Link>
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(survey.surveyId)}
+            >
+              Copy survey ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+                <Link href={`/dashboard/farmer/${survey.surveyId}`}>
+                    View details
+                </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>Edit survey</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )
     },
   },
@@ -254,14 +287,6 @@ function SurveyDataTable() {
                 value={(table.getColumn("farmerName")?.getFilterValue() as string) ?? ""}
                 onChange={(event) =>
                     table.getColumn("farmerName")?.setFilterValue(event.target.value)
-                }
-                className="max-w-sm"
-                />
-                <Input
-                placeholder="Filter by village..."
-                value={(table.getColumn("village")?.getFilterValue() as string) ?? ""}
-                onChange={(event) =>
-                    table.getColumn("village")?.setFilterValue(event.target.value)
                 }
                 className="max-w-sm"
                 />
@@ -444,5 +469,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-
-    

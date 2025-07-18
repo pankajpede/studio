@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Image from "next/image"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -470,7 +469,7 @@ function SurveyDataTable() {
   }
 
   return (
-    <Card className="col-span-1 lg:col-span-2">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle className="font-headline">Surveys</CardTitle>
         <CardDescription>
@@ -644,25 +643,27 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <SurveyDataTable />
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle className="font-headline">Survey Area Heatmap</CardTitle>
-          <CardDescription>Visual representation of survey density and coverage.</CardDescription>
+          <CardDescription>Visual representation of survey density in Latur, Maharashtra.</CardDescription>
         </CardHeader>
         <CardContent>
             <div className="w-full h-96 rounded-lg overflow-hidden relative bg-muted flex items-center justify-center">
-                 <Image
-                    src="https://placehold.co/1200x600.png"
-                    alt="Map of survey areas"
-                    layout="fill"
-                    objectFit="cover"
-                    data-ai-hint="map satellite"
-                  />
-                  <p className="z-10 text-lg font-semibold text-background bg-foreground/50 px-4 py-2 rounded-md">Map Placeholder</p>
+                 <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d242118.8028710328!2d76.47187313360707!3d18.4087932319087!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcf83bd7676b91d%3A0x63d9737526224343!2sLatur%2C%20Maharashtra%2C%20India!5e0!3m2!1sen!2sus!4v1700000000000"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen={false}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Survey Area Heatmap Latur"
+                  ></iframe>
             </div>
         </CardContent>
       </Card>

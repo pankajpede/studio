@@ -205,11 +205,11 @@ export default function FarmerDetailPage() {
                 <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                     <div>
                         <p className="text-muted-foreground">Approval Status</p>
-                        <p className="font-medium flex items-center">
+                        <div className="font-medium flex items-center">
                             <Badge variant={surveyData.approvalStatus === "Approved" ? "default" : surveyData.approvalStatus === "Pending" ? "secondary" : "destructive"}>
                                 {surveyData.approvalStatus}
                             </Badge>
-                        </p>
+                        </div>
                     </div>
                      <div>
                         <p className="text-muted-foreground">Approved By</p>

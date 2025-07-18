@@ -55,7 +55,7 @@ export default function DashboardLayout({
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Reports" isDisabled>
+              <SidebarMenuButton asChild tooltip="Reports" disabled>
                 <Link href="#">
                   <BarChart3 />
                   <span>Reports</span>
@@ -67,7 +67,7 @@ export default function DashboardLayout({
         <SidebarFooter>
            <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Settings" isDisabled>
+                <SidebarMenuButton asChild tooltip="Settings" disabled>
                     <Link href="#">
                         <Settings />
                         <span>Settings</span>

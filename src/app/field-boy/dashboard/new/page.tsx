@@ -27,7 +27,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { Map, Pin, Upload, Walk } from "lucide-react"
+import { Map, Pin, Upload, Footprints } from "lucide-react"
 
 export default function NewFieldSurveyPage() {
     const router = useRouter();
@@ -164,7 +164,7 @@ export default function NewFieldSurveyPage() {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
                     <Button variant="outline" className="w-full"><Pin className="mr-2" /> Draw Button</Button>
-                    <Button variant="outline" className="w-full"><Walk className="mr-2" /> Walk Button</Button>
+                    <Button variant="outline" className="w-full"><Footprints className="mr-2" /> Walk Button</Button>
                     <Button className="w-full">Submit</Button>
                 </div>
             </div>

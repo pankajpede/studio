@@ -26,6 +26,9 @@ export default function FieldBoyLayout({
     if (segments.length > 2 && segments[2] === 'survey') {
       return `Survey Details`;
     }
+     if (segments.length > 1 && segments[1] === 'profile') {
+      return 'Profile';
+    }
     if (segments.length > 1 && segments[1] === 'dashboard') {
       return 'Survey';
     }
@@ -36,7 +39,7 @@ export default function FieldBoyLayout({
   };
   
   const showBackButton = pathname !== '/field-boy/dashboard';
-  const backLink = pathname.includes('/survey/') ? '/field-boy/dashboard' : '/field-boy/dashboard';
+  const backLink = pathname.includes('/survey/') || pathname.includes('/profile') ? '/field-boy/dashboard' : '/field-boy/dashboard';
 
 
   return (

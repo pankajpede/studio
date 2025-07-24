@@ -40,10 +40,10 @@ export default function NewFieldSurveyPage() {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="farmer-selection" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
-            <TabsTrigger value="farmer-selection">Farmer Selection</TabsTrigger>
-            <TabsTrigger value="farmer-info">Farmer Info</TabsTrigger>
-            <TabsTrigger value="farm-info">Farm Info</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="farmer-selection">Farmer</TabsTrigger>
+            <TabsTrigger value="farmer-info">Info</TabsTrigger>
+            <TabsTrigger value="farm-info">Farm</TabsTrigger>
             <TabsTrigger value="map">Map</TabsTrigger>
           </TabsList>
           

@@ -25,7 +25,10 @@ export default function LoginPage() {
   const handleLogin = () => {
     if (email === "admin@admin.com" && password === "admin") {
       router.push("/dashboard")
-    } else {
+    } else if (email === "fieldboy@gmail.com" && password === "boy123") {
+      router.push("/field-boy/dashboard")
+    }
+    else {
       toast({
         title: "Login Failed",
         description: "Invalid credentials. Please try again.",

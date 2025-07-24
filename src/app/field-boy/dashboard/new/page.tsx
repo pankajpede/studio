@@ -28,6 +28,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { Pin, Footprints } from "lucide-react"
+import Link from "next/link"
 
 export default function NewFieldSurveyPage() {
     const router = useRouter();
@@ -48,11 +49,6 @@ export default function NewFieldSurveyPage() {
         console.log("Survey submitted!");
         window.scrollTo(0, 0);
         router.push('/field-boy/dashboard');
-    }
-
-    const handleCancel = () => {
-        window.scrollTo(0, 0);
-        router.back();
     }
 
   return (
@@ -194,7 +190,9 @@ export default function NewFieldSurveyPage() {
         </Tabs>
       </CardContent>
       <CardFooter className="flex justify-end gap-2 mt-4">
-        <Button variant="outline" onClick={handleCancel}>Cancel</Button>
+        <Button variant="outline" asChild>
+            <Link href="/field-boy/dashboard">Cancel</Link>
+        </Button>
         {activeTab !== 'map' ? (
              <Button onClick={handleNext}>Save & Next</Button>
         ) : (

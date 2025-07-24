@@ -1,10 +1,11 @@
+
 "use client"
 
 import { UserNav } from "@/components/user-nav"
 import { ArrowLeft, Bell, Leaf } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import * as React from "react"
 import { Toaster } from "@/components/ui/toaster"
 
@@ -16,7 +17,6 @@ export default function FieldBoyLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname();
-  const router = useRouter();
 
   const getHeading = () => {
     const segments = pathname.split('/').filter(Boolean);
@@ -35,8 +35,10 @@ export default function FieldBoyLayout({
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
        <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:px-6">
           {showBackButton ? (
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.back()}>
-                <ArrowLeft />
+              <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                <Link href="/field-boy/dashboard">
+                  <ArrowLeft />
+                </Link>
               </Button>
           ) : (
              <Link href="#" className="flex items-center gap-2 font-semibold font-headline text-lg">

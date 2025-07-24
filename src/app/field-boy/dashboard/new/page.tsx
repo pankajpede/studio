@@ -36,6 +36,7 @@ export default function NewFieldSurveyPage() {
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "map"];
 
     const handleNext = () => {
+        window.scrollTo(0, 0);
         const currentIndex = tabs.indexOf(activeTab);
         if (currentIndex < tabs.length - 1) {
             setActiveTab(tabs[currentIndex + 1]);
@@ -45,7 +46,13 @@ export default function NewFieldSurveyPage() {
     const handleFinalSubmit = () => {
         // Logic for final submission
         console.log("Survey submitted!");
+        window.scrollTo(0, 0);
         router.push('/field-boy/dashboard');
+    }
+
+    const handleCancel = () => {
+        window.scrollTo(0, 0);
+        router.back();
     }
 
   return (
@@ -187,7 +194,7 @@ export default function NewFieldSurveyPage() {
         </Tabs>
       </CardContent>
       <CardFooter className="flex justify-end gap-2 mt-4">
-        <Button variant="outline" onClick={() => router.back()}>Cancel</Button>
+        <Button variant="outline" onClick={handleCancel}>Cancel</Button>
         {activeTab !== 'map' ? (
              <Button onClick={handleNext}>Save & Next</Button>
         ) : (

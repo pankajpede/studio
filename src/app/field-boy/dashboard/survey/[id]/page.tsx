@@ -7,11 +7,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
-import { FileText, User, Tractor, MapPin, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { FileText, User, Tractor, MapPin, CheckCircle, XCircle, AlertCircle, Pin, Footprints } from 'lucide-react';
 import { DetailItem } from '@/components/detail-item';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 // Mock data - in a real app, this would be fetched from a database
-const getSurveyById = (id: string) => {
+const getSurveyById = (id: string | null) => {
+    if (!id) return null;
     const statuses = ["Pending", "Approved", "Rejected"];
     const status = statuses[id.length % 3] as "Pending" | "Approved" | "Rejected";
   return {
@@ -22,7 +29,7 @@ const getSurveyById = (id: string) => {
     panCard: "ABCDE1234F",
     bankName: "State Bank of India",
     accountNumber: "XXXX-XXXX-1234",
-    area: "2.5 Acres",
+    area: "2.5",
     cropType: "Plant",
     soilType: "Black Cotton",
     irrigationType: "Drip",
@@ -38,6 +45,8 @@ const getSurveyById = (id: string) => {
     }
   };
 };
+
+type SurveyData = ReturnType<typeof getSurveyById>;
 
 const StatusInfo = ({ status, reason }: { status: string, reason?: string }) => {
     let icon;
@@ -84,7 +93,38 @@ const StatusInfo = ({ status, reason }: { status: string, reason?: string }) => 
 export default function SurveyDetailPage() {
   const params = useParams();
   const id = params.id as string;
-  const survey = React.useMemo(() => getSurveyById(id), [id]);
+  const [survey, setSurvey] = React.useState<SurveyData>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+        setSurvey(getSurveyById(id));
+        setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [id]);
+
+  if (isLoading) {
+    return (
+        <div className="flex flex-col gap-6">
+            <Skeleton className="h-24 w-full" />
+            <Card>
+                <CardHeader>
+                    <Skeleton className="h-8 w-48" />
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    )
+  }
 
   if (!survey) {
     return (
@@ -101,56 +141,107 @@ export default function SurveyDetailPage() {
       
       <StatusInfo status={survey.status} reason={survey.rejectionReason} />
 
-      <Card>
-        <CardHeader className="flex flex-row items-center gap-4">
-          <User className="w-6 h-6 text-primary" />
-          <CardTitle className="font-headline text-lg">Farmer Information</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-x-4 gap-y-5">
-          <DetailItem label="Farmer Name" value={survey.farmerName} />
-          <DetailItem label="Mobile Number" value={survey.mobileNumber} />
-          <DetailItem label="Voter ID" value={survey.voterId} />
-          <DetailItem label="PAN Card" value={survey.panCard} />
-          <DetailItem label="Bank Name" value={survey.bankName} />
-          <DetailItem label="Account Number" value={survey.accountNumber} />
-        </CardContent>
-      </Card>
-      
-       <Card>
-        <CardHeader className="flex flex-row items-center gap-4">
-          <Tractor className="w-6 h-6 text-primary" />
-          <CardTitle className="font-headline text-lg">Farm Information</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-x-4 gap-y-5">
-          <DetailItem label="Area" value={survey.area} />
-          <DetailItem label="Crop Type" value={survey.cropType} />
-          <DetailItem label="Soil Type" value={survey.soilType} />
-          <DetailItem label="Irrigation" value={survey.irrigationType} />
-           <DetailItem label="State" value={survey.location.state} />
-          <DetailItem label="District" value={survey.location.district} />
-          <DetailItem label="Taluka" value={survey.location.taluka} />
-          <DetailItem label="Village" value={survey.location.village} />
-        </CardContent>
-      </Card>
+        <Card className="w-full">
+            <CardContent className="pt-6">
+                <Tabs defaultValue="farmer-selection" className="w-full">
+                <TabsList className="grid w-full grid-cols-4">
+                    <TabsTrigger value="farmer-selection">Farmer</TabsTrigger>
+                    <TabsTrigger value="farmer-info">Info</TabsTrigger>
+                    <TabsTrigger value="farm-info">Farm</TabsTrigger>
+                    <TabsTrigger value="map">Map</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="farmer-selection" className="pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid gap-2">
+                            <Label htmlFor="state">State</Label>
+                            <Input id="state" value={survey.location.state} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="district">District</Label>
+                            <Input id="district" value={survey.location.district} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="taluka">Taluka</Label>
+                            <Input id="taluka" value={survey.location.taluka} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="village">Village</Label>
+                            <Input id="village" value={survey.location.village} disabled />
+                        </div>
+                    </div>
+                </TabsContent>
 
-       <Card>
-        <CardHeader className="flex flex-row items-center gap-4">
-          <MapPin className="w-6 h-6 text-primary" />
-          <CardTitle className="font-headline text-lg">Farm Map</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <div className="w-full h-64 rounded-lg overflow-hidden relative bg-muted flex items-center justify-center">
-                <Image
-                    src={survey.mapImage}
-                    alt="Farm Map"
-                    layout="fill"
-                    objectFit="cover"
-                    data-ai-hint="farm map"
-                />
-            </div>
-        </CardContent>
-      </Card>
+                <TabsContent value="farmer-info" className="pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid gap-2">
+                            <Label htmlFor="farmer-name">Farmer Name</Label>
+                            <Input id="farmer-name" value={survey.farmerName} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="mobile">Mobile Number</Label>
+                            <Input id="mobile" value={survey.mobileNumber} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="voter-id">Voter ID</Label>
+                            <Input id="voter-id" value={survey.voterId} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="pan">PAN Card</Label>
+                            <Input id="pan" value={survey.panCard} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="bank-name">Bank Name</Label>
+                            <Input id="bank-name" value={survey.bankName} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="account-number">Account Number</Label>
+                            <Input id="account-number" value={survey.accountNumber} disabled />
+                        </div>
+                    </div>
+                </TabsContent>
 
+                <TabsContent value="farm-info" className="pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid gap-2">
+                            <Label htmlFor="area">Area (in Acres)</Label>
+                            <Input id="area" value={survey.area} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="crop-type">Crop Type</Label>
+                            <Input id="crop-type" value={survey.cropType} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="soil-type">Soil Type</Label>
+                             <Input id="soil-type" value={survey.soilType} disabled />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="irrigation-type">Irrigation Type</Label>
+                            <Input id="irrigation-type" value={survey.irrigationType} disabled />
+                        </div>
+                    </div>
+                </TabsContent>
+
+                <TabsContent value="map" className="pt-6">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="w-full h-64 bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
+                            <Image
+                                src={survey.mapImage}
+                                alt="Farm Map"
+                                layout="fill"
+                                objectFit="cover"
+                                data-ai-hint="farm map"
+                            />
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-4 w-full">
+                            <Button variant="outline" className="w-full" disabled><Pin className="mr-2" /> Draw Button</Button>
+                            <Button variant="outline" className="w-full" disabled><Footprints className="mr-2" /> Walk Button</Button>
+                        </div>
+                    </div>
+                </TabsContent>
+                </Tabs>
+            </CardContent>
+        </Card>
     </div>
   );
 }

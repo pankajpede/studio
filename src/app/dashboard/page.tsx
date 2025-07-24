@@ -46,6 +46,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import SurveyMap from "@/components/survey-map"
 import Link from "next/link"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const generateSurveyData = (count: number): Survey[] => {
   const data: Survey[] = [];
@@ -233,13 +234,7 @@ export const columns: ColumnDef<Survey>[] = [
   },
 ]
 
-function SurveyDataTable() {
-  const [data, setData] = React.useState<Survey[]>([]);
-
-  React.useEffect(() => {
-    setData(generateSurveyData(100));
-  }, []);
-
+function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -314,31 +309,39 @@ function SurveyDataTable() {
                     ))}
                 </TableHeader>
                 <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                        <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && "selected"}
-                        >
-                        {row.getVisibleCells().map((cell) => (
-                            <TableCell key={cell.id} className="whitespace-nowrap">
-                            {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                            )}
-                            </TableCell>
-                        ))}
+                    {isLoading ? (
+                      [...Array(10)].map((_, i) => (
+                        <TableRow key={i}>
+                          <TableCell colSpan={columns.length} className="py-0">
+                            <Skeleton className="w-full h-12" />
+                          </TableCell>
                         </TableRow>
-                    ))
+                      ))
+                    ) : table.getRowModel().rows?.length ? (
+                      table.getRowModel().rows.map((row) => (
+                          <TableRow
+                          key={row.id}
+                          data-state={row.getIsSelected() && "selected"}
+                          >
+                          {row.getVisibleCells().map((cell) => (
+                              <TableCell key={cell.id} className="whitespace-nowrap">
+                              {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
+                              )}
+                              </TableCell>
+                          ))}
+                          </TableRow>
+                      ))
                     ) : (
-                    <TableRow>
-                        <TableCell
-                        colSpan={columns.length}
-                        className="h-24 text-center"
-                        >
-                        No results.
-                        </TableCell>
-                    </TableRow>
+                      <TableRow>
+                          <TableCell
+                          colSpan={columns.length}
+                          className="h-24 text-center"
+                          >
+                          No results.
+                          </TableCell>
+                      </TableRow>
                     )}
                 </TableBody>
                 </Table>
@@ -429,9 +432,15 @@ const stats = [
 
 export default function DashboardPage() {
   const [surveys, setSurveys] = React.useState<Survey[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    setSurveys(generateSurveyData(100));
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setSurveys(generateSurveyData(100));
+      setIsLoading(false);
+    }, 1000); // Simulate network delay
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -452,7 +461,7 @@ export default function DashboardPage() {
       </div>
       
       <div className="grid grid-cols-1 gap-4">
-        <SurveyDataTable />
+        <SurveyDataTable data={surveys} isLoading={isLoading} />
       </div>
 
 
@@ -470,5 +479,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-
-    

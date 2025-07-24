@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -45,6 +46,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const data: Survey[] = [
   {
@@ -406,6 +408,15 @@ export default function SurveyDataTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
+    const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000); // Simulate network delay
+    return () => clearTimeout(timer);
+  }, []);
 
   const defaultColumnVisibility = {
     'reassignedTo': false,
@@ -514,7 +525,15 @@ export default function SurveyDataTable() {
                     ))}
                 </TableHeader>
                 <TableBody>
-                    {table.getRowModel().rows?.length ? (
+                   {isLoading ? (
+                      [...Array(table.getState().pagination.pageSize)].map((_, i) => (
+                        <TableRow key={i}>
+                          {columns.map((column, j) => (
+                             <TableCell key={j}><Skeleton className="w-full h-8" /></TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                    ) : table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                         <TableRow
                         key={row.id}

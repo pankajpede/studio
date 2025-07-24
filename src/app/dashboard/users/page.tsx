@@ -56,6 +56,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
 
 // Define the User type
 export type User = {
@@ -201,12 +202,18 @@ export const columns: ColumnDef<User>[] = [
 // Main component for the User Management page
 export default function UserManagementPage() {
   const [data, setData] = React.useState<User[]>([])
+  const [isLoading, setIsLoading] = React.useState(true);
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   
   React.useEffect(() => {
-    setData(generateUserData(50))
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setData(generateUserData(50));
+      setIsLoading(false);
+    }, 1000); // Simulate network delay
+    return () => clearTimeout(timer);
   }, [])
 
   const table = useReactTable({
@@ -304,7 +311,15 @@ export default function UserManagementPage() {
                   ))}
                 </TableHeader>
                 <TableBody>
-                  {table.getRowModel().rows?.length ? (
+                  {isLoading ? (
+                     [...Array(table.getState().pagination.pageSize)].map((_, i) => (
+                        <TableRow key={i}>
+                          {columns.map((column, j) => (
+                             <TableCell key={j}><Skeleton className="w-full h-12" /></TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                  ) : table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                       <TableRow
                         key={row.id}
@@ -386,5 +401,3 @@ export default function UserManagementPage() {
     </Card>
   )
 }
-
-    

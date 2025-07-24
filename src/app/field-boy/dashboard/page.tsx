@@ -52,35 +52,37 @@ const statusTextStyles: Record<SurveyStatus, string> = {
 
 const SurveyCard = ({ survey }: { survey: Survey }) => {
     return (
-        <div className="bg-card text-card-foreground rounded-lg shadow-sm border overflow-hidden relative">
-            <div className="p-4 flex items-center gap-4">
-                <div className="flex-shrink-0 flex flex-col items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary">
-                    <span className="text-2xl font-bold">{survey.day}</span>
-                    <span className="text-xs uppercase">{survey.month}</span>
+        <Link href={`/field-boy/dashboard/survey/${survey.id}`} className="block">
+            <div className="bg-card text-card-foreground rounded-lg shadow-sm border overflow-hidden relative transition-all hover:shadow-md hover:border-primary/50">
+                <div className="p-4 flex items-center gap-4">
+                    <div className="flex-shrink-0 flex flex-col items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary">
+                        <span className="text-2xl font-bold">{survey.day}</span>
+                        <span className="text-xs uppercase">{survey.month}</span>
+                    </div>
+                    <div className="flex-grow">
+                        <h3 className="font-bold text-lg">{survey.farmerName}</h3>
+                        <p className="text-sm text-muted-foreground">
+                            <span>{survey.surveyCode}</span>
+                            <span className="mx-1">•</span>
+                            <span>{survey.date}</span>
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                            <span>{survey.taluka}</span>
+                            <span className="mx-1">•</span>
+                            <span>{survey.village}</span>
+                        </p>
+                    </div>
                 </div>
-                <div className="flex-grow">
-                    <h3 className="font-bold text-lg">{survey.farmerName}</h3>
-                    <p className="text-sm text-muted-foreground">
-                        <span>{survey.surveyCode}</span>
-                        <span className="mx-1">•</span>
-                        <span>{survey.date}</span>
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                        <span>{survey.taluka}</span>
-                        <span className="mx-1">•</span>
-                        <span>{survey.village}</span>
-                    </p>
+                <div className={cn(
+                    "absolute top-0 right-0 bottom-0 flex items-center justify-center w-8 writing-mode-vertical-rl transform rotate-180",
+                     statusStyles[survey.status]
+                )}>
+                     <span className={cn("text-xs font-semibold uppercase tracking-wider", statusTextStyles[survey.status])}>
+                        {survey.status === 'Approved' ? 'Queued' : survey.status}
+                    </span>
                 </div>
             </div>
-            <div className={cn(
-                "absolute top-0 right-0 bottom-0 flex items-center justify-center w-8 writing-mode-vertical-rl transform rotate-180",
-                 statusStyles[survey.status]
-            )}>
-                 <span className={cn("text-xs font-semibold uppercase tracking-wider", statusTextStyles[survey.status])}>
-                    {survey.status === 'Approved' ? 'Queued' : survey.status}
-                </span>
-            </div>
-        </div>
+        </Link>
     );
 };
 

@@ -5,11 +5,11 @@ import { UserNav } from "@/components/user-nav"
 import { ArrowLeft, Bell, Leaf } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import * as React from "react"
 import { Toaster } from "@/components/ui/toaster"
 
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const capitalize = (s: string) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 
 export default function FieldBoyLayout({
   children,
@@ -17,12 +17,14 @@ export default function FieldBoyLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname();
-  const router = useRouter();
 
   const getHeading = () => {
-    const segments = pathname.split('/').filter(Boolean);
+    const segments = pathname.split('/').filter(Boolean); // e.g. ['field-boy', 'dashboard', 'survey', 'SUR001']
     if (segments.includes('new')) {
       return 'New Survey';
+    }
+    if (segments.length > 2 && segments[2] === 'survey') {
+      return `Survey Details`;
     }
     if (segments.length > 1 && segments[1] === 'dashboard') {
       return 'Survey';
@@ -34,6 +36,8 @@ export default function FieldBoyLayout({
   };
   
   const showBackButton = pathname !== '/field-boy/dashboard';
+  const backLink = pathname.includes('/survey/') ? '/field-boy/dashboard' : '/field-boy/dashboard';
+
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -41,7 +45,7 @@ export default function FieldBoyLayout({
           <div className="flex items-center gap-2">
             {showBackButton ? (
                 <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                  <Link href="/field-boy/dashboard">
+                  <Link href={backLink}>
                     <ArrowLeft />
                   </Link>
                 </Button>

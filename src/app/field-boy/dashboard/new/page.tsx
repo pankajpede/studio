@@ -27,10 +27,26 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { Map, Pin, Upload, Footprints } from "lucide-react"
+import { Pin, Footprints } from "lucide-react"
 
 export default function NewFieldSurveyPage() {
     const router = useRouter();
+    const [activeTab, setActiveTab] = React.useState("farmer-selection");
+
+    const tabs = ["farmer-selection", "farmer-info", "farm-info", "map"];
+
+    const handleNext = () => {
+        const currentIndex = tabs.indexOf(activeTab);
+        if (currentIndex < tabs.length - 1) {
+            setActiveTab(tabs[currentIndex + 1]);
+        }
+    };
+    
+    const handleFinalSubmit = () => {
+        // Logic for final submission
+        console.log("Survey submitted!");
+        router.push('/field-boy/dashboard');
+    }
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
@@ -39,7 +55,7 @@ export default function NewFieldSurveyPage() {
         <CardDescription>Fill out the details for the new survey across the tabs.</CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="farmer-selection" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="farmer-selection">Farmer</TabsTrigger>
             <TabsTrigger value="farmer-info">Info</TabsTrigger>
@@ -165,7 +181,6 @@ export default function NewFieldSurveyPage() {
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
                     <Button variant="outline" className="w-full"><Pin className="mr-2" /> Draw Button</Button>
                     <Button variant="outline" className="w-full"><Footprints className="mr-2" /> Walk Button</Button>
-                    <Button className="w-full">Submit</Button>
                 </div>
             </div>
           </TabsContent>
@@ -173,7 +188,11 @@ export default function NewFieldSurveyPage() {
       </CardContent>
       <CardFooter className="flex justify-end gap-2 mt-4">
         <Button variant="outline" onClick={() => router.back()}>Cancel</Button>
-        <Button>Save & Next</Button>
+        {activeTab !== 'map' ? (
+             <Button onClick={handleNext}>Save & Next</Button>
+        ) : (
+             <Button onClick={handleFinalSubmit}>Submit Survey</Button>
+        )}
       </CardFooter>
     </Card>
   )

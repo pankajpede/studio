@@ -102,12 +102,23 @@ export default function NewFieldSurveyPage() {
         window.scrollTo(0, 0);
         router.push('/field-boy/dashboard');
     }
+    
+    const selectedFarmer = mockFarmers.find(f => f.value === farmer);
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle className="font-headline text-xl">नवीन शेत सर्वेक्षण</CardTitle>
-        <CardDescription>नवीन सर्वेक्षणासाठी टॅबमध्ये तपशील भरा.</CardDescription>
+        {selectedFarmer ? (
+          <>
+            <CardTitle className="font-headline text-xl">{selectedFarmer.label}</CardTitle>
+            <CardDescription>खालील टॅबमध्ये शेतकऱ्याचे आणि शेताचे तपशील तपासा आणि भरा.</CardDescription>
+          </>
+        ) : (
+          <>
+            <CardTitle className="font-headline text-xl">नवीन शेत सर्वेक्षण</CardTitle>
+            <CardDescription>नवीन सर्वेक्षणासाठी टॅबमध्ये तपशील भरा.</CardDescription>
+          </>
+        )}
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -379,3 +390,4 @@ export default function NewFieldSurveyPage() {
     
 
     
+

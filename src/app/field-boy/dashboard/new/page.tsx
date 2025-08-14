@@ -106,7 +106,8 @@ const FileUploader = ({
     accept,
     multiple = false,
     files,
-    icon
+    icon,
+    capture
 }: {
     id: string;
     label: string;
@@ -116,13 +117,14 @@ const FileUploader = ({
     multiple?: boolean;
     files: File[];
     icon: React.ReactNode;
+    capture?: 'user' | 'environment';
 }) => (
     <div className="grid gap-2">
         <Label htmlFor={id} className="flex items-center gap-2">{icon} {label}</Label>
         <div className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 relative">
             <UploadCloud className="w-8 h-8 text-muted-foreground" />
             <p className="mt-2 text-sm text-center text-muted-foreground">
-                <span className="font-semibold">अपलोड करण्यासाठी क्लिक करा</span>
+                <span className="font-semibold">{capture ? 'फोटो काढा' : 'अपलोड करण्यासाठी क्लिक करा'}</span>
             </p>
             <p className="text-xs text-muted-foreground text-center">{description}</p>
             <Input
@@ -132,6 +134,7 @@ const FileUploader = ({
                 multiple={multiple}
                 accept={accept}
                 onChange={(e) => onFileChange(e.target.files)}
+                capture={capture}
             />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -460,9 +463,13 @@ export default function NewFieldSurveyPage() {
 
           <TabsContent value="farmer-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="grid gap-2 md:col-span-2">
+                <div className="grid gap-2">
                     <Label htmlFor="mobile">मोबाइल नंबर</Label>
                     <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" value={mobile} onChange={(e) => setMobile(e.target.value)} />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="passbook-name">पासबुक वरील नाव</Label>
+                    <Input id="passbook-name" placeholder="पासबुकनुसार नाव टाका" value={nameAsPerPassbook} onChange={(e) => setNameAsPerPassbook(e.target.value)} />
                 </div>
                  <div className="md:col-span-2 grid gap-4">
                      <Label>ओळखपत्र</Label>
@@ -517,10 +524,6 @@ export default function NewFieldSurveyPage() {
                         </Button>
                      )}
                  </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="passbook-name">पासबुक वरील नाव</Label>
-                    <Input id="passbook-name" placeholder="पासबुकनुसार नाव टाका" value={nameAsPerPassbook} onChange={(e) => setNameAsPerPassbook(e.target.value)} />
-                </div>
                  <div className="grid gap-2">
                     <Label htmlFor="bank-name">बँकेचे नाव</Label>
                     <Input id="bank-name" placeholder="बँकेचे नाव टाका" value={bankName} onChange={(e) => setBankName(e.target.value)} />
@@ -592,30 +595,33 @@ export default function NewFieldSurveyPage() {
                     <FileUploader
                         id="farm-photos"
                         label="शेताचे फोटो"
-                        description="शेताचे ५ फोटो अपलोड करा"
+                        description="शेताचे ५ फोटो घ्या"
                         onFileChange={handleFileChange(setFarmPhotos, 5)}
                         accept="image/*"
                         multiple
                         files={farmPhotos}
                         icon={<ImageIcon />}
+                        capture="environment"
                     />
                     <FileUploader
                         id="farmer-photo"
                         label="शेतकरी फोटो"
-                        description="शेतकऱ्याचा १ फोटो अपलोड करा"
+                        description="शेतकऱ्याचा १ फोटो घ्या"
                         onFileChange={handleFileChange(setFarmerPhoto, 1)}
                         accept="image/*"
                         files={farmerPhoto}
                         icon={<User />}
+                        capture="environment"
                     />
                     <FileUploader
                         id="field-boy-photo"
                         label="फील्ड बॉय फोटो"
-                        description="तुमचा स्वतःचा १ फोटो अपलोड करा"
+                        description="तुमचा स्वतःचा १ फोटो घ्या"
                         onFileChange={handleFileChange(setFieldBoyPhoto, 1)}
                         accept="image/*"
                         files={fieldBoyPhoto}
                         icon={<User />}
+                        capture="user"
                     />
                     <FileUploader
                         id="audio-note"

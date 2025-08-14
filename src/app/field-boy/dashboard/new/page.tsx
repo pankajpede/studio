@@ -32,6 +32,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import FieldBoyMap from "@/components/field-boy-map"
 
 const mockFarmers = [
     { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], nameAsPerPassbook: "रमेश एस कुलकर्णी", bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234" },
@@ -510,9 +511,9 @@ export default function NewFieldSurveyPage() {
 
           <TabsContent value="map" className="pt-6">
             <div className="flex flex-col items-center gap-4">
-                <div className="w-full h-64 bg-muted rounded-lg flex items-center justify-center">
-                    <p className="text-muted-foreground">नकाशा पूर्वावलोकन येथे असेल</p>
-                </div>
+                 <div className="w-full h-64 bg-muted rounded-lg">
+                    <FieldBoyMap />
+                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
                     <Button variant="outline" className="w-full"><Pin className="mr-2" /> ड्रॉ बटण</Button>
                     <Button variant="outline" className="w-full"><Footprints className="mr-2" /> वॉक बटण</Button>

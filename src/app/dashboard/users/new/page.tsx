@@ -74,7 +74,7 @@ export default function NewUserPage() {
             </div>
             <div className="grid gap-2 md:col-span-2">
               <Label htmlFor="district">District</Label>
-              <Input id="district" placeholder="e.g., Pune" />
+              <Input id="district" placeholder="e.g., Latur" />
             </div>
           </>
         );
@@ -99,18 +99,18 @@ export default function NewUserPage() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="district">District</Label>
-              <Input id="district" placeholder="e.g., Pune" />
+              <Input id="district" placeholder="e.g., Latur" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="taluka">Taluka</Label>
-              <Input id="taluka" placeholder="e.g., Baramati" />
+              <Input id="taluka" placeholder="e.g., Ahmedpur" />
             </div>
             <div className="grid gap-2 md:col-span-2">
                 <Label htmlFor="assigned-agri-head">Assigned Agri Head</Label>
                 <Select>
                     <SelectTrigger><SelectValue placeholder="Select Agri Head" /></SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="agri-head-1">Raj Kumar</SelectItem>
+                        <SelectItem value="agri-head-1">Rajesh Kumar</SelectItem>
                         <SelectItem value="agri-head-2">Sunita Sharma</SelectItem>
                     </SelectContent>
                 </Select>
@@ -138,22 +138,22 @@ export default function NewUserPage() {
             </div>
              <div className="grid gap-2">
               <Label htmlFor="district">District</Label>
-              <Input id="district" placeholder="e.g., Pune" />
+              <Input id="district" placeholder="e.g., Latur" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="taluka">Taluka</Label>
-              <Input id="taluka" placeholder="e.g., Baramati" />
+              <Input id="taluka" placeholder="e.g., Ahmedpur" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="village">Village</Label>
-              <Input id="village" placeholder="e.g., Kothari" />
+              <Input id="village" placeholder="e.g., Chakur" />
             </div>
             <div className="grid gap-2">
                 <Label htmlFor="assigned-warshir">Assigned Warshir</Label>
                 <Select>
                     <SelectTrigger><SelectValue placeholder="Select Warshir" /></SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="warshir-1">Amit Gupta</SelectItem>
+                        <SelectItem value="warshir-1">Amit Gaikwad</SelectItem>
                         <SelectItem value="warshir-2">Priya Singh</SelectItem>
                     </SelectContent>
                 </Select>
@@ -173,15 +173,15 @@ export default function NewUserPage() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="village">Village</Label>
-              <Input id="village" placeholder="e.g., Kothari" />
+              <Input id="village" placeholder="e.g., Chakur" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="taluka">Taluka</Label>
-              <Input id="taluka" placeholder="e.g., Baramati" />
+              <Input id="taluka" placeholder="e.g., Ahmedpur" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="district">District</Label>
-              <Input id="district" placeholder="e.g., Pune" />
+              <Input id="district" placeholder="e.g., Latur" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="state">State</Label>

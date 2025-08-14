@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -49,21 +50,30 @@ export default function NewSurveyPage() {
                         <Label htmlFor="district">District</Label>
                         <Select>
                         <SelectTrigger id="district"><SelectValue placeholder="Select district" /></SelectTrigger>
-                        <SelectContent><SelectItem value="pune">Pune</SelectItem></SelectContent>
+                        <SelectContent><SelectItem value="latur">Latur</SelectItem></SelectContent>
                         </Select>
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="taluka">Taluka</Label>
                         <Select>
                         <SelectTrigger id="taluka"><SelectValue placeholder="Select taluka" /></SelectTrigger>
-                        <SelectContent><SelectItem value="baramati">Baramati</SelectItem></SelectContent>
+                        <SelectContent>
+                          <SelectItem value="latur">Latur</SelectItem>
+                          <SelectItem value="ausa">Ausa</SelectItem>
+                          <SelectItem value="ahmedpur">Ahmedpur</SelectItem>
+                          <SelectItem value="udgir">Udgir</SelectItem>
+                          <SelectItem value="nilanga">Nilanga</SelectItem>
+                        </SelectContent>
                         </Select>
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="village">Village</Label>
                         <Select>
                         <SelectTrigger id="village"><SelectValue placeholder="Select village" /></SelectTrigger>
-                        <SelectContent><SelectItem value="kothari">Kothari</SelectItem></SelectContent>
+                        <SelectContent>
+                            <SelectItem value="chakur">Chakur</SelectItem>
+                            <SelectItem value="mohgaon">Mohgaon</SelectItem>
+                        </SelectContent>
                         </Select>
                     </div>
                      <div className="grid gap-2">

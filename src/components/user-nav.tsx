@@ -25,9 +25,9 @@ export function UserNav() {
   const pathname = usePathname();
   const isFieldBoy = pathname.startsWith('/field-boy');
 
-  const userName = isFieldBoy ? "Field Boy" : "Agri Head";
-  const userEmail = isFieldBoy ? "fieldboy@gmail.com" : "agri.head@canevision.com";
-  const userFallback = isFieldBoy ? "FB" : "AH";
+  const userName = isFieldBoy ? "Sunil Pawar" : "Mahesh Deshmukh";
+  const userEmail = isFieldBoy ? "sunil.pawar@example.com" : "mahesh.deshmukh@canevision.com";
+  const userFallback = isFieldBoy ? "SP" : "MD";
   const profileLink = isFieldBoy ? "/field-boy/profile" : "/dashboard/settings";
 
 

@@ -32,20 +32,20 @@ const generateSurveyData = (count: number): Survey[] => {
   const data: Survey[] = [];
   for (let i = 1; i <= count; i++) {
     const status = i % 3 === 0 ? 'Rejected' : i % 2 === 0 ? 'Pending' : 'Approved';
-    const village = ['Kothari', 'Wadgaon', 'Sangvi', 'Malegaon'][i % 4];
-    const taluka = ['Baramati', 'Indapur', 'Daund', 'Haveli'][i % 4];
+    const village = ['Chakur', 'Ahmedpur', 'Udgir', 'Nilanga'][i % 4];
+    const taluka = ['Latur', 'Ausa', 'Udgir', 'Nilanga'][i % 4];
     data.push({
       surveyId: `SURV-${String(i).padStart(3, '0')}`,
       surveyDate: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
       surveyStatus: status,
       surveyStage: i % 2 === 0 ? 'Data Entry' : 'Completed',
-      surveyedBy: ['Sunil', 'Anil', 'Rajesh', 'Kavita'][i % 4],
-      reassignedTo: i % 5 === 0 ? ['Sunil', 'Anil', 'Rajesh', 'Kavita'][(i + 1) % 4] : '-',
+      surveyedBy: ['Sunil Pawar', 'Anil Shinde', 'Rajesh Patil', 'Kavita Jadhav'][i % 4],
+      reassignedTo: i % 5 === 0 ? ['Sunil Pawar', 'Anil Shinde', 'Rajesh Patil', 'Kavita Jadhav'][(i + 1) % 4] : '-',
       lastUpdated: `2023-10-${String((i % 30) + 2).padStart(2, '0')}`,
-      farmerName: `Ramesh Kumar`, // Keep farmer name consistent for history
+      farmerName: `Ramesh Kulkarni`, // Keep farmer name consistent for history
       farmerContact: `9876543${String(i).padStart(3, '0')}`,
       state: 'Maharashtra',
-      district: 'Pune',
+      district: 'Latur',
       division: 'Pune Division',
       taluka: taluka,
       village: village,
@@ -53,7 +53,7 @@ const generateSurveyData = (count: number): Survey[] => {
       gatGroupNumber: `GAT-${String(123 + i)}`,
       surveyNumber: `SN-${String(456 + i)}`,
       areaAcre: Number((Math.random() * 5 + 1).toFixed(1)),
-      gpsCoordinates: `${(18.15 + Math.random() * 0.1).toFixed(4)}, ${(74.58 + Math.random() * 0.1).toFixed(4)}`,
+      gpsCoordinates: `${(18.40 + Math.random() * 0.1).toFixed(4)}, ${(76.57 + Math.random() * 0.1).toFixed(4)}`,
       caneType: ['Adsali', 'Preseasonal', 'Sursali'][i % 3],
       caneVariety: ['Co-86032', 'CoM-0265', 'MS-10001'][i % 3],
       cropCondition: ['Good', 'Average', 'Poor'][i % 3],
@@ -70,7 +70,7 @@ const generateSurveyData = (count: number): Survey[] => {
       submittedFrom: i % 2 === 0 ? 'Mobile' : 'Web',
       offlineSync: i % 3 === 0 ? 'Yes' : 'No',
       createdOn: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
-      updatedBy: ['Sunil', 'Anil', 'Admin'][i % 3],
+      updatedBy: ['Sunil Pawar', 'Anil Shinde', 'Admin'][i % 3],
       voiceNoteUploaded: i % 4 === 0 ? 'Yes' : 'No',
     });
   }
@@ -121,24 +121,24 @@ export default function FarmerDetailPage() {
   const farmerData = {
       profile: {
           farmerName: surveyData.farmerName,
-          fatherHusbandName: "Suresh Kumar",
+          fatherHusbandName: "Suresh Kulkarni",
           dob: "1985-05-20",
           mobile: surveyData.farmerContact,
           altMobile: "9876543211",
-          email: "ramesh.kumar@example.com",
-          address: "123, Main Road, Kothari",
+          email: "ramesh.kulkarni@example.com",
+          address: "123, Main Road, Chakur",
           village: surveyData.village,
           taluka: surveyData.taluka,
           district: surveyData.district,
           state: surveyData.state,
-          pincode: "413102",
+          pincode: "413513",
       },
       identification: {
           aadhaar: "XXXX-XXXX-5678",
           electionId: "ABC1234567",
           pan: "ABCDE1234F",
           rationCard: "1234567890",
-          farmerRegId: "FARMER-PUNE-123",
+          farmerRegId: "FARMER-LATUR-123",
           bankAccount: "XXXX-XXXX-XX-12345",
           ifsc: "SBIN0000123",
       },

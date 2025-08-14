@@ -82,7 +82,7 @@ export default function NewFieldSurveyPage() {
                     <Select>
                         <SelectTrigger id="district"><SelectValue placeholder="Select district..." /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="pune">Pune</SelectItem>
+                            <SelectItem value="latur">Latur</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -91,7 +91,9 @@ export default function NewFieldSurveyPage() {
                     <Select>
                         <SelectTrigger id="taluka"><SelectValue placeholder="Select taluka..." /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="baramati">Baramati</SelectItem>
+                            <SelectItem value="ahmedpur">Ahmedpur</SelectItem>
+                            <SelectItem value="ausa">Ausa</SelectItem>
+                            <SelectItem value="latur">Latur</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -100,7 +102,8 @@ export default function NewFieldSurveyPage() {
                     <Select>
                         <SelectTrigger id="village"><SelectValue placeholder="Select village..." /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="kothari">Kothari</SelectItem>
+                            <SelectItem value="mohgaon">Mohgaon</SelectItem>
+                            <SelectItem value="chakur">Chakur</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

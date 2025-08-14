@@ -19,12 +19,12 @@ import { KeyRound, User } from "lucide-react"
 
 // Mock data for the logged-in field boy
 const fieldBoyData = {
-  name: "Sunil Sharma",
+  name: "Sunil Pawar",
   email: "fieldboy@gmail.com",
   mobile: "9876543210",
   taluka: "Ahmedpur",
   village: "Mohgaon",
-  reportsTo: "Mahesh (Warshir)",
+  reportsTo: "Mahesh Deshmukh (Warshir)",
   avatarUrl: "https://placehold.co/100x100.png",
 }
 

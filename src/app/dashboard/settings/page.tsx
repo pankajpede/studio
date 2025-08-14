@@ -54,24 +54,27 @@ type MasterDataItem = {
 // Mock Data
 const states: MasterDataItem[] = [
   { id: "1", name: "Maharashtra" },
-  { id: "2", name: "Karnataka" },
 ]
 
 const districts: MasterDataItem[] = [
-  { id: "1", name: "Pune", linkedTo: "Maharashtra" },
-  { id: "2", name: "Satara", linkedTo: "Maharashtra" },
-  { id: "3", name: "Belagavi", linkedTo: "Karnataka" },
+  { id: "1", name: "Latur", linkedTo: "Maharashtra" },
+  { id: "2", name: "Pune", linkedTo: "Maharashtra" },
+  { id: "3", name: "Satara", linkedTo: "Maharashtra" },
 ]
 
 const talukas: MasterDataItem[] = [
-  { id: "1", name: "Baramati", linkedTo: "Pune" },
-  { id: "2", name: "Indapur", linkedTo: "Pune" },
-  { id: "3", name: "Karad", linkedTo: "Satara" },
+  { id: "1", name: "Latur", linkedTo: "Latur" },
+  { id: "2", name: "Ausa", linkedTo: "Latur" },
+  { id: "3", name: "Udgir", linkedTo: "Latur" },
+  { id: "4", name: "Nilanga", linkedTo: "Latur" },
+  { id: "5", name: "Ahmedpur", linkedTo: "Latur" },
 ]
 
 const villages: MasterDataItem[] = [
-  { id: "1", name: "Kothari", linkedTo: "Baramati" },
-  { id: "2", name: "Wadgaon", linkedTo: "Baramati" },
+  { id: "1", name: "Chakur", linkedTo: "Ahmedpur" },
+  { id: "2", name: "Mohgaon", linkedTo: "Ahmedpur" },
+  { id: "3", name: "Lamjana", linkedTo: "Ausa" },
+  { id: "4", name: "Kasarwadi", linkedTo: "Latur" },
 ]
 
 const caneTypes: MasterDataItem[] = [
@@ -441,5 +444,4 @@ export default function SettingsPage() {
     </Card>
   )
 }
-
     

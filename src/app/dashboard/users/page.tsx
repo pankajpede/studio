@@ -78,10 +78,10 @@ const generateUserData = (count: number): User[] => {
   const data: User[] = []
   const roles: User["role"][] = ["Agri Head", "Warshir", "Field Boy", "Farmer"]
   const statuses: User["status"][] = ["Active", "Inactive"]
-  const firstNames = ["Raj", "Sunita", "Amit", "Priya", "Vikram", "Anjali", "Suresh", "Kavita"]
-  const lastNames = ["Kumar", "Patil", "Sharma", "Gupta", "Singh", "Reddy", "Joshi", "Mehta"]
-  const talukas = ["Baramati", "Indapur", "Daund", "Haveli"]
-  const villages = ["Kothari", "Wadgaon", "Sangvi", "Malegaon"]
+  const firstNames = ["Rajesh", "Sunita", "Amit", "Priya", "Vikram", "Anjali", "Suresh", "Kavita"]
+  const lastNames = ["Kumar", "Patil", "Sharma", "Gaikwad", "Singh", "Reddy", "Joshi", "Mehta"]
+  const talukas = ["Latur", "Ausa", "Udgir", "Nilanga"]
+  const villages = ["Chakur", "Ahmedpur", "Mohgaon", "Lamjana"]
 
   for (let i = 1; i <= count; i++) {
     const role = roles[i % roles.length]

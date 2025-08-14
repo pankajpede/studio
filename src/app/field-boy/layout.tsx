@@ -47,16 +47,14 @@ export default function FieldBoyLayout({
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
        <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
           <div className="flex items-center gap-2">
-            {showBackButton ? (
+            {showBackButton && (
                 <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
                   <Link href={backLink}>
                     <ArrowLeft />
                   </Link>
                 </Button>
-            ) : (
-              <div className="w-8"></div> // Placeholder for alignment
             )}
-             <h1 className="text-center text-lg font-semibold md:text-xl font-headline">
+             <h1 className="text-lg font-semibold md:text-xl font-headline">
                 {getHeading()}
             </h1>
           </div>

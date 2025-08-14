@@ -274,11 +274,11 @@ export default function FarmerDetailPage() {
                 <DialogTrigger asChild>
                     <Button><Map /> <span className="ml-2 hidden sm:inline">नकाशा पहा</span></Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-4xl h-4/5">
+                <DialogContent className="max-w-4xl h-4/5 flex flex-col">
                     <DialogHeader>
                         <DialogTitle>शेत नकाशा</DialogTitle>
                     </DialogHeader>
-                    <div className="h-full w-full py-4">
+                    <div className="flex-grow w-full py-4">
                         <SurveyMap surveys={[surveyData]} />
                     </div>
                 </DialogContent>

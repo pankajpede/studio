@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/tabs"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw } from "lucide-react"
+import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
@@ -82,17 +82,77 @@ type Document = {
     file: File | null;
 }
 
-const FileUploadItem = ({ file, onRemove }: { file: File, onRemove: () => void }) => (
+const FileUploadItem = ({ file, onRemove, name }: { file: File, onRemove: () => void, name?: string }) => (
     <div className="flex items-center justify-between p-2 mt-2 border rounded-md bg-muted/50">
-        <div className="flex items-center gap-2">
-            <FileIcon className="h-5 w-5 text-muted-foreground" />
-            <span className="text-sm font-medium truncate">{file.name}</span>
+        <div className="flex items-center gap-2 overflow-hidden">
+            <FileIcon className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+            <div className="flex flex-col overflow-hidden">
+                <span className="text-sm font-medium truncate">{name || file.name}</span>
+                <span className="text-xs text-muted-foreground">{Math.round(file.size / 1024)} KB</span>
+            </div>
         </div>
-        <Button size="icon" variant="ghost" className="h-6 w-6" onClick={onRemove}>
+        <Button size="icon" variant="ghost" className="h-6 w-6 flex-shrink-0" onClick={onRemove}>
             <X className="h-4 w-4" />
         </Button>
     </div>
 );
+
+
+const FileUploader = ({
+    id,
+    label,
+    description,
+    onFileChange,
+    accept,
+    multiple = false,
+    files,
+    icon
+}: {
+    id: string;
+    label: string;
+    description: string;
+    onFileChange: (files: FileList | null) => void;
+    accept: string;
+    multiple?: boolean;
+    files: File[];
+    icon: React.ReactNode;
+}) => (
+    <div className="grid gap-2">
+        <Label htmlFor={id} className="flex items-center gap-2">{icon} {label}</Label>
+        <div className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 relative">
+            <UploadCloud className="w-8 h-8 text-muted-foreground" />
+            <p className="mt-2 text-sm text-center text-muted-foreground">
+                <span className="font-semibold">अपलोड करण्यासाठी क्लिक करा</span>
+            </p>
+            <p className="text-xs text-muted-foreground text-center">{description}</p>
+            <Input
+                id={id}
+                type="file"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                multiple={multiple}
+                accept={accept}
+                onChange={(e) => onFileChange(e.target.files)}
+            />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {files.map((file, index) => (
+                <FileUploadItem
+                    key={index}
+                    file={file}
+                    onRemove={() => {
+                        const newFiles = [...files];
+                        newFiles.splice(index, 1);
+                        // This is a bit of a hack to create a new FileList
+                        const dataTransfer = new DataTransfer();
+                        newFiles.forEach(f => dataTransfer.items.add(f));
+                        onFileChange(dataTransfer.files);
+                    }}
+                />
+            ))}
+        </div>
+    </div>
+);
+
 
 export default function NewFieldSurveyPage() {
     const router = useRouter();
@@ -118,10 +178,19 @@ export default function NewFieldSurveyPage() {
     const [accountNumber, setAccountNumber] = React.useState("");
     const [ifscCode, setIfscCode] = React.useState("");
 
+    // State for media tab
+    const [farmPhotos, setFarmPhotos] = React.useState<File[]>([]);
+    const [farmerPhoto, setFarmerPhoto] = React.useState<File[]>([]);
+    const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File[]>([]);
+    const [audioNote, setAudioNote] = React.useState<File[]>([]);
+    const [otherMedia, setOtherMedia] = React.useState<File[]>([]);
+    const [otherMediaName, setOtherMediaName] = React.useState("");
+
+
     const [farmerSearchOpen, setFarmerSearchOpen] = React.useState(false);
     const [villageSearchOpen, setVillageSearchOpen] = React.useState(false);
 
-    const tabs = ["farmer-selection", "farmer-info", "farm-info", "map"];
+    const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
     const handleNext = () => {
         window.scrollTo(0, 0);
@@ -195,6 +264,12 @@ export default function NewFieldSurveyPage() {
         const selectedTypes = documents.map(d => d.type).filter(t => t && t !== currentDocType);
         return documentTypes.filter(type => !selectedTypes.includes(type.value));
     };
+    
+    const handleFileChange = (setter: React.Dispatch<React.SetStateAction<File[]>>, maxFiles: number) => (files: FileList | null) => {
+        if (files) {
+            setter(Array.from(files).slice(0, maxFiles));
+        }
+    };
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
@@ -213,10 +288,11 @@ export default function NewFieldSurveyPage() {
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
             <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
             <TabsTrigger value="farm-info">शेत</TabsTrigger>
+            <TabsTrigger value="media">मीडिया</TabsTrigger>
             <TabsTrigger value="map">नकाशा</TabsTrigger>
           </TabsList>
           
@@ -511,6 +587,80 @@ export default function NewFieldSurveyPage() {
             </div>
           </TabsContent>
 
+           <TabsContent value="media" className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <FileUploader
+                        id="farm-photos"
+                        label="शेताचे फोटो"
+                        description="शेताचे ५ फोटो अपलोड करा"
+                        onFileChange={handleFileChange(setFarmPhotos, 5)}
+                        accept="image/*"
+                        multiple
+                        files={farmPhotos}
+                        icon={<ImageIcon />}
+                    />
+                    <FileUploader
+                        id="farmer-photo"
+                        label="शेतकरी फोटो"
+                        description="शेतकऱ्याचा १ फोटो अपलोड करा"
+                        onFileChange={handleFileChange(setFarmerPhoto, 1)}
+                        accept="image/*"
+                        files={farmerPhoto}
+                        icon={<User />}
+                    />
+                    <FileUploader
+                        id="field-boy-photo"
+                        label="फील्ड बॉय फोटो"
+                        description="तुमचा स्वतःचा १ फोटो अपलोड करा"
+                        onFileChange={handleFileChange(setFieldBoyPhoto, 1)}
+                        accept="image/*"
+                        files={fieldBoyPhoto}
+                        icon={<User />}
+                    />
+                    <FileUploader
+                        id="audio-note"
+                        label="ऑडिओ नोट (पर्यायी)"
+                        description="ऑडिओ फाइल अपलोड करा"
+                        onFileChange={handleFileChange(setAudioNote, 1)}
+                        accept="audio/*"
+                        files={audioNote}
+                        icon={<AudioLines />}
+                    />
+                     <div className="grid gap-4 md:col-span-2">
+                        <Label htmlFor="other-media" className="flex items-center gap-2"><FileImage /> इतर मीडिया (पर्यायी)</Label>
+                        <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-center">
+                            <Input 
+                                placeholder="फाइलचे नाव" 
+                                value={otherMediaName}
+                                onChange={(e) => setOtherMediaName(e.target.value)}
+                            />
+                            <div className="relative w-full sm:w-auto">
+                                <Button asChild variant="outline" className="w-full">
+                                    <Label htmlFor="other-media-file" className="cursor-pointer">
+                                        <UploadCloud className="mr-2"/> फाइल निवडा
+                                    </Label>
+                                </Button>
+                                <Input 
+                                    id="other-media-file" 
+                                    type="file" 
+                                    className="sr-only" 
+                                    accept="image/*,application/pdf"
+                                    onChange={handleFileChange(setOtherMedia, 1)}
+                                />
+                            </div>
+                        </div>
+                        {otherMedia.map((file, index) => (
+                             <FileUploadItem
+                                key={index}
+                                file={file}
+                                name={otherMediaName || file.name}
+                                onRemove={() => setOtherMedia([])}
+                            />
+                        ))}
+                    </div>
+              </div>
+          </TabsContent>
+
           <TabsContent value="map" className="pt-6">
             <div className="flex flex-col gap-6">
                  <Card>
@@ -566,3 +716,4 @@ export default function NewFieldSurveyPage() {
   )
 }
 
+    

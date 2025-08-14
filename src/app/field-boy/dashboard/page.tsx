@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-type SurveyStatus = "Pending" | "Approved" | "Rejected";
+type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Draft";
 
 type Survey = {
   id: string
@@ -35,24 +35,28 @@ const mockSurveys: Survey[] = [
   { id: "SUR003", day: "२८", month: "जून", farmerName: "अजय पाटील", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected" },
   { id: "SUR004", day: "२७", month: "जून", farmerName: "सुनीता मोरे", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "लातूर", village: "कासारवाडी", status: "Pending" },
   { id: "SUR005", day: "२६", month: "जून", farmerName: "कविता देशमुख", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "औसा", village: "लामजना", status: "Approved" },
+  { id: "SUR006", day: "२५", month: "जून", farmerName: "राहुल जाधव", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
 ]
 
 const statusTranslations: Record<SurveyStatus, string> = {
     "Pending": "प्रलंबित",
     "Approved": "रांगेत",
     "Rejected": "नाकारलेले",
+    "Draft": "ड्राफ्ट"
 }
 
 const statusStyles: Record<SurveyStatus, string> = {
     "Pending": "bg-yellow-100 text-yellow-800 border-yellow-200",
     "Approved": "bg-green-100 text-green-800 border-green-200",
     "Rejected": "bg-red-100 text-red-800 border-red-200",
+    "Draft": "bg-gray-100 text-gray-800 border-gray-200",
 }
 
 const statusTextStyles: Record<SurveyStatus, string> = {
     "Pending": "text-yellow-600",
     "Approved": "text-green-600",
     "Rejected": "text-red-600",
+    "Draft": "text-gray-600",
 }
 
 const SurveyCard = ({ survey }: { survey: Survey }) => {
@@ -126,6 +130,7 @@ export default function FieldBoyDashboard() {
                 <SelectItem value="pending">प्रलंबित</SelectItem>
                 <SelectItem value="approved">रांगेत</SelectItem>
                 <SelectItem value="rejected">नाकारलेले</SelectItem>
+                <SelectItem value="draft">ड्राफ्ट</SelectItem>
             </SelectContent>
             </Select>
         </div>
@@ -156,3 +161,5 @@ export default function FieldBoyDashboard() {
     </div>
   )
 }
+
+    

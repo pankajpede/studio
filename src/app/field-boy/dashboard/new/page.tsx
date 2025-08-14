@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
 import Image from "next/image"
 import AudioRecorder from "@/components/audio-recorder"
+import { useToast } from "@/hooks/use-toast"
 
 const mockFarmers = [
     { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], nameAsPerPassbook: "रमेश एस कुलकर्णी", bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234" },
@@ -174,6 +175,7 @@ const ImageUploader = ({
 
 export default function NewFieldSurveyPage() {
     const router = useRouter();
+    const { toast } = useToast();
     const [activeTab, setActiveTab] = React.useState("farmer-selection");
     const mapRef = React.useRef<{ refreshLocation: () => void }>(null);
 
@@ -212,6 +214,10 @@ export default function NewFieldSurveyPage() {
     const handleNext = () => {
         window.scrollTo(0, 0);
         const currentIndex = tabs.indexOf(activeTab);
+        toast({
+            title: "यशस्वी!",
+            description: "तुमचा डेटा यशस्वीरित्या जतन झाला आहे.",
+        });
         if (currentIndex < tabs.length - 1) {
             setActiveTab(tabs[currentIndex + 1]);
         }
@@ -220,6 +226,10 @@ export default function NewFieldSurveyPage() {
     const handleFinalSubmit = () => {
         // Logic for final submission
         console.log("Survey submitted!");
+        toast({
+            title: "सर्वेक्षण सबमिट केले!",
+            description: "तुमचे सर्वेक्षण यशस्वीरित्या सबमिट झाले आहे.",
+        });
         window.scrollTo(0, 0);
         router.push('/field-boy/dashboard');
     }
@@ -763,3 +773,5 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    

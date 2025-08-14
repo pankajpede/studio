@@ -203,7 +203,6 @@ export default function FarmerDetailPage() {
             { category: "उसाची जात", url: `https://placehold.co/400x300.png`, hint: "sugarcane plant" },
             { category: "तोडणी टोकन", url: `https://placehold.co/400x300.png`, hint: "document paper" },
             { category: "तोडणी चालू", url: `https://placehold.co/400x300.png`, hint: "farm harvest" },
-            { category: "गेट पास नोंद", url: `https://placehold.co/400x300.png`, hint: "truck sugarcane" },
           ]
       }
   }
@@ -360,13 +359,11 @@ export default function FarmerDetailPage() {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                     <h4 className="font-semibold text-sm">फोटो</h4>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-2 gap-4">
                         {farmerData.media.photos.map((photo, i) => (
-                             <div key={i} className="relative group">
-                                <Image src={photo.url} data-ai-hint={photo.hint} alt={photo.category} width={100} height={100} className="rounded-md object-cover w-full aspect-square" />
-                                <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs text-center p-1 rounded-b-md opacity-0 group-hover:opacity-100 transition-opacity">
-                                    {photo.category}
-                                </div>
+                             <div key={i} className="flex flex-col gap-2">
+                                <Image src={photo.url} data-ai-hint={photo.hint} alt={photo.category} width={200} height={150} className="rounded-md object-cover w-full aspect-video" />
+                                <p className="text-xs text-center text-muted-foreground">{photo.category}</p>
                              </div>
                         ))}
                     </div>
@@ -401,5 +398,7 @@ export default function FarmerDetailPage() {
   );
 }
 
+
+    
 
     

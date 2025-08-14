@@ -5,6 +5,9 @@ import React, { useState } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import type { Survey } from '@/app/dashboard/page';
 import { Skeleton } from './ui/skeleton';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
 
 const containerStyle = {
   width: '100%',
@@ -24,7 +27,7 @@ interface SurveyMapProps {
 export default function SurveyMap({ surveys }: SurveyMapProps) {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
+    googleMapsApiKey: publicRuntimeConfig.googleMapsApiKey
   });
 
   const [activeMarker, setActiveMarker] = useState<string | null>(null);

@@ -358,7 +358,7 @@ export default function NewFieldSurveyPage() {
                  <div className="grid gap-2">
                     <Label htmlFor="voter-id">मतदार ओळखपत्र</Label>
                     <div className="flex gap-2">
-                        <Input id="voter-id" placeholder="मतदार ओळखपत्र टाका" value={voterId} onChange={(e) => setVoterId(e.target.value)} className="flex-grow" />
+                        <Input id="voter-id" placeholder="ओळखपत्र क्रमांक" value={voterId} onChange={(e) => setVoterId(e.target.value)} className="flex-grow" />
                         <Input id="voter-id-file" type="file" className="sr-only" onChange={(e) => handleFileChange(e, setVoterIdFile)} />
                         <Button asChild variant="outline" className="shrink-0">
                             <Label htmlFor="voter-id-file" className="cursor-pointer">
@@ -371,7 +371,7 @@ export default function NewFieldSurveyPage() {
                 <div className="grid gap-2">
                     <Label htmlFor="pan">पॅन कार्ड</Label>
                      <div className="flex gap-2">
-                        <Input id="pan" placeholder="पॅन नंबर टाका" value={pan} onChange={(e) => setPan(e.target.value)} className="flex-grow" />
+                        <Input id="pan" placeholder="पॅन क्रमांक" value={pan} onChange={(e) => setPan(e.target.value)} className="flex-grow" />
                         <Input id="pan-file" type="file" className="sr-only" onChange={(e) => handleFileChange(e, setPanFile)} />
                          <Button asChild variant="outline" className="shrink-0">
                             <Label htmlFor="pan-file" className="cursor-pointer">

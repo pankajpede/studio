@@ -29,31 +29,31 @@ import {
 } from "@/components/ui/tabs"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Pin, Footprints, ChevronsUpDown, Check } from "lucide-react"
+import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 const mockFarmers = [
-    { value: "farmer-1", label: "रमेश कुलकर्णी" },
-    { value: "farmer-2", label: "सुरेश पाटील" },
-    { value: "farmer-3", label: "गणेश जाधव" },
-    { value: "farmer-4", label: "प्रकाश शिंदे" },
-    { value: "farmer-5", label: "सचिन मोरे" },
-    { value: "farmer-6", label: "अनिल गायकवाड" },
-    { value: "farmer-7", label: "दीपक चव्हाण" },
-    { value: "farmer-8", label: "संजय देशमुख" },
-    { value: "farmer-9", label: "विशाल पवार" },
-    { value: "farmer-10", label: "अमित भोसले" },
-    { value: "farmer-11", label: "राहुल सावंत" },
-    { value: "farmer-12", label: "अजय कदम" },
-    { value: "farmer-13", label: "नितीन राऊत" },
-    { value: "farmer-14", label: "प्रशांत कांबळे" },
-    { value: "farmer-15", label: "मनोज जगताप" },
-    { value: "farmer-16", label: "योगेश यादव" },
-    { value: "farmer-17", label: "महेश माने" },
-    { value: "farmer-18", label: "अमोल थोरात" },
-    { value: "farmer-19", label: "किरण साळुंखे" },
-    { value: "farmer-20", label: "संदीप सूर्यवंशी" },
+    { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", voterId: "ABC1234567", pan: "ABCDE1234F", bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234" },
+    { value: "farmer-2", label: "सुरेश पाटील", mobile: "9876543211", voterId: "DEF2345678", pan: "BCDEF2345G", bankName: "HDFC बँक", accountNumber: "XXXX-XXXX-2345" },
+    { value: "farmer-3", label: "गणेश जाधव", mobile: "9876543212", voterId: "GHI3456789", pan: "CDEFG3456H", bankName: "ICICI बँक", accountNumber: "XXXX-XXXX-3456" },
+    { value: "farmer-4", label: "प्रकाश शिंदे", mobile: "9876543213", voterId: "JKL4567890", pan: "DEFGH4567I", bankName: "ऍक्सिस बँक", accountNumber: "XXXX-XXXX-4567" },
+    { value: "farmer-5", label: "सचिन मोरे", mobile: "9876543214", voterId: "MNO5678901", pan: "EFGHI5678J", bankName: "बँक ऑफ बडोदा", accountNumber: "XXXX-XXXX-5678" },
+    { value: "farmer-6", label: "अनिल गायकवाड", mobile: "9876543215", voterId: "PQR6789012", pan: "FGHIJ6789K", bankName: "पंजाब नॅशनल बँक", accountNumber: "XXXX-XXXX-6789" },
+    { value: "farmer-7", label: "दीपक चव्हाण", mobile: "9876543216", voterId: "STU7890123", pan: "GHIJK7890L", bankName: "कॅनरा बँक", accountNumber: "XXXX-XXXX-7890" },
+    { value: "farmer-8", label: "संजय देशमुख", mobile: "9876543217", voterId: "VWX8901234", pan: "HIJKL8901M", bankName: "युनियन बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-8901" },
+    { value: "farmer-9", label: "विशाल पवार", mobile: "9876543218", voterId: "YZA9012345", pan: "IJKLM9012N", bankName: "बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-9012" },
+    { value: "farmer-10", label: "अमित भोसले", mobile: "9876543219", voterId: "BCD0123456", pan: "JKLMN0123O", bankName: "सेंट्रल बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-0123" },
+    { value: "farmer-11", label: "राहुल सावंत", mobile: "9876543220", voterId: "EFG1234567", pan: "KLMNO1234P", bankName: "इंडियन बँक", accountNumber: "XXXX-XXXX-1234" },
+    { value: "farmer-12", label: "अजय कदम", mobile: "9876543221", voterId: "HIJ2345678", pan: "LMNOP2345Q", bankName: "IDBI बँक", accountNumber: "XXXX-XXXX-2345" },
+    { value: "farmer-13", label: "नितीन राऊत", mobile: "9876543222", voterId: "KLM3456789", pan: "MNOPQ3456R", bankName: "कोटक महिंद्रा बँक", accountNumber: "XXXX-XXXX-3456" },
+    { value: "farmer-14", label: "प्रशांत कांबळे", mobile: "9876543223", voterId: "NOP4567890", pan: "NOPQR4567S", bankName: "येस बँक", accountNumber: "XXXX-XXXX-4567" },
+    { value: "farmer-15", label: "मनोज जगताप", mobile: "9876543224", voterId: "PQR5678901", pan: "OPQRS5678T", bankName: "इंडसइंड बँक", accountNumber: "XXXX-XXXX-5678" },
+    { value: "farmer-16", label: "योगेश यादव", mobile: "9876543225", voterId: "STU6789012", pan: "PQRST6789U", bankName: "RBL बँक", accountNumber: "XXXX-XXXX-6789" },
+    { value: "farmer-17", label: "महेश माने", mobile: "9876543226", voterId: "VWX7890123", pan: "QRSTU7890V", bankName: "फेडरल बँक", accountNumber: "XXXX-XXXX-7890" },
+    { value: "farmer-18", label: "अमोल थोरात", mobile: "9876543227", voterId: "YZA8901234", pan: "RSTUV8901W", bankName: "साउथ इंडियन बँक", accountNumber: "XXXX-XXXX-8901" },
+    { value: "farmer-19", label: "किरण साळुंखे", mobile: "9876543228", voterId: "BCD9012345", pan: "STUVW9012X", bankName: "कर्नाटक बँक", accountNumber: "XXXX-XXXX-9012" },
+    { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", voterId: "EFG0123456", pan: "TUVWX0123Y", bankName: "सिटी युनियन बँक", accountNumber: "XXXX-XXXX-0123" },
 ];
 
 const mockVillages = [
@@ -67,6 +67,17 @@ const mockVillages = [
     { value: "devangra", label: "देवंग्रा" },
 ];
 
+const FileUploadItem = ({ file, onRemove }: { file: File, onRemove: () => void }) => (
+    <div className="flex items-center justify-between p-2 mt-2 border rounded-md bg-muted/50">
+        <div className="flex items-center gap-2">
+            <FileIcon className="h-5 w-5 text-muted-foreground" />
+            <span className="text-sm font-medium truncate">{file.name}</span>
+        </div>
+        <Button size="icon" variant="ghost" className="h-6 w-6" onClick={onRemove}>
+            <X className="h-4 w-4" />
+        </Button>
+    </div>
+);
 
 export default function NewFieldSurveyPage() {
     const router = useRouter();
@@ -81,10 +92,20 @@ export default function NewFieldSurveyPage() {
     const [surveyNo, setSurveyNo] = React.useState("");
     const [gatNo, setGatNo] = React.useState("");
     const [farmer, setFarmer] = React.useState("");
+    
+    // State for farmer info tab
+    const [mobile, setMobile] = React.useState("");
+    const [voterId, setVoterId] = React.useState("");
+    const [pan, setPan] = React.useState("");
+    const [bankName, setBankName] = React.useState("");
+    const [accountNumber, setAccountNumber] = React.useState("");
+
+    // State for file uploads
+    const [voterIdFile, setVoterIdFile] = React.useState<File | null>(null);
+    const [panFile, setPanFile] = React.useState<File | null>(null);
 
     const [farmerSearchOpen, setFarmerSearchOpen] = React.useState(false);
     const [villageSearchOpen, setVillageSearchOpen] = React.useState(false);
-
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "map"];
 
@@ -105,6 +126,24 @@ export default function NewFieldSurveyPage() {
     
     const selectedFarmer = mockFarmers.find(f => f.value === farmer);
 
+    React.useEffect(() => {
+        if (selectedFarmer) {
+            setMobile(selectedFarmer.mobile);
+            setVoterId(selectedFarmer.voterId);
+            setPan(selectedFarmer.pan);
+            setBankName(selectedFarmer.bankName);
+            setAccountNumber(selectedFarmer.accountNumber);
+        } else {
+            // Clear fields if no farmer is selected
+            setMobile("");
+            setVoterId("");
+            setPan("");
+            setBankName("");
+            setAccountNumber("");
+        }
+    }, [selectedFarmer]);
+
+
     const getBreadcrumb = () => {
         const stateLabel = selectedState === 'maharashtra' ? 'महाराष्ट्र' : 'कर्नाटक';
         const districtLabel = district ? ' > लातूर' : '';
@@ -115,6 +154,12 @@ export default function NewFieldSurveyPage() {
         const gatNoLabel = gatNo ? ` > ${gatNo}` : '';
 
         return `${stateLabel}${districtLabel}${regionLabel}${talukaLabel}${villageLabel}${surveyNoLabel}${gatNoLabel}`;
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setFile: React.Dispatch<React.SetStateAction<File | null>>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]);
+        }
     };
 
 
@@ -307,28 +352,44 @@ export default function NewFieldSurveyPage() {
           <TabsContent value="farmer-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="farmer-name">शेतकऱ्याचे नाव</Label>
-                    <Input id="farmer-name" placeholder="शेतकऱ्याचे नाव टाका" />
-                </div>
-                <div className="grid gap-2">
                     <Label htmlFor="mobile">मोबाइल नंबर</Label>
-                    <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" />
+                    <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" value={mobile} onChange={(e) => setMobile(e.target.value)} />
                 </div>
                  <div className="grid gap-2">
                     <Label htmlFor="voter-id">मतदार ओळखपत्र</Label>
-                    <Input id="voter-id" placeholder="मतदार ओळखपत्र टाका" />
+                    <Input id="voter-id" placeholder="मतदार ओळखपत्र टाका" value={voterId} onChange={(e) => setVoterId(e.target.value)} />
+                    <Input id="voter-id-file" type="file" className="sr-only" onChange={(e) => handleFileChange(e, setVoterIdFile)} />
+                    {voterIdFile ? (
+                        <FileUploadItem file={voterIdFile} onRemove={() => setVoterIdFile(null)} />
+                    ) : (
+                        <Button asChild variant="outline">
+                            <Label htmlFor="voter-id-file" className="cursor-pointer">
+                                <UploadCloud className="mr-2" /> ओळखपत्र अपलोड करा
+                            </Label>
+                        </Button>
+                    )}
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="pan">पॅन कार्ड</Label>
-                    <Input id="pan" placeholder="पॅन नंबर टाका" />
+                    <Input id="pan" placeholder="पॅन नंबर टाका" value={pan} onChange={(e) => setPan(e.target.value)} />
+                    <Input id="pan-file" type="file" className="sr-only" onChange={(e) => handleFileChange(e, setPanFile)} />
+                    {panFile ? (
+                        <FileUploadItem file={panFile} onRemove={() => setPanFile(null)} />
+                    ) : (
+                        <Button asChild variant="outline">
+                            <Label htmlFor="pan-file" className="cursor-pointer">
+                                <UploadCloud className="mr-2" /> पॅन कार्ड अपलोड करा
+                            </Label>
+                        </Button>
+                    )}
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="bank-name">बँकेचे नाव</Label>
-                    <Input id="bank-name" placeholder="बँकेचे नाव टाका" />
+                    <Input id="bank-name" placeholder="बँकेचे नाव टाका" value={bankName} onChange={(e) => setBankName(e.target.value)} />
                 </div>
-                <div className="grid gap-2">
+                <div className="grid gap-2 md:col-span-2">
                     <Label htmlFor="account-number">खाते क्रमांक</Label>
-                    <Input id="account-number" placeholder="बँक खाते क्रमांक टाका" />
+                    <Input id="account-number" placeholder="बँक खाते क्रमांक टाका" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
                 </div>
             </div>
           </TabsContent>
@@ -399,8 +460,3 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
-
-    
-
-    
-

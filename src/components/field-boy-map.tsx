@@ -1,8 +1,8 @@
 
 "use client"
 
-import React, { useState, useEffect } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow, Polyline } from '@react-google-maps/api';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { GoogleMap, useJsApiLoader, Marker, Polyline } from '@react-google-maps/api';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertTitle, AlertDescription } from './ui/alert';
@@ -23,39 +23,55 @@ interface FieldBoyMapProps {
     farmLocation?: google.maps.LatLngLiteral;
 }
 
-export default function FieldBoyMap({ showDistance = false, farmLocation }: FieldBoyMapProps) {
+const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation }: FieldBoyMapProps, ref) => {
   const { toast } = useToast();
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLngLiteral | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isFetching, setIsFetching] = useState(false);
 
-  useEffect(() => {
+  const getLocation = React.useCallback(() => {
     if (navigator.geolocation) {
-      const watchId = navigator.geolocation.watchPosition(
+      setIsFetching(true);
+      setErrorMsg(null);
+      navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
           setCurrentPosition({ lat: latitude, lng: longitude });
           setErrorMsg(null);
+          setIsFetching(false);
+          toast({
+            title: "स्थान अद्यतनित केले",
+            description: "तुमचे वर्तमान स्थान यशस्वीरित्या लोड झाले आहे.",
+          });
         },
         (error) => {
           setErrorMsg("तुमचे स्थान मिळवण्यास अक्षम. कृपया स्थान परवानग्या तपासा.");
-          if(currentPosition === null){ // only show toast if location was never fetched
-             toast({
-                variant: "destructive",
-                title: "स्थान त्रुटी",
-                description: "तुमचे स्थान मिळवता आले नाही. कृपया ब्राउझर सेटिंग्जमध्ये परवानगी सक्षम करा.",
-            });
-          }
+          setIsFetching(false);
+          toast({
+            variant: "destructive",
+            title: "स्थान त्रुटी",
+            description: "तुमचे स्थान मिळवता आले नाही. कृपया ब्राउझर सेटिंग्जमध्ये परवानगी सक्षम करा.",
+          });
           console.error("Geolocation error:", error);
         },
-        { enableHighAccuracy: true }
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
-      
-      return () => navigator.geolocation.clearWatch(watchId);
-
     } else {
       setErrorMsg("या ब्राउझरमध्ये जिओलोकेशन समर्थित नाही.");
+      setIsFetching(false);
     }
-  }, [toast, currentPosition]);
+  }, [toast]);
+  
+  // Expose the refresh function to the parent component
+  useImperativeHandle(ref, () => ({
+    refreshLocation: () => {
+      getLocation();
+    }
+  }));
+
+  useEffect(() => {
+    getLocation(); // Get initial location
+  }, [getLocation]);
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script-field-boy',
@@ -66,7 +82,7 @@ export default function FieldBoyMap({ showDistance = false, farmLocation }: Fiel
     return <div className="p-4 text-center">नकाशे लोड करताना त्रुटी. कृपया तुमचा API की तपासा.</div>;
   }
   
-  if (!isLoaded) {
+  if (!isLoaded || isFetching) {
     return <Skeleton className="w-full h-full" />;
   }
 
@@ -129,4 +145,8 @@ export default function FieldBoyMap({ showDistance = false, farmLocation }: Fiel
         )}
       </GoogleMap>
   );
-}
+});
+
+FieldBoyMap.displayName = "FieldBoyMap";
+
+export default FieldBoyMap;

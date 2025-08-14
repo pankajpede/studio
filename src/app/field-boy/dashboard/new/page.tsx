@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/tabs"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed } from "lucide-react"
+import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
@@ -97,6 +97,8 @@ const FileUploadItem = ({ file, onRemove }: { file: File, onRemove: () => void }
 export default function NewFieldSurveyPage() {
     const router = useRouter();
     const [activeTab, setActiveTab] = React.useState("farmer-selection");
+    const mapRef = React.useRef<{ refreshLocation: () => void }>(null);
+
 
     // State for each form field
     const [selectedState, setSelectedState] = React.useState("");
@@ -512,17 +514,23 @@ export default function NewFieldSurveyPage() {
           <TabsContent value="map" className="pt-6">
             <div className="flex flex-col gap-6">
                  <Card>
-                    <CardHeader>
-                        <CardTitle className="font-headline text-lg flex items-center gap-2">
-                            <LocateFixed className="w-5 h-5 text-primary"/>
-                            फील्ड बॉयचे स्थान
-                        </CardTitle>
-                        <CardDescription>
-                            शेतापासून अंदाजित अंतर: <strong>०.२ किमी</strong>
-                        </CardDescription>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div className="space-y-1.5">
+                           <CardTitle className="font-headline text-lg flex items-center gap-2">
+                                <LocateFixed className="w-5 h-5 text-primary"/>
+                                फील्ड बॉयचे स्थान
+                            </CardTitle>
+                            <CardDescription>
+                                शेतापासून अंदाजित अंतर: <strong>०.२ किमी</strong>
+                            </CardDescription>
+                        </div>
+                         <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()}>
+                            <RefreshCw className="h-4 w-4" />
+                            <span className="sr-only">Refresh Location</span>
+                        </Button>
                     </CardHeader>
                     <CardContent className="h-64 bg-muted rounded-b-lg">
-                        <FieldBoyMap showDistance farmLocation={{lat: 18.4088, lng: 76.5702}} />
+                        <FieldBoyMap ref={mapRef} showDistance farmLocation={{lat: 18.4088, lng: 76.5702}} />
                     </CardContent>
                 </Card>
                  <Card>
@@ -557,3 +565,4 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+

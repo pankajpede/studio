@@ -67,10 +67,11 @@ const mockVillages = [
     { value: "devangra", label: "देवंग्रा" },
 ];
 
-type DocumentType = 'voter-id' | 'pan';
+type DocumentType = 'voter-id' | 'pan' | 'driving-license';
 const documentTypes: {value: DocumentType, label: string}[] = [
     {value: 'voter-id', label: 'मतदार ओळखपत्र'},
     {value: 'pan', label: 'पॅन कार्ड'},
+    {value: 'driving-license', label: 'ड्रायविंग लायसन्स'},
 ];
 
 type Document = {
@@ -380,7 +381,7 @@ export default function NewFieldSurveyPage() {
                 </div>
                  <div className="md:col-span-2 grid gap-4">
                      <Label>ओळखपत्र</Label>
-                     {documents.map((doc) => (
+                     {documents.map((doc, index) => (
                          <div key={doc.id} className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto_auto] gap-2 items-center">
                             <Select
                                 value={doc.type}
@@ -403,7 +404,9 @@ export default function NewFieldSurveyPage() {
                                 id={`doc-file-${doc.id}`} 
                                 type="file" 
                                 className="sr-only" 
-                                onChange={(e) => handleDocumentChange(doc.id, 'file', e.target.files ? e.target.files[0] : null)}
+                                onChange={(e) => {
+                                    handleDocumentChange(doc.id, 'file', e.target.files ? e.target.files[0] : null);
+                                }}
                             />
                             <Button asChild variant="outline" size="icon">
                                 <Label htmlFor={`doc-file-${doc.id}`} className="cursor-pointer">
@@ -415,6 +418,11 @@ export default function NewFieldSurveyPage() {
                                  <Button variant="ghost" size="icon" onClick={() => handleRemoveDocument(doc.id)}>
                                     <MinusCircle className="text-destructive" />
                                  </Button>
+                            )}
+                            {doc.file && (
+                                <div className="sm:col-span-full">
+                                    <FileUploadItem file={doc.file} onRemove={() => handleDocumentChange(doc.id, 'file', null)} />
+                                </div>
                             )}
                          </div>
                      ))}
@@ -501,3 +509,5 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    

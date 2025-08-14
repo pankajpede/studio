@@ -234,6 +234,15 @@ export const columns: ColumnDef<Survey>[] = [
     header: "GPS",
     enableColumnFilter: true,
   },
+   {
+    accessorKey: "tokenDate",
+    header: "तोडणी तारीख",
+    cell: ({ row }) => {
+        const date = row.getValue("tokenDate") as string;
+        if (!date || date === '-') return '-';
+        return <div>{format(new Date(date), "dd/MM/yyyy")}</div>
+    },
+  },
   {
     id: "actions",
     enableHiding: false,
@@ -271,7 +280,8 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
     const [farmerName, setFarmerName] = React.useState(table.getColumn("farmerName")?.getFilterValue() as string ?? "");
     const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>(table.getColumn("surveyStatus")?.getFilterValue() as string[] ?? []);
     const [taluka, setTaluka] = React.useState(table.getColumn("taluka")?.getFilterValue() as string ?? "");
-    const [date, setDate] = React.useState<DateRange | undefined>()
+    const [surveyDate, setSurveyDate] = React.useState<DateRange | undefined>()
+    const [cuttingDate, setCuttingDate] = React.useState<DateRange | undefined>()
     const [minArea, setMinArea] = React.useState<string>("")
     const [maxArea, setMaxArea] = React.useState<string>("")
     const [radius, setRadius] = React.useState([100]);
@@ -293,7 +303,8 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
         table.getColumn("farmerName")?.setFilterValue(farmerName);
         table.getColumn("surveyStatus")?.setFilterValue(selectedStatuses.length ? selectedStatuses : undefined);
         table.getColumn("taluka")?.setFilterValue(taluka === "all" ? "" : taluka);
-        table.getColumn("surveyDate")?.setFilterValue(date ? [date.from, date.to] : undefined);
+        table.getColumn("surveyDate")?.setFilterValue(surveyDate ? [surveyDate.from, surveyDate.to] : undefined);
+        table.getColumn("tokenDate")?.setFilterValue(cuttingDate ? [cuttingDate.from, cuttingDate.to] : undefined);
         table.getColumn("areaAcre")?.setFilterValue([minArea, maxArea]);
         table.getColumn("gpsCoordinates")?.setFilterValue(radius[0] < 100 ? radius[0] : undefined);
     }
@@ -302,7 +313,8 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
         setFarmerName("");
         setSelectedStatuses([]);
         setTaluka("");
-        setDate(undefined);
+        setSurveyDate(undefined);
+        setCuttingDate(undefined);
         setMinArea("");
         setMaxArea("");
         setRadius([100]);
@@ -330,7 +342,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                             />
                         </div>
 
-                         <div className="grid gap-2">
+                        <div className="grid gap-2">
                             <Label>Radius (km)</Label>
                             <div className="flex items-center gap-2">
                                 <Slider
@@ -342,41 +354,76 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                 <span className="text-sm font-medium w-16 text-right">{radius[0] === 100 ? 'सर्व' : `${radius[0]} km`}</span>
                             </div>
                         </div>
-
-                        <div className="grid gap-2">
-                            <Label>सर्वेक्षण तारीख</Label>
-                             <Popover>
-                                <PopoverTrigger asChild>
-                                <Button
-                                    variant={"outline"}
-                                    className="w-full justify-start text-left font-normal"
-                                >
-                                    {date?.from ? (
-                                    date.to ? (
-                                        <>
-                                        {format(date.from, "LLL dd, y")} -{" "}
-                                        {format(date.to, "LLL dd, y")}
-                                        </>
-                                    ) : (
-                                        format(date.from, "LLL dd, y")
-                                    )
-                                    ) : (
-                                    <span>एक तारीख निवडा</span>
-                                    )}
-                                </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                    mode="range"
-                                    defaultMonth={date?.from}
-                                    selected={date}
-                                    onSelect={setDate}
-                                    numberOfMonths={2}
-                                />
-                                </PopoverContent>
-                            </Popover>
-                        </div>
                         
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="grid gap-2">
+                                <Label>सर्वेक्षण तारीख</Label>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className="w-full justify-start text-left font-normal"
+                                    >
+                                        {surveyDate?.from ? (
+                                        surveyDate.to ? (
+                                            <>
+                                            {format(surveyDate.from, "LLL dd, y")} -{" "}
+                                            {format(surveyDate.to, "LLL dd, y")}
+                                            </>
+                                        ) : (
+                                            format(surveyDate.from, "LLL dd, y")
+                                        )
+                                        ) : (
+                                        <span>एक तारीख निवडा</span>
+                                        )}
+                                    </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="range"
+                                        defaultMonth={surveyDate?.from}
+                                        selected={surveyDate}
+                                        onSelect={setSurveyDate}
+                                        numberOfMonths={1}
+                                    />
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+                             <div className="grid gap-2">
+                                <Label>तोडणी तारीख</Label>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className="w-full justify-start text-left font-normal"
+                                    >
+                                        {cuttingDate?.from ? (
+                                        cuttingDate.to ? (
+                                            <>
+                                            {format(cuttingDate.from, "LLL dd, y")} -{" "}
+                                            {format(cuttingDate.to, "LLL dd, y")}
+                                            </>
+                                        ) : (
+                                            format(cuttingDate.from, "LLL dd, y")
+                                        )
+                                        ) : (
+                                        <span>एक तारीख निवडा</span>
+                                        )}
+                                    </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="range"
+                                        defaultMonth={cuttingDate?.from}
+                                        selected={cuttingDate}
+                                        onSelect={setCuttingDate}
+                                        numberOfMonths={1}
+                                    />
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+                        </div>
+
                         <div className="grid gap-2">
                             <Label>सर्वेक्षण स्थिती</Label>
                              <DropdownMenu>
@@ -480,11 +527,14 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
       gpsCoordinates: false, // Hide GPS column by default
+      tokenDate: false,
     })
   const [rowSelection, setRowSelection] = React.useState({})
 
   const dateRangeFilter: FilterFn<Survey> = (row, columnId, filterValue) => {
-    const date = new Date(row.getValue(columnId));
+    const dateValue = row.getValue(columnId) as string;
+    if (!dateValue || dateValue === '-') return false;
+    const date = new Date(dateValue);
     const [start, end] = filterValue as (Date | undefined)[];
     if (start && !end) return date >= start;
     if (!start && end) return date <= end;
@@ -581,7 +631,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                         let valueText: string | null = null;
                         if (filter.id === 'surveyStatus' && Array.isArray(filter.value)) {
                             valueText = (filter.value as string[]).map(v => statusOptions.find(o => o.value === v)?.label || v).join(', ');
-                        } else if (filter.id === 'surveyDate' && Array.isArray(filter.value)) {
+                        } else if ((filter.id === 'surveyDate' || filter.id === 'tokenDate') && Array.isArray(filter.value)) {
                            const [start, end] = filter.value as (Date | undefined)[];
                            if(start && end) valueText = `${format(start, 'dd/MM/yy')} - ${format(end, 'dd/MM/yy')}`;
                            else if (start) valueText = `from ${format(start, 'dd/MM/yy')}`;
@@ -807,6 +857,8 @@ export default function DashboardPage() {
     </div>
   )
 }
+
+    
 
     
 

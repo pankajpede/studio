@@ -208,8 +208,9 @@ export default function FarmerDetailPage() {
       identification: {
           electionId: "ABC1234567",
           pan: "ABCDE1234F",
-          rationCard: "1234567890",
+          drivingLicense: "MH1420110012345",
           farmerRegId: "FARMER-LATUR-123",
+          nameAsPerPassbook: "रमेश सुरेश कुलकर्णी",
           bankAccount: "XXXX-XXXX-XX-12345",
           ifsc: "SBIN0000123",
       },
@@ -301,7 +302,9 @@ export default function FarmerDetailPage() {
             <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <DocumentDetailItem label="निवडणूक ओळखपत्र" value={maskDocument(farmerData.identification.electionId)} imageUrl="https://placehold.co/600x400.png" />
                 <DocumentDetailItem label="पॅन कार्ड" value={maskDocument(farmerData.identification.pan)} imageUrl="https://placehold.co/600x400.png" />
+                <DocumentDetailItem label="ड्रायविंग लायसन्स" value={maskDocument(farmerData.identification.drivingLicense)} imageUrl="https://placehold.co/600x400.png" />
                 <DetailItem label="शेतकरी नोंदणी आयडी" value={farmerData.identification.farmerRegId} />
+                <DetailItem label="पासबुक वरील नाव" value={farmerData.identification.nameAsPerPassbook} />
                 <DetailItem label="बँक खाते क्रमांक" value={farmerData.identification.bankAccount} />
                 <DetailItem label="IFSC कोड" value={farmerData.identification.ifsc} />
             </CardContent>
@@ -460,5 +463,7 @@ export default function FarmerDetailPage() {
     </div>
   );
 }
+
+    
 
     

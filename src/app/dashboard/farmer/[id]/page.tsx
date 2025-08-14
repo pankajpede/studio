@@ -202,10 +202,13 @@ export default function FarmerDetailPage() {
           gatePassEntryDate: surveyData.gatePassEntryDate,
       },
       media: {
-          voiceNotes: selectedSurveyForMedia.voiceNoteUploaded === 'होय' ? [
-              { name: `सर्वेक्षण ${selectedSurveyForMedia.surveyId}`, file: "voice_note_survey_1.mp3", src: silentAudio },
-              { name: "तोडणीदरम्यान", file: "voice_note_cutting.mp3", src: silentAudio },
-          ] : [],
+          voiceNotes: allSurveys
+            .filter(survey => survey.voiceNoteUploaded === 'होय')
+            .map(survey => ({
+                name: `सर्वेक्षण ${survey.surveyId}`,
+                file: `voice_note_${survey.surveyId}.mp3`,
+                src: silentAudio
+            })),
           photos: selectedSurveyForMedia.photoCount > 0 ? [
             { category: "शेताचे फोटो", url: `https://placehold.co/400x300.png`, hint: "sugarcane farm" },
             { category: "उसाची जात", url: `https://placehold.co/400x300.png`, hint: "sugarcane plant" },
@@ -363,7 +366,7 @@ export default function FarmerDetailPage() {
                         <ImageIcon className="w-8 h-8 text-primary" />
                         <div className='flex-grow'>
                             <CardTitle className="font-headline">मीडिया</CardTitle>
-                            <CardDescription>सर्वेक्षण मीडिया पहा.</CardDescription>
+                            <CardDescription>सर्वेक्षण मीडिया ({selectedSurveyForMedia.surveyDate}) पहा.</CardDescription>
                         </div>
                         <Select onValueChange={handleMediaSurveyChange} value={selectedSurveyForMedia.surveyId}>
                             <SelectTrigger className="w-[180px]">
@@ -418,7 +421,7 @@ export default function FarmerDetailPage() {
                             ))}
                         </TooltipProvider>
                      ) : (
-                        <p className="text-sm text-muted-foreground text-center">या सर्वेक्षणासाठी व्हॉइस नोट्स नाहीत.</p>
+                        <p className="text-sm text-muted-foreground text-center">या शेतकऱ्यासाठी व्हॉइस नोट्स नाहीत.</p>
                      )}
                 </CardContent>
             </Card>
@@ -427,5 +430,3 @@ export default function FarmerDetailPage() {
     </div>
   );
 }
-
-    

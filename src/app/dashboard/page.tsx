@@ -512,17 +512,17 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
   
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="font-headline">सर्वेक्षण</CardTitle>
-        <CardDescription>
-          प्रणालीतील सर्व शेत सर्वेक्षणांची विस्तृत यादी.
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+            <CardTitle className="font-headline">सर्वेक्षण</CardTitle>
+            <CardDescription>
+            प्रणालीतील सर्व शेत सर्वेक्षणांची विस्तृत यादी.
+            </CardDescription>
+        </div>
+        <AdvancedFilters table={table} data={data} />
       </CardHeader>
       <CardContent>
         <div className="w-full">
-            <div className="flex items-center gap-2 py-4">
-                 <AdvancedFilters table={table} data={data} />
-            </div>
              {activeFilters.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 pb-4">
                     <p className="text-sm text-muted-foreground">सक्रिय फिल्टर:</p>
@@ -754,3 +754,4 @@ export default function DashboardPage() {
   )
 }
 
+    

@@ -399,7 +399,6 @@ export default function FarmerDetailPage() {
                         <ImageIcon className="w-8 h-8 text-primary" />
                         <div className='flex-grow'>
                             <CardTitle className="font-headline">मीडिया</CardTitle>
-                            <CardDescription>सर्वेक्षण मीडिया ({selectedSurveyForMedia.surveyDate}) पहा.</CardDescription>
                         </div>
                         <Select onValueChange={handleMediaSurveyChange} value={selectedSurveyForMedia.surveyId}>
                             <SelectTrigger className="w-[180px]">

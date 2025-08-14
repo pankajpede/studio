@@ -27,6 +27,7 @@ import SurveyMap from '@/components/survey-map';
 import type { Survey } from '../../page';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
 // Mock data generation - in a real app, this would come from your backend/DB
 const generateSurveyData = (count: number): Survey[] => {
@@ -93,6 +94,7 @@ export default function FarmerDetailPage() {
   const params = useParams();
   const { id } = params;
   const [surveyData, setSurveyData] = React.useState<Survey | undefined>(undefined);
+  const [selectedSurveyForMedia, setSelectedSurveyForMedia] = React.useState<Survey | undefined>(undefined);
   const [allSurveys, setAllSurveys] = React.useState<Survey[]>([]);
   const [playingAudio, setPlayingAudio] = React.useState<string | null>(null);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
@@ -104,7 +106,13 @@ export default function FarmerDetailPage() {
     setAllSurveys(generatedSurveys);
     const currentSurvey = generatedSurveys.find(s => s.surveyId === id);
     setSurveyData(currentSurvey);
+    setSelectedSurveyForMedia(currentSurvey);
   }, [id]);
+
+  const handleMediaSurveyChange = (surveyId: string) => {
+    const newSelectedSurvey = allSurveys.find(s => s.surveyId === surveyId);
+    setSelectedSurveyForMedia(newSelectedSurvey);
+  };
 
   const handlePlayPause = (audioSrc: string, noteName: string) => {
     if (playingAudio === noteName) {
@@ -131,7 +139,7 @@ export default function FarmerDetailPage() {
   }, [])
 
 
-  if (!surveyData) {
+  if (!surveyData || !selectedSurveyForMedia) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center p-4">
         <FileText className="w-16 h-16 text-muted-foreground mb-4" />
@@ -194,16 +202,16 @@ export default function FarmerDetailPage() {
           gatePassEntryDate: surveyData.gatePassEntryDate,
       },
       media: {
-          voiceNotes: [
-              { name: "सर्वेक्षणादरम्यान १", file: "voice_note_survey_1.mp3", src: silentAudio },
+          voiceNotes: selectedSurveyForMedia.voiceNoteUploaded === 'होय' ? [
+              { name: `सर्वेक्षण ${selectedSurveyForMedia.surveyId}`, file: "voice_note_survey_1.mp3", src: silentAudio },
               { name: "तोडणीदरम्यान", file: "voice_note_cutting.mp3", src: silentAudio },
-          ],
-          photos: [
+          ] : [],
+          photos: selectedSurveyForMedia.photoCount > 0 ? [
             { category: "शेताचे फोटो", url: `https://placehold.co/400x300.png`, hint: "sugarcane farm" },
             { category: "उसाची जात", url: `https://placehold.co/400x300.png`, hint: "sugarcane plant" },
             { category: "तोडणी टोकन", url: `https://placehold.co/400x300.png`, hint: "document paper" },
             { category: "तोडणी चालू", url: `https://placehold.co/400x300.png`, hint: "farm harvest" },
-          ]
+          ] : []
       }
   }
   const statusTranslations: Record<string, string> = {
@@ -350,46 +358,68 @@ export default function FarmerDetailPage() {
                 </CardContent>
             </Card>
              <Card>
-                <CardHeader className="flex flex-row items-center gap-4">
-                    <ImageIcon className="w-8 h-8 text-primary" />
-                    <div>
-                        <CardTitle className="font-headline">मीडिया</CardTitle>
-                        <CardDescription>सर्वेक्षण {surveyData.surveyDate} रोजी अपलोड केलेले.</CardDescription>
+                <CardHeader>
+                    <div className='flex flex-row items-center gap-4 w-full'>
+                        <ImageIcon className="w-8 h-8 text-primary" />
+                        <div className='flex-grow'>
+                            <CardTitle className="font-headline">मीडिया</CardTitle>
+                            <CardDescription>सर्वेक्षण मीडिया पहा.</CardDescription>
+                        </div>
+                        <Select onValueChange={handleMediaSurveyChange} value={selectedSurveyForMedia.surveyId}>
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="सर्वेक्षण निवडा" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {allSurveys.map(s => (
+                                    <SelectItem key={s.surveyId} value={s.surveyId}>
+                                        {s.surveyDate}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                     <h4 className="font-semibold text-sm">फोटो</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                        {farmerData.media.photos.map((photo, i) => (
-                             <div key={i} className="flex flex-col gap-2">
-                                <Image src={photo.url} data-ai-hint={photo.hint} alt={photo.category} width={200} height={150} className="rounded-md object-cover w-full aspect-video" />
-                                <p className="text-xs text-center text-muted-foreground">{photo.category}</p>
-                             </div>
-                        ))}
-                    </div>
+                    {farmerData.media.photos.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-4">
+                            {farmerData.media.photos.map((photo, i) => (
+                                <div key={i} className="flex flex-col gap-2">
+                                    <Image src={photo.url} data-ai-hint={photo.hint} alt={photo.category} width={200} height={150} className="rounded-md object-cover w-full aspect-video" />
+                                    <p className="text-xs text-center text-muted-foreground">{photo.category}</p>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-sm text-muted-foreground text-center">या सर्वेक्षणासाठी फोटो नाहीत.</p>
+                    )}
                     <Separator />
                     <h4 className="font-semibold text-sm">व्हॉइस नोट्स</h4>
-                     <TooltipProvider>
-                     {farmerData.media.voiceNotes.map((note, i) => (
-                        <div key={i} className="flex items-center gap-2 p-2 rounded-md border bg-muted/50">
-                            <Mic className="text-primary" />
-                            <div className="flex flex-col">
-                                <span className="text-sm font-medium">{note.file}</span>
-                                <span className="text-xs text-muted-foreground">{note.name}</span>
-                            </div>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button size="icon" variant="ghost" className="ml-auto h-8 w-8" onClick={() => handlePlayPause(note.src, note.name)}>
-                                        {playingAudio === note.name ? <Pause /> : <Play />}
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>{playingAudio === note.name ? 'विराम' : 'प्ले'}</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </div>
-                    ))}
-                    </TooltipProvider>
+                     {farmerData.media.voiceNotes.length > 0 ? (
+                        <TooltipProvider>
+                            {farmerData.media.voiceNotes.map((note, i) => (
+                                <div key={i} className="flex items-center gap-2 p-2 rounded-md border bg-muted/50">
+                                    <Mic className="text-primary" />
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-medium">{note.file}</span>
+                                        <span className="text-xs text-muted-foreground">{note.name}</span>
+                                    </div>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button size="icon" variant="ghost" className="ml-auto h-8 w-8" onClick={() => handlePlayPause(note.src, note.name)}>
+                                                {playingAudio === note.name ? <Pause /> : <Play />}
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>{playingAudio === note.name ? 'विराम' : 'प्ले'}</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                            ))}
+                        </TooltipProvider>
+                     ) : (
+                        <p className="text-sm text-muted-foreground text-center">या सर्वेक्षणासाठी व्हॉइस नोट्स नाहीत.</p>
+                     )}
                 </CardContent>
             </Card>
         </div>
@@ -397,8 +427,5 @@ export default function FarmerDetailPage() {
     </div>
   );
 }
-
-
-    
 
     

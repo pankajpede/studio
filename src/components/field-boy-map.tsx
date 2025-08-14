@@ -6,9 +6,6 @@ import { GoogleMap, useJsApiLoader, Marker, Polyline } from '@react-google-maps/
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertTitle, AlertDescription } from './ui/alert';
-import getConfig from 'next/config';
-
-const { publicRuntimeConfig } = getConfig();
 
 const containerStyle = {
   width: '100%',
@@ -78,7 +75,7 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation }: FieldBoy
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: publicRuntimeConfig.googleMapsApiKey
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
   });
 
   if (loadError) {

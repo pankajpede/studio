@@ -55,6 +55,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { DateRange } from "react-day-picker"
 import { format } from "date-fns"
+import { Slider } from "@/components/ui/slider"
 
 const generateSurveyData = (count: number): Survey[] => {
   const data: Survey[] = [];
@@ -88,7 +89,7 @@ const generateSurveyData = (count: number): Survey[] => {
       gatGroupNumber: `GAT-${String(123 + i)}`,
       surveyNumber: `SN-${String(456 + i)}`,
       areaAcre: Number((Math.random() * 5 + 1).toFixed(1)),
-      gpsCoordinates: `${(18.40 + Math.random() * 0.1).toFixed(4)}, ${(76.57 + Math.random() * 0.1).toFixed(4)}`,
+      gpsCoordinates: `${(18.4088 + (Math.random() - 0.5) * 0.5).toFixed(4)}, ${(76.5702 + (Math.random() - 0.5) * 0.5).toFixed(4)}`,
       caneType: ["अडसाली", "पूर्व-हंगामी", "सुरू"][i % 3],
       caneVariety: ["को-86032", "कोएम-0265", "एमएस-10001"][i % 3],
       cropCondition: ["चांगली", "मध्यम", "खराब"][i % 3],
@@ -228,6 +229,11 @@ export const columns: ColumnDef<Survey>[] = [
     accessorKey: "areaAcre",
     header: "क्षेत्र (एकर)",
   },
+   {
+    accessorKey: "gpsCoordinates",
+    header: "GPS",
+    enableColumnFilter: true,
+  },
   {
     id: "actions",
     enableHiding: false,
@@ -268,6 +274,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
     const [date, setDate] = React.useState<DateRange | undefined>()
     const [minArea, setMinArea] = React.useState<string>("")
     const [maxArea, setMaxArea] = React.useState<string>("")
+    const [radius, setRadius] = React.useState([50]);
     
     const uniqueTalukas = React.useMemo(() => Array.from(new Set(data.map(s => s.taluka))), [data]);
     const uniqueSurveyors = React.useMemo(() => {
@@ -288,6 +295,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
         table.getColumn("taluka")?.setFilterValue(taluka === "all" ? "" : taluka);
         table.getColumn("surveyDate")?.setFilterValue(date ? [date.from, date.to] : undefined);
         table.getColumn("areaAcre")?.setFilterValue([minArea, maxArea]);
+        table.getColumn("gpsCoordinates")?.setFilterValue(radius[0] < 100 ? radius[0] : undefined);
     }
 
     const handleClear = () => {
@@ -297,6 +305,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
         setDate(undefined);
         setMinArea("");
         setMaxArea("");
+        setRadius([100]);
         table.resetColumnFilters();
     }
     
@@ -439,6 +448,19 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                 <Input type="number" placeholder="कमाल" value={maxArea} onChange={e => setMaxArea(e.target.value)} />
                             </div>
                         </div>
+
+                         <div className="grid gap-2">
+                            <Label>Radius (km)</Label>
+                            <div className="flex items-center gap-2">
+                                <Slider
+                                    value={radius}
+                                    onValueChange={setRadius}
+                                    max={100}
+                                    step={1}
+                                />
+                                <span className="text-sm font-medium w-16 text-right">{radius[0] === 100 ? 'सर्व' : `${radius[0]} km`}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <SheetFooter>
@@ -456,7 +478,9 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
     []
   )
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+    React.useState<VisibilityState>({
+      gpsCoordinates: false, // Hide GPS column by default
+    })
   const [rowSelection, setRowSelection] = React.useState({})
 
   const dateRangeFilter: FilterFn<Survey> = (row, columnId, filterValue) => {
@@ -479,6 +503,32 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
     return true;
   };
 
+  const factoryLocation = { lat: 18.4088, lng: 76.5702 }; // Latur, as an example
+
+  const haversineDistance = (coords1: {lat: number, lng: number}, coords2: {lat: number, lng: number}) => {
+      const toRad = (x: number) => x * Math.PI / 180;
+      const R = 6371; // Earth radius in km
+
+      const dLat = toRad(coords2.lat - coords1.lat);
+      const dLon = toRad(coords2.lng - coords1.lng);
+      const lat1 = toRad(coords1.lat);
+      const lat2 = toRad(coords2.lat);
+
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+  };
+
+  const radiusFilter: FilterFn<Survey> = (row, columnId, filterValue: number) => {
+      if (filterValue === undefined || filterValue === null) return true;
+      const [lat, lng] = (row.getValue(columnId) as string).split(',').map(Number);
+      if (isNaN(lat) || isNaN(lng)) return false;
+
+      const farmLocation = { lat, lng };
+      const distance = haversineDistance(factoryLocation, farmLocation);
+      return distance <= filterValue;
+  };
 
   const table = useReactTable({
     data,
@@ -494,6 +544,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
     filterFns: {
         dateRange: dateRangeFilter,
         areaRange: areaRangeFilter,
+        radius: radiusFilter,
     },
     state: {
       sorting,
@@ -540,7 +591,10 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                             if(min && max) valueText = `${min}-${max} एकर`;
                             else if (min) valueText = `>= ${min} एकर`;
                             else if (max) valueText = `<= ${max} एकर`;
-                        } else if (typeof filter.value === 'string') {
+                        } else if (filter.id === 'gpsCoordinates' && typeof filter.value === 'number') {
+                           valueText = `<= ${filter.value} km`;
+                        }
+                         else if (typeof filter.value === 'string') {
                             valueText = filter.value
                         }
 

@@ -20,6 +20,10 @@ export default function FieldBoyLayout({
 
   const getHeading = () => {
     const segments = pathname.split('/').filter(Boolean); // e.g. ['field-boy', 'dashboard', 'survey', 'SUR001']
+
+    if (pathname === '/field-boy/dashboard') {
+        return 'Sai Sugar';
+    }
     if (segments.includes('new')) {
       return 'New Survey';
     }
@@ -28,9 +32,6 @@ export default function FieldBoyLayout({
     }
      if (segments.length > 1 && segments[1] === 'profile') {
       return 'Profile';
-    }
-    if (segments.length > 1 && segments[1] === 'dashboard') {
-      return 'Survey';
     }
     if (segments.length > 1) {
       return capitalize(segments[1]);

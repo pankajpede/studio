@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ArrowLeft, Edit, FileText, Image as ImageIcon, Map, Mic, Share2, User, Landmark, Fingerprint, Tractor, Droplets, BookUser, Wheat, Percent, Receipt, Truck, Play, Pause, Eye } from 'lucide-react';
+import { ArrowLeft, Edit, FileText, Image as ImageIcon, Map, Mic, Share2, User, Landmark, Fingerprint, Tractor, Droplets, BookUser, Wheat, Percent, Receipt, Truck, Play, Pause, Eye, Ticket } from 'lucide-react';
 import Image from 'next/image';
 import SurveyMap from '@/components/survey-map';
 import type { Survey } from '../../page';
@@ -125,6 +125,7 @@ export default function FarmerDetailPage() {
   const [allSurveys, setAllSurveys] = React.useState<Survey[]>([]);
   const [playingAudio, setPlayingAudio] = React.useState<string | null>(null);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  const [showTokenDetails, setShowTokenDetails] = React.useState(false);
 
 
   // In a real app, you would fetch this data from Firestore based on the farmer/survey ID
@@ -139,6 +140,10 @@ export default function FarmerDetailPage() {
   const handleMediaSurveyChange = (surveyId: string) => {
     const newSelectedSurvey = allSurveys.find(s => s.surveyId === surveyId);
     setSelectedSurveyForMedia(newSelectedSurvey);
+  };
+  
+   const handleGenerateToken = () => {
+    setShowTokenDetails(true);
   };
 
   const handlePlayPause = (audioSrc: string, noteName: string) => {
@@ -375,24 +380,7 @@ export default function FarmerDetailPage() {
                     </div>
                 </CardContent>
             </Card>
-
-            <Card>
-                <CardHeader className="flex flex-row items-center gap-4">
-                    <Receipt className="w-8 h-8 text-primary" />
-                    <div>
-                        <CardTitle className="font-headline">तोडणी टोकन आणि गेट पास</CardTitle>
-                        <CardDescription>कापणी आणि वितरण माहिती.</CardDescription>
-                    </div>
-                </CardHeader>
-                <CardContent className="grid grid-cols-2 gap-4">
-                    <DetailItem label="टोकन नंबर" value={farmerData.cuttingToken.tokenNumber} />
-                    <DetailItem label="टोकन तारीख" value={farmerData.cuttingToken.tokenDate} />
-                    <DetailItem label="मंजूर करणारा" value={farmerData.cuttingToken.approvedBy} />
-                    <DetailItem label="प्राप्त टनेज" value={farmerData.cuttingToken.tonnageReceived} />
-                    <DetailItem label="तोडणी फोटो" value={farmerData.cuttingToken.cuttingPhotoUploaded} />
-                    <DetailItem label="गेट पास तारीख" value={farmerData.cuttingToken.gatePassEntryDate} />
-                </CardContent>
-            </Card>
+            
              <Card>
                 <CardHeader>
                     <div className='flex flex-row items-center gap-4 w-full'>
@@ -457,12 +445,37 @@ export default function FarmerDetailPage() {
                      )}
                 </CardContent>
             </Card>
+
+            <Card>
+                <CardHeader className="flex flex-row items-center gap-4">
+                    <Receipt className="w-8 h-8 text-primary" />
+                    <div>
+                        <CardTitle className="font-headline">तोडणी टोकन आणि गेट पास</CardTitle>
+                        <CardDescription>कापणी आणि वितरण माहिती.</CardDescription>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                {showTokenDetails ? (
+                    <div className="grid grid-cols-2 gap-4">
+                        <DetailItem label="टोकन नंबर" value={farmerData.cuttingToken.tokenNumber} />
+                        <DetailItem label="टोकन तारीख" value={farmerData.cuttingToken.tokenDate} />
+                        <DetailItem label="मंजूर करणारा" value={farmerData.cuttingToken.approvedBy} />
+                        <DetailItem label="प्राप्त टनेज" value={farmerData.cuttingToken.tonnageReceived} />
+                        <DetailItem label="तोडणी फोटो" value={farmerData.cuttingToken.cuttingPhotoUploaded} />
+                        <DetailItem label="गेट पास तारीख" value={farmerData.cuttingToken.gatePassEntryDate} />
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center p-4">
+                        <Button onClick={handleGenerateToken}>
+                            <Ticket className="mr-2" />
+                            टोकन तयार करा
+                        </Button>
+                    </div>
+                )}
+                </CardContent>
+            </Card>
         </div>
       </div>
     </div>
   );
 }
-
-    
-
-    

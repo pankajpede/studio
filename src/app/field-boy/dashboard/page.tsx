@@ -30,13 +30,18 @@ type Survey = {
 }
 
 const mockSurveys: Survey[] = [
-  { id: "SUR001", day: "30", month: "June", farmerName: "Sachin Kulkarni", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ahmedpur", village: "Mohgaon", status: "Pending" },
-  { id: "SUR002", day: "29", month: "June", farmerName: "Vishal More", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ahmedpur", village: "Mohgaon", status: "Approved" },
-  { id: "SUR003", day: "28", month: "June", farmerName: "Ajay Patil", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ahmedpur", village: "Mohgaon", status: "Rejected" },
-  { id: "SUR004", day: "27", month: "June", farmerName: "Sunita More", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Latur", village: "Kasarwadi", status: "Pending" },
-  { id: "SUR005", day: "26", month: "June", farmerName: "Kavita Deshmukh", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ausa", village: "Lamjana", status: "Approved" },
+  { id: "SUR001", day: "३०", month: "जून", farmerName: "सचिन कुलकर्णी", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "अहमदपूर", village: "मोहगाव", status: "Pending" },
+  { id: "SUR002", day: "२९", month: "जून", farmerName: "विशाल मोरे", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "अहमदपूर", village: "मोहगाव", status: "Approved" },
+  { id: "SUR003", day: "२८", month: "जून", farmerName: "अजय पाटील", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected" },
+  { id: "SUR004", day: "२७", month: "जून", farmerName: "सुनीता मोरे", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "लातूर", village: "कासारवाडी", status: "Pending" },
+  { id: "SUR005", day: "२६", month: "जून", farmerName: "कविता देशमुख", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "औसा", village: "लामजना", status: "Approved" },
 ]
 
+const statusTranslations: Record<SurveyStatus, string> = {
+    "Pending": "प्रलंबित",
+    "Approved": "रांगेत",
+    "Rejected": "नाकारलेले",
+}
 
 const statusStyles: Record<SurveyStatus, string> = {
     "Pending": "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -78,7 +83,7 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                      statusStyles[survey.status]
                 )}>
                      <span className={cn("text-xs font-semibold uppercase tracking-wider", statusTextStyles[survey.status])}>
-                        {survey.status === 'Approved' ? 'Queued' : survey.status}
+                        {statusTranslations[survey.status]}
                     </span>
                 </div>
             </div>
@@ -106,7 +111,7 @@ export default function FieldBoyDashboard() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
                 type="search"
-                placeholder="Search..."
+                placeholder="शोधा..."
                 className="w-full rounded-lg bg-background pl-8 h-9"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -114,13 +119,13 @@ export default function FieldBoyDashboard() {
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-auto h-9">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder="स्थिती" />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="approved">Queued</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
+                <SelectItem value="all">सर्व</SelectItem>
+                <SelectItem value="pending">प्रलंबित</SelectItem>
+                <SelectItem value="approved">रांगेत</SelectItem>
+                <SelectItem value="rejected">नाकारलेले</SelectItem>
             </SelectContent>
             </Select>
         </div>
@@ -133,7 +138,7 @@ export default function FieldBoyDashboard() {
             ))
             ) : (
             <div className="flex-grow flex items-center justify-center">
-                <p className="text-muted-foreground">No surveys found.</p>
+                <p className="text-muted-foreground">सर्वेक्षण आढळले नाहीत.</p>
             </div>
             )}
         </div>
@@ -143,7 +148,7 @@ export default function FieldBoyDashboard() {
             <Button asChild className="h-16 w-auto px-6 rounded-full shadow-lg text-lg bg-primary hover:bg-primary/90">
             <Link href="/field-boy/dashboard/new">
                 <Plus className="mr-2 h-6 w-6" />
-                Survey
+                सर्वेक्षण
             </Link>
             </Button>
         </div>

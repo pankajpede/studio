@@ -64,100 +64,100 @@ export default function NewFieldSurveyPage() {
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle className="font-headline text-xl">New Farm Survey</CardTitle>
-        <CardDescription>Fill out the details for the new survey across the tabs.</CardDescription>
+        <CardTitle className="font-headline text-xl">नवीन शेत सर्वेक्षण</CardTitle>
+        <CardDescription>नवीन सर्वेक्षणासाठी टॅबमध्ये तपशील भरा.</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="farmer-selection">Farmer</TabsTrigger>
-            <TabsTrigger value="farmer-info">Info</TabsTrigger>
-            <TabsTrigger value="farm-info">Farm</TabsTrigger>
-            <TabsTrigger value="map">Map</TabsTrigger>
+            <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
+            <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
+            <TabsTrigger value="farm-info">शेत</TabsTrigger>
+            <TabsTrigger value="map">नकाशा</TabsTrigger>
           </TabsList>
           
           <TabsContent value="farmer-selection" className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="state">State</Label>
+                    <Label htmlFor="state">राज्य</Label>
                     <Select onValueChange={setSelectedState} value={selectedState}>
-                        <SelectTrigger id="state"><SelectValue placeholder="Select state..." /></SelectTrigger>
+                        <SelectTrigger id="state"><SelectValue placeholder="राज्य निवडा..." /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="maharashtra">Maharashtra</SelectItem>
+                            <SelectItem value="maharashtra">महाराष्ट्र</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="district">District</Label>
+                    <Label htmlFor="district">जिल्हा</Label>
                     <Select onValueChange={setDistrict} value={district} disabled={!selectedState}>
-                        <SelectTrigger id="district"><SelectValue placeholder={!selectedState ? "Select state first" : "Select district..."} /></SelectTrigger>
+                        <SelectTrigger id="district"><SelectValue placeholder={!selectedState ? "प्रथम राज्य निवडा" : "जिल्हा निवडा..."} /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="latur">Latur</SelectItem>
+                            <SelectItem value="latur">लातूर</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="region">Region</Label>
+                    <Label htmlFor="region">परिसर</Label>
                     <Select onValueChange={setRegion} value={region} disabled={!district}>
-                        <SelectTrigger id="region"><SelectValue placeholder={!district ? "Select district first" : "Select region..."} /></SelectTrigger>
+                        <SelectTrigger id="region"><SelectValue placeholder={!district ? "प्रथम जिल्हा निवडा" : "परिसर निवडा..."} /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="latur-east">Latur East</SelectItem>
-                             <SelectItem value="latur-west">Latur West</SelectItem>
+                            <SelectItem value="latur-east">लातूर पूर्व</SelectItem>
+                             <SelectItem value="latur-west">लातूर पश्चिम</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="taluka">Taluka</Label>
+                    <Label htmlFor="taluka">तालुका</Label>
                     <Select onValueChange={setTaluka} value={taluka} disabled={!region}>
-                        <SelectTrigger id="taluka"><SelectValue placeholder={!region ? "Select region first" : "Select taluka..."} /></SelectTrigger>
+                        <SelectTrigger id="taluka"><SelectValue placeholder={!region ? "प्रथम परिसर निवडा" : "तालुका निवडा..."} /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="ahmedpur">Ahmedpur</SelectItem>
-                            <SelectItem value="ausa">Ausa</SelectItem>
-                            <SelectItem value="latur">Latur</SelectItem>
+                            <SelectItem value="ahmedpur">अहमदपूर</SelectItem>
+                            <SelectItem value="ausa">औसा</SelectItem>
+                            <SelectItem value="latur">लातूर</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="village">Village</Label>
+                    <Label htmlFor="village">गाव</Label>
                     <Select onValueChange={setVillage} value={village} disabled={!taluka}>
-                        <SelectTrigger id="village"><SelectValue placeholder={!taluka ? "Select taluka first" : "Select village..."} /></SelectTrigger>
+                        <SelectTrigger id="village"><SelectValue placeholder={!taluka ? "प्रथम तालुका निवडा" : "गाव निवडा..."} /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="mohgaon">Mohgaon</SelectItem>
-                            <SelectItem value="chakur">Chakur</SelectItem>
+                            <SelectItem value="mohgaon">मोहगाव</SelectItem>
+                            <SelectItem value="chakur">चाकूर</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="survey-no">Survey No.</Label>
+                    <Label htmlFor="survey-no">सर्वेक्षण क्र.</Label>
                     <Input 
                         id="survey-no" 
-                        placeholder={!village ? "Select village first" : "Enter survey number"}
+                        placeholder={!village ? "प्रथम गाव निवडा" : "सर्वेक्षण क्रमांक टाका"}
                         value={surveyNo}
                         onChange={(e) => setSurveyNo(e.target.value)}
                         disabled={!village}
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="gat-no">Gat No.</Label>
+                    <Label htmlFor="gat-no">गट क्र.</Label>
                      <Select onValueChange={setGatNo} value={gatNo} disabled={!surveyNo}>
-                        <SelectTrigger id="gat-no"><SelectValue placeholder={!surveyNo ? "Enter survey no. first" : "Select gat number"} /></SelectTrigger>
+                        <SelectTrigger id="gat-no"><SelectValue placeholder={!surveyNo ? "प्रथम सर्वेक्षण क्र. टाका" : "गट क्रमांक निवडा"} /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="1">1</SelectItem>
-                            <SelectItem value="2">2</SelectItem>
-                            <SelectItem value="3">3</SelectItem>
-                            <SelectItem value="4">4</SelectItem>
+                            <SelectItem value="1">१</SelectItem>
+                            <SelectItem value="2">२</SelectItem>
+                            <SelectItem value="3">३</SelectItem>
+                            <SelectItem value="4">४</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                  <div className="grid gap-2 md:col-span-2">
-                    <Label htmlFor="farmer-selection">Farmer Selection</Label>
+                    <Label htmlFor="farmer-selection">शेतकरी निवड</Label>
                     <Select onValueChange={setFarmer} value={farmer} disabled={!gatNo}>
                         <SelectTrigger id="farmer-selection">
-                            <SelectValue placeholder={!gatNo ? "Select gat no. first" : "Select farmer..."} />
+                            <SelectValue placeholder={!gatNo ? "प्रथम गट क्र. निवडा" : "शेतकरी निवडा..."} />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="farmer-1">Ramesh Kulkarni</SelectItem>
-                            <SelectItem value="farmer-2">Suresh Patil</SelectItem>
+                            <SelectItem value="farmer-1">रमेश कुलकर्णी</SelectItem>
+                            <SelectItem value="farmer-2">सुरेश पाटील</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -167,28 +167,28 @@ export default function NewFieldSurveyPage() {
           <TabsContent value="farmer-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="farmer-name">Farmer Name</Label>
-                    <Input id="farmer-name" placeholder="Enter farmer's name" />
+                    <Label htmlFor="farmer-name">शेतकऱ्याचे नाव</Label>
+                    <Input id="farmer-name" placeholder="शेतकऱ्याचे नाव टाका" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="mobile">Mobile Number</Label>
-                    <Input id="mobile" type="tel" placeholder="Enter mobile number" />
+                    <Label htmlFor="mobile">मोबाइल नंबर</Label>
+                    <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="voter-id">Voter ID</Label>
-                    <Input id="voter-id" placeholder="Enter Voter ID" />
+                    <Label htmlFor="voter-id">मतदार ओळखपत्र</Label>
+                    <Input id="voter-id" placeholder="मतदार ओळखपत्र टाका" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="pan">PAN Card</Label>
-                    <Input id="pan" placeholder="Enter PAN number" />
+                    <Label htmlFor="pan">पॅन कार्ड</Label>
+                    <Input id="pan" placeholder="पॅन नंबर टाका" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="bank-name">Bank Name</Label>
-                    <Input id="bank-name" placeholder="Enter bank name" />
+                    <Label htmlFor="bank-name">बँकेचे नाव</Label>
+                    <Input id="bank-name" placeholder="बँकेचे नाव टाका" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="account-number">Account Number</Label>
-                    <Input id="account-number" placeholder="Enter bank account number" />
+                    <Label htmlFor="account-number">खाते क्रमांक</Label>
+                    <Input id="account-number" placeholder="बँक खाते क्रमांक टाका" />
                 </div>
             </div>
           </TabsContent>
@@ -196,37 +196,37 @@ export default function NewFieldSurveyPage() {
           <TabsContent value="farm-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="area">Area (in Acres)</Label>
-                    <Input id="area" type="number" placeholder="e.g., 2.5" />
+                    <Label htmlFor="area">क्षेत्र (एकरमध्ये)</Label>
+                    <Input id="area" type="number" placeholder="उदा. २.५" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="crop-type">Crop Type</Label>
+                    <Label htmlFor="crop-type">पिकाचा प्रकार</Label>
                     <Select>
-                        <SelectTrigger id="crop-type"><SelectValue placeholder="Select crop type" /></SelectTrigger>
+                        <SelectTrigger id="crop-type"><SelectValue placeholder="पिकाचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="plant">Plant</SelectItem>
-                            <SelectItem value="ratoon">Ratoon</SelectItem>
+                            <SelectItem value="plant">रोप</SelectItem>
+                            <SelectItem value="ratoon">खोडवा</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="soil-type">Soil Type</Label>
+                    <Label htmlFor="soil-type">मातीचा प्रकार</Label>
                      <Select>
-                        <SelectTrigger id="soil-type"><SelectValue placeholder="Select soil type" /></SelectTrigger>
+                        <SelectTrigger id="soil-type"><SelectValue placeholder="मातीचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="black-cotton">Black Cotton</SelectItem>
-                            <SelectItem value="red-loam">Red Loam</SelectItem>
+                            <SelectItem value="black-cotton">काळी कापूस</SelectItem>
+                            <SelectItem value="red-loam">लाल चिकणमाती</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="irrigation-type">Irrigation Type</Label>
+                    <Label htmlFor="irrigation-type">सिंचनाचा प्रकार</Label>
                     <Select>
-                        <SelectTrigger id="irrigation-type"><SelectValue placeholder="Select irrigation type" /></SelectTrigger>
+                        <SelectTrigger id="irrigation-type"><SelectValue placeholder="सिंचनाचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="drip">Drip</SelectItem>
-                            <SelectItem value="flood">Flood</SelectItem>
-                            <SelectItem value="canal">Canal</SelectItem>
+                            <SelectItem value="drip">ठिबक</SelectItem>
+                            <SelectItem value="flood">प्रवाही</SelectItem>
+                            <SelectItem value="canal">कालवा</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -236,11 +236,11 @@ export default function NewFieldSurveyPage() {
           <TabsContent value="map" className="pt-6">
             <div className="flex flex-col items-center gap-4">
                 <div className="w-full h-64 bg-muted rounded-lg flex items-center justify-center">
-                    <p className="text-muted-foreground">Map preview will be here</p>
+                    <p className="text-muted-foreground">नकाशा पूर्वावलोकन येथे असेल</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
-                    <Button variant="outline" className="w-full"><Pin className="mr-2" /> Draw Button</Button>
-                    <Button variant="outline" className="w-full"><Footprints className="mr-2" /> Walk Button</Button>
+                    <Button variant="outline" className="w-full"><Pin className="mr-2" /> ड्रॉ बटण</Button>
+                    <Button variant="outline" className="w-full"><Footprints className="mr-2" /> वॉक बटण</Button>
                 </div>
             </div>
           </TabsContent>
@@ -248,16 +248,14 @@ export default function NewFieldSurveyPage() {
       </CardContent>
       <CardFooter className="flex justify-end gap-2 mt-4">
         <Button variant="outline" asChild>
-            <Link href="/field-boy/dashboard">Cancel</Link>
+            <Link href="/field-boy/dashboard">रद्द करा</Link>
         </Button>
         {activeTab !== 'map' ? (
-             <Button onClick={handleNext}>Save & Next</Button>
+             <Button onClick={handleNext}>जतन करा आणि पुढे जा</Button>
         ) : (
-             <Button onClick={handleFinalSubmit}>Submit Survey</Button>
+             <Button onClick={handleFinalSubmit}>सर्वेक्षण सबमिट करा</Button>
         )}
       </CardFooter>
     </Card>
   )
 }
-
-    

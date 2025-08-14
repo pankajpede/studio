@@ -53,48 +53,48 @@ type MasterDataItem = {
 
 // Mock Data
 const states: MasterDataItem[] = [
-  { id: "1", name: "Maharashtra" },
+  { id: "1", name: "महाराष्ट्र" },
 ]
 
 const districts: MasterDataItem[] = [
-  { id: "1", name: "Latur", linkedTo: "Maharashtra" },
-  { id: "2", name: "Pune", linkedTo: "Maharashtra" },
-  { id: "3", name: "Satara", linkedTo: "Maharashtra" },
+  { id: "1", name: "लातूर", linkedTo: "महाराष्ट्र" },
+  { id: "2", name: "पुणे", linkedTo: "महाराष्ट्र" },
+  { id: "3", name: "सातारा", linkedTo: "महाराष्ट्र" },
 ]
 
 const talukas: MasterDataItem[] = [
-  { id: "1", name: "Latur", linkedTo: "Latur" },
-  { id: "2", name: "Ausa", linkedTo: "Latur" },
-  { id: "3", name: "Udgir", linkedTo: "Latur" },
-  { id: "4", name: "Nilanga", linkedTo: "Latur" },
-  { id: "5", name: "Ahmedpur", linkedTo: "Latur" },
+  { id: "1", name: "लातूर", linkedTo: "लातूर" },
+  { id: "2", name: "औसा", linkedTo: "लातूर" },
+  { id: "3", name: "उदगीर", linkedTo: "लातूर" },
+  { id: "4", name: "निलंगा", linkedTo: "लातूर" },
+  { id: "5", name: "अहमदपूर", linkedTo: "लातूर" },
 ]
 
 const villages: MasterDataItem[] = [
-  { id: "1", name: "Chakur", linkedTo: "Ahmedpur" },
-  { id: "2", name: "Mohgaon", linkedTo: "Ahmedpur" },
-  { id: "3", name: "Lamjana", linkedTo: "Ausa" },
-  { id: "4", name: "Kasarwadi", linkedTo: "Latur" },
+  { id: "1", name: "चाकूर", linkedTo: "अहमदपूर" },
+  { id: "2", name: "मोहगाव", linkedTo: "अहमदपूर" },
+  { id: "3", name: "लामजना", linkedTo: "औसा" },
+  { id: "4", name: "कासारवाडी", linkedTo: "लातूर" },
 ]
 
 const caneTypes: MasterDataItem[] = [
-  { id: "1", name: "Co-86032", category: "Early" },
-  { id: "2", name: "CoM-0265", category: "Mid-late" },
-  { id: "3", name: "MS-10001", category: "Early" },
+  { id: "1", name: "को-८६०३२", category: "लवकर" },
+  { id: "2", name: "कोएम-०२६५", category: "मध्यम-उशिरा" },
+  { id: "3", name: "एमएस-१०००१", category: "लवकर" },
 ]
 
 const soilTypes: MasterDataItem[] = [
-  { id: "1", name: "Black Cotton" },
-  { id: "2", name: "Red Loam" },
+  { id: "1", name: "काळी कापूस" },
+  { id: "2", name: "लाल चिकणमाती" },
 ]
 
 const masterDataMap = {
-  states: { data: states, linkedEntity: null, category: null, entityName: "State" },
-  districts: { data: districts, linkedEntity: "State", category: null, entityName: "District" },
-  talukas: { data: talukas, linkedEntity: "District", category: null, entityName: "Taluka" },
-  villages: { data: villages, linkedEntity: "Taluka", category: null, entityName: "Village" },
-  caneTypes: { data: caneTypes, linkedEntity: null, category: "Maturity Category", entityName: "Cane Type" },
-  soilTypes: { data: soilTypes, linkedEntity: null, category: null, entityName: "Soil Type" },
+  states: { data: states, linkedEntity: null, category: null, entityName: "राज्य" },
+  districts: { data: districts, linkedEntity: "राज्य", category: null, entityName: "जिल्हा" },
+  talukas: { data: talukas, linkedEntity: "जिल्हा", category: null, entityName: "तालुका" },
+  villages: { data: villages, linkedEntity: "तालुका", category: null, entityName: "गाव" },
+  caneTypes: { data: caneTypes, linkedEntity: null, category: "पक्वता श्रेणी", entityName: "उसाचा प्रकार" },
+  soilTypes: { data: soilTypes, linkedEntity: null, category: null, entityName: "मातीचा प्रकार" },
 }
 
 type MasterDataKey = keyof typeof masterDataMap
@@ -107,14 +107,14 @@ const getColumns = (
   const columns: ColumnDef<MasterDataItem>[] = [
     {
       accessorKey: "name",
-      header: `${entityName} Name`,
+      header: `${entityName} नाव`,
     },
   ]
 
   if (linkedEntity) {
     columns.push({
       accessorKey: "linkedTo",
-      header: `Linked ${linkedEntity}`,
+      header: `जोडलेले ${linkedEntity}`,
     })
   }
 
@@ -131,14 +131,14 @@ const getColumns = (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">मेनू उघडा</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+          <DropdownMenuLabel>क्रिया</DropdownMenuLabel>
+          <DropdownMenuItem>संपादित करा</DropdownMenuItem>
+          <DropdownMenuItem className="text-destructive">हटवा</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
@@ -180,7 +180,7 @@ function MasterDataTable({
     <div>
       <div className="flex items-center gap-4 py-4">
         <Input
-          placeholder={`Filter by ${entityName.toLowerCase()} name...`}
+          placeholder={`${entityName.toLowerCase()} नावाने फिल्टर करा...`}
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -188,8 +188,8 @@ function MasterDataTable({
           className="max-w-sm"
         />
         <div className="ml-auto flex gap-2">
-          <Button variant="outline"><Upload className="mr-2" /> Bulk Upload</Button>
-          <Button onClick={() => onAddNew(entityName)}><PlusCircle className="mr-2" /> Add New</Button>
+          <Button variant="outline"><Upload className="mr-2" /> बल्क अपलोड</Button>
+          <Button onClick={() => onAddNew(entityName)}><PlusCircle className="mr-2" /> नवीन जोडा</Button>
         </div>
       </div>
       <div className="rounded-md border">
@@ -224,7 +224,7 @@ function MasterDataTable({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  परिणाम नाहीत.
                 </TableCell>
               </TableRow>
             )}
@@ -238,7 +238,7 @@ function MasterDataTable({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Previous
+          मागील
         </Button>
         <Button
           variant="outline"
@@ -246,7 +246,7 @@ function MasterDataTable({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Next
+          पुढील
         </Button>
       </div>
     </div>
@@ -268,24 +268,24 @@ function MasterDataModal({
 
   const renderFormFields = () => {
     switch (entityType) {
-      case "State":
+      case "राज्य":
         return (
           <div className="grid gap-2">
-            <Label htmlFor="state-name">State Name</Label>
-            <Input id="state-name" placeholder="Enter state name" />
+            <Label htmlFor="state-name">राज्याचे नाव</Label>
+            <Input id="state-name" placeholder="राज्याचे नाव प्रविष्ट करा" />
           </div>
         );
-      case "District":
+      case "जिल्हा":
         return (
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="district-name">District Name</Label>
-              <Input id="district-name" placeholder="Enter district name" />
+              <Label htmlFor="district-name">जिल्ह्याचे नाव</Label>
+              <Input id="district-name" placeholder="जिल्ह्याचे नाव प्रविष्ट करा" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="parent-state">Linked State</Label>
+              <Label htmlFor="parent-state">जोडलेले राज्य</Label>
               <Select>
-                <SelectTrigger id="parent-state"><SelectValue placeholder="Select state" /></SelectTrigger>
+                <SelectTrigger id="parent-state"><SelectValue placeholder="राज्य निवडा" /></SelectTrigger>
                 <SelectContent>
                   {states.map(s => <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>)}
                 </SelectContent>
@@ -293,17 +293,17 @@ function MasterDataModal({
             </div>
           </div>
         );
-      case "Taluka":
+      case "तालुका":
         return (
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="taluka-name">Taluka Name</Label>
-              <Input id="taluka-name" placeholder="Enter taluka name" />
+              <Label htmlFor="taluka-name">तालुक्याचे नाव</Label>
+              <Input id="taluka-name" placeholder="तालुक्याचे नाव प्रविष्ट करा" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="parent-district">Linked District</Label>
+              <Label htmlFor="parent-district">जोडलेला जिल्हा</Label>
               <Select>
-                <SelectTrigger id="parent-district"><SelectValue placeholder="Select district" /></SelectTrigger>
+                <SelectTrigger id="parent-district"><SelectValue placeholder="जिल्हा निवडा" /></SelectTrigger>
                 <SelectContent>
                   {districts.map(d => <SelectItem key={d.id} value={d.name}>{d.name}</SelectItem>)}
                 </SelectContent>
@@ -311,17 +311,17 @@ function MasterDataModal({
             </div>
           </div>
         );
-       case "Village":
+       case "गाव":
         return (
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="village-name">Village Name</Label>
-              <Input id="village-name" placeholder="Enter village name" />
+              <Label htmlFor="village-name">गावाचे नाव</Label>
+              <Input id="village-name" placeholder="गावाचे नाव प्रविष्ट करा" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="parent-taluka">Linked Taluka</Label>
+              <Label htmlFor="parent-taluka">जोडलेला तालुका</Label>
               <Select>
-                <SelectTrigger id="parent-taluka"><SelectValue placeholder="Select taluka" /></SelectTrigger>
+                <SelectTrigger id="parent-taluka"><SelectValue placeholder="तालुका निवडा" /></SelectTrigger>
                 <SelectContent>
                   {talukas.map(t => <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>)}
                 </SelectContent>
@@ -329,35 +329,35 @@ function MasterDataModal({
             </div>
           </div>
         );
-      case "Cane Type":
+      case "उसाचा प्रकार":
         return (
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="cane-type-name">Cane Type Name</Label>
-              <Input id="cane-type-name" placeholder="Enter cane type name" />
+              <Label htmlFor="cane-type-name">उसाच्या प्रकाराचे नाव</Label>
+              <Input id="cane-type-name" placeholder="उसाच्या प्रकाराचे नाव प्रविष्ट करा" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="maturity-category">Maturity Category</Label>
+              <Label htmlFor="maturity-category">पक्वता श्रेणी</Label>
               <Select>
-                <SelectTrigger id="maturity-category"><SelectValue placeholder="Select category" /></SelectTrigger>
+                <SelectTrigger id="maturity-category"><SelectValue placeholder="श्रेणी निवडा" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Early">Early</SelectItem>
-                  <SelectItem value="Mid-late">Mid-late</SelectItem>
-                  <SelectItem value="Late">Late</SelectItem>
+                  <SelectItem value="Early">लवकर</SelectItem>
+                  <SelectItem value="Mid-late">मध्यम-उशिरा</SelectItem>
+                  <SelectItem value="Late">उशिरा</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
         );
-      case "Soil Type":
+      case "मातीचा प्रकार":
         return (
           <div className="grid gap-2">
-            <Label htmlFor="soil-type-name">Soil Type Name</Label>
-            <Input id="soil-type-name" placeholder="Enter soil type name" />
+            <Label htmlFor="soil-type-name">मातीच्या प्रकाराचे नाव</Label>
+            <Input id="soil-type-name" placeholder="मातीच्या प्रकाराचे नाव प्रविष्ट करा" />
           </div>
         );
       default:
-        return <p>Invalid entity type selected.</p>;
+        return <p>अवैध घटक प्रकार निवडला आहे.</p>;
     }
   };
 
@@ -365,16 +365,16 @@ function MasterDataModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-            <DialogTitle>Add New {entityType}</DialogTitle>
+            <DialogTitle>नवीन {entityType} जोडा</DialogTitle>
             </DialogHeader>
             <div className="py-4">
               {renderFormFields()}
             </div>
             <DialogFooter>
             <DialogClose asChild>
-                <Button type="button" variant="secondary">Cancel</Button>
+                <Button type="button" variant="secondary">रद्द करा</Button>
             </DialogClose>
-            <Button type="submit" onClick={onSave}>Save changes</Button>
+            <Button type="submit" onClick={onSave}>बदल जतन करा</Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>
@@ -384,12 +384,12 @@ function MasterDataModal({
 export default function SettingsPage() {
   const { toast } = useToast();
   const masterDataTabs = [
-    { value: "states", label: "State", dataKey: "states" as MasterDataKey },
-    { value: "districts", label: "District", dataKey: "districts" as MasterDataKey },
-    { value: "talukas", label: "Taluka", dataKey: "talukas" as MasterDataKey },
-    { value: "villages", label: "Village", dataKey: "villages" as MasterDataKey },
-    { value: "caneTypes", label: "Cane Type", dataKey: "caneTypes" as MasterDataKey },
-    { value: "soilTypes", label: "Soil Type", dataKey: "soilTypes" as MasterDataKey },
+    { value: "states", label: "राज्य", dataKey: "states" as MasterDataKey },
+    { value: "districts", label: "जिल्हा", dataKey: "districts" as MasterDataKey },
+    { value: "talukas", label: "तालुका", dataKey: "talukas" as MasterDataKey },
+    { value: "villages", label: "गाव", dataKey: "villages" as MasterDataKey },
+    { value: "caneTypes", label: "उसाचा प्रकार", dataKey: "caneTypes" as MasterDataKey },
+    { value: "soilTypes", label: "मातीचा प्रकार", dataKey: "soilTypes" as MasterDataKey },
   ]
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -408,8 +408,8 @@ export default function SettingsPage() {
   const handleSave = () => {
     if (currentEntityType) {
       toast({
-        title: "Success!",
-        description: `${currentEntityType} has been saved successfully.`,
+        title: "यशस्वी!",
+        description: `${currentEntityType} यशस्वीरित्या जतन केले आहे.`,
       });
     }
     handleCloseModal();
@@ -418,8 +418,8 @@ export default function SettingsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Configuration</CardTitle>
-        <CardDescription>Manage master data for the application.</CardDescription>
+        <CardTitle>कॉन्फिगरेशन</CardTitle>
+        <CardDescription>अनुप्रयोगासाठी मास्टर डेटा व्यवस्थापित करा.</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="states" className="w-full">
@@ -444,4 +444,3 @@ export default function SettingsPage() {
     </Card>
   )
 }
-    

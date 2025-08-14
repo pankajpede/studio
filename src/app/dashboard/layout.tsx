@@ -34,21 +34,28 @@ export default function DashboardLayout({
   const getHeading = () => {
     const segments = pathname.split('/').filter(Boolean);
     if (segments.length === 1 && segments[0] === 'dashboard') {
-      return 'Dashboard';
+      return 'डॅशबोर्ड';
     }
     if (segments.length > 1) {
         if(segments[1] === 'farmer' && segments[2]){
-            return 'Farmer Details'
+            return 'शेतकरी तपशील'
         }
         if(segments[1] === 'users' && segments[2] === 'new'){
-            return 'Create New User'
+            return 'नवीन वापरकर्ता तयार करा'
         }
          if(segments[1] === 'surveys' && segments[2] === 'new'){
-            return 'New Farm Survey'
+            return 'नवीन शेत सर्वेक्षण'
         }
-      return capitalize(segments[1]);
+        
+        const segmentTranslations: { [key: string]: string } = {
+            'surveys': 'सर्वेक्षण',
+            'users': 'वापरकर्ता व्यवस्थापन',
+            'settings': 'सेटिंग्ज'
+        };
+        
+        return segmentTranslations[segments[1]] || capitalize(segments[1]);
     }
-    return 'Dashboard';
+    return 'डॅशबोर्ड';
   };
 
   return (
@@ -63,41 +70,41 @@ export default function DashboardLayout({
             </Button>
             <h1 className="font-headline text-xl font-semibold text-sidebar-foreground">
               <Leaf className="inline-block mr-2 h-6 w-6" />
-              CaneVision
+              केनव्हिजन
             </h1>
           </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Dashboard" isActive={pathname === '/dashboard'}>
+              <SidebarMenuButton asChild tooltip="डॅशबोर्ड" isActive={pathname === '/dashboard'}>
                 <Link href="/dashboard">
                   <LayoutGrid />
-                  <span>Dashboard</span>
+                  <span>डॅशबोर्ड</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Surveys" isActive={pathname.startsWith('/dashboard/surveys')}>
+              <SidebarMenuButton asChild tooltip="सर्वेक्षण" isActive={pathname.startsWith('/dashboard/surveys')}>
                 <Link href="/dashboard/surveys">
                   <ClipboardList />
-                  <span>Surveys</span>
+                  <span>सर्वेक्षण</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="User Management" isActive={pathname.startsWith('/dashboard/users')}>
+              <SidebarMenuButton asChild tooltip="वापरकर्ता व्यवस्थापन" isActive={pathname.startsWith('/dashboard/users')}>
                 <Link href="/dashboard/users">
                   <Users />
-                  <span>User Management</span>
+                  <span>वापरकर्ता व्यवस्थापन</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Reports" disabled>
+              <SidebarMenuButton asChild tooltip="अहवाल" disabled>
                 <Link href="#">
                   <BarChart3 />
-                  <span>Reports</span>
+                  <span>अहवाल</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -106,10 +113,10 @@ export default function DashboardLayout({
         <SidebarFooter>
            <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Settings" isActive={pathname.startsWith('/dashboard/settings')}>
+                <SidebarMenuButton asChild tooltip="सेटिंग्ज" isActive={pathname.startsWith('/dashboard/settings')}>
                     <Link href="/dashboard/settings">
                         <Settings />
-                        <span>Settings</span>
+                        <span>सेटिंग्ज</span>
                     </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>

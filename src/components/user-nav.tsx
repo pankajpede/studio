@@ -25,9 +25,9 @@ export function UserNav() {
   const pathname = usePathname();
   const isFieldBoy = pathname.startsWith('/field-boy');
 
-  const userName = isFieldBoy ? "Sunil Pawar" : "Mahesh Deshmukh";
+  const userName = isFieldBoy ? "सुनील पवार" : "महेश देशमुख";
   const userEmail = isFieldBoy ? "sunil.pawar@example.com" : "mahesh.deshmukh@canevision.com";
-  const userFallback = isFieldBoy ? "SP" : "MD";
+  const userFallback = isFieldBoy ? "सुप" : "मदे";
   const profileLink = isFieldBoy ? "/field-boy/profile" : "/dashboard/settings";
 
 
@@ -55,13 +55,13 @@ export function UserNav() {
           <DropdownMenuItem asChild>
              <Link href={profileLink}>
               <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+              <span>प्रोफाइल</span>
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
+            <span>सेटिंग्ज</span>
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
@@ -69,7 +69,7 @@ export function UserNav() {
         <DropdownMenuItem asChild>
           <Link href="/">
             <LogOut className="mr-2 h-4 w-4" />
-            <span>Log out</span>
+            <span>लॉग आउट</span>
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </Link>
         </DropdownMenuItem>

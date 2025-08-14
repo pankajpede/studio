@@ -53,73 +53,73 @@ const data: Survey[] = [
     surveyId: "SURV-001",
     surveyDate: "2023-10-01",
     surveyStatus: "Approved",
-    surveyStage: "Completed",
-    surveyedBy: "Sunil Pawar",
+    surveyStage: "पूर्ण झाले",
+    surveyedBy: "सुनील पवार",
     reassignedTo: "-",
     lastUpdated: "2023-10-02",
-    farmerName: "Ramesh Kulkarni",
+    farmerName: "रमेश कुलकर्णी",
     farmerContact: "9876543210",
-    village: "Chakur",
-    taluka: "Ahmedpur",
-    district: "Latur",
+    village: "चाकूर",
+    taluka: "अहमदपूर",
+    district: "लातूर",
     gatGroupNumber: "GAT-123",
     surveyNumber: "SN-456",
     areaAcre: 5.2,
     gpsCoordinates: "18.40, 76.57",
-    caneType: "Adsali",
-    caneVariety: "Co-86032",
-    cropCondition: "Good",
+    caneType: "अडसाली",
+    caneVariety: "को-86032",
+    cropCondition: "चांगली",
     photoCount: 5,
-    approvedBy: "Admin",
+    approvedBy: "प्रशासक",
     approvalStatus: "Approved",
     rejectionReason: "-",
     tokenNumber: "TKN-789",
     tokenDate: "2023-10-03",
-    otpVerified: "Yes",
-    cuttingPhotoUploaded: "Yes",
+    otpVerified: "होय",
+    cuttingPhotoUploaded: "होय",
     tonnageReceived: 250,
     gatePassEntryDate: "2023-11-15",
-    submittedFrom: "Mobile",
-    offlineSync: "Yes",
+    submittedFrom: "मोबाइल",
+    offlineSync: "होय",
     createdOn: "2023-10-01",
-    updatedBy: "Admin",
-    voiceNoteUploaded: "No",
+    updatedBy: "प्रशासक",
+    voiceNoteUploaded: "नाही",
   },
   {
     surveyId: "SURV-002",
     surveyDate: "2023-10-02",
     surveyStatus: "Pending",
-    surveyStage: "Data Entry",
-    surveyedBy: "Anil Shinde",
-    reassignedTo: "Sunil Pawar",
+    surveyStage: "माहिती भरणे",
+    surveyedBy: "अनिल शिंदे",
+    reassignedTo: "सुनील पवार",
     lastUpdated: "2023-10-03",
-    farmerName: "Suresh Patil",
+    farmerName: "सुरेश पाटील",
     farmerContact: "9876543211",
-    village: "Mohgaon",
-    taluka: "Ausa",
-    district: "Latur",
+    village: "मोहगाव",
+    taluka: "औसा",
+    district: "लातूर",
     gatGroupNumber: "GAT-124",
     surveyNumber: "SN-457",
     areaAcre: 3.1,
     gpsCoordinates: "18.35, 76.50",
-    caneType: "Preseasonal",
-    caneVariety: "CoM-0265",
-    cropCondition: "Average",
+    caneType: "पूर्व-हंगामी",
+    caneVariety: "कोएम-0265",
+    cropCondition: "मध्यम",
     photoCount: 3,
     approvedBy: "-",
     approvalStatus: "Pending",
     rejectionReason: "-",
     tokenNumber: "-",
     tokenDate: "-",
-    otpVerified: "No",
-    cuttingPhotoUploaded: "No",
+    otpVerified: "नाही",
+    cuttingPhotoUploaded: "नाही",
     tonnageReceived: 0,
     gatePassEntryDate: "-",
-    submittedFrom: "Web",
-    offlineSync: "No",
+    submittedFrom: "वेब",
+    offlineSync: "नाही",
     createdOn: "2023-10-02",
-    updatedBy: "Anil Shinde",
-    voiceNoteUploaded: "Yes",
+    updatedBy: "अनिल शिंदे",
+    voiceNoteUploaded: "होय",
   },
   // Add more mock data entries here to test pagination
 ];
@@ -172,14 +172,14 @@ export const columns: ColumnDef<Survey>[] = [
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
+        aria-label="सर्व निवडा"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        aria-label="पंक्ती निवडा"
       />
     ),
     enableSorting: false,
@@ -187,35 +187,40 @@ export const columns: ColumnDef<Survey>[] = [
   },
   {
     accessorKey: "surveyId",
-    header: "Survey ID",
+    header: "सर्वेक्षण आयडी",
   },
   {
     accessorKey: "surveyDate",
-    header: "Survey Date",
+    header: "सर्वेक्षण तारीख",
   },
   {
     accessorKey: "surveyStatus",
-    header: "Survey Status",
+    header: "सर्वेक्षण स्थिती",
     cell: ({ row }) => {
         const status = row.getValue("surveyStatus") as string;
-        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
+        const statusTranslations: Record<string, string> = {
+            "Approved": "मंजूर",
+            "Pending": "प्रलंबित",
+            "Rejected": "नाकारलेले"
+        }
+        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{statusTranslations[status] || status}</Badge>;
     }
   },
   {
     accessorKey: "surveyStage",
-    header: "Survey Stage",
+    header: "सर्वेक्षण टप्पा",
   },
   {
     accessorKey: "surveyedBy",
-    header: "Surveyed By",
+    header: "सर्वेक्षक",
   },
   {
     accessorKey: "reassignedTo",
-    header: "Reassigned To",
+    header: "पुन्हा नियुक्त",
   },
   {
     accessorKey: "lastUpdated",
-    header: "Last Updated",
+    header: "शेवटचे अद्यतन",
   },
   {
     accessorKey: "farmerName",
@@ -224,114 +229,114 @@ export const columns: ColumnDef<Survey>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Farmer Name
+        शेतकऱ्याचे नाव
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
   {
     accessorKey: "farmerContact",
-    header: "Farmer Contact",
+    header: "शेतकरी संपर्क",
   },
   {
     accessorKey: "village",
-    header: "Village",
+    header: "गाव",
   },
   {
     accessorKey: "taluka",
-    header: "Taluka",
+    header: "तालुका",
   },
   {
     accessorKey: "district",
-    header: "District",
+    header: "जिल्हा",
   },
   {
     accessorKey: "gatGroupNumber",
-    header: "Gat/Group Number",
+    header: "गट/ग्रुप नंबर",
   },
   {
     accessorKey: "surveyNumber",
-    header: "Survey Number",
+    header: "सर्वेक्षण नंबर",
   },
   {
     accessorKey: "areaAcre",
-    header: "Area (Acre)",
+    header: "क्षेत्र (एकर)",
   },
   {
     accessorKey: "gpsCoordinates",
-    header: "GPS Coordinates",
+    header: "GPS कोऑर्डिनेट्स",
   },
   {
     accessorKey: "caneType",
-    header: "Cane Type",
+    header: "उसाचा प्रकार",
   },
   {
     accessorKey: "caneVariety",
-    header: "Cane Variety",
+    header: "उसाची जात",
   },
   {
     accessorKey: "cropCondition",
-    header: "Crop Condition",
+    header: "पिकाची स्थिती",
   },
   {
     accessorKey: "photoCount",
-    header: "Photo Count",
+    header: "फोटो संख्या",
   },
   {
     accessorKey: "approvedBy",
-    header: "Approved By",
+    header: "मंजूर करणारा",
   },
   {
     accessorKey: "approvalStatus",
-    header: "Approval Status",
+    header: "मंजुरीची स्थिती",
   },
   {
     accessorKey: "rejectionReason",
-    header: "Rejection Reason",
+    header: "नाकारण्याचे कारण",
   },
   {
     accessorKey: "tokenNumber",
-    header: "Token Number",
+    header: "टोकन नंबर",
   },
   {
     accessorKey: "tokenDate",
-    header: "Token Date",
+    header: "टोकन तारीख",
   },
   {
     accessorKey: "otpVerified",
-    header: "OTP Verified",
+    header: "OTP सत्यापित",
   },
   {
     accessorKey: "cuttingPhotoUploaded",
-    header: "Cutting Photo Uploaded",
+    header: "तोडणी फोटो अपलोड",
   },
   {
     accessorKey: "tonnageReceived",
-    header: "Tonnage Received",
+    header: "प्राप्त टनेज",
   },
   {
     accessorKey: "gatePassEntryDate",
-    header: "Gate Pass Entry Date",
+    header: "गेट पास प्रवेश तारीख",
   },
   {
     accessorKey: "submittedFrom",
-    header: "Submitted From",
+    header: "सादर केले",
   },
   {
     accessorKey: "offlineSync",
-    header: "Offline Sync",
+    header: "ऑफलाइन सिंक",
   },
   {
     accessorKey: "createdOn",
-    header: "Created On",
+    header: "तयार केले",
   },
   {
     accessorKey: "updatedBy",
-    header: "Updated By",
+    header: "अद्यतनित केले",
   },
   {
     accessorKey: "voiceNoteUploaded",
-    header: "Voice Note Uploaded",
+    header: "व्हॉइस नोट अपलोड",
   },
   {
     id: "actions",
@@ -343,20 +348,20 @@ export const columns: ColumnDef<Survey>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">मेनू उघडा</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>क्रिया</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(survey.surveyId)}
             >
-              Copy survey ID
+              सर्वेक्षण आयडी कॉपी करा
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View details</DropdownMenuItem>
-            <DropdownMenuItem>Edit survey</DropdownMenuItem>
+            <DropdownMenuItem>तपशील पहा</DropdownMenuItem>
+            <DropdownMenuItem>सर्वेक्षण संपादित करा</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -369,11 +374,11 @@ function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<t
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="ml-auto">
-          Columns <ChevronDown className="ml-2 h-4 w-4" />
+          स्तंभ <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+        <DropdownMenuLabel>स्तंभ टॉगल करा</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <ScrollArea className="h-72">
         {table
@@ -394,8 +399,8 @@ function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<t
         </ScrollArea>
         <DropdownMenuSeparator />
         <div className="flex justify-end gap-2 p-2">
-            <Button variant="ghost" size="sm" onClick={onReset}>Reset</Button>
-            <Button size="sm" onClick={onApply}>Apply</Button>
+            <Button variant="ghost" size="sm" onClick={onReset}>रीसेट</Button>
+            <Button size="sm" onClick={onApply}>लागू करा</Button>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -485,16 +490,16 @@ export default function SurveyDataTable() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-headline">Surveys</CardTitle>
+        <CardTitle className="font-headline">सर्वेक्षण</CardTitle>
         <CardDescription>
-          A comprehensive list of all farm surveys in the system.
+          प्रणालीतील सर्व शेत सर्वेक्षणांची विस्तृत यादी.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="w-full">
             <div className="flex items-center py-4">
                 <Input
-                placeholder="Filter by farmer name..."
+                placeholder="शेतकऱ्याच्या नावाने फिल्टर करा..."
                 value={(table.getColumn("farmerName")?.getFilterValue() as string) ?? ""}
                 onChange={(event) =>
                     table.getColumn("farmerName")?.setFilterValue(event.target.value)
@@ -555,7 +560,7 @@ export default function SurveyDataTable() {
                         colSpan={columns.length}
                         className="h-24 text-center"
                         >
-                        No results.
+                        परिणाम नाहीत.
                         </TableCell>
                     </TableRow>
                     )}
@@ -570,7 +575,7 @@ export default function SurveyDataTable() {
                 {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
                 <div className="space-x-2 flex items-center">
-                    <span className="text-sm text-muted-foreground">Rows per page</span>
+                    <span className="text-sm text-muted-foreground">प्रति पृष्ठ पंक्ती</span>
                      <Select
                         onValueChange={(value) => {
                             table.setPageSize(Number(value))
@@ -590,7 +595,7 @@ export default function SurveyDataTable() {
                     </Select>
                 </div>
                 <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-                    Page {table.getState().pagination.pageIndex + 1} of{" "}
+                    पृष्ठ {table.getState().pagination.pageIndex + 1} पैकी{" "}
                     {table.getPageCount()}
                 </div>
                 <div className="space-x-2">
@@ -600,7 +605,7 @@ export default function SurveyDataTable() {
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    Previous
+                    मागील
                 </Button>
                 <Button
                     variant="outline"
@@ -608,7 +613,7 @@ export default function SurveyDataTable() {
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    Next
+                    पुढील
                 </Button>
                 </div>
             </div>

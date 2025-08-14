@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState } from 'react';
@@ -47,7 +48,7 @@ export default function SurveyMap({ surveys }: SurveyMapProps) {
   };
 
   if (loadError) {
-    return <div>Error loading maps. Please check your API key.</div>;
+    return <div>नकाशे लोड करताना त्रुटी. कृपया तुमचा API की तपासा.</div>;
   }
   
   if (!isLoaded) {
@@ -73,9 +74,9 @@ export default function SurveyMap({ surveys }: SurveyMapProps) {
               >
                 <div className="p-1 max-w-xs">
                   <h3 className="font-bold text-md mb-1">{marker.farmerName}</h3>
-                  <p className="text-sm"><strong>Area:</strong> {marker.areaAcre} Acres</p>
-                  <p className="text-sm"><strong>Cane Type:</strong> {marker.caneType}</p>
-                  <p className="text-sm"><strong>Survey Date:</strong> {marker.surveyDate}</p>
+                  <p className="text-sm"><strong>क्षेत्र:</strong> {marker.areaAcre} एकर</p>
+                  <p className="text-sm"><strong>उसाचा प्रकार:</strong> {marker.caneType}</p>
+                  <p className="text-sm"><strong>सर्वेक्षण तारीख:</strong> {marker.surveyDate}</p>
                 </div>
               </InfoWindow>
             )}

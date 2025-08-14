@@ -22,21 +22,21 @@ export default function FieldBoyLayout({
     const segments = pathname.split('/').filter(Boolean); // e.g. ['field-boy', 'dashboard', 'survey', 'SUR001']
 
     if (pathname === '/field-boy/dashboard') {
-        return 'Sai Sugar';
+        return 'साई शुगर';
     }
     if (segments.includes('new')) {
-      return 'New Survey';
+      return 'नवीन सर्वेक्षण';
     }
     if (segments.length > 2 && segments[2] === 'survey') {
-      return `Survey Details`;
+      return `सर्वेक्षण तपशील`;
     }
      if (segments.length > 1 && segments[1] === 'profile') {
-      return 'Profile';
+      return 'प्रोफाइल';
     }
     if (segments.length > 1) {
       return capitalize(segments[1]);
     }
-    return 'Dashboard';
+    return 'डॅशबोर्ड';
   };
   
   const showBackButton = pathname !== '/field-boy/dashboard';

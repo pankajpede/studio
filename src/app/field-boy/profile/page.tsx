@@ -19,12 +19,12 @@ import { KeyRound, User } from "lucide-react"
 
 // Mock data for the logged-in field boy
 const fieldBoyData = {
-  name: "Sunil Pawar",
+  name: "सुनील पवार",
   email: "fieldboy@gmail.com",
   mobile: "9876543210",
-  taluka: "Ahmedpur",
-  village: "Mohgaon",
-  reportsTo: "Mahesh Deshmukh (Warshir)",
+  taluka: "अहमदपूर",
+  village: "मोहगाव",
+  reportsTo: "महेश देशमुख (वारशिर)",
   avatarUrl: "https://placehold.co/100x100.png",
 }
 
@@ -33,16 +33,16 @@ export default function FieldBoyProfilePage() {
 
   const handleUpdateProfile = () => {
     toast({
-      title: "Profile Updated",
-      description: "Your profile information has been saved.",
+      title: "प्रोफाइल अद्यतनित",
+      description: "तुमची प्रोफाइल माहिती जतन केली आहे.",
     })
   }
 
   const handleChangePassword = () => {
     // Add password change logic here
     toast({
-      title: "Password Changed",
-      description: "Your password has been updated successfully.",
+      title: "पासवर्ड बदलला",
+      description: "तुमचा पासवर्ड यशस्वीरित्या अद्यतनित केला आहे.",
     })
   }
 
@@ -52,38 +52,38 @@ export default function FieldBoyProfilePage() {
         <CardHeader>
           <div className="flex items-center gap-4">
             <User className="h-6 w-6 text-primary" />
-            <CardTitle className="font-headline">Your Profile</CardTitle>
+            <CardTitle className="font-headline">तुमचे प्रोफाइल</CardTitle>
           </div>
-          <CardDescription>View and edit your personal information.</CardDescription>
+          <CardDescription>तुमची वैयक्तिक माहिती पहा आणि संपादित करा.</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="name">पूर्ण नाव</Label>
             <Input id="name" defaultValue={fieldBoyData.name} />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email">ईमेल पत्ता</Label>
             <Input id="email" type="email" defaultValue={fieldBoyData.email} disabled />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="mobile">Mobile Number</Label>
+            <Label htmlFor="mobile">मोबाइल नंबर</Label>
             <Input id="mobile" type="tel" defaultValue={fieldBoyData.mobile} />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="taluka">Assigned Taluka</Label>
+            <Label htmlFor="taluka">नियुक्त तालुका</Label>
             <Input id="taluka" defaultValue={fieldBoyData.taluka} disabled />
           </div>
            <div className="grid gap-2">
-            <Label htmlFor="village">Assigned Village</Label>
+            <Label htmlFor="village">नियुक्त गाव</Label>
             <Input id="village" defaultValue={fieldBoyData.village} disabled />
           </div>
            <div className="grid gap-2">
-            <Label htmlFor="reportsTo">Reports To</Label>
+            <Label htmlFor="reportsTo">रिपोर्ट्स</Label>
             <Input id="reportsTo" defaultValue={fieldBoyData.reportsTo} disabled />
           </div>
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button onClick={handleUpdateProfile}>Save Changes</Button>
+          <Button onClick={handleUpdateProfile}>बदल जतन करा</Button>
         </CardFooter>
       </Card>
 
@@ -91,27 +91,27 @@ export default function FieldBoyProfilePage() {
         <CardHeader>
            <div className="flex items-center gap-4">
             <KeyRound className="h-6 w-6 text-primary" />
-            <CardTitle className="font-headline">Change Password</CardTitle>
+            <CardTitle className="font-headline">पासवर्ड बदला</CardTitle>
           </div>
-          <CardDescription>Update your password for better security.</CardDescription>
+          <CardDescription>उत्तम सुरक्षेसाठी तुमचा पासवर्ड अद्यतनित करा.</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="current-password">Current Password</Label>
+            <Label htmlFor="current-password">सध्याचा पासवर्ड</Label>
             <Input id="current-password" type="password" />
           </div>
           <div /> 
           <div className="grid gap-2">
-            <Label htmlFor="new-password">New Password</Label>
+            <Label htmlFor="new-password">नवीन पासवर्ड</Label>
             <Input id="new-password" type="password" />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="confirm-password">Confirm New Password</Label>
+            <Label htmlFor="confirm-password">नवीन पासवर्डची पुष्टी करा</Label>
             <Input id="confirm-password" type="password" />
           </div>
         </CardContent>
          <CardFooter className="flex justify-end">
-          <Button onClick={handleChangePassword}>Update Password</Button>
+          <Button onClick={handleChangePassword}>पासवर्ड अद्यतनित करा</Button>
         </CardFooter>
       </Card>
     </div>

@@ -23,25 +23,25 @@ const getSurveyById = (id: string | null) => {
     const status = statuses[id.length % 3] as "Pending" | "Approved" | "Rejected";
   return {
     id,
-    farmerName: "Sachin Kulkarni",
+    farmerName: "सचिन कुलकर्णी",
     mobileNumber: "9876543210",
     voterId: "ABC1234567",
     panCard: "ABCDE1234F",
-    bankName: "State Bank of India",
+    bankName: "स्टेट बँक ऑफ इंडिया",
     accountNumber: "XXXX-XXXX-1234",
-    area: "2.5",
-    cropType: "Plant",
-    soilType: "Black Cotton",
-    irrigationType: "Drip",
+    area: "२.५",
+    cropType: "रोप",
+    soilType: "काळी कापूस",
+    irrigationType: "ठिबक",
     mapImage: "https://placehold.co/600x400.png",
     status,
-    rejectionReason: status === "Rejected" ? "Incomplete documents provided." : "-",
+    rejectionReason: status === "Rejected" ? "अपूर्ण कागदपत्रे सादर केली." : "-",
     submittedOn: "2024-06-30",
     location: {
-        state: "Maharashtra",
-        district: "Latur",
-        taluka: "Ahmedpur",
-        village: "Mohgaon",
+        state: "महाराष्ट्र",
+        district: "लातूर",
+        taluka: "अहमदपूर",
+        village: "मोहगाव",
     }
   };
 };
@@ -59,19 +59,19 @@ const StatusInfo = ({ status, reason }: { status: string, reason?: string }) => 
             icon = <CheckCircle className="h-5 w-5" />;
             textClass = "text-green-800";
             bgClass = "bg-green-100";
-            label = "Approved (Queued)";
+            label = "मंजूर (रांगेत)";
             break;
         case "Rejected":
             icon = <XCircle className="h-5 w-5" />;
             textClass = "text-red-800";
             bgClass = "bg-red-100";
-            label = "Rejected";
+            label = "नाकारलेले";
             break;
         default:
             icon = <AlertCircle className="h-5 w-5" />;
             textClass = "text-yellow-800";
             bgClass = "bg-yellow-100";
-            label = "Pending";
+            label = "प्रलंबित";
     }
 
     return (
@@ -130,8 +130,8 @@ export default function SurveyDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center text-center p-4">
         <FileText className="w-12 h-12 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-bold mb-2">Survey Not Found</h2>
-        <p className="text-muted-foreground">The survey with ID "{id}" could not be found.</p>
+        <h2 className="text-xl font-bold mb-2">सर्वेक्षण आढळले नाही</h2>
+        <p className="text-muted-foreground">"{id}" आयडी असलेले सर्वेक्षण आढळले नाही.</p>
       </div>
     );
   }
@@ -145,28 +145,28 @@ export default function SurveyDetailPage() {
             <CardContent className="pt-6">
                 <Tabs defaultValue="farmer-selection" className="w-full">
                 <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="farmer-selection">Farmer</TabsTrigger>
-                    <TabsTrigger value="farmer-info">Info</TabsTrigger>
-                    <TabsTrigger value="farm-info">Farm</TabsTrigger>
-                    <TabsTrigger value="map">Map</TabsTrigger>
+                    <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
+                    <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
+                    <TabsTrigger value="farm-info">शेत</TabsTrigger>
+                    <TabsTrigger value="map">नकाशा</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="farmer-selection" className="pt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="state">State</Label>
+                            <Label htmlFor="state">राज्य</Label>
                             <Input id="state" value={survey.location.state} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="district">District</Label>
+                            <Label htmlFor="district">जिल्हा</Label>
                             <Input id="district" value={survey.location.district} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="taluka">Taluka</Label>
+                            <Label htmlFor="taluka">तालुका</Label>
                             <Input id="taluka" value={survey.location.taluka} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="village">Village</Label>
+                            <Label htmlFor="village">गाव</Label>
                             <Input id="village" value={survey.location.village} disabled />
                         </div>
                     </div>
@@ -175,27 +175,27 @@ export default function SurveyDetailPage() {
                 <TabsContent value="farmer-info" className="pt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="farmer-name">Farmer Name</Label>
+                            <Label htmlFor="farmer-name">शेतकऱ्याचे नाव</Label>
                             <Input id="farmer-name" value={survey.farmerName} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="mobile">Mobile Number</Label>
+                            <Label htmlFor="mobile">मोबाइल नंबर</Label>
                             <Input id="mobile" value={survey.mobileNumber} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="voter-id">Voter ID</Label>
+                            <Label htmlFor="voter-id">मतदार ओळखपत्र</Label>
                             <Input id="voter-id" value={survey.voterId} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="pan">PAN Card</Label>
+                            <Label htmlFor="pan">पॅन कार्ड</Label>
                             <Input id="pan" value={survey.panCard} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="bank-name">Bank Name</Label>
+                            <Label htmlFor="bank-name">बँकेचे नाव</Label>
                             <Input id="bank-name" value={survey.bankName} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="account-number">Account Number</Label>
+                            <Label htmlFor="account-number">खाते क्रमांक</Label>
                             <Input id="account-number" value={survey.accountNumber} disabled />
                         </div>
                     </div>
@@ -204,19 +204,19 @@ export default function SurveyDetailPage() {
                 <TabsContent value="farm-info" className="pt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="area">Area (in Acres)</Label>
+                            <Label htmlFor="area">क्षेत्र (एकरमध्ये)</Label>
                             <Input id="area" value={survey.area} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="crop-type">Crop Type</Label>
+                            <Label htmlFor="crop-type">पिकाचा प्रकार</Label>
                             <Input id="crop-type" value={survey.cropType} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="soil-type">Soil Type</Label>
+                            <Label htmlFor="soil-type">मातीचा प्रकार</Label>
                              <Input id="soil-type" value={survey.soilType} disabled />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="irrigation-type">Irrigation Type</Label>
+                            <Label htmlFor="irrigation-type">सिंचनाचा प्रकार</Label>
                             <Input id="irrigation-type" value={survey.irrigationType} disabled />
                         </div>
                     </div>
@@ -234,8 +234,8 @@ export default function SurveyDetailPage() {
                             />
                         </div>
                         <div className="flex flex-col sm:flex-row gap-4 w-full">
-                            <Button variant="outline" className="w-full" disabled><Pin className="mr-2" /> Draw Button</Button>
-                            <Button variant="outline" className="w-full" disabled><Footprints className="mr-2" /> Walk Button</Button>
+                            <Button variant="outline" className="w-full" disabled><Pin className="mr-2" /> ड्रॉ बटण</Button>
+                            <Button variant="outline" className="w-full" disabled><Footprints className="mr-2" /> वॉक बटण</Button>
                         </div>
                     </div>
                 </TabsContent>

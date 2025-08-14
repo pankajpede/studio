@@ -13,12 +13,14 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  FilterFn,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, CheckCircle2, ListTodo, Ruler, BarChart3 } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, CheckCircle2, ListTodo, Ruler, BarChart3, Filter, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -47,6 +49,12 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import SurveyMap from "@/components/survey-map"
 import Link from "next/link"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet"
+import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { DateRange } from "react-day-picker"
+import { format } from "date-fns"
 
 const generateSurveyData = (count: number): Survey[] => {
   const data: Survey[] = [];
@@ -169,6 +177,10 @@ export const columns: ColumnDef<Survey>[] = [
   {
     accessorKey: "surveyDate",
     header: "सर्वेक्षण तारीख",
+     cell: ({ row }) => {
+      const date = new Date(row.getValue("surveyDate"))
+      return <div>{format(date, "dd/MM/yyyy")}</div>
+    },
   },
   {
     accessorKey: "surveyStatus",
@@ -240,6 +252,126 @@ export const columns: ColumnDef<Survey>[] = [
   },
 ]
 
+function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTable>, data: Survey[] }) {
+    const [date, setDate] = React.useState<DateRange | undefined>()
+    const [minArea, setMinArea] = React.useState<string>("")
+    const [maxArea, setMaxArea] = React.useState<string>("")
+    
+    const handleApply = () => {
+        table.getColumn("surveyDate")?.setFilterValue(date ? [date.from, date.to] : undefined);
+        table.getColumn("areaAcre")?.setFilterValue([minArea, maxArea]);
+    }
+
+    const handleClear = () => {
+        setDate(undefined);
+        setMinArea("");
+        setMaxArea("");
+        table.resetColumnFilters();
+    }
+
+    const uniqueSurveyors = React.useMemo(() => {
+        const surveyors = new Set<string>();
+        data.forEach(s => surveyors.add(s.surveyedBy));
+        return Array.from(surveyors);
+    }, [data]);
+
+    const uniqueWarshirs = React.useMemo(() => {
+        const warshirs = new Set<string>();
+        data.forEach(s => s.warshir && warshirs.add(s.warshir));
+        return Array.from(warshirs);
+    }, [data]);
+
+    return (
+        <Sheet>
+            <SheetTrigger asChild>
+                <Button variant="outline"><Filter className="mr-2"/> अधिक फिल्टर</Button>
+            </SheetTrigger>
+            <SheetContent className="flex flex-col">
+                <SheetHeader>
+                    <SheetTitle>अधिक फिल्टर</SheetTitle>
+                </SheetHeader>
+                <div className="flex-grow overflow-y-auto p-1">
+                    <div className="grid gap-6">
+                        <div className="grid gap-2">
+                            <Label>सर्वेक्षण तारीख श्रेणी</Label>
+                             <Popover>
+                                <PopoverTrigger asChild>
+                                <Button
+                                    variant={"outline"}
+                                >
+                                    {date?.from ? (
+                                    date.to ? (
+                                        <>
+                                        {format(date.from, "LLL dd, y")} -{" "}
+                                        {format(date.to, "LLL dd, y")}
+                                        </>
+                                    ) : (
+                                        format(date.from, "LLL dd, y")
+                                    )
+                                    ) : (
+                                    <span>एक तारीख निवडा</span>
+                                    )}
+                                </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    mode="range"
+                                    defaultMonth={date?.from}
+                                    selected={date}
+                                    onSelect={setDate}
+                                    numberOfMonths={2}
+                                />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
+                         <div className="grid gap-2">
+                            <Label htmlFor="surveyor">सर्वेक्षक</Label>
+                            <Select
+                                value={table.getColumn("surveyedBy")?.getFilterValue() as string ?? ""}
+                                onValueChange={(value) => table.getColumn("surveyedBy")?.setFilterValue(value === "all" ? "" : value)}
+                            >
+                                <SelectTrigger><SelectValue placeholder="सर्वेक्षक निवडा" /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">सर्व सर्वेक्षक</SelectItem>
+                                    {uniqueSurveyors.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        
+                         <div className="grid gap-2">
+                            <Label htmlFor="warshir">वारशिर</Label>
+                           <Select
+                                value={table.getColumn("warshir")?.getFilterValue() as string ?? ""}
+                                onValueChange={(value) => table.getColumn("warshir")?.setFilterValue(value === "all" ? "" : value)}
+                           >
+                                <SelectTrigger><SelectValue placeholder="वारशिर निवडा" /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">सर्व वारशिर</SelectItem>
+                                    {uniqueWarshirs.map(w => <SelectItem key={w} value={w}>{w}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        
+                        <div className="grid gap-2">
+                            <Label>क्षेत्र (एकर)</Label>
+                            <div className="flex items-center gap-2">
+                                <Input type="number" placeholder="किमान" value={minArea} onChange={e => setMinArea(e.target.value)} />
+                                <span className="text-muted-foreground">-</span>
+                                <Input type="number" placeholder="कमाल" value={maxArea} onChange={e => setMaxArea(e.target.value)} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <SheetFooter>
+                    <Button variant="ghost" onClick={handleClear}>स्वच्छ करा</Button>
+                    <Button onClick={handleApply}>फिल्टर लागू करा</Button>
+                </SheetFooter>
+            </SheetContent>
+        </Sheet>
+    )
+}
+
 function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -248,6 +380,27 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const dateRangeFilter: FilterFn<Survey> = (row, columnId, filterValue) => {
+    const date = new Date(row.getValue(columnId));
+    const [start, end] = filterValue as (Date | undefined)[];
+    if (start && !end) return date >= start;
+    if (!start && end) return date <= end;
+    if (start && end) return date >= start && date <= end;
+    return true;
+  };
+
+  const areaRangeFilter: FilterFn<Survey> = (row, columnId, filterValue) => {
+    const area = row.getValue(columnId) as number;
+    const [min, max] = filterValue as string[];
+    const minVal = parseFloat(min);
+    const maxVal = parseFloat(max);
+    if (!isNaN(minVal) && !isNaN(maxVal)) return area >= minVal && area <= maxVal;
+    if (!isNaN(minVal)) return area >= minVal;
+    if (!isNaN(maxVal)) return area <= maxVal;
+    return true;
+  };
+
 
   const table = useReactTable({
     data,
@@ -260,6 +413,10 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    filterFns: {
+        dateRange: dateRangeFilter,
+        areaRange: areaRangeFilter,
+    },
     state: {
       sorting,
       columnFilters,
@@ -272,6 +429,9 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
         },
     }
   })
+  
+  const activeFilters = columnFilters.filter(f => f.value && (Array.isArray(f.value) ? f.value.some(v => v) : true));
+  const uniqueTalukas = React.useMemo(() => Array.from(new Set(data.map(s => s.taluka))), [data]);
 
   return (
     <Card className="w-full">
@@ -283,16 +443,82 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
       </CardHeader>
       <CardContent>
         <div className="w-full">
-            <div className="flex items-center gap-4 py-4">
+            <div className="flex items-center gap-2 py-4">
                 <Input
                 placeholder="शेतकऱ्याच्या नावाने फिल्टर करा..."
                 value={(table.getColumn("farmerName")?.getFilterValue() as string) ?? ""}
                 onChange={(event) =>
                     table.getColumn("farmerName")?.setFilterValue(event.target.value)
                 }
-                className="max-w-sm"
+                className="max-w-xs"
                 />
+                 <Select
+                    value={(table.getColumn("surveyStatus")?.getFilterValue() as string) ?? ""}
+                    onValueChange={(value) => table.getColumn("surveyStatus")?.setFilterValue(value === "all" ? "" : value)}
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="स्थितीनुसार फिल्टर करा" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">सर्व स्थिती</SelectItem>
+                        <SelectItem value="Approved">मंजूर</SelectItem>
+                        <SelectItem value="Pending">प्रलंबित</SelectItem>
+                        <SelectItem value="Rejected">नाकारलेले</SelectItem>
+                    </SelectContent>
+                </Select>
+                 <Select
+                    value={(table.getColumn("taluka")?.getFilterValue() as string) ?? ""}
+                    onValueChange={(value) => table.getColumn("taluka")?.setFilterValue(value === "all" ? "" : value)}
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="तालुकानुसार फिल्टर करा" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">सर्व तालुके</SelectItem>
+                        {uniqueTalukas.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                    </SelectContent>
+                </Select>
+                 <div className="ml-auto flex items-center gap-2">
+                  <AdvancedFilters table={table} data={data} />
+                </div>
             </div>
+             {activeFilters.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 pb-4">
+                    <p className="text-sm text-muted-foreground">सक्रिय फिल्टर:</p>
+                    {activeFilters.map(filter => {
+                        let valueText = JSON.stringify(filter.value);
+                        if (filter.id === 'surveyDate' && Array.isArray(filter.value)) {
+                           const [start, end] = filter.value as (Date | undefined)[];
+                           if(start && end) valueText = `${format(start, 'dd/MM/yy')} - ${format(end, 'dd/MM/yy')}`;
+                           else if (start) valueText = `from ${format(start, 'dd/MM/yy')}`;
+                           else if (end) valueText = `to ${format(end, 'dd/MM/yy')}`;
+                           else valueText = ''
+                        }
+                        if (filter.id === 'areaAcre' && Array.isArray(filter.value)) {
+                            const [min, max] = filter.value as string[];
+                            if(min && max) valueText = `${min}-${max} एकर`;
+                            else if (min) valueText = `>= ${min} एकर`;
+                            else if (max) valueText = `<= ${max} एकर`;
+                            else valueText = ''
+                        }
+
+                        if (!valueText) return null;
+                        
+                         return (<Badge key={filter.id} variant="secondary" className="gap-1">
+                            {filter.id}: {valueText}
+                            <button
+                                className="h-4 w-4 rounded-full flex items-center justify-center hover:bg-destructive hover:text-destructive-foreground"
+                                onClick={() => table.getColumn(filter.id)?.setFilterValue("")}
+                            >
+                                <X className="h-3 w-3"/>
+                            </button>
+                        </Badge>)
+                    })}
+                    <Button variant="ghost" size="sm" onClick={() => table.resetColumnFilters()}>
+                        सर्व साफ करा
+                    </Button>
+                </div>
+            )}
             <div className="rounded-md border">
               <div className="relative w-full overflow-auto">
                 <Table>

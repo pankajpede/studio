@@ -97,12 +97,6 @@ export default function LoginPage() {
               लॉगिन
             </Button>
           </div>
-          <div className="mt-4 text-center text-sm">
-            खाते नाही?{" "}
-            <Link href="#" className="underline">
-              साइन अप करा
-            </Link>
-          </div>
         </CardContent>
       </Card>
     </div>

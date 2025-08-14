@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Filter, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -47,6 +47,13 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet"
+import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { DateRange } from "react-day-picker"
+import { format } from "date-fns"
+import Link from "next/link"
 
 const data: Survey[] = [
   {
@@ -55,6 +62,7 @@ const data: Survey[] = [
     surveyStatus: "Approved",
     surveyStage: "पूर्ण झाले",
     surveyedBy: "सुनील पवार",
+    warshir: "महेश देशमुख",
     reassignedTo: "-",
     lastUpdated: "2023-10-02",
     farmerName: "रमेश कुलकर्णी",
@@ -75,15 +83,15 @@ const data: Survey[] = [
     rejectionReason: "-",
     tokenNumber: "TKN-789",
     tokenDate: "2023-10-03",
-    otpVerified: "होय",
-    cuttingPhotoUploaded: "होय",
+    otpVerified: "Yes",
+    cuttingPhotoUploaded: "Yes",
     tonnageReceived: 250,
     gatePassEntryDate: "2023-11-15",
-    submittedFrom: "मोबाइल",
-    offlineSync: "होय",
+    submittedFrom: "Mobile",
+    offlineSync: "Yes",
     createdOn: "2023-10-01",
     updatedBy: "प्रशासक",
-    voiceNoteUploaded: "नाही",
+    voiceNoteUploaded: "No",
   },
   {
     surveyId: "SURV-002",
@@ -91,6 +99,7 @@ const data: Survey[] = [
     surveyStatus: "Pending",
     surveyStage: "माहिती भरणे",
     surveyedBy: "अनिल शिंदे",
+    warshir: "संजय गायकवाड",
     reassignedTo: "सुनील पवार",
     lastUpdated: "2023-10-03",
     farmerName: "सुरेश पाटील",
@@ -111,15 +120,15 @@ const data: Survey[] = [
     rejectionReason: "-",
     tokenNumber: "-",
     tokenDate: "-",
-    otpVerified: "नाही",
-    cuttingPhotoUploaded: "नाही",
+    otpVerified: "No",
+    cuttingPhotoUploaded: "No",
     tonnageReceived: 0,
     gatePassEntryDate: "-",
-    submittedFrom: "वेब",
-    offlineSync: "नाही",
+    submittedFrom: "Web",
+    offlineSync: "No",
     createdOn: "2023-10-02",
     updatedBy: "अनिल शिंदे",
-    voiceNoteUploaded: "होय",
+    voiceNoteUploaded: "Yes",
   },
   // Add more mock data entries here to test pagination
 ];
@@ -131,6 +140,7 @@ export type Survey = {
   surveyStatus: "Pending" | "Approved" | "Rejected";
   surveyStage: string;
   surveyedBy: string;
+  warshir: string;
   reassignedTo: string;
   lastUpdated: string;
   farmerName: string;
@@ -192,6 +202,10 @@ export const columns: ColumnDef<Survey>[] = [
   {
     accessorKey: "surveyDate",
     header: "सर्वेक्षण तारीख",
+     cell: ({ row }) => {
+      const date = new Date(row.getValue("surveyDate"))
+      return <div>{format(date, "dd/MM/yyyy")}</div>
+    },
   },
   {
     accessorKey: "surveyStatus",
@@ -213,6 +227,10 @@ export const columns: ColumnDef<Survey>[] = [
   {
     accessorKey: "surveyedBy",
     header: "सर्वेक्षक",
+  },
+  {
+    accessorKey: "warshir",
+    header: "वारशिर",
   },
   {
     accessorKey: "reassignedTo",
@@ -360,7 +378,9 @@ export const columns: ColumnDef<Survey>[] = [
               सर्वेक्षण आयडी कॉपी करा
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>तपशील पहा</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/dashboard/farmer/${survey.surveyId}`}>तपशील पहा</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>सर्वेक्षण संपादित करा</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -369,11 +389,11 @@ export const columns: ColumnDef<Survey>[] = [
   },
 ]
 
-function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<typeof useReactTable>, onApply: () => void, onReset: () => void }) {
+function ColumnToggleDropdown({ table }: { table: ReturnType<typeof useReactTable> }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="ml-auto">
+        <Button variant="outline">
           स्तंभ <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -385,6 +405,8 @@ function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<t
           .getAllColumns()
           .filter((column) => column.getCanHide())
           .map((column) => {
+            // Create a more readable label
+            const label = column.id.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
@@ -392,19 +414,147 @@ function ColumnToggleDropdown({ table, onApply, onReset }: { table: ReturnType<t
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {label}
               </DropdownMenuCheckboxItem>
             )
           })}
         </ScrollArea>
-        <DropdownMenuSeparator />
-        <div className="flex justify-end gap-2 p-2">
-            <Button variant="ghost" size="sm" onClick={onReset}>रीसेट</Button>
-            <Button size="sm" onClick={onApply}>लागू करा</Button>
-        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
+}
+
+function AdvancedFilters({ table }: { table: ReturnType<typeof useReactTable> }) {
+    const [date, setDate] = React.useState<DateRange | undefined>()
+    const [minArea, setMinArea] = React.useState<string>("")
+    const [maxArea, setMaxArea] = React.useState<string>("")
+    
+    const handleApply = () => {
+        // Date filter
+        table.getColumn("surveyDate")?.setFilterValue((old: [Date | undefined, Date | undefined]) => {
+             if (date?.from && date?.to) {
+                return [date.from, date.to];
+            }
+            return old;
+        });
+
+        // Area filter
+        table.getColumn("areaAcre")?.setFilterValue((old: [number, number]) => {
+            const min = parseFloat(minArea);
+            const max = parseFloat(maxArea);
+            return [isNaN(min) ? old?.[0] : min, isNaN(max) ? old?.[1] : max];
+        });
+    }
+
+    const handleClear = () => {
+        setDate(undefined);
+        setMinArea("");
+        setMaxArea("");
+        table.getColumn("surveyDate")?.setFilterValue(undefined);
+        table.getColumn("areaAcre")?.setFilterValue(undefined);
+        table.getColumn("surveyedBy")?.setFilterValue("");
+        table.getColumn("warshir")?.setFilterValue("");
+    }
+
+    const uniqueSurveyors = React.useMemo(() => {
+        const surveyors = new Set<string>();
+        data.forEach(s => surveyors.add(s.surveyedBy));
+        return Array.from(surveyors);
+    }, []);
+
+    const uniqueWarshirs = React.useMemo(() => {
+        const warshirs = new Set<string>();
+        data.forEach(s => s.warshir && warshirs.add(s.warshir));
+        return Array.from(warshirs);
+    }, []);
+
+    return (
+        <Sheet>
+            <SheetTrigger asChild>
+                <Button variant="outline"><Filter className="mr-2"/> अधिक फिल्टर</Button>
+            </SheetTrigger>
+            <SheetContent className="flex flex-col">
+                <SheetHeader>
+                    <SheetTitle>अधिक फिल्टर</SheetTitle>
+                </SheetHeader>
+                <div className="flex-grow overflow-y-auto p-1">
+                    <div className="grid gap-6">
+                        <div className="grid gap-2">
+                            <Label>सर्वेक्षण तारीख श्रेणी</Label>
+                             <Popover>
+                                <PopoverTrigger asChild>
+                                <Button
+                                    variant={"outline"}
+                                >
+                                    {date?.from ? (
+                                    date.to ? (
+                                        <>
+                                        {format(date.from, "LLL dd, y")} -{" "}
+                                        {format(date.to, "LLL dd, y")}
+                                        </>
+                                    ) : (
+                                        format(date.from, "LLL dd, y")
+                                    )
+                                    ) : (
+                                    <span>एक तारीख निवडा</span>
+                                    )}
+                                </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    mode="range"
+                                    defaultMonth={date?.from}
+                                    selected={date}
+                                    onSelect={setDate}
+                                    numberOfMonths={2}
+                                />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
+                         <div className="grid gap-2">
+                            <Label htmlFor="surveyor">सर्वेक्षक</Label>
+                            <Select
+                                value={table.getColumn("surveyedBy")?.getFilterValue() as string ?? ""}
+                                onValueChange={(value) => table.getColumn("surveyedBy")?.setFilterValue(value)}
+                            >
+                                <SelectTrigger><SelectValue placeholder="सर्वेक्षक निवडा" /></SelectTrigger>
+                                <SelectContent>
+                                    {uniqueSurveyors.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        
+                         <div className="grid gap-2">
+                            <Label htmlFor="warshir">वारशिर</Label>
+                           <Select
+                                value={table.getColumn("warshir")?.getFilterValue() as string ?? ""}
+                                onValueChange={(value) => table.getColumn("warshir")?.setFilterValue(value)}
+                           >
+                                <SelectTrigger><SelectValue placeholder="वारशिर निवडा" /></SelectTrigger>
+                                <SelectContent>
+                                    {uniqueWarshirs.map(w => <SelectItem key={w} value={w}>{w}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        
+                        <div className="grid gap-2">
+                            <Label>क्षेत्र (एकर)</Label>
+                            <div className="flex items-center gap-2">
+                                <Input type="number" placeholder="किमान" value={minArea} onChange={e => setMinArea(e.target.value)} />
+                                <span className="text-muted-foreground">-</span>
+                                <Input type="number" placeholder="कमाल" value={maxArea} onChange={e => setMaxArea(e.target.value)} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <SheetFooter>
+                    <Button variant="ghost" onClick={handleClear}>स्वच्छ करा</Button>
+                    <Button onClick={handleApply}>फिल्टर लागू करा</Button>
+                </SheetFooter>
+            </SheetContent>
+        </Sheet>
+    )
 }
 
 
@@ -413,7 +563,7 @@ export default function SurveyDataTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
-    const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -424,36 +574,46 @@ export default function SurveyDataTable() {
   }, []);
 
   const defaultColumnVisibility = {
-    'reassignedTo': false,
-    'lastUpdated': false,
-    'farmerContact': false,
-    'gatGroupNumber': false,
-    'surveyNumber': false,
-    'gpsCoordinates': false,
-    'cropCondition': false,
-    'approvedBy': false,
-    'rejectionReason': false,
-    'tokenNumber': false,
-    'tokenDate': false,
-    'otpVerified': false,
-    'cuttingPhotoUploaded': false,
-    'tonnageReceived': false,
-    'gatePassEntryDate': false,
-    'submittedFrom': false,
-    'offlineSync': false,
-    'createdOn': false,
-    'updatedBy': false,
-    'voiceNoteUploaded': false,
+    'reassignedTo': false, 'lastUpdated': false, 'farmerContact': false, 'gatGroupNumber': false,
+    'surveyNumber': false, 'gpsCoordinates': false, 'cropCondition': false, 'approvedBy': false,
+    'rejectionReason': false, 'tokenNumber': false, 'tokenDate': false, 'otpVerified': false,
+    'cuttingPhotoUploaded': false, 'tonnageReceived': false, 'gatePassEntryDate': false,
+    'submittedFrom': false, 'offlineSync': false, 'createdOn': false, 'updatedBy': false,
+    'voiceNoteUploaded': false, 'select': false, 'surveyStage': false, 'photoCount': false,
+    'district': false, 'caneType': false, 'caneVariety': false, 'approvalStatus': false
   };
-
 
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>(defaultColumnVisibility)
-  
-  const [stagedColumnVisibility, setStagedColumnVisibility] =
-    React.useState<VisibilityState>(defaultColumnVisibility)
 
   const [rowSelection, setRowSelection] = React.useState({})
+  
+  const dateRangeFilterFn = (row: any, columnId: string, filterValue: [Date | undefined, Date | undefined]) => {
+      const date = new Date(row.getValue(columnId));
+      const [start, end] = filterValue;
+      if (start && !end) {
+          return date >= start;
+      } else if (!start && end) {
+          return date <= end;
+      } else if (start && end) {
+          return date >= start && date <= end;
+      }
+      return true;
+  };
+  
+  const areaRangeFilterFn = (row: any, columnId: string, filterValue: [number | undefined, number | undefined]) => {
+    const area = row.getValue(columnId);
+    const [min, max] = filterValue;
+
+    if (min && !max) {
+      return area >= min;
+    } else if (!min && max) {
+      return area <= max;
+    } else if (min && max) {
+      return area >= min && area <= max;
+    }
+    return true;
+  };
 
   const table = useReactTable({
     data,
@@ -464,12 +624,16 @@ export default function SurveyDataTable() {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setStagedColumnVisibility,
+    onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    filterFns: {
+        dateRange: dateRangeFilterFn,
+        areaRange: areaRangeFilterFn,
+    },
     state: {
       sorting,
       columnFilters,
-      columnVisibility: stagedColumnVisibility,
+      columnVisibility,
       rowSelection,
     },
     initialState: {
@@ -478,14 +642,8 @@ export default function SurveyDataTable() {
         },
     }
   })
-
-  const handleApply = () => {
-    setColumnVisibility(stagedColumnVisibility)
-  }
-
-  const handleReset = () => {
-    setStagedColumnVisibility(defaultColumnVisibility)
-  }
+  
+  const activeFilters = columnFilters.filter(f => f.value);
 
   return (
     <Card>
@@ -497,17 +655,68 @@ export default function SurveyDataTable() {
       </CardHeader>
       <CardContent>
         <div className="w-full">
-            <div className="flex items-center py-4">
+            <div className="flex items-center gap-2 py-4">
                 <Input
-                placeholder="शेतकऱ्याच्या नावाने फिल्टर करा..."
-                value={(table.getColumn("farmerName")?.getFilterValue() as string) ?? ""}
-                onChange={(event) =>
-                    table.getColumn("farmerName")?.setFilterValue(event.target.value)
-                }
-                className="max-w-sm"
+                  placeholder="शेतकऱ्याच्या नावाने फिल्टर करा..."
+                  value={(table.getColumn("farmerName")?.getFilterValue() as string) ?? ""}
+                  onChange={(event) =>
+                      table.getColumn("farmerName")?.setFilterValue(event.target.value)
+                  }
+                  className="max-w-xs"
                 />
-                <ColumnToggleDropdown table={table} onApply={handleApply} onReset={handleReset} />
+                <Select
+                    value={(table.getColumn("surveyStatus")?.getFilterValue() as string) ?? ""}
+                    onValueChange={(value) => table.getColumn("surveyStatus")?.setFilterValue(value === "all" ? "" : value)}
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="स्थितीनुसार फिल्टर करा" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">सर्व स्थिती</SelectItem>
+                        <SelectItem value="Approved">मंजूर</SelectItem>
+                        <SelectItem value="Pending">प्रलंबित</SelectItem>
+                        <SelectItem value="Rejected">नाकारलेले</SelectItem>
+                    </SelectContent>
+                </Select>
+                 <Select
+                    value={(table.getColumn("taluka")?.getFilterValue() as string) ?? ""}
+                    onValueChange={(value) => table.getColumn("taluka")?.setFilterValue(value === "all" ? "" : value)}
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="तालुकानुसार फिल्टर करा" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">सर्व तालुके</SelectItem>
+                        <SelectItem value="अहमदपूर">अहमदपूर</SelectItem>
+                        <SelectItem value="औसा">औसा</SelectItem>
+                    </SelectContent>
+                </Select>
+                <div className="ml-auto flex items-center gap-2">
+                  <AdvancedFilters table={table} />
+                  <ColumnToggleDropdown table={table} />
+                </div>
             </div>
+             {activeFilters.length > 0 && (
+                <div className="flex items-center gap-2 pb-4">
+                    <p className="text-sm text-muted-foreground">सक्रिय फिल्टर:</p>
+                    {activeFilters.map(filter => (
+                         <Badge key={filter.id} variant="secondary">
+                            {filter.id}: {JSON.stringify(filter.value)}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-4 w-4 ml-2"
+                                onClick={() => table.getColumn(filter.id)?.setFilterValue("")}
+                            >
+                                <X className="h-3 w-3"/>
+                            </Button>
+                        </Badge>
+                    ))}
+                    <Button variant="ghost" size="sm" onClick={() => table.resetColumnFilters()}>
+                        सर्व साफ करा
+                    </Button>
+                </div>
+            )}
             <div className="rounded-md border">
               <ScrollArea className="w-full whitespace-nowrap h-[500px]">
                 <Table>
@@ -622,3 +831,5 @@ export default function SurveyDataTable() {
     </Card>
   )
 }
+
+    

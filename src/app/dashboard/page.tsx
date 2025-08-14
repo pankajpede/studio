@@ -153,6 +153,12 @@ export type Survey = {
   voiceNoteUploaded: "Yes" | "No";
 }
 
+const statusOptions = [
+    { value: "Approved", label: "मंजूर" },
+    { value: "Pending", label: "प्रलंबित" },
+    { value: "Rejected", label: "नाकारलेले" },
+];
+
 export const columns: ColumnDef<Survey>[] = [
   {
     accessorKey: "farmerName",
@@ -193,7 +199,10 @@ export const columns: ColumnDef<Survey>[] = [
             "Rejected": "नाकारलेले"
         }
         return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{statusTranslations[status] || status}</Badge>;
-    }
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
   },
   {
     accessorKey: "surveyedBy",
@@ -432,6 +441,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
   
   const activeFilters = columnFilters.filter(f => f.value && (Array.isArray(f.value) ? f.value.some(v => v) : true));
   const uniqueTalukas = React.useMemo(() => Array.from(new Set(data.map(s => s.taluka))), [data]);
+  const selectedStatuses = table.getColumn('surveyStatus')?.getFilterValue() as string[] ?? [];
 
   return (
     <Card className="w-full">
@@ -452,20 +462,40 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                 }
                 className="max-w-xs"
                 />
-                 <Select
-                    value={(table.getColumn("surveyStatus")?.getFilterValue() as string) ?? ""}
-                    onValueChange={(value) => table.getColumn("surveyStatus")?.setFilterValue(value === "all" ? "" : value)}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="स्थितीनुसार फिल्टर करा" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">सर्व स्थिती</SelectItem>
-                        <SelectItem value="Approved">मंजूर</SelectItem>
-                        <SelectItem value="Pending">प्रलंबित</SelectItem>
-                        <SelectItem value="Rejected">नाकारलेले</SelectItem>
-                    </SelectContent>
-                </Select>
+                 <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-[180px] justify-between">
+                            <span>
+                                स्थितीनुसार फिल्टर करा
+                                {selectedStatuses.length > 0 && (
+                                    <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
+                                        {selectedStatuses.length} निवडले
+                                    </Badge>
+                                )}
+                            </span>
+                             <ChevronDown className="ml-2 h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[180px]">
+                        <DropdownMenuLabel>स्थितीनुसार फिल्टर करा</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {statusOptions.map((option) => (
+                            <DropdownMenuCheckboxItem
+                                key={option.value}
+                                checked={selectedStatuses.includes(option.value)}
+                                onCheckedChange={(checked) => {
+                                    const current = table.getColumn('surveyStatus')?.getFilterValue() as string[] ?? [];
+                                    const newStatuses = checked
+                                        ? [...current, option.value]
+                                        : current.filter((s) => s !== option.value);
+                                    table.getColumn('surveyStatus')?.setFilterValue(newStatuses.length ? newStatuses : undefined);
+                                }}
+                            >
+                                {option.label}
+                            </DropdownMenuCheckboxItem>
+                        ))}
+                    </DropdownMenuContent>
+                </DropdownMenu>
                  <Select
                     value={(table.getColumn("taluka")?.getFilterValue() as string) ?? ""}
                     onValueChange={(value) => table.getColumn("taluka")?.setFilterValue(value === "all" ? "" : value)}
@@ -486,20 +516,21 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                 <div className="flex flex-wrap items-center gap-2 pb-4">
                     <p className="text-sm text-muted-foreground">सक्रिय फिल्टर:</p>
                     {activeFilters.map(filter => {
-                        let valueText = JSON.stringify(filter.value);
-                        if (filter.id === 'surveyDate' && Array.isArray(filter.value)) {
+                        let valueText: string | null = null;
+                        if (filter.id === 'surveyStatus' && Array.isArray(filter.value)) {
+                            valueText = (filter.value as string[]).map(v => statusOptions.find(o => o.value === v)?.label || v).join(', ');
+                        } else if (filter.id === 'surveyDate' && Array.isArray(filter.value)) {
                            const [start, end] = filter.value as (Date | undefined)[];
                            if(start && end) valueText = `${format(start, 'dd/MM/yy')} - ${format(end, 'dd/MM/yy')}`;
                            else if (start) valueText = `from ${format(start, 'dd/MM/yy')}`;
                            else if (end) valueText = `to ${format(end, 'dd/MM/yy')}`;
-                           else valueText = ''
-                        }
-                        if (filter.id === 'areaAcre' && Array.isArray(filter.value)) {
+                        } else if (filter.id === 'areaAcre' && Array.isArray(filter.value)) {
                             const [min, max] = filter.value as string[];
                             if(min && max) valueText = `${min}-${max} एकर`;
                             else if (min) valueText = `>= ${min} एकर`;
                             else if (max) valueText = `<= ${max} एकर`;
-                            else valueText = ''
+                        } else if (typeof filter.value === 'string') {
+                            valueText = filter.value
                         }
 
                         if (!valueText) return null;
@@ -711,3 +742,5 @@ export default function DashboardPage() {
     </div>
   )
 }
+
+    

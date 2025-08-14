@@ -21,11 +21,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ArrowLeft, Edit, FileText, Image as ImageIcon, Map, Mic, Share2, User, Landmark, Fingerprint, Tractor, Droplets, BookUser, Wheat, Percent, Receipt, Truck } from 'lucide-react';
+import { ArrowLeft, Edit, FileText, Image as ImageIcon, Map, Mic, Share2, User, Landmark, Fingerprint, Tractor, Droplets, BookUser, Wheat, Percent, Receipt, Truck, Play, Pause } from 'lucide-react';
 import Image from 'next/image';
 import SurveyMap from '@/components/survey-map';
 import type { Survey } from '../../page';
 import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Mock data generation - in a real app, this would come from your backend/DB
 const generateSurveyData = (count: number): Survey[] => {
@@ -84,11 +85,18 @@ const DetailItem = ({ label, value }: { label: string; value?: React.ReactNode }
     </div>
 );
 
+// A silent 1-second WAV file encoded in Base64
+const silentAudio = "data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=";
+
+
 export default function FarmerDetailPage() {
   const params = useParams();
   const { id } = params;
   const [surveyData, setSurveyData] = React.useState<Survey | undefined>(undefined);
   const [allSurveys, setAllSurveys] = React.useState<Survey[]>([]);
+  const [playingAudio, setPlayingAudio] = React.useState<string | null>(null);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
 
   // In a real app, you would fetch this data from Firestore based on the farmer/survey ID
   React.useEffect(() => {
@@ -97,6 +105,30 @@ export default function FarmerDetailPage() {
     const currentSurvey = generatedSurveys.find(s => s.surveyId === id);
     setSurveyData(currentSurvey);
   }, [id]);
+
+  const handlePlayPause = (audioSrc: string, noteName: string) => {
+    if (playingAudio === noteName) {
+        audioRef.current?.pause();
+        setPlayingAudio(null);
+    } else {
+        if (audioRef.current) {
+            audioRef.current.pause();
+        }
+        audioRef.current = new Audio(audioSrc);
+        audioRef.current.play();
+        setPlayingAudio(noteName);
+        audioRef.current.onended = () => {
+            setPlayingAudio(null);
+        };
+    }
+  };
+  
+  React.useEffect(() => {
+    // Cleanup audio element on component unmount
+    return () => {
+        audioRef.current?.pause();
+    }
+  }, [])
 
 
   if (!surveyData) {
@@ -163,8 +195,8 @@ export default function FarmerDetailPage() {
       },
       media: {
           voiceNotes: [
-              { name: "सर्वेक्षणादरम्यान १", file: "voice_note_survey_1.mp3" },
-              { name: "तोडणीदरम्यान", file: "voice_note_cutting.mp3" },
+              { name: "सर्वेक्षणादरम्यान १", file: "voice_note_survey_1.mp3", src: silentAudio },
+              { name: "तोडणीदरम्यान", file: "voice_note_cutting.mp3", src: silentAudio },
           ],
           photos: [
             { category: "शेताचे फोटो", url: `https://placehold.co/400x300.png`, hint: "sugarcane farm" },
@@ -340,6 +372,7 @@ export default function FarmerDetailPage() {
                     </div>
                     <Separator />
                     <h4 className="font-semibold text-sm">व्हॉइस नोट्स</h4>
+                     <TooltipProvider>
                      {farmerData.media.voiceNotes.map((note, i) => (
                         <div key={i} className="flex items-center gap-2 p-2 rounded-md border bg-muted/50">
                             <Mic className="text-primary" />
@@ -347,9 +380,19 @@ export default function FarmerDetailPage() {
                                 <span className="text-sm font-medium">{note.file}</span>
                                 <span className="text-xs text-muted-foreground">{note.name}</span>
                             </div>
-                            <Button size="sm" variant="ghost" className="ml-auto" disabled>प्ले</Button>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button size="icon" variant="ghost" className="ml-auto h-8 w-8" onClick={() => handlePlayPause(note.src, note.name)}>
+                                        {playingAudio === note.name ? <Pause /> : <Play />}
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{playingAudio === note.name ? 'विराम' : 'प्ले'}</p>
+                                </TooltipContent>
+                            </Tooltip>
                         </div>
                     ))}
+                    </TooltipProvider>
                 </CardContent>
             </Card>
         </div>
@@ -357,3 +400,6 @@ export default function FarmerDetailPage() {
     </div>
   );
 }
+
+
+    

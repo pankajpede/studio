@@ -56,6 +56,17 @@ const mockFarmers = [
     { value: "farmer-20", label: "संदीप सूर्यवंशी" },
 ];
 
+const mockVillages = [
+    { value: "chakur", label: "चाकूर" },
+    { value: "mohgaon", label: "मोहगाव" },
+    { value: "lamjana", label: "लामजना" },
+    { value: "kasarwadi", label: "कासारवाडी" },
+    { value: "nalegaon", label: "नाळेगाव" },
+    { value: "wadwal", label: "वडवळ" },
+    { value: "handarguli", label: "हंडरगुळी" },
+    { value: "devangra", label: "देवंग्रा" },
+];
+
 
 export default function NewFieldSurveyPage() {
     const router = useRouter();
@@ -72,6 +83,7 @@ export default function NewFieldSurveyPage() {
     const [farmer, setFarmer] = React.useState("");
 
     const [farmerSearchOpen, setFarmerSearchOpen] = React.useState(false);
+    const [villageSearchOpen, setVillageSearchOpen] = React.useState(false);
 
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "map"];
@@ -150,13 +162,50 @@ export default function NewFieldSurveyPage() {
                 </div>
                  <div className="grid gap-2">
                     <Label htmlFor="village">गाव</Label>
-                    <Select onValueChange={setVillage} value={village} disabled={!taluka}>
-                        <SelectTrigger id="village"><SelectValue placeholder={!taluka ? "प्रथम तालुका निवडा" : "गाव निवडा..."} /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="mohgaon">मोहगाव</SelectItem>
-                            <SelectItem value="chakur">चाकूर</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <Popover open={villageSearchOpen} onOpenChange={setVillageSearchOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={villageSearchOpen}
+                                className="w-full justify-between"
+                                disabled={!taluka}
+                            >
+                                {village
+                                    ? mockVillages.find((v) => v.value === village)?.label
+                                    : !taluka ? "प्रथम तालुका निवडा" : "गाव निवडा..."}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0" align="start">
+                            <Command>
+                                <CommandInput placeholder="गाव शोधा..." />
+                                <CommandList>
+                                    <CommandEmpty>गाव आढळले नाही.</CommandEmpty>
+                                    <CommandGroup>
+                                        {mockVillages.map((v) => (
+                                        <CommandItem
+                                            key={v.value}
+                                            value={v.value}
+                                            onSelect={(currentValue) => {
+                                                setVillage(currentValue === village ? "" : currentValue)
+                                                setVillageSearchOpen(false)
+                                            }}
+                                        >
+                                            <Check
+                                            className={cn(
+                                                "mr-2 h-4 w-4",
+                                                village === v.value ? "opacity-100" : "opacity-0"
+                                            )}
+                                            />
+                                            {v.label}
+                                        </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="survey-no">सर्वेक्षण क्र.</Label>

@@ -438,7 +438,7 @@ export default function NewFieldSurveyPage() {
                         </Button>
                      )}
                  </div>
-                <div className="grid gap-2">
+                 <div className="grid gap-2">
                     <Label htmlFor="passbook-name">पासबुक वरील नाव</Label>
                     <Input id="passbook-name" placeholder="पासबुकनुसार नाव टाका" value={nameAsPerPassbook} onChange={(e) => setNameAsPerPassbook(e.target.value)} />
                 </div>
@@ -464,12 +464,23 @@ export default function NewFieldSurveyPage() {
                     <Input id="area" type="number" placeholder="उदा. २.५" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="crop-type">पिकाचा प्रकार</Label>
+                    <Label htmlFor="planting-type">पिकाचा प्रकार</Label>
                     <Select>
-                        <SelectTrigger id="crop-type"><SelectValue placeholder="पिकाचा प्रकार निवडा" /></SelectTrigger>
+                        <SelectTrigger id="planting-type"><SelectValue placeholder="पिकाचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="plant">रोप</SelectItem>
                             <SelectItem value="ratoon">खोडवा</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="cane-type">उसाचा प्रकार</Label>
+                    <Select>
+                        <SelectTrigger id="cane-type"><SelectValue placeholder="उसाचा प्रकार निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="adsali">अडसाली</SelectItem>
+                            <SelectItem value="preseasonal">पूर्व-हंगामी</SelectItem>
+                             <SelectItem value="suru">सुरू</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

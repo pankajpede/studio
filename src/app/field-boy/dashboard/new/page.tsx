@@ -357,31 +357,29 @@ export default function NewFieldSurveyPage() {
                 </div>
                  <div className="grid gap-2">
                     <Label htmlFor="voter-id">मतदार ओळखपत्र</Label>
-                    <Input id="voter-id" placeholder="मतदार ओळखपत्र टाका" value={voterId} onChange={(e) => setVoterId(e.target.value)} />
-                    <Input id="voter-id-file" type="file" className="sr-only" onChange={(e) => handleFileChange(e, setVoterIdFile)} />
-                    {voterIdFile ? (
-                        <FileUploadItem file={voterIdFile} onRemove={() => setVoterIdFile(null)} />
-                    ) : (
-                        <Button asChild variant="outline">
+                    <div className="flex gap-2">
+                        <Input id="voter-id" placeholder="मतदार ओळखपत्र टाका" value={voterId} onChange={(e) => setVoterId(e.target.value)} className="flex-grow" />
+                        <Input id="voter-id-file" type="file" className="sr-only" onChange={(e) => handleFileChange(e, setVoterIdFile)} />
+                        <Button asChild variant="outline" className="shrink-0">
                             <Label htmlFor="voter-id-file" className="cursor-pointer">
-                                <UploadCloud className="mr-2" /> ओळखपत्र अपलोड करा
+                                <UploadCloud className="mr-2" /> अपलोड
                             </Label>
                         </Button>
-                    )}
+                    </div>
+                    {voterIdFile && <FileUploadItem file={voterIdFile} onRemove={() => setVoterIdFile(null)} />}
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="pan">पॅन कार्ड</Label>
-                    <Input id="pan" placeholder="पॅन नंबर टाका" value={pan} onChange={(e) => setPan(e.target.value)} />
-                    <Input id="pan-file" type="file" className="sr-only" onChange={(e) => handleFileChange(e, setPanFile)} />
-                    {panFile ? (
-                        <FileUploadItem file={panFile} onRemove={() => setPanFile(null)} />
-                    ) : (
-                        <Button asChild variant="outline">
+                     <div className="flex gap-2">
+                        <Input id="pan" placeholder="पॅन नंबर टाका" value={pan} onChange={(e) => setPan(e.target.value)} className="flex-grow" />
+                        <Input id="pan-file" type="file" className="sr-only" onChange={(e) => handleFileChange(e, setPanFile)} />
+                         <Button asChild variant="outline" className="shrink-0">
                             <Label htmlFor="pan-file" className="cursor-pointer">
-                                <UploadCloud className="mr-2" /> पॅन कार्ड अपलोड करा
+                                <UploadCloud className="mr-2" /> अपलोड
                             </Label>
                         </Button>
-                    )}
+                    </div>
+                    {panFile && <FileUploadItem file={panFile} onRemove={() => setPanFile(null)} />}
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="bank-name">बँकेचे नाव</Label>

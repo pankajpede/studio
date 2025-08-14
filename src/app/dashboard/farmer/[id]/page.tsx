@@ -269,9 +269,20 @@ export default function FarmerDetailPage() {
           </Link>
         </Button>
         <div className="flex gap-2">
-            <Button variant="outline"><Edit /> <span className="ml-2 hidden sm:inline">संपादित करा</span></Button>
-            <Button variant="outline"><Share2 /> <span className="ml-2 hidden sm:inline">पुन्हा नियुक्त करा</span></Button>
-            <Button><Map /> <span className="ml-2 hidden sm:inline">नकाशा पहा</span></Button>
+            <Button variant="outline"><Edit /> <span className="ml-2 hidden sm:inline">अपडेट करा</span></Button>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button><Map /> <span className="ml-2 hidden sm:inline">नकाशा पहा</span></Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl h-4/5">
+                    <DialogHeader>
+                        <DialogTitle>शेत नकाशा</DialogTitle>
+                    </DialogHeader>
+                    <div className="h-full w-full py-4">
+                        <SurveyMap surveys={[surveyData]} />
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
       </div>
 

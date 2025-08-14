@@ -114,6 +114,7 @@ export default function NewFieldSurveyPage() {
                         <SelectTrigger id="state"><SelectValue placeholder="राज्य निवडा..." /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="maharashtra">महाराष्ट्र</SelectItem>
+                            <SelectItem value="karnataka">कर्नाटक</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -159,18 +160,19 @@ export default function NewFieldSurveyPage() {
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="survey-no">सर्वेक्षण क्र.</Label>
-                    <Input 
-                        id="survey-no" 
-                        placeholder={!village ? "प्रथम गाव निवडा" : "सर्वेक्षण क्रमांक टाका"}
-                        value={surveyNo}
-                        onChange={(e) => setSurveyNo(e.target.value)}
-                        disabled={!village}
-                    />
+                     <Select onValueChange={setSurveyNo} value={surveyNo} disabled={!village}>
+                        <SelectTrigger id="survey-no"><SelectValue placeholder={!village ? "प्रथम गाव निवडा" : "सर्वेक्षण क्रमांक निवडा"} /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="SN-101">SN-101</SelectItem>
+                            <SelectItem value="SN-102">SN-102</SelectItem>
+                            <SelectItem value="SN-103">SN-103</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="gat-no">गट क्र.</Label>
                      <Select onValueChange={setGatNo} value={gatNo} disabled={!surveyNo}>
-                        <SelectTrigger id="gat-no"><SelectValue placeholder={!surveyNo ? "प्रथम सर्वेक्षण क्र. टाका" : "गट क्रमांक निवडा"} /></SelectTrigger>
+                        <SelectTrigger id="gat-no"><SelectValue placeholder={!surveyNo ? "प्रथम सर्वेक्षण क्र. निवडा" : "गट क्रमांक निवडा"} /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="1">१</SelectItem>
                             <SelectItem value="2">२</SelectItem>

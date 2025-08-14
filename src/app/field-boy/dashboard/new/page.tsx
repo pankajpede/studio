@@ -128,9 +128,9 @@ export default function NewFieldSurveyPage() {
                     </Select>
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="region">परिसर</Label>
+                    <Label htmlFor="region">रीजन</Label>
                     <Select onValueChange={setRegion} value={region} disabled={!district}>
-                        <SelectTrigger id="region"><SelectValue placeholder={!district ? "प्रथम जिल्हा निवडा" : "परिसर निवडा..."} /></SelectTrigger>
+                        <SelectTrigger id="region"><SelectValue placeholder={!district ? "प्रथम जिल्हा निवडा" : "रीजन निवडा..."} /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="latur-east">लातूर पूर्व</SelectItem>
                              <SelectItem value="latur-west">लातूर पश्चिम</SelectItem>
@@ -140,7 +140,7 @@ export default function NewFieldSurveyPage() {
                  <div className="grid gap-2">
                     <Label htmlFor="taluka">तालुका</Label>
                     <Select onValueChange={setTaluka} value={taluka} disabled={!region}>
-                        <SelectTrigger id="taluka"><SelectValue placeholder={!region ? "प्रथम परिसर निवडा" : "तालुका निवडा..."} /></SelectTrigger>
+                        <SelectTrigger id="taluka"><SelectValue placeholder={!region ? "प्रथम रीजन निवडा" : "तालुका निवडा..."} /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="ahmedpur">अहमदपूर</SelectItem>
                             <SelectItem value="ausa">औसा</SelectItem>
@@ -326,3 +326,5 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    

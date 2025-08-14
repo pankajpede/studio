@@ -34,6 +34,7 @@ export default function NewFieldSurveyPage() {
     const router = useRouter();
     const [activeTab, setActiveTab] = React.useState("farmer-selection");
     const [surveyNo, setSurveyNo] = React.useState("");
+    const [gatNo, setGatNo] = React.useState("");
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "map"];
 
@@ -130,7 +131,7 @@ export default function NewFieldSurveyPage() {
                 <div className="grid gap-2">
                     <Label htmlFor="gat-no">Gat No.</Label>
                      {surveyNo ? (
-                        <Select>
+                        <Select onValueChange={setGatNo} value={gatNo}>
                             <SelectTrigger id="gat-no"><SelectValue placeholder="Select gat number" /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="1">1</SelectItem>
@@ -145,8 +146,10 @@ export default function NewFieldSurveyPage() {
                 </div>
                  <div className="grid gap-2 md:col-span-2">
                     <Label htmlFor="farmer-selection">Farmer Selection</Label>
-                    <Select>
-                        <SelectTrigger id="farmer-selection"><SelectValue placeholder="Select farmer..." /></SelectTrigger>
+                    <Select disabled={!gatNo}>
+                        <SelectTrigger id="farmer-selection">
+                            <SelectValue placeholder={gatNo ? "Select farmer..." : "Select gat no. first"} />
+                        </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="farmer-1">Ramesh Kulkarni</SelectItem>
                             <SelectItem value="farmer-2">Suresh Patil</SelectItem>

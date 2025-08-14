@@ -34,26 +34,26 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 const mockFarmers = [
-    { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}] , bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234" },
-    { value: "farmer-2", label: "सुरेश पाटील", mobile: "9876543211", docs: [{type: 'pan', number: 'BCDEF2345G'}], bankName: "HDFC बँक", accountNumber: "XXXX-XXXX-2345", ifsc: "HDFC0002345" },
-    { value: "farmer-3", label: "गणेश जाधव", mobile: "9876543212", docs: [{type: 'voter-id', number: 'GHI3456789'}], bankName: "ICICI बँक", accountNumber: "XXXX-XXXX-3456", ifsc: "ICIC0003456" },
-    { value: "farmer-4", label: "प्रकाश शिंदे", mobile: "9876543213", docs: [{type: 'voter-id', number: 'JKL4567890'}], bankName: "ऍक्सिस बँक", accountNumber: "XXXX-XXXX-4567", ifsc: "UTIB0004567" },
-    { value: "farmer-5", label: "सचिन मोरे", mobile: "9876543214", docs: [{type: 'voter-id', number: 'MNO5678901'}], bankName: "बँक ऑफ बडोदा", accountNumber: "XXXX-XXXX-5678", ifsc: "BARB0005678" },
-    { value: "farmer-6", label: "अनिल गायकवाड", mobile: "9876543215", docs: [{type: 'pan', number: 'FGHIJ6789K'}], bankName: "पंजाब नॅशनल बँक", accountNumber: "XXXX-XXXX-6789", ifsc: "PUNB0006789" },
-    { value: "farmer-7", label: "दीपक चव्हाण", mobile: "9876543216", docs: [{type: 'voter-id', number: 'STU7890123'}], bankName: "कॅनरा बँक", accountNumber: "XXXX-XXXX-7890", ifsc: "CNRB0007890" },
-    { value: "farmer-8", label: "संजय देशमुख", mobile: "9876543217", docs: [{type: 'voter-id', number: 'VWX8901234'}], bankName: "युनियन बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-8901", ifsc: "UBIN0008901" },
-    { value: "farmer-9", label: "विशाल पवार", mobile: "9876543218", docs: [{type: 'pan', number: 'IJKLM9012N'}], bankName: "बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-9012", ifsc: "BKID0009012" },
-    { value: "farmer-10", label: "अमित भोसले", mobile: "9876543219", docs: [{type: 'voter-id', number: 'BCD0123456'}], bankName: "सेंट्रल बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-0123", ifsc: "CBIN0000123" },
-    { value: "farmer-11", label: "राहुल सावंत", mobile: "9876543220", docs: [{type: 'voter-id', number: 'EFG1234567'}], bankName: "इंडियन बँक", accountNumber: "XXXX-XXXX-1234", ifsc: "IDIB0001234" },
-    { value: "farmer-12", label: "अजय कदम", mobile: "9876543221", docs: [{type: 'pan', number: 'LMNOP2345Q'}], bankName: "IDBI बँक", accountNumber: "XXXX-XXXX-2345", ifsc: "IBKL0002345" },
-    { value: "farmer-13", label: "नितीन राऊत", mobile: "9876543222", docs: [{type: 'voter-id', number: 'KLM3456789'}], bankName: "कोटक महिंद्रा बँक", accountNumber: "XXXX-XXXX-3456", ifsc: "KKBK0003456" },
-    { value: "farmer-14", label: "प्रशांत कांबळे", mobile: "9876543223", docs: [{type: 'voter-id', number: 'NOP4567890'}], bankName: "येस बँक", accountNumber: "XXXX-XXXX-4567", ifsc: "YESB0004567" },
-    { value: "farmer-15", label: "मनोज जगताप", mobile: "9876543224", docs: [{type: 'pan', number: 'OPQRS5678T'}], bankName: "इंडसइंड बँक", accountNumber: "XXXX-XXXX-5678", ifsc: "INDB0005678" },
-    { value: "farmer-16", label: "योगेश यादव", mobile: "9876543225", docs: [{type: 'voter-id', number: 'STU6789012'}], bankName: "RBL बँक", accountNumber: "XXXX-XXXX-6789", ifsc: "RATN0006789" },
-    { value: "farmer-17", label: "महेश माने", mobile: "9876543226", docs: [{type: 'voter-id', number: 'VWX7890123'}], bankName: "फेडरल बँक", accountNumber: "XXXX-XXXX-7890", ifsc: "FDRL0007890" },
-    { value: "farmer-18", label: "अमोल थोरात", mobile: "9876543227", docs: [{type: 'pan', number: 'RSTUV8901W'}], bankName: "साउथ इंडियन बँक", accountNumber: "XXXX-XXXX-8901", ifsc: "SIBL0008901" },
-    { value: "farmer-19", label: "किरण साळुंखे", mobile: "9876543228", docs: [{type: 'voter-id', number: 'BCD9012345'}], bankName: "कर्नाटक बँक", accountNumber: "XXXX-XXXX-9012", ifsc: "KARB0009012" },
-    { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", docs: [{type: 'voter-id', number: 'EFG0123456'}], bankName: "सिटी युनियन बँक", accountNumber: "XXXX-XXXX-0123", ifsc: "CIUB0000123" },
+    { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], nameAsPerPassbook: "रमेश एस कुलकर्णी", bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234" },
+    { value: "farmer-2", label: "सुरेश पाटील", mobile: "9876543211", docs: [{type: 'pan', number: 'BCDEF2345G'}], nameAsPerPassbook: "सुरेश पाटील", bankName: "HDFC बँक", accountNumber: "XXXX-XXXX-2345", ifsc: "HDFC0002345" },
+    { value: "farmer-3", label: "गणेश जाधव", mobile: "9876543212", docs: [{type: 'voter-id', number: 'GHI3456789'}], nameAsPerPassbook: "गणेश एम जाधव", bankName: "ICICI बँक", accountNumber: "XXXX-XXXX-3456", ifsc: "ICIC0003456" },
+    { value: "farmer-4", label: "प्रकाश शिंदे", mobile: "9876543213", docs: [{type: 'voter-id', number: 'JKL4567890'}], nameAsPerPassbook: "प्रकाश शिंदे", bankName: "ऍक्सिस बँक", accountNumber: "XXXX-XXXX-4567", ifsc: "UTIB0004567" },
+    { value: "farmer-5", label: "सचिन मोरे", mobile: "9876543214", docs: [{type: 'voter-id', number: 'MNO5678901'}], nameAsPerPassbook: "सचिन आर मोरे", bankName: "बँक ऑफ बडोदा", accountNumber: "XXXX-XXXX-5678", ifsc: "BARB0005678" },
+    { value: "farmer-6", label: "अनिल गायकवाड", mobile: "9876543215", docs: [{type: 'pan', number: 'FGHIJ6789K'}], nameAsPerPassbook: "अनिल गायकवाड", bankName: "पंजाब नॅशनल बँक", accountNumber: "XXXX-XXXX-6789", ifsc: "PUNB0006789" },
+    { value: "farmer-7", label: "दीपक चव्हाण", mobile: "9876543216", docs: [{type: 'voter-id', number: 'STU7890123'}], nameAsPerPassbook: "दीपक व्ही चव्हाण", bankName: "कॅनरा बँक", accountNumber: "XXXX-XXXX-7890", ifsc: "CNRB0007890" },
+    { value: "farmer-8", label: "संजय देशमुख", mobile: "9876543217", docs: [{type: 'voter-id', number: 'VWX8901234'}], nameAsPerPassbook: "संजय देशमुख", bankName: "युनियन बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-8901", ifsc: "UBIN0008901" },
+    { value: "farmer-9", label: "विशाल पवार", mobile: "9876543218", docs: [{type: 'pan', number: 'IJKLM9012N'}], nameAsPerPassbook: "विशाल एस पवार", bankName: "बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-9012", ifsc: "BKID0009012" },
+    { value: "farmer-10", label: "अमित भोसले", mobile: "9876543219", docs: [{type: 'voter-id', number: 'BCD0123456'}], nameAsPerPassbook: "अमित भोसले", bankName: "सेंट्रल बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-0123", ifsc: "CBIN0000123" },
+    { value: "farmer-11", label: "राहुल सावंत", mobile: "9876543220", docs: [{type: 'voter-id', number: 'EFG1234567'}], nameAsPerPassbook: "राहुल सावंत", bankName: "इंडियन बँक", accountNumber: "XXXX-XXXX-1234", ifsc: "IDIB0001234" },
+    { value: "farmer-12", label: "अजय कदम", mobile: "9876543221", docs: [{type: 'pan', number: 'LMNOP2345Q'}], nameAsPerPassbook: "अजय कदम", bankName: "IDBI बँक", accountNumber: "XXXX-XXXX-2345", ifsc: "IBKL0002345" },
+    { value: "farmer-13", label: "नितीन राऊत", mobile: "9876543222", docs: [{type: 'voter-id', number: 'KLM3456789'}], nameAsPerPassbook: "नितीन राऊत", bankName: "कोटक महिंद्रा बँक", accountNumber: "XXXX-XXXX-3456", ifsc: "KKBK0003456" },
+    { value: "farmer-14", label: "प्रशांत कांबळे", mobile: "9876543223", docs: [{type: 'voter-id', number: 'NOP4567890'}], nameAsPerPassbook: "प्रशांत कांबळे", bankName: "येस बँक", accountNumber: "XXXX-XXXX-4567", ifsc: "YESB0004567" },
+    { value: "farmer-15", label: "मनोज जगताप", mobile: "9876543224", docs: [{type: 'pan', number: 'OPQRS5678T'}], nameAsPerPassbook: "मनोज जगताप", bankName: "इंडसइंड बँक", accountNumber: "XXXX-XXXX-5678", ifsc: "INDB0005678" },
+    { value: "farmer-16", label: "योगेश यादव", mobile: "9876543225", docs: [{type: 'voter-id', number: 'STU6789012'}], nameAsPerPassbook: "योगेश यादव", bankName: "RBL बँक", accountNumber: "XXXX-XXXX-6789", ifsc: "RATN0006789" },
+    { value: "farmer-17", label: "महेश माने", mobile: "9876543226", docs: [{type: 'voter-id', number: 'VWX7890123'}], nameAsPerPassbook: "महेश माने", bankName: "फेडरल बँक", accountNumber: "XXXX-XXXX-7890", ifsc: "FDRL0007890" },
+    { value: "farmer-18", label: "अमोल थोरात", mobile: "9876543227", docs: [{type: 'pan', number: 'RSTUV8901W'}], nameAsPerPassbook: "अमोल थोरात", bankName: "साउथ इंडियन बँक", accountNumber: "XXXX-XXXX-8901", ifsc: "SIBL0008901" },
+    { value: "farmer-19", label: "किरण साळुंखे", mobile: "9876543228", docs: [{type: 'voter-id', number: 'BCD9012345'}], nameAsPerPassbook: "किरण साळुंखे", bankName: "कर्नाटक बँक", accountNumber: "XXXX-XXXX-9012", ifsc: "KARB0009012" },
+    { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", docs: [{type: 'voter-id', number: 'EFG0123456'}], nameAsPerPassbook: "संदीप सूर्यवंशी", bankName: "सिटी युनियन बँक", accountNumber: "XXXX-XXXX-0123", ifsc: "CIUB0000123" },
 ];
 
 const mockVillages = [
@@ -110,6 +110,7 @@ export default function NewFieldSurveyPage() {
     // State for farmer info tab
     const [mobile, setMobile] = React.useState("");
     const [documents, setDocuments] = React.useState<Document[]>([{ id: 1, type: '', number: '', file: null }]);
+    const [nameAsPerPassbook, setNameAsPerPassbook] = React.useState("");
     const [bankName, setBankName] = React.useState("");
     const [accountNumber, setAccountNumber] = React.useState("");
     const [ifscCode, setIfscCode] = React.useState("");
@@ -139,6 +140,7 @@ export default function NewFieldSurveyPage() {
     React.useEffect(() => {
         if (selectedFarmer) {
             setMobile(selectedFarmer.mobile);
+            setNameAsPerPassbook(selectedFarmer.nameAsPerPassbook);
             setBankName(selectedFarmer.bankName);
             setAccountNumber(selectedFarmer.accountNumber);
             setIfscCode(selectedFarmer.ifsc)
@@ -151,6 +153,7 @@ export default function NewFieldSurveyPage() {
         } else {
             // Clear fields if no farmer is selected
             setMobile("");
+            setNameAsPerPassbook("");
             setDocuments([{ id: 1, type: '', number: '', file: null }]);
             setBankName("");
             setAccountNumber("");
@@ -430,12 +433,16 @@ export default function NewFieldSurveyPage() {
                          </div>
                      ))}
                      {documents.length < documentTypes.length && (
-                        <Button variant="outline" onClick={handleAddDocument} className="w-full sm:w-auto justify-self-start">
+                        <Button variant="outline" onClick={handleAddDocument} className="w-full sm:w-auto justify-self-start" disabled={documents.length >= documentTypes.length}>
                            <PlusCircle className="mr-2"/> आणखी जोडा
                         </Button>
                      )}
                  </div>
                 <div className="grid gap-2">
+                    <Label htmlFor="passbook-name">पासबुक वरील नाव</Label>
+                    <Input id="passbook-name" placeholder="पासबुकनुसार नाव टाका" value={nameAsPerPassbook} onChange={(e) => setNameAsPerPassbook(e.target.value)} />
+                </div>
+                 <div className="grid gap-2">
                     <Label htmlFor="bank-name">बँकेचे नाव</Label>
                     <Input id="bank-name" placeholder="बँकेचे नाव टाका" value={bankName} onChange={(e) => setBankName(e.target.value)} />
                 </div>
@@ -516,3 +523,5 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    

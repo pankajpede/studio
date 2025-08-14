@@ -323,7 +323,7 @@ export default function FarmerDetailPage() {
                     <ImageIcon className="w-8 h-8 text-primary" />
                     <div>
                         <CardTitle className="font-headline">मीडिया</CardTitle>
-                        <CardDescription>अपलोड केलेले फोटो आणि व्हॉइस नोट्स.</CardDescription>
+                        <CardDescription>सर्वेक्षण {surveyData.surveyDate} रोजी अपलोड केलेले.</CardDescription>
                     </div>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
@@ -347,7 +347,7 @@ export default function FarmerDetailPage() {
                                 <span className="text-sm font-medium">{note.file}</span>
                                 <span className="text-xs text-muted-foreground">{note.name}</span>
                             </div>
-                            <Button size="sm" variant="ghost" className="ml-auto">प्ले</Button>
+                            <Button size="sm" variant="ghost" className="ml-auto" disabled>प्ले</Button>
                         </div>
                     ))}
                 </CardContent>

@@ -74,10 +74,10 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                     </div>
                 </div>
                 <div className={cn(
-                    "absolute top-0 right-0 bottom-0 flex items-center justify-center w-8 writing-mode-vertical-rl transform rotate-180",
+                    "absolute top-0 right-0 bottom-0 flex items-center justify-center w-8 [writing-mode:vertical-rl]",
                      statusStyles[survey.status]
                 )}>
-                     <span className={cn("text-xs font-semibold uppercase tracking-wider", statusTextStyles[survey.status])}>
+                     <span className={cn("text-xs font-semibold uppercase tracking-wider -rotate-180", statusTextStyles[survey.status])}>
                         {survey.status === 'Approved' ? 'Queued' : survey.status}
                     </span>
                 </div>

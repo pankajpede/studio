@@ -105,13 +105,26 @@ export default function NewFieldSurveyPage() {
     
     const selectedFarmer = mockFarmers.find(f => f.value === farmer);
 
+    const getBreadcrumb = () => {
+        const stateLabel = selectedState === 'maharashtra' ? 'महाराष्ट्र' : 'कर्नाटक';
+        const districtLabel = district ? ' > लातूर' : '';
+        const regionLabel = region ? ' > लातूर पूर्व' : '';
+        const talukaLabel = taluka ? ' > अहमदपूर' : '';
+        const villageLabel = village ? ` > ${mockVillages.find(v => v.value === village)?.label}` : '';
+        const surveyNoLabel = surveyNo ? ` > एसएन-${surveyNo}` : '';
+        const gatNoLabel = gatNo ? ` > ${gatNo}` : '';
+
+        return `${stateLabel}${districtLabel}${regionLabel}${talukaLabel}${villageLabel}${surveyNoLabel}${gatNoLabel}`;
+    };
+
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         {selectedFarmer ? (
           <>
             <CardTitle className="font-headline text-xl">{selectedFarmer.label}</CardTitle>
-            <CardDescription>खालील टॅबमध्ये शेतकऱ्याचे आणि शेताचे तपशील तपासा आणि भरा.</CardDescription>
+            <CardDescription>{getBreadcrumb()}</CardDescription>
           </>
         ) : (
           <>
@@ -223,9 +236,9 @@ export default function NewFieldSurveyPage() {
                      <Select onValueChange={setSurveyNo} value={surveyNo} disabled={!village}>
                         <SelectTrigger id="survey-no"><SelectValue placeholder={!village ? "प्रथम गाव निवडा" : "सर्वेक्षण क्रमांक निवडा"} /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="SN-101">एसएन-१०१</SelectItem>
-                            <SelectItem value="SN-102">एसएन-१०२</SelectItem>
-                            <SelectItem value="SN-103">एसएन-१०३</SelectItem>
+                            <SelectItem value="१०१">एसएन-१०१</SelectItem>
+                            <SelectItem value="१०२">एसएन-१०२</SelectItem>
+                            <SelectItem value="१०३">एसएन-१०३</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -234,10 +247,10 @@ export default function NewFieldSurveyPage() {
                      <Select onValueChange={setGatNo} value={gatNo} disabled={!surveyNo}>
                         <SelectTrigger id="gat-no"><SelectValue placeholder={!surveyNo ? "प्रथम सर्वेक्षण क्र. निवडा" : "गट क्रमांक निवडा"} /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="1">१</SelectItem>
-                            <SelectItem value="2">२</SelectItem>
-                            <SelectItem value="3">३</SelectItem>
-                            <SelectItem value="4">४</SelectItem>
+                            <SelectItem value="१">१</SelectItem>
+                            <SelectItem value="२">२</SelectItem>
+                            <SelectItem value="३">३</SelectItem>
+                            <SelectItem value="४">४</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

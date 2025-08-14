@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -355,73 +354,71 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                             </div>
                         </div>
                         
-                        <div className="grid grid-cols-2 gap-2">
-                            <div className="grid gap-2">
-                                <Label>सर्वेक्षण तारीख</Label>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                    <Button
-                                        variant={"outline"}
-                                        className="w-full justify-start text-left font-normal"
-                                    >
-                                        {surveyDate?.from ? (
-                                        surveyDate.to ? (
-                                            <>
-                                            {format(surveyDate.from, "LLL dd, y")} -{" "}
-                                            {format(surveyDate.to, "LLL dd, y")}
-                                            </>
-                                        ) : (
-                                            format(surveyDate.from, "LLL dd, y")
-                                        )
-                                        ) : (
-                                        <span>एक तारीख निवडा</span>
-                                        )}
-                                    </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        mode="range"
-                                        defaultMonth={surveyDate?.from}
-                                        selected={surveyDate}
-                                        onSelect={setSurveyDate}
-                                        numberOfMonths={1}
-                                    />
-                                    </PopoverContent>
-                                </Popover>
-                            </div>
-                             <div className="grid gap-2">
-                                <Label>तोडणी तारीख</Label>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                    <Button
-                                        variant={"outline"}
-                                        className="w-full justify-start text-left font-normal"
-                                    >
-                                        {cuttingDate?.from ? (
-                                        cuttingDate.to ? (
-                                            <>
-                                            {format(cuttingDate.from, "LLL dd, y")} -{" "}
-                                            {format(cuttingDate.to, "LLL dd, y")}
-                                            </>
-                                        ) : (
-                                            format(cuttingDate.from, "LLL dd, y")
-                                        )
-                                        ) : (
-                                        <span>एक तारीख निवडा</span>
-                                        )}
-                                    </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        mode="range"
-                                        defaultMonth={cuttingDate?.from}
-                                        selected={cuttingDate}
-                                        onSelect={setCuttingDate}
-                                        numberOfMonths={1}
-                                    />
-                                    </PopoverContent>
-                                </Popover>
-                            </div>
+                        <div className="grid gap-2">
+                            <Label>सर्वेक्षण तारीख</Label>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                <Button
+                                    variant={"outline"}
+                                    className="w-full justify-start text-left font-normal"
+                                >
+                                    {surveyDate?.from ? (
+                                    surveyDate.to ? (
+                                        <>
+                                        {format(surveyDate.from, "LLL dd, y")} -{" "}
+                                        {format(surveyDate.to, "LLL dd, y")}
+                                        </>
+                                    ) : (
+                                        format(surveyDate.from, "LLL dd, y")
+                                    )
+                                    ) : (
+                                    <span>एक तारीख निवडा</span>
+                                    )}
+                                </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    mode="range"
+                                    defaultMonth={surveyDate?.from}
+                                    selected={surveyDate}
+                                    onSelect={setSurveyDate}
+                                    numberOfMonths={1}
+                                />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                         <div className="grid gap-2">
+                            <Label>तोडणी तारीख</Label>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                <Button
+                                    variant={"outline"}
+                                    className="w-full justify-start text-left font-normal"
+                                >
+                                    {cuttingDate?.from ? (
+                                    cuttingDate.to ? (
+                                        <>
+                                        {format(cuttingDate.from, "LLL dd, y")} -{" "}
+                                        {format(cuttingDate.to, "LLL dd, y")}
+                                        </>
+                                    ) : (
+                                        format(cuttingDate.from, "LLL dd, y")
+                                    )
+                                    ) : (
+                                    <span>एक तारीख निवडा</span>
+                                    )}
+                                </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    mode="range"
+                                    defaultMonth={cuttingDate?.from}
+                                    selected={cuttingDate}
+                                    onSelect={setCuttingDate}
+                                    numberOfMonths={1}
+                                />
+                                </PopoverContent>
+                            </Popover>
                         </div>
 
                         <div className="grid gap-2">
@@ -857,9 +854,5 @@ export default function DashboardPage() {
     </div>
   )
 }
-
-    
-
-    
 
     

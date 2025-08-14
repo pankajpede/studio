@@ -83,6 +83,12 @@ type Document = {
     file: File | null;
 }
 
+type OtherMedia = {
+    id: number;
+    name: string;
+    file: File | null;
+}
+
 const FileUploadItem = ({ file, onRemove, name }: { file: File, onRemove: () => void, name?: string }) => (
     <div className="flex items-center justify-between p-2 mt-2 border rounded-md bg-muted/50">
         <div className="flex items-center gap-2 overflow-hidden">
@@ -194,8 +200,7 @@ export default function NewFieldSurveyPage() {
     const [farmerPhoto, setFarmerPhoto] = React.useState<File | null>(null);
     const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File | null>(null);
     const [audioNote, setAudioNote] = React.useState<File | null>(null);
-    const [otherMedia, setOtherMedia] = React.useState<File | null>(null);
-    const [otherMediaName, setOtherMediaName] = React.useState("");
+    const [otherMedia, setOtherMedia] = React.useState<OtherMedia[]>([{ id: 1, name: '', file: null }]);
 
 
     const [farmerSearchOpen, setFarmerSearchOpen] = React.useState(false);
@@ -284,12 +289,18 @@ export default function NewFieldSurveyPage() {
         }
     };
     
-    const handleOtherMediaFileChange = (files: FileList | null) => {
-        if (files && files.length > 0) {
-            setOtherMedia(files[0]);
-        } else {
-            setOtherMedia(null);
+    const handleOtherMediaChange = (id: number, field: keyof OtherMedia, value: string | File | null) => {
+        setOtherMedia(otherMedia.map(item => item.id === id ? { ...item, [field]: value } : item));
+    };
+
+    const handleAddOtherMedia = () => {
+        if (otherMedia.length < 3) {
+            setOtherMedia([...otherMedia, { id: Date.now(), name: '', file: null }]);
         }
+    };
+
+    const handleRemoveOtherMedia = (id: number) => {
+        setOtherMedia(otherMedia.filter(item => item.id !== id));
     };
 
     const handleFarmPhotoChange = (index: number, file: File | null) => {
@@ -669,36 +680,50 @@ export default function NewFieldSurveyPage() {
                             )}
                         </div>
 
-                        <div className="grid gap-4">
+                         <div className="grid gap-4">
                             <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया (पर्यायी)</Label>
-                            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-center">
-                                <Input 
-                                    placeholder="फाइलचे नाव" 
-                                    value={otherMediaName}
-                                    onChange={(e) => setOtherMediaName(e.target.value)}
-                                />
-                                <div className="relative w-full sm:w-auto">
-                                    <Button asChild variant="outline" className="w-full">
-                                        <Label htmlFor="other-media-file" className="cursor-pointer">
-                                            <UploadCloud className="mr-2"/> फाइल निवडा
-                                        </Label>
-                                    </Button>
-                                    <Input 
-                                        id="other-media-file" 
-                                        type="file" 
-                                        className="sr-only" 
-                                        accept="image/*,application/pdf"
-                                        onChange={(e) => handleOtherMediaFileChange(e.target.files)}
-                                    />
+                            {otherMedia.map((item, index) => (
+                                <div key={item.id} className="grid gap-2">
+                                     <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-2 items-center">
+                                        <Input
+                                            placeholder="फाइलचे नाव"
+                                            value={item.name}
+                                            onChange={(e) => handleOtherMediaChange(item.id, 'name', e.target.value)}
+                                        />
+                                        <div className="relative">
+                                            <Button asChild variant="outline" size="icon">
+                                                 <Label htmlFor={`other-media-file-${item.id}`} className="cursor-pointer">
+                                                    <UploadCloud className="h-4 w-4"/>
+                                                </Label>
+                                            </Button>
+                                            <Input
+                                                id={`other-media-file-${item.id}`}
+                                                type="file"
+                                                className="sr-only"
+                                                accept="image/*,application/pdf"
+                                                onChange={(e) => handleOtherMediaChange(item.id, 'file', e.target.files ? e.target.files[0] : null)}
+                                            />
+                                        </div>
+                                         {otherMedia.length > 1 && (
+                                             <Button variant="ghost" size="icon" onClick={() => handleRemoveOtherMedia(item.id)}>
+                                                <MinusCircle className="text-destructive" />
+                                             </Button>
+                                        )}
+                                    </div>
+                                    {item.file && (
+                                        <FileUploadItem
+                                            file={item.file}
+                                            name={item.name || item.file.name}
+                                            onRemove={() => handleOtherMediaChange(item.id, 'file', null)}
+                                        />
+                                    )}
                                 </div>
-                            </div>
-                            {otherMedia && (
-                                <FileUploadItem
-                                    file={otherMedia}
-                                    name={otherMediaName || otherMedia.name}
-                                    onRemove={() => setOtherMedia(null)}
-                                />
-                            )}
+                            ))}
+                             {otherMedia.length < 3 && (
+                                <Button variant="outline" onClick={handleAddOtherMedia} className="w-full sm:w-auto justify-self-start">
+                                   <PlusCircle className="mr-2"/> आणखी जोडा
+                                </Button>
+                             )}
                         </div>
                     </div>
                 </div>
@@ -758,3 +783,5 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    

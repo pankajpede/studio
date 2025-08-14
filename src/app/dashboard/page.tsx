@@ -274,7 +274,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
     const [date, setDate] = React.useState<DateRange | undefined>()
     const [minArea, setMinArea] = React.useState<string>("")
     const [maxArea, setMaxArea] = React.useState<string>("")
-    const [radius, setRadius] = React.useState([50]);
+    const [radius, setRadius] = React.useState([100]);
     
     const uniqueTalukas = React.useMemo(() => Array.from(new Set(data.map(s => s.taluka))), [data]);
     const uniqueSurveyors = React.useMemo(() => {
@@ -378,6 +378,19 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                             </Select>
                         </div>
                         
+                         <div className="grid gap-2">
+                            <Label>Radius (km)</Label>
+                            <div className="flex items-center gap-2">
+                                <Slider
+                                    value={radius}
+                                    onValueChange={setRadius}
+                                    max={100}
+                                    step={1}
+                                />
+                                <span className="text-sm font-medium w-16 text-right">{radius[0] === 100 ? 'सर्व' : `${radius[0]} km`}</span>
+                            </div>
+                        </div>
+
                         <div className="grid gap-2">
                             <Label>सर्वेक्षण तारीख श्रेणी</Label>
                              <Popover>
@@ -446,19 +459,6 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                 <Input type="number" placeholder="किमान" value={minArea} onChange={e => setMinArea(e.target.value)} />
                                 <span className="text-muted-foreground">-</span>
                                 <Input type="number" placeholder="कमाल" value={maxArea} onChange={e => setMaxArea(e.target.value)} />
-                            </div>
-                        </div>
-
-                         <div className="grid gap-2">
-                            <Label>Radius (km)</Label>
-                            <div className="flex items-center gap-2">
-                                <Slider
-                                    value={radius}
-                                    onValueChange={setRadius}
-                                    max={100}
-                                    step={1}
-                                />
-                                <span className="text-sm font-medium w-16 text-right">{radius[0] === 100 ? 'सर्व' : `${radius[0]} km`}</span>
                             </div>
                         </div>
                     </div>

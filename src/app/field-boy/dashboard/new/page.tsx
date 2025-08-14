@@ -33,6 +33,7 @@ import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIco
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
+import Image from "next/image"
 
 const mockFarmers = [
     { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], nameAsPerPassbook: "रमेश एस कुलकर्णी", bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234" },
@@ -98,63 +99,70 @@ const FileUploadItem = ({ file, onRemove, name }: { file: File, onRemove: () => 
 );
 
 
-const FileUploader = ({
+const ImageUploader = ({
     id,
     label,
-    description,
     onFileChange,
-    accept,
-    multiple = false,
-    files,
-    icon,
+    file,
     capture
 }: {
     id: string;
     label: string;
-    description: string;
-    onFileChange: (files: FileList | null) => void;
-    accept: string;
-    multiple?: boolean;
-    files: File[];
-    icon: React.ReactNode;
+    onFileChange: (file: File | null) => void;
+    file: File | null;
     capture?: 'user' | 'environment';
-}) => (
-    <div className="grid gap-2">
-        <Label htmlFor={id} className="flex items-center gap-2">{icon} {label}</Label>
-        <div className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 relative">
-            <UploadCloud className="w-8 h-8 text-muted-foreground" />
-            <p className="mt-2 text-sm text-center text-muted-foreground">
-                <span className="font-semibold">{capture ? 'फोटो काढा' : 'अपलोड करण्यासाठी क्लिक करा'}</span>
-            </p>
-            <p className="text-xs text-muted-foreground text-center">{description}</p>
-            <Input
-                id={id}
-                type="file"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                multiple={multiple}
-                accept={accept}
-                onChange={(e) => onFileChange(e.target.files)}
-                capture={capture}
-            />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {files.map((file, index) => (
-                <FileUploadItem
-                    key={index}
-                    file={file}
-                    onRemove={() => {
-                        const newFiles = [...files];
-                        newFiles.splice(index, 1);
-                        // This is a bit of a hack to create a new FileList
-                        const dataTransfer = new DataTransfer();
-                        newFiles.forEach(f => dataTransfer.items.add(f));
-                        onFileChange(dataTransfer.files);
-                    }}
+}) => {
+    // Create a preview URL for the file
+    const previewUrl = React.useMemo(() => {
+        if (file) {
+            return URL.createObjectURL(file);
+        }
+        return null;
+    }, [file]);
+
+    // Clean up the object URL when the component unmounts
+    React.useEffect(() => {
+        return () => {
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
+        };
+    }, [previewUrl]);
+
+    if (file && previewUrl) {
+        return (
+            <div className="grid gap-2">
+                 <Label>{label}</Label>
+                 <div className="relative w-full aspect-video rounded-lg overflow-hidden border">
+                     <Image src={previewUrl} alt={label} layout="fill" objectFit="cover" />
+                     <Button size="icon" variant="destructive" className="absolute top-1 right-1 h-7 w-7 z-10" onClick={() => onFileChange(null)}>
+                         <X className="h-4 w-4" />
+                     </Button>
+                 </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="grid gap-2">
+            <Label htmlFor={id} className="flex items-center gap-2">{label}</Label>
+            <div className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 relative aspect-video">
+                <UploadCloud className="w-8 h-8 text-muted-foreground" />
+                <p className="mt-2 text-sm text-center text-muted-foreground">
+                    <span className="font-semibold">{capture ? 'फोटो काढा' : 'अपलोड करा'}</span>
+                </p>
+                <Input
+                    id={id}
+                    type="file"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    accept="image/*"
+                    onChange={(e) => onFileChange(e.target.files ? e.target.files[0] : null)}
+                    capture={capture}
                 />
-            ))}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 
 export default function NewFieldSurveyPage() {
@@ -182,11 +190,11 @@ export default function NewFieldSurveyPage() {
     const [ifscCode, setIfscCode] = React.useState("");
 
     // State for media tab
-    const [farmPhotos, setFarmPhotos] = React.useState<File[]>([]);
-    const [farmerPhoto, setFarmerPhoto] = React.useState<File[]>([]);
-    const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File[]>([]);
-    const [audioNote, setAudioNote] = React.useState<File[]>([]);
-    const [otherMedia, setOtherMedia] = React.useState<File[]>([]);
+    const [farmPhotos, setFarmPhotos] = React.useState<(File | null)[]>(Array(5).fill(null));
+    const [farmerPhoto, setFarmerPhoto] = React.useState<File | null>(null);
+    const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File | null>(null);
+    const [audioNote, setAudioNote] = React.useState<File | null>(null);
+    const [otherMedia, setOtherMedia] = React.useState<File | null>(null);
     const [otherMediaName, setOtherMediaName] = React.useState("");
 
 
@@ -234,7 +242,7 @@ export default function NewFieldSurveyPage() {
             setAccountNumber("");
             setIfscCode("");
         }
-    }, [farmer]);
+    }, [farmer, selectedFarmer]);
 
 
     const getBreadcrumb = () => {
@@ -268,11 +276,28 @@ export default function NewFieldSurveyPage() {
         return documentTypes.filter(type => !selectedTypes.includes(type.value));
     };
     
-    const handleFileChange = (setter: React.Dispatch<React.SetStateAction<File[]>>, maxFiles: number) => (files: FileList | null) => {
-        if (files) {
-            setter(Array.from(files).slice(0, maxFiles));
+    const handleAudioFileChange = (files: FileList | null) => {
+        if (files && files.length > 0) {
+            setAudioNote(files[0]);
+        } else {
+            setAudioNote(null);
         }
     };
+    
+    const handleOtherMediaFileChange = (files: FileList | null) => {
+        if (files && files.length > 0) {
+            setOtherMedia(files[0]);
+        } else {
+            setOtherMedia(null);
+        }
+    };
+
+    const handleFarmPhotoChange = (index: number, file: File | null) => {
+        const newPhotos = [...farmPhotos];
+        newPhotos[index] = file;
+        setFarmPhotos(newPhotos);
+    };
+
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
@@ -591,81 +616,93 @@ export default function NewFieldSurveyPage() {
           </TabsContent>
 
            <TabsContent value="media" className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                    <FileUploader
-                        id="farm-photos"
-                        label="शेताचे फोटो"
-                        description="शेताचे ५ फोटो घ्या"
-                        onFileChange={handleFileChange(setFarmPhotos, 5)}
-                        accept="image/*"
-                        multiple
-                        files={farmPhotos}
-                        icon={<ImageIcon />}
-                        capture="environment"
-                    />
-                    <FileUploader
-                        id="farmer-photo"
-                        label="शेतकरी फोटो"
-                        description="शेतकऱ्याचा १ फोटो घ्या"
-                        onFileChange={handleFileChange(setFarmerPhoto, 1)}
-                        accept="image/*"
-                        files={farmerPhoto}
-                        icon={<User />}
-                        capture="environment"
-                    />
-                    <FileUploader
-                        id="field-boy-photo"
-                        label="फील्ड बॉय फोटो"
-                        description="तुमचा स्वतःचा १ फोटो घ्या"
-                        onFileChange={handleFileChange(setFieldBoyPhoto, 1)}
-                        accept="image/*"
-                        files={fieldBoyPhoto}
-                        icon={<User />}
-                        capture="user"
-                    />
-                    <FileUploader
-                        id="audio-note"
-                        label="ऑडिओ नोट (पर्यायी)"
-                        description="ऑडिओ फाइल अपलोड करा"
-                        onFileChange={handleFileChange(setAudioNote, 1)}
-                        accept="audio/*"
-                        files={audioNote}
-                        icon={<AudioLines />}
-                    />
-                     <div className="grid gap-4 md:col-span-2">
-                        <Label htmlFor="other-media" className="flex items-center gap-2"><FileImage /> इतर मीडिया (पर्यायी)</Label>
-                        <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-center">
-                            <Input 
-                                placeholder="फाइलचे नाव" 
-                                value={otherMediaName}
-                                onChange={(e) => setOtherMediaName(e.target.value)}
-                            />
-                            <div className="relative w-full sm:w-auto">
-                                <Button asChild variant="outline" className="w-full">
-                                    <Label htmlFor="other-media-file" className="cursor-pointer">
-                                        <UploadCloud className="mr-2"/> फाइल निवडा
-                                    </Label>
-                                </Button>
-                                <Input 
-                                    id="other-media-file" 
-                                    type="file" 
-                                    className="sr-only" 
-                                    accept="image/*,application/pdf"
-                                    onChange={handleFileChange(setOtherMedia, 1)}
+                <div className="flex flex-col gap-6">
+                    <div>
+                        <Label className="text-base font-medium">शेताचे फोटो (५ आवश्यक)</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-2">
+                            {farmPhotos.map((photo, index) => (
+                                <ImageUploader
+                                    key={index}
+                                    id={`farm-photo-${index}`}
+                                    label={`फोटो ${index + 1}`}
+                                    file={photo}
+                                    onFileChange={(file) => handleFarmPhotoChange(index, file)}
+                                    capture="environment"
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <ImageUploader
+                            id="farmer-photo"
+                            label="शेतकरी फोटो"
+                            file={farmerPhoto}
+                            onFileChange={setFarmerPhoto}
+                            capture="environment"
+                        />
+                        <ImageUploader
+                            id="field-boy-photo"
+                            label="फील्ड बॉय फोटो"
+                            file={fieldBoyPhoto}
+                            onFileChange={setFieldBoyPhoto}
+                            capture="user"
+                        />
+                    
+                        <div className="grid gap-2">
+                            <Label htmlFor="audio-note" className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट (पर्यायी)</Label>
+                            <div className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 relative">
+                                <UploadCloud className="w-8 h-8 text-muted-foreground" />
+                                <p className="mt-2 text-sm text-center text-muted-foreground">
+                                    <span className="font-semibold">अपलोड करण्यासाठी क्लिक करा</span>
+                                </p>
+                                <Input
+                                    id="audio-note"
+                                    type="file"
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    accept="audio/*"
+                                    onChange={(e) => handleAudioFileChange(e.target.files)}
                                 />
                             </div>
+                            {audioNote && (
+                                <FileUploadItem file={audioNote} onRemove={() => setAudioNote(null)} />
+                            )}
                         </div>
-                        {otherMedia.map((file, index) => (
-                             <FileUploadItem
-                                key={index}
-                                file={file}
-                                name={otherMediaName || file.name}
-                                onRemove={() => setOtherMedia([])}
-                            />
-                        ))}
+
+                        <div className="grid gap-4">
+                            <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया (पर्यायी)</Label>
+                            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-center">
+                                <Input 
+                                    placeholder="फाइलचे नाव" 
+                                    value={otherMediaName}
+                                    onChange={(e) => setOtherMediaName(e.target.value)}
+                                />
+                                <div className="relative w-full sm:w-auto">
+                                    <Button asChild variant="outline" className="w-full">
+                                        <Label htmlFor="other-media-file" className="cursor-pointer">
+                                            <UploadCloud className="mr-2"/> फाइल निवडा
+                                        </Label>
+                                    </Button>
+                                    <Input 
+                                        id="other-media-file" 
+                                        type="file" 
+                                        className="sr-only" 
+                                        accept="image/*,application/pdf"
+                                        onChange={(e) => handleOtherMediaFileChange(e.target.files)}
+                                    />
+                                </div>
+                            </div>
+                            {otherMedia && (
+                                <FileUploadItem
+                                    file={otherMedia}
+                                    name={otherMediaName || otherMedia.name}
+                                    onRemove={() => setOtherMedia(null)}
+                                />
+                            )}
+                        </div>
                     </div>
-              </div>
-          </TabsContent>
+                </div>
+            </TabsContent>
 
           <TabsContent value="map" className="pt-6">
             <div className="flex flex-col gap-6">
@@ -721,5 +758,3 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
-
-    

@@ -212,9 +212,9 @@ export default function NewFieldSurveyPage() {
                      <Select onValueChange={setSurveyNo} value={surveyNo} disabled={!village}>
                         <SelectTrigger id="survey-no"><SelectValue placeholder={!village ? "प्रथम गाव निवडा" : "सर्वेक्षण क्रमांक निवडा"} /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="SN-101">SN-101</SelectItem>
-                            <SelectItem value="SN-102">SN-102</SelectItem>
-                            <SelectItem value="SN-103">SN-103</SelectItem>
+                            <SelectItem value="SN-101">एसएन-१०१</SelectItem>
+                            <SelectItem value="SN-102">एसएन-१०२</SelectItem>
+                            <SelectItem value="SN-103">एसएन-१०३</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -375,5 +375,7 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    
 
     

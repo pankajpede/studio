@@ -30,9 +30,9 @@ type Survey = {
 }
 
 const mockSurveys: Survey[] = [
-  { id: "SUR001", day: "30", month: "June", farmerName: "Pankaj Pede", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ahmedpur", village: "Mohgaon", status: "Pending" },
-  { id: "SUR002", day: "29", month: "June", farmerName: "Shankar Mali", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ahmedpur", village: "Mohgaon", status: "Approved" },
-  { id: "SUR003", day: "28", month: "June", farmerName: "Chetan Bukey", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ahmedpur", village: "Mohgaon", status: "Rejected" },
+  { id: "SUR001", day: "30", month: "June", farmerName: "Sachin Kulkarni", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ahmedpur", village: "Mohgaon", status: "Pending" },
+  { id: "SUR002", day: "29", month: "June", farmerName: "Vishal More", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ahmedpur", village: "Mohgaon", status: "Approved" },
+  { id: "SUR003", day: "28", month: "June", farmerName: "Ajay Patil", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ahmedpur", village: "Mohgaon", status: "Rejected" },
   { id: "SUR004", day: "27", month: "June", farmerName: "Sunita More", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Latur", village: "Kasarwadi", status: "Pending" },
   { id: "SUR005", day: "26", month: "June", farmerName: "Kavita Deshmukh", surveyCode: "Co 0238", date: "12 Aug 2024", taluka: "Ausa", village: "Lamjana", status: "Approved" },
 ]

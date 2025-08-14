@@ -23,7 +23,7 @@ const getSurveyById = (id: string | null) => {
     const status = statuses[id.length % 3] as "Pending" | "Approved" | "Rejected";
   return {
     id,
-    farmerName: "Pankaj Pede",
+    farmerName: "Sachin Kulkarni",
     mobileNumber: "9876543210",
     voterId: "ABC1234567",
     panCard: "ABCDE1234F",

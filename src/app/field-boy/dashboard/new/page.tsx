@@ -196,7 +196,7 @@ export default function NewFieldSurveyPage() {
     const [ifscCode, setIfscCode] = React.useState("");
 
     // State for media tab
-    const [farmPhotos, setFarmPhotos] = React.useState<(File | null)[]>(Array(5).fill(null));
+    const [farmPhotos, setFarmPhotos] = React.useState<(File | null)[]>(Array(4).fill(null));
     const [farmerPhoto, setFarmerPhoto] = React.useState<File | null>(null);
     const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File | null>(null);
     const [audioNote, setAudioNote] = React.useState<File | null>(null);
@@ -629,8 +629,8 @@ export default function NewFieldSurveyPage() {
            <TabsContent value="media" className="pt-6">
                 <div className="flex flex-col gap-6">
                     <div>
-                        <Label className="text-base font-medium">शेताचे फोटो (५ आवश्यक)</Label>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-2">
+                        <Label className="text-base font-medium">शेताचे फोटो (४ आवश्यक)</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
                             {farmPhotos.map((photo, index) => (
                                 <ImageUploader
                                     key={index}

@@ -77,7 +77,7 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation }: FieldBoy
   }, [getLocation]);
 
   const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script-field-boy',
+    id: 'google-map-script',
     googleMapsApiKey: publicRuntimeConfig.googleMapsApiKey
   });
 

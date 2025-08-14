@@ -21,13 +21,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ArrowLeft, Edit, FileText, Image as ImageIcon, Map, Mic, Share2, User, Landmark, Fingerprint, Tractor, Droplets, BookUser, Wheat, Percent, Receipt, Truck, Play, Pause } from 'lucide-react';
+import { ArrowLeft, Edit, FileText, Image as ImageIcon, Map, Mic, Share2, User, Landmark, Fingerprint, Tractor, Droplets, BookUser, Wheat, Percent, Receipt, Truck, Play, Pause, Eye } from 'lucide-react';
 import Image from 'next/image';
 import SurveyMap from '@/components/survey-map';
 import type { Survey } from '../../page';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
 
 // Mock data generation - in a real app, this would come from your backend/DB
 const generateSurveyData = (count: number): Survey[] => {
@@ -86,6 +88,31 @@ const DetailItem = ({ label, value }: { label: string; value?: React.ReactNode }
     </div>
 );
 
+const DocumentDetailItem = ({ label, value, imageUrl }: { label: string; value: string; imageUrl: string }) => (
+    <div>
+        <p className="text-sm text-muted-foreground">{label}</p>
+        <div className="flex items-center gap-2">
+            <p className="font-medium text-sm font-mono">{value || '-'}</p>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-6 w-6">
+                        <Eye className="h-4 w-4" />
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>{label} कागदपत्र</DialogTitle>
+                    </DialogHeader>
+                    <div className="mt-4">
+                        <Image src={imageUrl} alt={`${label} document`} width={500} height={300} className="rounded-md w-full" data-ai-hint="document photo"/>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        </div>
+    </div>
+);
+
+
 // A silent 1-second WAV file encoded in Base64
 const silentAudio = "data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=";
 
@@ -138,6 +165,11 @@ export default function FarmerDetailPage() {
     }
   }, [])
 
+  const maskDocument = (docNumber: string) => {
+    if (!docNumber || docNumber.length <= 4) return docNumber;
+    return 'X'.repeat(docNumber.length - 4) + docNumber.slice(-4);
+  }
+
 
   if (!surveyData || !selectedSurveyForMedia) {
     return (
@@ -174,7 +206,6 @@ export default function FarmerDetailPage() {
           pincode: "413513",
       },
       identification: {
-          aadhaar: "XXXX-XXXX-5678",
           electionId: "ABC1234567",
           pan: "ABCDE1234F",
           rationCard: "1234567890",
@@ -268,9 +299,8 @@ export default function FarmerDetailPage() {
                 </div>
             </CardHeader>
             <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <DetailItem label="आधार नंबर" value={farmerData.identification.aadhaar} />
-                <DetailItem label="निवडणूक ओळखपत्र" value={farmerData.identification.electionId} />
-                <DetailItem label="पॅन कार्ड" value={farmerData.identification.pan} />
+                <DocumentDetailItem label="निवडणूक ओळखपत्र" value={maskDocument(farmerData.identification.electionId)} imageUrl="https://placehold.co/600x400.png" />
+                <DocumentDetailItem label="पॅन कार्ड" value={maskDocument(farmerData.identification.pan)} imageUrl="https://placehold.co/600x400.png" />
                 <DetailItem label="शेतकरी नोंदणी आयडी" value={farmerData.identification.farmerRegId} />
                 <DetailItem label="बँक खाते क्रमांक" value={farmerData.identification.bankAccount} />
                 <DetailItem label="IFSC कोड" value={farmerData.identification.ifsc} />
@@ -430,3 +460,5 @@ export default function FarmerDetailPage() {
     </div>
   );
 }
+
+    

@@ -27,8 +27,35 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { Pin, Footprints } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { Pin, Footprints, ChevronsUpDown, Check } from "lucide-react"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
+
+const mockFarmers = [
+    { value: "farmer-1", label: "रमेश कुलकर्णी" },
+    { value: "farmer-2", label: "सुरेश पाटील" },
+    { value: "farmer-3", label: "गणेश जाधव" },
+    { value: "farmer-4", label: "प्रकाश शिंदे" },
+    { value: "farmer-5", label: "सचिन मोरे" },
+    { value: "farmer-6", label: "अनिल गायकवाड" },
+    { value: "farmer-7", label: "दीपक चव्हाण" },
+    { value: "farmer-8", label: "संजय देशमुख" },
+    { value: "farmer-9", label: "विशाल पवार" },
+    { value: "farmer-10", label: "अमित भोसले" },
+    { value: "farmer-11", label: "राहुल सावंत" },
+    { value: "farmer-12", label: "अजय कदम" },
+    { value: "farmer-13", label: "नितीन राऊत" },
+    { value: "farmer-14", label: "प्रशांत कांबळे" },
+    { value: "farmer-15", label: "मनोज जगताप" },
+    { value: "farmer-16", label: "योगेश यादव" },
+    { value: "farmer-17", label: "महेश माने" },
+    { value: "farmer-18", label: "अमोल थोरात" },
+    { value: "farmer-19", label: "किरण साळुंखे" },
+    { value: "farmer-20", label: "संदीप सूर्यवंशी" },
+];
+
 
 export default function NewFieldSurveyPage() {
     const router = useRouter();
@@ -43,6 +70,9 @@ export default function NewFieldSurveyPage() {
     const [surveyNo, setSurveyNo] = React.useState("");
     const [gatNo, setGatNo] = React.useState("");
     const [farmer, setFarmer] = React.useState("");
+
+    const [farmerSearchOpen, setFarmerSearchOpen] = React.useState(false);
+
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "map"];
 
@@ -151,15 +181,50 @@ export default function NewFieldSurveyPage() {
                 </div>
                  <div className="grid gap-2 md:col-span-2">
                     <Label htmlFor="farmer-selection">शेतकरी निवड</Label>
-                    <Select onValueChange={setFarmer} value={farmer} disabled={!gatNo}>
-                        <SelectTrigger id="farmer-selection">
-                            <SelectValue placeholder={!gatNo ? "प्रथम गट क्र. निवडा" : "शेतकरी निवडा..."} />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="farmer-1">रमेश कुलकर्णी</SelectItem>
-                            <SelectItem value="farmer-2">सुरेश पाटील</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <Popover open={farmerSearchOpen} onOpenChange={setFarmerSearchOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={farmerSearchOpen}
+                                className="w-full justify-between"
+                                disabled={!gatNo}
+                            >
+                                {farmer
+                                    ? mockFarmers.find((f) => f.value === farmer)?.label
+                                    : !gatNo ? "प्रथम गट क्र. निवडा" : "शेतकरी निवडा..."}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0" align="start">
+                            <Command>
+                                <CommandInput placeholder="शेतकरी शोधा..." />
+                                <CommandList>
+                                    <CommandEmpty>शेतकरी आढळला नाही.</CommandEmpty>
+                                    <CommandGroup>
+                                        {mockFarmers.map((f) => (
+                                        <CommandItem
+                                            key={f.value}
+                                            value={f.value}
+                                            onSelect={(currentValue) => {
+                                                setFarmer(currentValue === farmer ? "" : currentValue)
+                                                setFarmerSearchOpen(false)
+                                            }}
+                                        >
+                                            <Check
+                                            className={cn(
+                                                "mr-2 h-4 w-4",
+                                                farmer === f.value ? "opacity-100" : "opacity-0"
+                                            )}
+                                            />
+                                            {f.label}
+                                        </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                 </div>
             </div>
           </TabsContent>

@@ -262,22 +262,14 @@ export const columns: ColumnDef<Survey>[] = [
 ]
 
 function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTable>, data: Survey[] }) {
+    const [farmerName, setFarmerName] = React.useState(table.getColumn("farmerName")?.getFilterValue() as string ?? "");
+    const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>(table.getColumn("surveyStatus")?.getFilterValue() as string[] ?? []);
+    const [taluka, setTaluka] = React.useState(table.getColumn("taluka")?.getFilterValue() as string ?? "");
     const [date, setDate] = React.useState<DateRange | undefined>()
     const [minArea, setMinArea] = React.useState<string>("")
     const [maxArea, setMaxArea] = React.useState<string>("")
     
-    const handleApply = () => {
-        table.getColumn("surveyDate")?.setFilterValue(date ? [date.from, date.to] : undefined);
-        table.getColumn("areaAcre")?.setFilterValue([minArea, maxArea]);
-    }
-
-    const handleClear = () => {
-        setDate(undefined);
-        setMinArea("");
-        setMaxArea("");
-        table.resetColumnFilters();
-    }
-
+    const uniqueTalukas = React.useMemo(() => Array.from(new Set(data.map(s => s.taluka))), [data]);
     const uniqueSurveyors = React.useMemo(() => {
         const surveyors = new Set<string>();
         data.forEach(s => surveyors.add(s.surveyedBy));
@@ -290,6 +282,24 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
         return Array.from(warshirs);
     }, [data]);
 
+    const handleApply = () => {
+        table.getColumn("farmerName")?.setFilterValue(farmerName);
+        table.getColumn("surveyStatus")?.setFilterValue(selectedStatuses.length ? selectedStatuses : undefined);
+        table.getColumn("taluka")?.setFilterValue(taluka === "all" ? "" : taluka);
+        table.getColumn("surveyDate")?.setFilterValue(date ? [date.from, date.to] : undefined);
+        table.getColumn("areaAcre")?.setFilterValue([minArea, maxArea]);
+    }
+
+    const handleClear = () => {
+        setFarmerName("");
+        setSelectedStatuses([]);
+        setTaluka("");
+        setDate(undefined);
+        setMinArea("");
+        setMaxArea("");
+        table.resetColumnFilters();
+    }
+    
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -302,11 +312,70 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                 <div className="flex-grow overflow-y-auto p-1">
                     <div className="grid gap-6">
                         <div className="grid gap-2">
+                            <Label htmlFor="farmerName">शेतकऱ्याचे नाव</Label>
+                            <Input
+                                id="farmerName"
+                                placeholder="शेतकऱ्याच्या नावाने फिल्टर करा..."
+                                value={farmerName}
+                                onChange={(event) => setFarmerName(event.target.value)}
+                            />
+                        </div>
+                        
+                        <div className="grid gap-2">
+                            <Label>सर्वेक्षण स्थिती</Label>
+                             <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="w-full justify-between">
+                                        <span>
+                                            स्थितीनुसार फिल्टर करा
+                                            {selectedStatuses.length > 0 && (
+                                                <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
+                                                    {selectedStatuses.length} निवडले
+                                                </Badge>
+                                            )}
+                                        </span>
+                                        <ChevronDown className="ml-2 h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                                    <DropdownMenuLabel>स्थितीनुसार फिल्टर करा</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    {statusOptions.map((option) => (
+                                        <DropdownMenuCheckboxItem
+                                            key={option.value}
+                                            checked={selectedStatuses.includes(option.value)}
+                                            onCheckedChange={(checked) => {
+                                                const newStatuses = checked
+                                                    ? [...selectedStatuses, option.value]
+                                                    : selectedStatuses.filter((s) => s !== option.value);
+                                                setSelectedStatuses(newStatuses);
+                                            }}
+                                        >
+                                            {option.label}
+                                        </DropdownMenuCheckboxItem>
+                                    ))}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+
+                         <div className="grid gap-2">
+                            <Label htmlFor="taluka">तालुका</Label>
+                             <Select value={taluka} onValueChange={setTaluka}>
+                                <SelectTrigger><SelectValue placeholder="तालुकानुसार फिल्टर करा" /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">सर्व तालुके</SelectItem>
+                                    {uniqueTalukas.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        
+                        <div className="grid gap-2">
                             <Label>सर्वेक्षण तारीख श्रेणी</Label>
                              <Popover>
                                 <PopoverTrigger asChild>
                                 <Button
                                     variant={"outline"}
+                                    className="w-full justify-start text-left font-normal"
                                 >
                                     {date?.from ? (
                                     date.to ? (
@@ -440,9 +509,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
   })
   
   const activeFilters = columnFilters.filter(f => f.value && (Array.isArray(f.value) ? f.value.some(v => v) : true));
-  const uniqueTalukas = React.useMemo(() => Array.from(new Set(data.map(s => s.taluka))), [data]);
-  const selectedStatuses = table.getColumn('surveyStatus')?.getFilterValue() as string[] ?? [];
-
+  
   return (
     <Card className="w-full">
       <CardHeader>
@@ -454,63 +521,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
       <CardContent>
         <div className="w-full">
             <div className="flex items-center gap-2 py-4">
-                <Input
-                placeholder="शेतकऱ्याच्या नावाने फिल्टर करा..."
-                value={(table.getColumn("farmerName")?.getFilterValue() as string) ?? ""}
-                onChange={(event) =>
-                    table.getColumn("farmerName")?.setFilterValue(event.target.value)
-                }
-                className="max-w-xs"
-                />
-                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="w-[180px] justify-between">
-                            <span>
-                                स्थितीनुसार फिल्टर करा
-                                {selectedStatuses.length > 0 && (
-                                    <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
-                                        {selectedStatuses.length} निवडले
-                                    </Badge>
-                                )}
-                            </span>
-                             <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[180px]">
-                        <DropdownMenuLabel>स्थितीनुसार फिल्टर करा</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {statusOptions.map((option) => (
-                            <DropdownMenuCheckboxItem
-                                key={option.value}
-                                checked={selectedStatuses.includes(option.value)}
-                                onCheckedChange={(checked) => {
-                                    const current = table.getColumn('surveyStatus')?.getFilterValue() as string[] ?? [];
-                                    const newStatuses = checked
-                                        ? [...current, option.value]
-                                        : current.filter((s) => s !== option.value);
-                                    table.getColumn('surveyStatus')?.setFilterValue(newStatuses.length ? newStatuses : undefined);
-                                }}
-                            >
-                                {option.label}
-                            </DropdownMenuCheckboxItem>
-                        ))}
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                 <Select
-                    value={(table.getColumn("taluka")?.getFilterValue() as string) ?? ""}
-                    onValueChange={(value) => table.getColumn("taluka")?.setFilterValue(value === "all" ? "" : value)}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="तालुकानुसार फिल्टर करा" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">सर्व तालुके</SelectItem>
-                        {uniqueTalukas.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                    </SelectContent>
-                </Select>
-                 <div className="ml-auto flex items-center gap-2">
-                  <AdvancedFilters table={table} data={data} />
-                </div>
+                 <AdvancedFilters table={table} data={data} />
             </div>
              {activeFilters.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 pb-4">
@@ -743,4 +754,3 @@ export default function DashboardPage() {
   )
 }
 
-    

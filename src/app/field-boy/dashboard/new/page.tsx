@@ -87,6 +87,16 @@ export default function NewFieldSurveyPage() {
                     </Select>
                 </div>
                  <div className="grid gap-2">
+                    <Label htmlFor="region">Region</Label>
+                    <Select>
+                        <SelectTrigger id="region"><SelectValue placeholder="Select region..." /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="latur-east">Latur East</SelectItem>
+                             <SelectItem value="latur-west">Latur West</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <div className="grid gap-2">
                     <Label htmlFor="taluka">Taluka</Label>
                     <Select>
                         <SelectTrigger id="taluka"><SelectValue placeholder="Select taluka..." /></SelectTrigger>
@@ -104,6 +114,24 @@ export default function NewFieldSurveyPage() {
                         <SelectContent>
                             <SelectItem value="mohgaon">Mohgaon</SelectItem>
                             <SelectItem value="chakur">Chakur</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="survey-no">Survey No.</Label>
+                    <Input id="survey-no" placeholder="Enter survey number" />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="gat-no">Gat No.</Label>
+                    <Input id="gat-no" placeholder="Enter gat number" />
+                </div>
+                 <div className="grid gap-2">
+                    <Label htmlFor="farmer-selection">Farmer Selection</Label>
+                    <Select>
+                        <SelectTrigger id="farmer-selection"><SelectValue placeholder="Select farmer..." /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="farmer-1">Ramesh Kulkarni</SelectItem>
+                            <SelectItem value="farmer-2">Suresh Patil</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

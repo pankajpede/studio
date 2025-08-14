@@ -67,9 +67,15 @@ const mockVillages = [
     { value: "devangra", label: "देवंग्रा" },
 ];
 
+type DocumentType = 'voter-id' | 'pan';
+const documentTypes: {value: DocumentType, label: string}[] = [
+    {value: 'voter-id', label: 'मतदार ओळखपत्र'},
+    {value: 'pan', label: 'पॅन कार्ड'},
+];
+
 type Document = {
     id: number;
-    type: 'voter-id' | 'pan' | '';
+    type: DocumentType | '';
     number: string;
     file: File | null;
 }
@@ -135,7 +141,7 @@ export default function NewFieldSurveyPage() {
             setAccountNumber(selectedFarmer.accountNumber);
             setDocuments(selectedFarmer.docs.map((doc, index) => ({
                 id: index + 1,
-                type: doc.type as 'voter-id' | 'pan',
+                type: doc.type as DocumentType,
                 number: doc.number,
                 file: null
             })))
@@ -146,7 +152,7 @@ export default function NewFieldSurveyPage() {
             setBankName("");
             setAccountNumber("");
         }
-    }, [selectedFarmer]);
+    }, [farmer]);
 
 
     const getBreadcrumb = () => {
@@ -166,13 +172,18 @@ export default function NewFieldSurveyPage() {
     };
 
     const handleAddDocument = () => {
-        if (documents.length < 2) {
+        if (documents.length < documentTypes.length) {
             setDocuments([...documents, { id: Date.now(), type: '', number: '', file: null }]);
         }
     };
 
     const handleRemoveDocument = (id: number) => {
         setDocuments(documents.filter(doc => doc.id !== id));
+    };
+    
+    const getAvailableDocTypes = (currentDocType: DocumentType | '') => {
+        const selectedTypes = documents.map(d => d.type).filter(t => t && t !== currentDocType);
+        return documentTypes.filter(type => !selectedTypes.includes(type.value));
     };
 
   return (
@@ -369,16 +380,17 @@ export default function NewFieldSurveyPage() {
                 </div>
                  <div className="md:col-span-2 grid gap-4">
                      <Label>ओळखपत्र</Label>
-                     {documents.map((doc, index) => (
-                         <div key={doc.id} className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-2 items-center">
+                     {documents.map((doc) => (
+                         <div key={doc.id} className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto_auto] gap-2 items-center">
                             <Select
                                 value={doc.type}
-                                onValueChange={(value: 'voter-id' | 'pan') => handleDocumentChange(doc.id, 'type', value)}
+                                onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
                             >
                                 <SelectTrigger><SelectValue placeholder="ओळखपत्राचा प्रकार" /></SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="voter-id">मतदार ओळखपत्र</SelectItem>
-                                    <SelectItem value="pan">पॅन कार्ड</SelectItem>
+                                    {getAvailableDocTypes(doc.type).map(docType => (
+                                        <SelectItem key={docType.value} value={docType.value}>{docType.label}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                             <Input 
@@ -386,32 +398,27 @@ export default function NewFieldSurveyPage() {
                                 value={doc.number}
                                 onChange={(e) => handleDocumentChange(doc.id, 'number', e.target.value)}
                             />
-                            <div className="flex items-center gap-2">
-                                <Input 
-                                    id={`doc-file-${doc.id}`} 
-                                    type="file" 
-                                    className="sr-only" 
-                                    onChange={(e) => handleDocumentChange(doc.id, 'file', e.target.files ? e.target.files[0] : null)}
-                                />
-                                <Button asChild variant="outline" size="icon">
-                                    <Label htmlFor={`doc-file-${doc.id}`} className="cursor-pointer">
-                                        <UploadCloud className="h-4 w-4"/>
-                                    </Label>
-                                </Button>
-                                {documents.length > 1 && (
-                                     <Button variant="ghost" size="icon" onClick={() => handleRemoveDocument(doc.id)}>
-                                        <MinusCircle className="text-destructive" />
-                                     </Button>
-                                )}
-                            </div>
-                            {doc.file && (
-                                <div className="sm:col-span-3">
-                                    <FileUploadItem file={doc.file} onRemove={() => handleDocumentChange(doc.id, 'file', null)} />
-                                </div>
+                            
+                            <Input 
+                                id={`doc-file-${doc.id}`} 
+                                type="file" 
+                                className="sr-only" 
+                                onChange={(e) => handleDocumentChange(doc.id, 'file', e.target.files ? e.target.files[0] : null)}
+                            />
+                            <Button asChild variant="outline" size="icon">
+                                <Label htmlFor={`doc-file-${doc.id}`} className="cursor-pointer">
+                                    <UploadCloud className="h-4 w-4"/>
+                                </Label>
+                            </Button>
+                            
+                            {documents.length > 1 && (
+                                 <Button variant="ghost" size="icon" onClick={() => handleRemoveDocument(doc.id)}>
+                                    <MinusCircle className="text-destructive" />
+                                 </Button>
                             )}
                          </div>
                      ))}
-                     {documents.length < 2 && (
+                     {documents.length < documentTypes.length && (
                         <Button variant="outline" onClick={handleAddDocument} className="w-full sm:w-auto justify-self-start">
                            <PlusCircle className="mr-2"/> आणखी जोडा
                         </Button>
@@ -494,5 +501,3 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
-
-    

@@ -90,8 +90,8 @@ const generateSurveyData = (count: number): Survey[] => {
       rejectionReason: status === "Rejected" ? "चुकीची माहिती" : "-",
       tokenNumber: status === "Approved" ? `TKN-${String(789 + i)}` : "-",
       tokenDate: status === "Approved" ? `2023-10-${String((i % 30) + 3).padStart(2, '0')}` : "-",
-      otpVerified: i % 2 === 0 ? "होय" : "नाही",
-      cuttingPhotoUploaded: i % 2 === 0 ? "होय" : "नाही",
+      otpVerified: i % 2 === 0 ? "Yes" : "No",
+      cuttingPhotoUploaded: i % 2 === 0 ? "Yes" : "No",
       tonnageReceived: status === "Approved" ? Math.floor(Math.random() * 100 + 150) : 0,
       gatePassEntryDate: status === "Approved" ? `2023-11-${String((i % 28) + 1).padStart(2, '0')}` : "-",
       submittedFrom: i % 2 === 0 ? "Mobile" : "Web",
@@ -222,7 +222,6 @@ export const columns: ColumnDef<Survey>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>क्रिया</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(survey.surveyId)}
             >
@@ -234,7 +233,6 @@ export const columns: ColumnDef<Survey>[] = [
                     तपशील पहा
                 </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>सर्वेक्षण संपादित करा</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

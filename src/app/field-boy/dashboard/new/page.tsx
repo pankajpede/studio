@@ -33,6 +33,7 @@ import Link from "next/link"
 export default function NewFieldSurveyPage() {
     const router = useRouter();
     const [activeTab, setActiveTab] = React.useState("farmer-selection");
+    const [surveyNo, setSurveyNo] = React.useState("");
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "map"];
 
@@ -119,13 +120,30 @@ export default function NewFieldSurveyPage() {
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="survey-no">Survey No.</Label>
-                    <Input id="survey-no" placeholder="Enter survey number" />
+                    <Input 
+                        id="survey-no" 
+                        placeholder="Enter survey number" 
+                        value={surveyNo}
+                        onChange={(e) => setSurveyNo(e.target.value)}
+                    />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="gat-no">Gat No.</Label>
-                    <Input id="gat-no" placeholder="Enter gat number" />
+                     {surveyNo ? (
+                        <Select>
+                            <SelectTrigger id="gat-no"><SelectValue placeholder="Select gat number" /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="1">1</SelectItem>
+                                <SelectItem value="2">2</SelectItem>
+                                <SelectItem value="3">3</SelectItem>
+                                <SelectItem value="4">4</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    ) : (
+                        <Input id="gat-no" placeholder="Enter survey no. first" disabled />
+                    )}
                 </div>
-                 <div className="grid gap-2">
+                 <div className="grid gap-2 md:col-span-2">
                     <Label htmlFor="farmer-selection">Farmer Selection</Label>
                     <Select>
                         <SelectTrigger id="farmer-selection"><SelectValue placeholder="Select farmer..." /></SelectTrigger>

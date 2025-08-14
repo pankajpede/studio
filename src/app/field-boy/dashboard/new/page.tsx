@@ -33,8 +33,16 @@ import Link from "next/link"
 export default function NewFieldSurveyPage() {
     const router = useRouter();
     const [activeTab, setActiveTab] = React.useState("farmer-selection");
+
+    // State for each form field
+    const [selectedState, setSelectedState] = React.useState("");
+    const [district, setDistrict] = React.useState("");
+    const [region, setRegion] = React.useState("");
+    const [taluka, setTaluka] = React.useState("");
+    const [village, setVillage] = React.useState("");
     const [surveyNo, setSurveyNo] = React.useState("");
     const [gatNo, setGatNo] = React.useState("");
+    const [farmer, setFarmer] = React.useState("");
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "map"];
 
@@ -72,7 +80,7 @@ export default function NewFieldSurveyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
                     <Label htmlFor="state">State</Label>
-                    <Select>
+                    <Select onValueChange={setSelectedState} value={selectedState}>
                         <SelectTrigger id="state"><SelectValue placeholder="Select state..." /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="maharashtra">Maharashtra</SelectItem>
@@ -81,8 +89,8 @@ export default function NewFieldSurveyPage() {
                 </div>
                  <div className="grid gap-2">
                     <Label htmlFor="district">District</Label>
-                    <Select>
-                        <SelectTrigger id="district"><SelectValue placeholder="Select district..." /></SelectTrigger>
+                    <Select onValueChange={setDistrict} value={district} disabled={!selectedState}>
+                        <SelectTrigger id="district"><SelectValue placeholder={!selectedState ? "Select state first" : "Select district..."} /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="latur">Latur</SelectItem>
                         </SelectContent>
@@ -90,8 +98,8 @@ export default function NewFieldSurveyPage() {
                 </div>
                  <div className="grid gap-2">
                     <Label htmlFor="region">Region</Label>
-                    <Select>
-                        <SelectTrigger id="region"><SelectValue placeholder="Select region..." /></SelectTrigger>
+                    <Select onValueChange={setRegion} value={region} disabled={!district}>
+                        <SelectTrigger id="region"><SelectValue placeholder={!district ? "Select district first" : "Select region..."} /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="latur-east">Latur East</SelectItem>
                              <SelectItem value="latur-west">Latur West</SelectItem>
@@ -100,8 +108,8 @@ export default function NewFieldSurveyPage() {
                 </div>
                  <div className="grid gap-2">
                     <Label htmlFor="taluka">Taluka</Label>
-                    <Select>
-                        <SelectTrigger id="taluka"><SelectValue placeholder="Select taluka..." /></SelectTrigger>
+                    <Select onValueChange={setTaluka} value={taluka} disabled={!region}>
+                        <SelectTrigger id="taluka"><SelectValue placeholder={!region ? "Select region first" : "Select taluka..."} /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="ahmedpur">Ahmedpur</SelectItem>
                             <SelectItem value="ausa">Ausa</SelectItem>
@@ -111,8 +119,8 @@ export default function NewFieldSurveyPage() {
                 </div>
                  <div className="grid gap-2">
                     <Label htmlFor="village">Village</Label>
-                    <Select>
-                        <SelectTrigger id="village"><SelectValue placeholder="Select village..." /></SelectTrigger>
+                    <Select onValueChange={setVillage} value={village} disabled={!taluka}>
+                        <SelectTrigger id="village"><SelectValue placeholder={!taluka ? "Select taluka first" : "Select village..."} /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="mohgaon">Mohgaon</SelectItem>
                             <SelectItem value="chakur">Chakur</SelectItem>
@@ -123,32 +131,29 @@ export default function NewFieldSurveyPage() {
                     <Label htmlFor="survey-no">Survey No.</Label>
                     <Input 
                         id="survey-no" 
-                        placeholder="Enter survey number" 
+                        placeholder={!village ? "Select village first" : "Enter survey number"}
                         value={surveyNo}
                         onChange={(e) => setSurveyNo(e.target.value)}
+                        disabled={!village}
                     />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="gat-no">Gat No.</Label>
-                     {surveyNo ? (
-                        <Select onValueChange={setGatNo} value={gatNo}>
-                            <SelectTrigger id="gat-no"><SelectValue placeholder="Select gat number" /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="1">1</SelectItem>
-                                <SelectItem value="2">2</SelectItem>
-                                <SelectItem value="3">3</SelectItem>
-                                <SelectItem value="4">4</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    ) : (
-                        <Input id="gat-no" placeholder="Enter survey no. first" disabled />
-                    )}
+                     <Select onValueChange={setGatNo} value={gatNo} disabled={!surveyNo}>
+                        <SelectTrigger id="gat-no"><SelectValue placeholder={!surveyNo ? "Enter survey no. first" : "Select gat number"} /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="1">1</SelectItem>
+                            <SelectItem value="2">2</SelectItem>
+                            <SelectItem value="3">3</SelectItem>
+                            <SelectItem value="4">4</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
                  <div className="grid gap-2 md:col-span-2">
                     <Label htmlFor="farmer-selection">Farmer Selection</Label>
-                    <Select disabled={!gatNo}>
+                    <Select onValueChange={setFarmer} value={farmer} disabled={!gatNo}>
                         <SelectTrigger id="farmer-selection">
-                            <SelectValue placeholder={gatNo ? "Select farmer..." : "Select gat no. first"} />
+                            <SelectValue placeholder={!gatNo ? "Select gat no. first" : "Select farmer..."} />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="farmer-1">Ramesh Kulkarni</SelectItem>
@@ -254,3 +259,5 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    

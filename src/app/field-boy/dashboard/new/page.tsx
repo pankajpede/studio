@@ -34,6 +34,7 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
 import Image from "next/image"
+import AudioRecorder from "@/components/audio-recorder"
 
 const mockFarmers = [
     { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], nameAsPerPassbook: "रमेश एस कुलकर्णी", bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234" },
@@ -280,15 +281,7 @@ export default function NewFieldSurveyPage() {
         const selectedTypes = documents.map(d => d.type).filter(t => t && t !== currentDocType);
         return documentTypes.filter(type => !selectedTypes.includes(type.value));
     };
-    
-    const handleAudioFileChange = (files: FileList | null) => {
-        if (files && files.length > 0) {
-            setAudioNote(files[0]);
-        } else {
-            setAudioNote(null);
-        }
-    };
-    
+        
     const handleOtherMediaChange = (id: number, field: keyof OtherMedia, value: string | File | null) => {
         setOtherMedia(otherMedia.map(item => item.id === id ? { ...item, [field]: value } : item));
     };
@@ -662,22 +655,9 @@ export default function NewFieldSurveyPage() {
                     
                         <div className="grid gap-2">
                             <Label htmlFor="audio-note" className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट (पर्यायी)</Label>
-                            <div className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 relative">
-                                <UploadCloud className="w-8 h-8 text-muted-foreground" />
-                                <p className="mt-2 text-sm text-center text-muted-foreground">
-                                    <span className="font-semibold">अपलोड करण्यासाठी क्लिक करा</span>
-                                </p>
-                                <Input
-                                    id="audio-note"
-                                    type="file"
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                    accept="audio/*"
-                                    onChange={(e) => handleAudioFileChange(e.target.files)}
-                                />
-                            </div>
-                            {audioNote && (
-                                <FileUploadItem file={audioNote} onRemove={() => setAudioNote(null)} />
-                            )}
+                            <AudioRecorder
+                                onRecordingComplete={(file) => setAudioNote(file)}
+                            />
                         </div>
 
                          <div className="grid gap-4">
@@ -783,5 +763,3 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
-
-    

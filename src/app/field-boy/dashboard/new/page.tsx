@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/tabs"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle } from "lucide-react"
+import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
@@ -510,14 +510,36 @@ export default function NewFieldSurveyPage() {
           </TabsContent>
 
           <TabsContent value="map" className="pt-6">
-            <div className="flex flex-col items-center gap-4">
-                 <div className="w-full h-64 bg-muted rounded-lg">
-                    <FieldBoyMap />
-                 </div>
-                <div className="flex flex-col sm:flex-row gap-4 w-full">
-                    <Button variant="outline" className="w-full"><Pin className="mr-2" /> ड्रॉ बटण</Button>
-                    <Button variant="outline" className="w-full"><Footprints className="mr-2" /> वॉक बटण</Button>
-                </div>
+            <div className="flex flex-col gap-6">
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-lg flex items-center gap-2">
+                            <LocateFixed className="w-5 h-5 text-primary"/>
+                            फील्ड बॉयचे स्थान
+                        </CardTitle>
+                        <CardDescription>
+                            शेतापासून अंदाजित अंतर: <strong>०.२ किमी</strong>
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="h-64 bg-muted rounded-b-lg">
+                        <FieldBoyMap showDistance farmLocation={{lat: 18.4088, lng: 76.5702}} />
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
+                        <CardDescription>शेताची सीमा निश्चित करण्यासाठी खालील बटणे वापरा.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="w-full h-64 bg-muted rounded-lg">
+                           <FieldBoyMap />
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-4 w-full mt-4">
+                            <Button variant="outline" className="w-full"><Pin className="mr-2" /> ड्रॉ बटण</Button>
+                            <Button variant="outline" className="w-full"><Footprints className="mr-2" /> वॉक बटण</Button>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
           </TabsContent>
         </Tabs>
@@ -535,5 +557,3 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
-
-    

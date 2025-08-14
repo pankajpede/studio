@@ -329,55 +329,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                 onChange={(event) => setFarmerName(event.target.value)}
                             />
                         </div>
-                        
-                        <div className="grid gap-2">
-                            <Label>सर्वेक्षण स्थिती</Label>
-                             <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" className="w-full justify-between">
-                                        <span>
-                                            स्थितीनुसार फिल्टर करा
-                                            {selectedStatuses.length > 0 && (
-                                                <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
-                                                    {selectedStatuses.length} निवडले
-                                                </Badge>
-                                            )}
-                                        </span>
-                                        <ChevronDown className="ml-2 h-4 w-4" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
-                                    <DropdownMenuLabel>स्थितीनुसार फिल्टर करा</DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    {statusOptions.map((option) => (
-                                        <DropdownMenuCheckboxItem
-                                            key={option.value}
-                                            checked={selectedStatuses.includes(option.value)}
-                                            onCheckedChange={(checked) => {
-                                                const newStatuses = checked
-                                                    ? [...selectedStatuses, option.value]
-                                                    : selectedStatuses.filter((s) => s !== option.value);
-                                                setSelectedStatuses(newStatuses);
-                                            }}
-                                        >
-                                            {option.label}
-                                        </DropdownMenuCheckboxItem>
-                                    ))}
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
 
-                         <div className="grid gap-2">
-                            <Label htmlFor="taluka">तालुका</Label>
-                             <Select value={taluka} onValueChange={setTaluka}>
-                                <SelectTrigger><SelectValue placeholder="तालुकानुसार फिल्टर करा" /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">सर्व तालुके</SelectItem>
-                                    {uniqueTalukas.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        
                          <div className="grid gap-2">
                             <Label>Radius (km)</Label>
                             <div className="flex items-center gap-2">
@@ -424,6 +376,63 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                 </PopoverContent>
                             </Popover>
                         </div>
+                        
+                        <div className="grid gap-2">
+                            <Label>सर्वेक्षण स्थिती</Label>
+                             <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="w-full justify-between">
+                                        <span>
+                                            स्थितीनुसार फिल्टर करा
+                                            {selectedStatuses.length > 0 && (
+                                                <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
+                                                    {selectedStatuses.length} निवडले
+                                                </Badge>
+                                            )}
+                                        </span>
+                                        <ChevronDown className="ml-2 h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                                    <DropdownMenuLabel>स्थितीनुसार फिल्टर करा</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    {statusOptions.map((option) => (
+                                        <DropdownMenuCheckboxItem
+                                            key={option.value}
+                                            checked={selectedStatuses.includes(option.value)}
+                                            onCheckedChange={(checked) => {
+                                                const newStatuses = checked
+                                                    ? [...selectedStatuses, option.value]
+                                                    : selectedStatuses.filter((s) => s !== option.value);
+                                                setSelectedStatuses(newStatuses);
+                                            }}
+                                        >
+                                            {option.label}
+                                        </DropdownMenuCheckboxItem>
+                                    ))}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+
+                         <div className="grid gap-2">
+                            <Label>क्षेत्र (एकर)</Label>
+                            <div className="flex items-center gap-2">
+                                <Input type="number" placeholder="किमान" value={minArea} onChange={e => setMinArea(e.target.value)} />
+                                <span className="text-muted-foreground">-</span>
+                                <Input type="number" placeholder="कमाल" value={maxArea} onChange={e => setMaxArea(e.target.value)} />
+                            </div>
+                        </div>
+
+                         <div className="grid gap-2">
+                            <Label htmlFor="taluka">तालुका</Label>
+                             <Select value={taluka} onValueChange={setTaluka}>
+                                <SelectTrigger><SelectValue placeholder="तालुकानुसार फिल्टर करा" /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">सर्व तालुके</SelectItem>
+                                    {uniqueTalukas.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                        </div>
 
                          <div className="grid gap-2">
                             <Label htmlFor="surveyor">सर्वेक्षक</Label>
@@ -451,15 +460,6 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                     {uniqueWarshirs.map(w => <SelectItem key={w} value={w}>{w}</SelectItem>)}
                                 </SelectContent>
                             </Select>
-                        </div>
-                        
-                        <div className="grid gap-2">
-                            <Label>क्षेत्र (एकर)</Label>
-                            <div className="flex items-center gap-2">
-                                <Input type="number" placeholder="किमान" value={minArea} onChange={e => setMinArea(e.target.value)} />
-                                <span className="text-muted-foreground">-</span>
-                                <Input type="number" placeholder="कमाल" value={maxArea} onChange={e => setMaxArea(e.target.value)} />
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -809,3 +809,4 @@ export default function DashboardPage() {
 }
 
     
+

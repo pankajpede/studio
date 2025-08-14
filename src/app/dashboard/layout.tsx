@@ -70,7 +70,7 @@ export default function DashboardLayout({
             </Button>
             <h1 className="font-headline text-xl font-semibold text-sidebar-foreground">
               <Leaf className="inline-block mr-2 h-6 w-6" />
-              केनव्हिजन
+              साई शुगर
             </h1>
           </div>
         </SidebarHeader>

@@ -45,7 +45,7 @@ export default function LoginPage() {
           <div className="flex items-center justify-center mb-4">
             <Leaf className="h-8 w-8 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-headline text-center">केनव्हिजन</CardTitle>
+          <CardTitle className="text-2xl font-headline text-center">साई शुगर</CardTitle>
           <CardDescription className="text-center">
             तुमच्या खात्यात प्रवेश करण्यासाठी क्रेडेन्शियल्स प्रविष्ट करा
           </CardDescription>

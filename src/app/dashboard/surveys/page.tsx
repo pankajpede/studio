@@ -13,6 +13,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  FilterFn,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal, Filter, X } from "lucide-react"
 
@@ -172,6 +173,12 @@ export type Survey = {
   voiceNoteUploaded: "Yes" | "No";
 }
 
+const statusOptions = [
+    { value: "Approved", label: "मंजूर" },
+    { value: "Pending", label: "प्रलंबित" },
+    { value: "Rejected", label: "नाकारलेले" },
+];
+
 export const columns: ColumnDef<Survey>[] = [
   {
     id: "select",
@@ -218,7 +225,10 @@ export const columns: ColumnDef<Survey>[] = [
             "Rejected": "नाकारलेले"
         }
         return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{statusTranslations[status] || status}</Badge>;
-    }
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
   },
   {
     accessorKey: "surveyStage",
@@ -588,7 +598,7 @@ export default function SurveyDataTable() {
 
   const [rowSelection, setRowSelection] = React.useState({})
   
-  const dateRangeFilterFn = (row: any, columnId: string, filterValue: [Date | undefined, Date | undefined]) => {
+  const dateRangeFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
       const date = new Date(row.getValue(columnId));
       const [start, end] = filterValue;
       if (start && !end) {
@@ -601,7 +611,7 @@ export default function SurveyDataTable() {
       return true;
   };
   
-  const areaRangeFilterFn = (row: any, columnId: string, filterValue: [number | undefined, number | undefined]) => {
+  const areaRangeFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
     const area = row.getValue(columnId);
     const [min, max] = filterValue;
 
@@ -644,6 +654,8 @@ export default function SurveyDataTable() {
   })
   
   const activeFilters = columnFilters.filter(f => f.value);
+  const selectedStatuses = table.getColumn('surveyStatus')?.getFilterValue() as string[] ?? [];
+
 
   return (
     <Card>
@@ -664,20 +676,41 @@ export default function SurveyDataTable() {
                   }
                   className="max-w-xs"
                 />
-                <Select
-                    value={(table.getColumn("surveyStatus")?.getFilterValue() as string) ?? ""}
-                    onValueChange={(value) => table.getColumn("surveyStatus")?.setFilterValue(value === "all" ? "" : value)}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="स्थितीनुसार फिल्टर करा" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">सर्व स्थिती</SelectItem>
-                        <SelectItem value="Approved">मंजूर</SelectItem>
-                        <SelectItem value="Pending">प्रलंबित</SelectItem>
-                        <SelectItem value="Rejected">नाकारलेले</SelectItem>
-                    </SelectContent>
-                </Select>
+                 <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-[180px] justify-between">
+                            <span>
+                                स्थितीनुसार फिल्टर करा
+                                {selectedStatuses.length > 0 && (
+                                    <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
+                                        {selectedStatuses.length} निवडले
+                                    </Badge>
+                                )}
+                            </span>
+                             <ChevronDown className="ml-2 h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[180px]">
+                        <DropdownMenuLabel>स्थितीनुसार फिल्टर करा</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {statusOptions.map((option) => (
+                            <DropdownMenuCheckboxItem
+                                key={option.value}
+                                checked={selectedStatuses.includes(option.value)}
+                                onCheckedChange={(checked) => {
+                                    const current = table.getColumn('surveyStatus')?.getFilterValue() as string[] ?? [];
+                                    const newStatuses = checked
+                                        ? [...current, option.value]
+                                        : current.filter((s) => s !== option.value);
+                                    table.getColumn('surveyStatus')?.setFilterValue(newStatuses.length ? newStatuses : undefined);
+                                }}
+                            >
+                                {option.label}
+                            </DropdownMenuCheckboxItem>
+                        ))}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
                  <Select
                     value={(table.getColumn("taluka")?.getFilterValue() as string) ?? ""}
                     onValueChange={(value) => table.getColumn("taluka")?.setFilterValue(value === "all" ? "" : value)}

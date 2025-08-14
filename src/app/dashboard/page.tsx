@@ -344,7 +344,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                         </div>
 
                         <div className="grid gap-2">
-                            <Label>सर्वेक्षण तारीख श्रेणी</Label>
+                            <Label>सर्वेक्षण तारीख</Label>
                              <Popover>
                                 <PopoverTrigger asChild>
                                 <Button
@@ -435,14 +435,14 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                         </div>
 
                          <div className="grid gap-2">
-                            <Label htmlFor="surveyor">सर्वेक्षक</Label>
+                            <Label htmlFor="surveyor">फील्ड बॉय</Label>
                             <Select
                                 value={table.getColumn("surveyedBy")?.getFilterValue() as string ?? ""}
                                 onValueChange={(value) => table.getColumn("surveyedBy")?.setFilterValue(value === "all" ? "" : value)}
                             >
-                                <SelectTrigger><SelectValue placeholder="सर्वेक्षक निवडा" /></SelectTrigger>
+                                <SelectTrigger><SelectValue placeholder="फील्ड बॉय निवडा" /></SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">सर्व सर्वेक्षक</SelectItem>
+                                    <SelectItem value="all">सर्व फील्ड बॉय</SelectItem>
                                     {uniqueSurveyors.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                                 </SelectContent>
                             </Select>
@@ -810,3 +810,4 @@ export default function DashboardPage() {
 
     
 
+    

@@ -509,7 +509,7 @@ export default function SurveyDataTable() {
                 <ColumnToggleDropdown table={table} onApply={handleApply} onReset={handleReset} />
             </div>
             <div className="rounded-md border">
-              <ScrollArea className="w-full whitespace-nowrap">
+              <ScrollArea className="w-full whitespace-nowrap h-[500px]">
                 <Table>
                 <TableHeader className="sticky top-0 bg-card">
                     {table.getHeaderGroups().map((headerGroup) => (

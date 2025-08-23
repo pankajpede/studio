@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -797,10 +798,10 @@ const stats = [
     change: "+8.1% मागच्या महिन्यापेक्षा",
   },
   {
-    title: "अपेक्षित उत्पादन (टन)",
-    value: "22,605",
-    icon: <BarChart3 className="h-6 w-6 text-muted-foreground" />,
-    change: "+2.3% मागच्या महिन्यापेक्षा",
+    title: "प्रलंबित सर्वेक्षण",
+    value: "270",
+    icon: <ListTodo className="h-6 w-6 text-muted-foreground" />,
+    change: "-3.5% मागच्या आठवड्यापेक्षा",
   },
 ]
 
@@ -854,5 +855,7 @@ export default function DashboardPage() {
     </div>
   )
 }
+
+    
 
     

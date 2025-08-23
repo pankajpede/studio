@@ -15,7 +15,7 @@ import {
   useReactTable,
   FilterFn,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, CheckCircle2, ListTodo, Ruler, BarChart3, Filter, X } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, CheckCircle2, ListTodo, Ruler, BarChart3, Filter, X, Leaf, Scissors, CalendarClock, Copy } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -777,32 +777,60 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
   )
 }
 
-
 const stats = [
   {
-    title: "एकूण क्षेत्र (हेक्टर)",
-    value: "4,521",
-    subValue: "प्रलंबित: 530 हेक्टर",
-    icon: <Ruler className="h-6 w-6 text-muted-foreground" />,
-    change: "+8.1% मागच्या महिन्यापेक्षा",
-  },
-  {
-    title: "मंजूर सर्वेक्षण",
-    value: "980",
+    title: "स्वीकारलेली ऊस नोंदणी",
     icon: <CheckCircle2 className="h-6 w-6 text-muted-foreground" />,
-    change: "+5.2% मागच्या महिन्यापेक्षा",
+    details: [
+      { label: "एकूण ऊस नोंदी", value: "3,396" },
+      { label: "एकूण ऊस क्षेत्र (हेक्टर)", value: "3,341.86" },
+    ],
   },
   {
-    title: "प्रलंबित सर्वेक्षण",
-    value: "270",
-    icon: <ListTodo className="h-6 w-6 text-muted-foreground" />,
-    change: "-3.5% मागच्या आठवड्यापेक्षा",
+    title: "ऊस तोड (झालेली)",
+    icon: <Scissors className="h-6 w-6 text-muted-foreground" />,
+    details: [
+      { label: "एकूण ऊस तोड नोंदी", value: "0" },
+      { label: "एकूण ऊस तोड क्षेत्र (हेक्टर)", value: "0" },
+    ],
   },
   {
-    title: "एकूण सर्वेक्षण",
-    value: "1,250",
-    icon: <ListTodo className="h-6 w-6 text-muted-foreground" />,
-    change: "+12.5% मागच्या महिन्यापेक्षा",
+    title: "प्रलंबित ऊस तोडणी",
+    icon: <CalendarClock className="h-6 w-6 text-muted-foreground" />,
+    details: [
+      { label: "एकूण बाकी ऊस नोंदी", value: "3,396" },
+      { label: "एकूण बाकी ऊस क्षेत्र (हेक्टर)", value: "3,341.86" },
+      { label: "अंदाजे दिवस", value: "0" },
+    ],
+  },
+   {
+    title: "दुबार ऊस नोंदणी",
+    icon: <Copy className="h-6 w-6 text-muted-foreground" />,
+    details: [
+      { label: "एकूण ऊस नोंदी", value: "0" },
+      { label: "एकूण ऊस क्षेत्र (हेक्टर)", value: "0" },
+    ],
+  },
+];
+
+const simpleStats = [
+ {
+    title: "ऊस क्षेत्र (हेक्टर)",
+    value: "3,342",
+    icon: <Ruler className="h-6 w-6 text-muted-foreground" />,
+    change: "+2.6% than last week",
+  },
+  {
+    title: "ऊस नोंदी",
+    value: "3,396",
+    icon: <Leaf className="h-6 w-6 text-muted-foreground" />,
+    change: "+0.6% than last week",
+  },
+   {
+    title: "ऊस तोड (हेक्टर)",
+    value: "0",
+    icon: <Scissors className="h-6 w-6 text-muted-foreground" />,
+    change: "-0.1% than last week",
   },
 ]
 
@@ -825,13 +853,33 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.title}>
+            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+              {stat.icon}
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-1 text-sm">
+                {stat.details.map(detail => (
+                    <div key={detail.label} className="flex justify-between">
+                        <span className="text-muted-foreground">{detail.label}:</span>
+                        <span className="font-semibold">{detail.value}</span>
+                    </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+       <div className="grid gap-4 md:grid-cols-3">
+        {simpleStats.map((stat) => (
+          <Card key={stat.title}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
               {stat.icon}
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
-              {stat.subValue && <p className="text-xs text-muted-foreground mt-1">{stat.subValue}</p>}
               <p className="text-xs text-muted-foreground">{stat.change}</p>
             </CardContent>
           </Card>
@@ -857,7 +905,5 @@ export default function DashboardPage() {
     </div>
   )
 }
-
-    
 
     

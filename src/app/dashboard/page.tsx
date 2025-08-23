@@ -794,6 +794,7 @@ const stats = [
   {
     title: "एकूण क्षेत्र (हेक्टर)",
     value: "4,521",
+    subValue: "प्रलंबित: 530 हेक्टर",
     icon: <Ruler className="h-6 w-6 text-muted-foreground" />,
     change: "+8.1% मागच्या महिन्यापेक्षा",
   },
@@ -830,6 +831,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
+              {stat.subValue && <p className="text-xs text-muted-foreground mt-1">{stat.subValue}</p>}
               <p className="text-xs text-muted-foreground">{stat.change}</p>
             </CardContent>
           </Card>

@@ -780,10 +780,11 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
 
 const stats = [
   {
-    title: "एकूण सर्वेक्षण",
-    value: "1,250",
-    icon: <ListTodo className="h-6 w-6 text-muted-foreground" />,
-    change: "+12.5% मागच्या महिन्यापेक्षा",
+    title: "एकूण क्षेत्र (हेक्टर)",
+    value: "4,521",
+    subValue: "प्रलंबित: 530 हेक्टर",
+    icon: <Ruler className="h-6 w-6 text-muted-foreground" />,
+    change: "+8.1% मागच्या महिन्यापेक्षा",
   },
   {
     title: "मंजूर सर्वेक्षण",
@@ -792,17 +793,16 @@ const stats = [
     change: "+5.2% मागच्या महिन्यापेक्षा",
   },
   {
-    title: "एकूण क्षेत्र (हेक्टर)",
-    value: "4,521",
-    subValue: "प्रलंबित: 530 हेक्टर",
-    icon: <Ruler className="h-6 w-6 text-muted-foreground" />,
-    change: "+8.1% मागच्या महिन्यापेक्षा",
-  },
-  {
     title: "प्रलंबित सर्वेक्षण",
     value: "270",
     icon: <ListTodo className="h-6 w-6 text-muted-foreground" />,
     change: "-3.5% मागच्या आठवड्यापेक्षा",
+  },
+  {
+    title: "एकूण सर्वेक्षण",
+    value: "1,250",
+    icon: <ListTodo className="h-6 w-6 text-muted-foreground" />,
+    change: "+12.5% मागच्या महिन्यापेक्षा",
   },
 ]
 

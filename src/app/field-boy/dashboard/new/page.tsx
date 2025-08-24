@@ -183,13 +183,12 @@ export default function NewFieldSurveyPage() {
     // State for each form field
     const [selectedState, setSelectedState] = React.useState("");
     const [district, setDistrict] = React.useState("");
-    const [region, setRegion] = React.useState("");
     const [taluka, setTaluka] = React.useState("");
+    const [circle, setCircle] = React.useState("");
+    const [gut, setGut] = React.useState("");
     const [village, setVillage] = React.useState("");
-    const [surveyNo, setSurveyNo] = React.useState("");
-    const [gatNo, setGatNo] = React.useState("");
-    const [farmer, setFarmer] = React.useState("");
-    
+    const [partyName, setPartyName] = React.useState("");
+
     // State for farmer info tab
     const [mobile, setMobile] = React.useState("");
     const [documents, setDocuments] = React.useState<Document[]>([{ id: 1, type: '', number: '', file: null }]);
@@ -206,9 +205,6 @@ export default function NewFieldSurveyPage() {
     const [audioNote, setAudioNote] = React.useState<File | null>(null);
     const [otherMedia, setOtherMedia] = React.useState<OtherMedia[]>([{ id: 1, name: '', file: null }]);
 
-
-    const [farmerSearchOpen, setFarmerSearchOpen] = React.useState(false);
-    const [villageSearchOpen, setVillageSearchOpen] = React.useState(false);
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
@@ -235,7 +231,7 @@ export default function NewFieldSurveyPage() {
         router.push('/field-boy/dashboard');
     }
     
-    const selectedFarmer = mockFarmers.find(f => f.value === farmer);
+    const selectedFarmer = mockFarmers.find(f => f.value === partyName);
 
     React.useEffect(() => {
         if (selectedFarmer) {
@@ -259,19 +255,17 @@ export default function NewFieldSurveyPage() {
             setAccountNumber("");
             setIfscCode("");
         }
-    }, [farmer, selectedFarmer]);
+    }, [partyName, selectedFarmer]);
 
 
     const getBreadcrumb = () => {
-        const stateLabel = selectedState === 'maharashtra' ? 'महाराष्ट्र' : 'कर्नाटक';
-        const districtLabel = district ? ' > लातूर' : '';
-        const regionLabel = region ? ` > ${region === 'latur-east' ? 'लातूर पूर्व' : 'लातूर पश्चिम'}` : '';
+        const stateLabel = selectedState ? `${selectedState === 'maharashtra' ? 'महाराष्ट्र' : 'कर्नाटक'}` : '';
+        const districtLabel = district ? ` > ${district === 'latur' ? 'लातूर' : ''}` : '';
         const talukaLabel = taluka ? ` > ${taluka === 'ahmedpur' ? 'अहमदपूर' : taluka === 'ausa' ? 'औसा' : 'लातूर'}` : '';
         const villageLabel = village ? ` > ${mockVillages.find(v => v.value === village)?.label}` : '';
-        const surveyNoLabel = surveyNo ? ` > एसएन-${surveyNo}` : '';
-        const gatNoLabel = gatNo ? ` > ${gatNo}` : '';
+        const partyNameLabel = partyName ? ` > ${mockFarmers.find(f => f.value === partyName)?.label}` : '';
 
-        return `${stateLabel}${districtLabel}${regionLabel}${talukaLabel}${villageLabel}${surveyNoLabel}${gatNoLabel}`;
+        return `${stateLabel}${districtLabel}${talukaLabel}${villageLabel}${partyNameLabel}`;
     };
     
     const handleDocumentChange = (id: number, field: keyof Document, value: string | File | null) => {
@@ -342,7 +336,7 @@ export default function NewFieldSurveyPage() {
           <TabsContent value="farmer-selection" className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="state">राज्य</Label>
+                    <Label htmlFor="state">राज्य (State)</Label>
                     <Select onValueChange={setSelectedState} value={selectedState}>
                         <SelectTrigger id="state"><SelectValue placeholder="राज्य निवडा..." /></SelectTrigger>
                         <SelectContent>
@@ -352,7 +346,7 @@ export default function NewFieldSurveyPage() {
                     </Select>
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="district">जिल्हा</Label>
+                    <Label htmlFor="district">जिल्हा (District)</Label>
                     <Select onValueChange={setDistrict} value={district} disabled={!selectedState}>
                         <SelectTrigger id="district"><SelectValue placeholder={!selectedState ? "प्रथम राज्य निवडा" : "जिल्हा निवडा..."} /></SelectTrigger>
                         <SelectContent>
@@ -361,19 +355,9 @@ export default function NewFieldSurveyPage() {
                     </Select>
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="region">रीजन</Label>
-                    <Select onValueChange={setRegion} value={region} disabled={!district}>
-                        <SelectTrigger id="region"><SelectValue placeholder={!district ? "प्रथम जिल्हा निवडा" : "रीजन निवडा..."} /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="latur-east">लातूर पूर्व</SelectItem>
-                             <SelectItem value="latur-west">लातूर पश्चिम</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="taluka">तालुका</Label>
-                    <Select onValueChange={setTaluka} value={taluka} disabled={!region}>
-                        <SelectTrigger id="taluka"><SelectValue placeholder={!region ? "प्रथम रीजन निवडा" : "तालुका निवडा..."} /></SelectTrigger>
+                    <Label htmlFor="taluka">तालुका (Taluka)</Label>
+                    <Select onValueChange={setTaluka} value={taluka} disabled={!district}>
+                        <SelectTrigger id="taluka"><SelectValue placeholder={!district ? "प्रथम जिल्हा निवडा" : "तालुका निवडा..."} /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="ahmedpur">अहमदपूर</SelectItem>
                             <SelectItem value="ausa">औसा</SelectItem>
@@ -382,121 +366,42 @@ export default function NewFieldSurveyPage() {
                     </Select>
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="village">गाव</Label>
-                    <Popover open={villageSearchOpen} onOpenChange={setVillageSearchOpen}>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={villageSearchOpen}
-                                className="w-full justify-between"
-                                disabled={!taluka}
-                            >
-                                {village
-                                    ? mockVillages.find((v) => v.value === village)?.label
-                                    : !taluka ? "प्रथम तालुका निवडा" : "गाव निवडा..."}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-full p-0" align="start">
-                            <Command>
-                                <CommandInput placeholder="गाव शोधा..." />
-                                <CommandList>
-                                    <CommandEmpty>गाव आढळले नाही.</CommandEmpty>
-                                    <CommandGroup>
-                                        {mockVillages.map((v) => (
-                                        <CommandItem
-                                            key={v.value}
-                                            value={v.value}
-                                            onSelect={(currentValue) => {
-                                                setVillage(currentValue === village ? "" : currentValue)
-                                                setVillageSearchOpen(false)
-                                            }}
-                                        >
-                                            <Check
-                                            className={cn(
-                                                "mr-2 h-4 w-4",
-                                                village === v.value ? "opacity-100" : "opacity-0"
-                                            )}
-                                            />
-                                            {v.label}
-                                        </CommandItem>
-                                        ))}
-                                    </CommandGroup>
-                                </CommandList>
-                            </Command>
-                        </PopoverContent>
-                    </Popover>
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="survey-no">सर्वेक्षण क्र.</Label>
-                     <Select onValueChange={setSurveyNo} value={surveyNo} disabled={!village}>
-                        <SelectTrigger id="survey-no"><SelectValue placeholder={!village ? "प्रथम गाव निवडा" : "सर्वेक्षण क्रमांक निवडा"} /></SelectTrigger>
+                    <Label htmlFor="circle">सर्कल (Circle)</Label>
+                    <Select onValueChange={setCircle} value={circle} disabled={!taluka}>
+                        <SelectTrigger id="circle"><SelectValue placeholder={!taluka ? "प्रथम तालुका निवडा" : "सर्कल निवडा..."} /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="१०१">एसएन-१०१</SelectItem>
-                            <SelectItem value="१०२">एसएन-१०२</SelectItem>
-                            <SelectItem value="१०३">एसएन-१०३</SelectItem>
+                            <SelectItem value="circle-1">सर्कल १</SelectItem>
+                            <SelectItem value="circle-2">सर्कल २</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="gat-no">गट क्र.</Label>
-                     <Select onValueChange={setGatNo} value={gatNo} disabled={!surveyNo}>
-                        <SelectTrigger id="gat-no"><SelectValue placeholder={!surveyNo ? "प्रथम सर्वेक्षण क्र. निवडा" : "गट क्रमांक निवडा"} /></SelectTrigger>
+                 <div className="grid gap-2">
+                    <Label htmlFor="gut">गट (Gut)</Label>
+                    <Select onValueChange={setGut} value={gut} disabled={!circle}>
+                        <SelectTrigger id="gut"><SelectValue placeholder={!circle ? "प्रथम सर्कल निवडा" : "गट निवडा..."} /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="१">१</SelectItem>
-                            <SelectItem value="२">२</SelectItem>
-                            <SelectItem value="३">३</SelectItem>
-                            <SelectItem value="४">४</SelectItem>
+                            <SelectItem value="gut-101">गट १०१</SelectItem>
+                            <SelectItem value="gut-102">गट १०२</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <div className="grid gap-2">
+                    <Label htmlFor="village">गाव (Village)</Label>
+                    <Select onValueChange={setVillage} value={village} disabled={!gut}>
+                        <SelectTrigger id="village"><SelectValue placeholder={!gut ? "प्रथम गट निवडा" : "गाव निवडा..."} /></SelectTrigger>
+                        <SelectContent>
+                            {mockVillages.map(v => <SelectItem key={v.value} value={v.value}>{v.label}</SelectItem>)}
                         </SelectContent>
                     </Select>
                 </div>
                  <div className="grid gap-2 md:col-span-2">
-                    <Label htmlFor="farmer-selection">शेतकरी निवड</Label>
-                    <Popover open={farmerSearchOpen} onOpenChange={setFarmerSearchOpen}>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={farmerSearchOpen}
-                                className="w-full justify-between"
-                                disabled={!gatNo}
-                            >
-                                {farmer
-                                    ? mockFarmers.find((f) => f.value === farmer)?.label
-                                    : !gatNo ? "प्रथम गट क्र. निवडा" : "शेतकरी निवडा..."}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-full p-0" align="start">
-                            <Command>
-                                <CommandInput placeholder="शेतकरी शोधा..." />
-                                <CommandList>
-                                    <CommandEmpty>शेतकरी आढळला नाही.</CommandEmpty>
-                                    <CommandGroup>
-                                        {mockFarmers.map((f) => (
-                                        <CommandItem
-                                            key={f.value}
-                                            value={f.value}
-                                            onSelect={(currentValue) => {
-                                                setFarmer(currentValue === farmer ? "" : currentValue)
-                                                setFarmerSearchOpen(false)
-                                            }}
-                                        >
-                                            <Check
-                                            className={cn(
-                                                "mr-2 h-4 w-4",
-                                                farmer === f.value ? "opacity-100" : "opacity-0"
-                                            )}
-                                            />
-                                            {f.label}
-                                        </CommandItem>
-                                        ))}
-                                    </CommandGroup>
-                                </CommandList>
-                            </Command>
-                        </PopoverContent>
-                    </Popover>
+                    <Label htmlFor="party-name">शेतकरी (Party Name)</Label>
+                    <Select onValueChange={setPartyName} value={partyName} disabled={!village}>
+                        <SelectTrigger id="party-name"><SelectValue placeholder={!village ? "प्रथम गाव निवडा" : "शेतकरी निवडा..."} /></SelectTrigger>
+                        <SelectContent>
+                            {mockFarmers.map(f => <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
           </TabsContent>
@@ -774,5 +679,3 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
-
-    

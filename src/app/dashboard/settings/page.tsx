@@ -24,12 +24,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
@@ -128,21 +122,21 @@ const plantationMethods: MasterDataItem[] = [
 ]
 
 const masterDataMap = {
-  states: { data: states, linkedEntity: null, category: null, entityName: "राज्य" },
-  districts: { data: districts, linkedEntity: "राज्य", category: null, entityName: "जिल्हा" },
-  talukas: { data: talukas, linkedEntity: "जिल्हा", category: null, entityName: "तालुका" },
-  circles: { data: circles, linkedEntity: "तालुका", category: null, entityName: "सर्कल" },
-  guts: { data: guts, linkedEntity: "सर्कल", category: null, entityName: "गट" },
-  villages: { data: villages, linkedEntity: "तालुका", category: null, entityName: "गाव" },
-  shivars: { data: shivars, linkedEntity: "गाव", category: null, entityName: "शिवार" },
-  surveyNumbers: { data: surveyNumbers, linkedEntity: "शिवार", category: null, entityName: "सर्वेक्षण नंबर" },
-  caneVarieties: { data: caneVarieties, linkedEntity: null, category: "पक्वता श्रेणी", entityName: "उसाची जात" },
-  caneMaturities: { data: caneMaturities, linkedEntity: "उसाची जात", category: null, entityName: "उसाची पक्वता" },
-  caneTypes: { data: caneTypes, linkedEntity: "उसाची जात", category: null, entityName: "उसाचा प्रकार" },
-  irrigationTypes: { data: irrigationTypes, linkedEntity: null, category: null, entityName: "सिंचनाचा प्रकार" },
-  irrigationSources: { data: irrigationSources, linkedEntity: null, category: null, entityName: "सिंचनाचा स्रोत" },
-  irrigationMethods: { data: irrigationMethods, linkedEntity: null, category: null, entityName: "सिंचन पद्धत" },
-  plantationMethods: { data: plantationMethods, linkedEntity: null, category: null, entityName: "लागवड पद्धत" },
+  states: { data: states, linkedEntity: null, category: null, entityName: "राज्य", label: "राज्य" },
+  districts: { data: districts, linkedEntity: "राज्य", category: null, entityName: "जिल्हा", label: "जिल्हा" },
+  talukas: { data: talukas, linkedEntity: "जिल्हा", category: null, entityName: "तालुका", label: "तालुका" },
+  circles: { data: circles, linkedEntity: "तालुका", category: null, entityName: "सर्कल", label: "सर्कल" },
+  guts: { data: guts, linkedEntity: "सर्कल", category: null, entityName: "गट", label: "गट" },
+  villages: { data: villages, linkedEntity: "तालुका", category: null, entityName: "गाव", label: "गाव" },
+  shivars: { data: shivars, linkedEntity: "गाव", category: null, entityName: "शिवार", label: "शिवार" },
+  surveyNumbers: { data: surveyNumbers, linkedEntity: "शिवार", category: null, entityName: "सर्वेक्षण नंबर", label: "सर्वेक्षण नंबर" },
+  caneVarieties: { data: caneVarieties, linkedEntity: null, category: "पक्वता श्रेणी", entityName: "उसाची जात", label: "उसाची जात" },
+  caneMaturities: { data: caneMaturities, linkedEntity: "उसाची जात", category: null, entityName: "उसाची पक्वता", label: "उसाची पक्वता" },
+  caneTypes: { data: caneTypes, linkedEntity: "उसाची जात", category: null, entityName: "उसाचा प्रकार", label: "उसाचा प्रकार" },
+  irrigationTypes: { data: irrigationTypes, linkedEntity: null, category: null, entityName: "सिंचनाचा प्रकार", label: "सिंचनाचा प्रकार" },
+  irrigationSources: { data: irrigationSources, linkedEntity: null, category: null, entityName: "सिंचनाचा स्रोत", label: "सिंचनाचा स्रोत" },
+  irrigationMethods: { data: irrigationMethods, linkedEntity: null, category: null, entityName: "सिंचन पद्धत", label: "सिंचन पद्धत" },
+  plantationMethods: { data: plantationMethods, linkedEntity: null, category: null, entityName: "लागवड पद्धत", label: "लागवड पद्धत" },
 }
 
 type MasterDataKey = keyof typeof masterDataMap
@@ -554,23 +548,12 @@ function MasterDataModal({
 
 export default function SettingsPage() {
   const { toast } = useToast();
-  const masterDataTabs = [
-    { value: "states", label: "राज्य", dataKey: "states" as MasterDataKey },
-    { value: "districts", label: "जिल्हा", dataKey: "districts" as MasterDataKey },
-    { value: "talukas", label: "तालुका", dataKey: "talukas" as MasterDataKey },
-    { value: "circles", label: "सर्कल", dataKey: "circles" as MasterDataKey },
-    { value: "guts", label: "गट", dataKey: "guts" as MasterDataKey },
-    { value: "villages", label: "गाव", dataKey: "villages" as MasterDataKey },
-    { value: "shivars", label: "शिवार", dataKey: "shivars" as MasterDataKey },
-    { value: "surveyNumbers", label: "सर्वेक्षण नंबर", dataKey: "surveyNumbers" as MasterDataKey },
-    { value: "caneVarieties", label: "उसाची जात", dataKey: "caneVarieties" as MasterDataKey },
-    { value: "caneMaturities", label: "उसाची पक्वता", dataKey: "caneMaturities" as MasterDataKey },
-    { value: "caneTypes", label: "उसाचा प्रकार", dataKey: "caneTypes" as MasterDataKey },
-    { value: "irrigationTypes", label: "सिंचनाचा प्रकार", dataKey: "irrigationTypes" as MasterDataKey },
-    { value: "irrigationSources", label: "सिंचनाचा स्रोत", dataKey: "irrigationSources" as MasterDataKey },
-    { value: "irrigationMethods", label: "सिंचन पद्धत", dataKey: "irrigationMethods" as MasterDataKey },
-    { value: "plantationMethods", label: "लागवड पद्धत", dataKey: "plantationMethods" as MasterDataKey },
-  ]
+  const [selectedConfig, setSelectedConfig] = React.useState<MasterDataKey>("states");
+
+  const configOptions = Object.keys(masterDataMap).map(key => ({
+    value: key as MasterDataKey,
+    label: masterDataMap[key as MasterDataKey].label,
+  }));
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [currentEntityType, setCurrentEntityType] = React.useState<string | null>(null);
@@ -597,23 +580,24 @@ export default function SettingsPage() {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex-row items-center gap-4 space-y-0">
         <CardTitle>कॉन्फिगरेशन</CardTitle>
-        <CardDescription>अनुप्रयोगासाठी मास्टर डेटा व्यवस्थापित करा.</CardDescription>
+        <Select value={selectedConfig} onValueChange={(value) => setSelectedConfig(value as MasterDataKey)}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="कॉन्फिगरेशन प्रकार निवडा" />
+          </SelectTrigger>
+          <SelectContent>
+            {configOptions.map(option => (
+              <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="states" className="w-full">
-          <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
-            {masterDataTabs.map(tab => (
-              <TabsTrigger key={tab.value} value={tab.value}>{tab.label}</TabsTrigger>
-            ))}
-          </TabsList>
-          {masterDataTabs.map(tab => (
-            <TabsContent key={tab.value} value={tab.value}>
-              <MasterDataTable dataKey={tab.dataKey} onAddNew={handleAddNew} />
-            </TabsContent>
-          ))}
-        </Tabs>
+         <CardDescription className="mb-4">
+              अनुप्रयोगासाठी मास्टर डेटा व्यवस्थापित करा.
+          </CardDescription>
+        <MasterDataTable dataKey={selectedConfig} onAddNew={handleAddNew} />
         <MasterDataModal 
             isOpen={isModalOpen}
             onClose={handleCloseModal}

@@ -65,6 +65,27 @@ const mockGuts = [
     { value: "gut-102", label: "गट १०२" },
 ];
 
+const mockVillages = [
+    { value: "chakur", label: "चाकूर" },
+    { value: "mohgaon", label: "मोहगाव" },
+    { value: "lamjana", label: "लामजना" },
+    { value: "kasarwadi", label: "कासारवाडी" },
+    { value: "nalegaon", label: "नाळेगाव" },
+    { value: "wadwal", label: "वडवळ" },
+    { value: "handarguli", label: "हंडरगुळी" },
+    { value: "devangra", label: "देवंग्रा" },
+];
+
+const mockShivars = [
+    { value: "shivar-a", label: "शिवार अ" },
+    { value: "shivar-b", label: "शिवार ब" },
+];
+
+const mockSurveyNumbers = [
+    { value: "sn-123", label: "SN-123" },
+    { value: "sn-456", label: "SN-456" },
+];
+
 
 const mockFarmers = [
     { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], nameAsPerPassbook: "रमेश एस कुलकर्णी", bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234" },
@@ -87,17 +108,6 @@ const mockFarmers = [
     { value: "farmer-18", label: "अमोल थोरात", mobile: "9876543227", docs: [{type: 'pan', number: 'RSTUV8901W'}], nameAsPerPassbook: "अमोल थोरात", bankName: "साउथ इंडियन बँक", accountNumber: "XXXX-XXXX-8901", ifsc: "SIBL0008901" },
     { value: "farmer-19", label: "किरण साळुंखे", mobile: "9876543228", docs: [{type: 'voter-id', number: 'BCD9012345'}], nameAsPerPassbook: "किरण साळुंखे", bankName: "कर्नाटक बँक", accountNumber: "XXXX-XXXX-9012", ifsc: "KARB0009012" },
     { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", docs: [{type: 'voter-id', number: 'EFG0123456'}], nameAsPerPassbook: "संदीप सूर्यवंशी", bankName: "सिटी युनियन बँक", accountNumber: "XXXX-XXXX-0123", ifsc: "CIUB0000123" },
-];
-
-const mockVillages = [
-    { value: "chakur", label: "चाकूर" },
-    { value: "mohgaon", label: "मोहगाव" },
-    { value: "lamjana", label: "लामजना" },
-    { value: "kasarwadi", label: "कासारवाडी" },
-    { value: "nalegaon", label: "नाळेगाव" },
-    { value: "wadwal", label: "वडवळ" },
-    { value: "handarguli", label: "हंडरगुळी" },
-    { value: "devangra", label: "देवंग्रा" },
 ];
 
 type DocumentType = 'voter-id' | 'pan' | 'driving-license';
@@ -281,6 +291,8 @@ export default function NewFieldSurveyPage() {
     const [circle, setCircle] = React.useState("");
     const [gut, setGut] = React.useState("");
     const [village, setVillage] = React.useState("");
+    const [shivar, setShivar] = React.useState("");
+    const [surveyNumber, setSurveyNumber] = React.useState("");
     const [partyName, setPartyName] = React.useState("");
     const [growerType, setGrowerType] = React.useState("");
 
@@ -536,6 +548,28 @@ export default function NewFieldSurveyPage() {
                     />
                 </div>
                 <div className="grid gap-2">
+                    <Label htmlFor="shivar">शिवार (Shivar)</Label>
+                    <Combobox
+                        options={mockShivars}
+                        value={shivar}
+                        onValueChange={setShivar}
+                        placeholder="शिवार निवडा..."
+                        searchPlaceholder="शिवार शोधा..."
+                        disabled={!village}
+                    />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="survey-number">सर्वेक्षण क्र. (Survey No.)</Label>
+                    <Combobox
+                        options={mockSurveyNumbers}
+                        value={surveyNumber}
+                        onValueChange={setSurveyNumber}
+                        placeholder="सर्वेक्षण क्र. निवडा..."
+                        searchPlaceholder="सर्वेक्षण क्र. शोधा..."
+                        disabled={!shivar}
+                    />
+                </div>
+                <div className="grid gap-2">
                     <Label htmlFor="party-name">शेतकरी (Party Name)</Label>
                     <Combobox
                         options={mockFarmers}
@@ -543,7 +577,7 @@ export default function NewFieldSurveyPage() {
                         onValueChange={setPartyName}
                         placeholder="शेतकरी निवडा..."
                         searchPlaceholder="शेतकरी शोधा..."
-                        disabled={!village}
+                        disabled={!surveyNumber}
                     />
                 </div>
                 <div className="grid gap-2">

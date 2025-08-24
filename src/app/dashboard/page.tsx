@@ -63,6 +63,7 @@ const generateSurveyData = (count: number): Survey[] => {
   const warshirs = ["महेश देशमुख", "संजय गायकवाड", "विक्रम राठोड", "पूजा चव्हाण"];
   const farmerFirstNames = ["रमेश", "सुरेश", "गणेश", "प्रिया", "प्रकाश", "अनिता", "सचिन", "दीपा"];
   const farmerLastNames = ["कुलकर्णी", "पाटील", "जाधव", "शिंदे", "मोरे", "गायकवाड", "चव्हाण", "देशमुख"];
+  const plantationTypes = ["अडसाली", "पूर्व-हंगामी", "सुरू"];
 
 
   for (let i = 1; i <= count; i++) {
@@ -108,6 +109,10 @@ const generateSurveyData = (count: number): Survey[] => {
       createdOn: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
       updatedBy: ["सुनील पवार", "अनिल शिंदे", "प्रशासक"][i % 3],
       voiceNoteUploaded: i % 4 === 0 ? "Yes" : "No",
+      aadhaarNumber: `XXXX-XXXX-${String(1000 + i)}`,
+      saatBaaraNumber: `SB-${String(2000 + i)}`,
+      plantationType: plantationTypes[i % 3],
+      cuttingNumber: (i % 5) + 1,
     });
   }
   return data;
@@ -152,6 +157,10 @@ export type Survey = {
   createdOn: string;
   updatedBy: string;
   voiceNoteUploaded: "Yes" | "No";
+  aadhaarNumber: string;
+  saatBaaraNumber: string;
+  plantationType: string;
+  cuttingNumber: number;
 }
 
 const statusOptions = [
@@ -162,16 +171,20 @@ const statusOptions = [
 
 export const columns: ColumnDef<Survey>[] = [
   {
+    accessorKey: "district",
+    header: "जिल्हा",
+  },
+  {
+    accessorKey: "taluka",
+    header: "तालुका",
+  },
+  {
+    accessorKey: "village",
+    header: "गाव",
+  },
+  {
     accessorKey: "farmerName",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        शेतकऱ्याचे नाव
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: "शेतकऱ्याचे नाव",
     cell: ({ row }) => {
         const survey = row.original
         return (
@@ -182,12 +195,44 @@ export const columns: ColumnDef<Survey>[] = [
     }
   },
   {
+    accessorKey: "farmerContact",
+    header: "मोबाईल नंबर",
+  },
+   {
+    accessorKey: "aadhaarNumber",
+    header: "आधार नंबर",
+  },
+  {
+    accessorKey: "surveyNumber",
+    header: "सर्वे नंबर",
+  },
+  {
+    accessorKey: "saatBaaraNumber",
+    header: "सातबारा नंबर",
+  },
+  {
+    accessorKey: "areaHector",
+    header: "एकूण नोंद क्षेत्र",
+  },
+  {
+    accessorKey: "plantationType",
+    header: "लागवड प्रकार",
+  },
+  {
+    accessorKey: "caneVariety",
+    header: "उसाची जात",
+  },
+  {
     accessorKey: "surveyDate",
-    header: "सर्वेक्षण तारीख",
+    header: "लागवड दिनांक",
      cell: ({ row }) => {
       const date = new Date(row.getValue("surveyDate"))
       return <div>{format(date, "dd/MM/yyyy")}</div>
     },
+  },
+  {
+    accessorKey: "cuttingNumber",
+    header: "तोडणी क्र.",
   },
   {
     accessorKey: "surveyStatus",
@@ -203,44 +248,6 @@ export const columns: ColumnDef<Survey>[] = [
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
-    },
-  },
-  {
-    accessorKey: "surveyedBy",
-    header: "फील्ड बॉय",
-  },
-   {
-    accessorKey: "warshir",
-    header: "वारशिर",
-  },
-  {
-    accessorKey: "village",
-    header: "गाव",
-  },
-  {
-    accessorKey: "taluka",
-    header: "तालुका",
-  },
-  {
-    accessorKey: "district",
-    header: "जिल्हा",
-  },
-  {
-    accessorKey: "areaHector",
-    header: "क्षेत्र (हेक्टर)",
-  },
-   {
-    accessorKey: "gpsCoordinates",
-    header: "GPS",
-    enableColumnFilter: true,
-  },
-   {
-    accessorKey: "tokenDate",
-    header: "तोडणी तारीख",
-    cell: ({ row }) => {
-        const date = row.getValue("tokenDate") as string;
-        if (!date || date === '-') return '-';
-        return <div>{format(new Date(date), "dd/MM/yyyy")}</div>
     },
   },
   {
@@ -904,6 +911,8 @@ export default function DashboardPage() {
     </div>
   )
 }
+
+    
 
     
 

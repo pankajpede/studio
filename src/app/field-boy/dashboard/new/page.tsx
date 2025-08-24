@@ -386,10 +386,10 @@ export default function NewFieldSurveyPage() {
     React.useEffect(() => {
         if (caneType && plantationDate) {
             let monthsToAdd = 0;
-            if (caneType === 'type-1') {
-                monthsToAdd = 12; // Adsali
-            } else if (caneType === 'type-2') {
-                monthsToAdd = 14; // Pre-seasonal
+            if (caneType === 'type-1') { // Adsali
+                monthsToAdd = 12; 
+            } else if (caneType === 'type-2') { // Pre-seasonal
+                monthsToAdd = 14; 
             }
             if (monthsToAdd > 0) {
                 setCaneMaturityDate(addMonths(plantationDate, monthsToAdd));
@@ -663,8 +663,8 @@ export default function NewFieldSurveyPage() {
                      <Separator />
                      <Label className="text-base font-medium">ओळखपत्र (Identification)</Label>
                      {documents.map((doc) => (
-                         <div key={doc.id} className="grid grid-cols-1 gap-4">
-                            <div className="grid grid-cols-1 gap-2">
+                        <div key={doc.id} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto_auto] gap-4 items-end">
+                            <div className="grid gap-2">
                                  <Label htmlFor={`doc-type-${doc.id}`} className="text-sm">ओळखपत्राचा प्रकार (Document Type)</Label>
                                  <Select
                                      value={doc.type}
@@ -678,38 +678,38 @@ export default function NewFieldSurveyPage() {
                                      </SelectContent>
                                  </Select>
                              </div>
-                             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-2 items-end">
-                                 <div className="grid gap-2">
-                                      <Label htmlFor={`doc-number-${doc.id}`} className="text-sm">ओळखपत्र क्रमांक (Document Number)</Label>
-                                     <Input
-                                         id={`doc-number-${doc.id}`}
-                                         placeholder="ओळखपत्र क्रमांक"
-                                         value={doc.number}
-                                         onChange={(e) => handleDocumentChange(doc.id, 'number', e.target.value)}
-                                     />
-                                 </div>
-                                    <Input
-                                        id={`doc-file-${doc.id}`}
-                                        type="file"
-                                        className="sr-only"
-                                        onChange={(e) => {
-                                            handleDocumentChange(doc.id, 'file', e.target.files ? e.target.files[0] : null);
-                                        }}
-                                    />
-                                    <Button asChild variant="outline" size="icon">
-                                        <Label htmlFor={`doc-file-${doc.id}`} className="cursor-pointer">
-                                            <UploadCloud className="h-4 w-4"/>
-                                        </Label>
-                                    </Button>
-                                     {documents.length > 1 && (
-                                    <Button variant="ghost" size="icon" onClick={() => handleRemoveDocument(doc.id)}>
-                                        <MinusCircle className="text-destructive" />
-                                    </Button>
-                                )}
+                             <div className="grid gap-2">
+                                  <Label htmlFor={`doc-number-${doc.id}`} className="text-sm">ओळखपत्र क्रमांक (Document Number)</Label>
+                                 <Input
+                                     id={`doc-number-${doc.id}`}
+                                     placeholder="ओळखपत्र क्रमांक"
+                                     value={doc.number}
+                                     onChange={(e) => handleDocumentChange(doc.id, 'number', e.target.value)}
+                                 />
                              </div>
-                            {doc.file && (
+                            <Input
+                                id={`doc-file-${doc.id}`}
+                                type="file"
+                                className="sr-only"
+                                onChange={(e) => {
+                                    handleDocumentChange(doc.id, 'file', e.target.files ? e.target.files[0] : null);
+                                }}
+                            />
+                            <Button asChild variant="outline" size="icon">
+                                <Label htmlFor={`doc-file-${doc.id}`} className="cursor-pointer">
+                                    <UploadCloud className="h-4 w-4"/>
+                                </Label>
+                            </Button>
+                             {documents.length > 1 && (
+                            <Button variant="ghost" size="icon" onClick={() => handleRemoveDocument(doc.id)}>
+                                <MinusCircle className="text-destructive" />
+                            </Button>
+                        )}
+                        {doc.file && (
+                            <div className="md:col-span-4">
                                 <FileUploadItem file={doc.file} onRemove={() => handleDocumentChange(doc.id, 'file', null)} />
-                            )}
+                             </div>
+                        )}
                          </div>
                      ))}
                      {documents.length < documentTypes.length && (
@@ -841,6 +841,22 @@ export default function NewFieldSurveyPage() {
                 <div className="grid gap-2">
                     <Label htmlFor="cane-maturity">उसाची पक्वता (Cane Maturity)</Label>
                     <Input id="cane-maturity" value={caneMaturityDate ? format(caneMaturityDate, "PPP") : 'पक्वता तारीख'} disabled />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="east">पूर्व (East)</Label>
+                    <Input id="east" placeholder="पूर्व सीमा तपशील" />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="west">पश्चिम (West)</Label>
+                    <Input id="west" placeholder="पश्चिम सीमा तपशील" />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="north">उत्तर (North)</Label>
+                    <Input id="north" placeholder="उत्तर सीमा तपशील" />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="south">दक्षिण (South)</Label>
+                    <Input id="south" placeholder="दक्षिण सीमा तपशील" />
                 </div>
             </div>
           </TabsContent>

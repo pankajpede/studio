@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/tabs"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon } from "lucide-react"
+import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
@@ -285,6 +285,9 @@ export default function NewFieldSurveyPage() {
 
     // State for farmer info tab
     const [mobile, setMobile] = React.useState("");
+    const [otp, setOtp] = React.useState("");
+    const [isOtpSent, setIsOtpSent] = React.useState(false);
+    const [isOtpVerified, setIsOtpVerified] = React.useState(false);
     const [documents, setDocuments] = React.useState<Document[]>([{ id: 1, type: '', number: '', file: null }]);
     const [nameAsPerPassbook, setNameAsPerPassbook] = React.useState("");
     const [bankName, setBankName] = React.useState("");
@@ -349,7 +352,44 @@ export default function NewFieldSurveyPage() {
             setAccountNumber("");
             setIfscCode("");
         }
+        setIsOtpSent(false);
+        setIsOtpVerified(false);
+        setOtp("");
     }, [partyName, selectedFarmer]);
+
+    const handleSendOtp = () => {
+        // Simulate sending OTP
+        if (mobile && mobile.length === 10) {
+            setIsOtpSent(true);
+            toast({
+                title: "ओटीपी पाठवला",
+                description: `ओटीपी ${mobile} वर पाठवला आहे.`,
+            });
+        } else {
+            toast({
+                variant: "destructive",
+                title: "अवैध मोबाईल नंबर",
+                description: "कृपया १०-अंकी मोबाईल नंबर प्रविष्ट करा.",
+            });
+        }
+    };
+
+    const handleVerifyOtp = () => {
+        // Simulate verifying OTP
+        if (otp === "1234") { // Mock OTP
+            setIsOtpVerified(true);
+            toast({
+                title: "यशस्वी!",
+                description: "ओटीपी यशस्वीरित्या सत्यापित झाला आहे.",
+            });
+        } else {
+            toast({
+                variant: "destructive",
+                title: "अवैध ओटीपी",
+                description: "प्रविष्ट केलेला ओटीपी चुकीचा आहे.",
+            });
+        }
+    };
 
 
     const getBreadcrumb = () => {
@@ -421,10 +461,10 @@ export default function NewFieldSurveyPage() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
-            <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
-            <TabsTrigger value="farm-info">शेत</TabsTrigger>
-            <TabsTrigger value="media">मीडिया</TabsTrigger>
-            <TabsTrigger value="map">नकाशा</TabsTrigger>
+            <TabsTrigger value="farmer-info" disabled={!partyName}>माहिती</TabsTrigger>
+            <TabsTrigger value="farm-info" disabled={!partyName}>शेत</TabsTrigger>
+            <TabsTrigger value="media" disabled={!partyName}>मीडिया</TabsTrigger>
+            <TabsTrigger value="map" disabled={!partyName}>नकाशा</TabsTrigger>
           </TabsList>
           
           <TabsContent value="farmer-selection" className="pt-6">
@@ -520,10 +560,29 @@ export default function NewFieldSurveyPage() {
 
           <TabsContent value="farmer-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="grid gap-2">
-                    <Label htmlFor="mobile">मोबाइल नंबर</Label>
+                <div className="grid gap-2 md:col-span-2">
+                    <div className="flex items-center justify-between">
+                         <Label htmlFor="mobile">मोबाइल नंबर</Label>
+                         <Button variant="link" size="sm" onClick={handleSendOtp} disabled={isOtpSent}>
+                            <Send className="mr-2 h-4 w-4"/>
+                            ओटीपी पाठवा
+                         </Button>
+                    </div>
                     <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" value={mobile} onChange={(e) => setMobile(e.target.value)} />
                 </div>
+
+                {isOtpSent && (
+                    <div className="grid gap-2 md:col-span-2">
+                        <Label htmlFor="otp">ओटीपी</Label>
+                        <div className="flex gap-2">
+                            <Input id="otp" type="text" placeholder="ओटीपी प्रविष्ट करा" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={isOtpVerified} />
+                            <Button onClick={handleVerifyOtp} disabled={isOtpVerified}>
+                                {isOtpVerified ? <ShieldCheck /> : null}
+                                {isOtpVerified ? "सत्यापित" : "सत्यापित करा"}
+                            </Button>
+                        </div>
+                    </div>
+                )}
                 <div className="grid gap-2">
                     <Label htmlFor="passbook-name">पासबुक वरील नाव</Label>
                     <Input id="passbook-name" placeholder="पासबुकनुसार नाव टाका" value={nameAsPerPassbook} onChange={(e) => setNameAsPerPassbook(e.target.value)} />
@@ -783,7 +842,7 @@ export default function NewFieldSurveyPage() {
             <Link href="/field-boy/dashboard">रद्द करा</Link>
         </Button>
         {activeTab !== 'map' ? (
-             <Button onClick={handleNext}>जतन करा आणि पुढे जा</Button>
+             <Button onClick={handleNext} disabled={!partyName || (activeTab === 'farmer-info' && !isOtpVerified)}>जतन करा आणि पुढे जा</Button>
         ) : (
              <Button onClick={handleFinalSubmit}>सर्वेक्षण सबमिट करा</Button>
         )}
@@ -791,3 +850,5 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    

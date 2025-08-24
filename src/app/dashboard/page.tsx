@@ -294,17 +294,6 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
     const [radius, setRadius] = React.useState([100]);
     
     const uniqueTalukas = React.useMemo(() => Array.from(new Set(data.map(s => s.taluka))), [data]);
-    const uniqueSurveyors = React.useMemo(() => {
-        const surveyors = new Set<string>();
-        data.forEach(s => surveyors.add(s.surveyedBy));
-        return Array.from(surveyors);
-    }, [data]);
-
-    const uniqueWarshirs = React.useMemo(() => {
-        const warshirs = new Set<string>();
-        data.forEach(s => s.warshir && warshirs.add(s.warshir));
-        return Array.from(warshirs);
-    }, [data]);
 
     const handleApply = () => {
         table.getColumn("farmerName")?.setFilterValue(farmerName);
@@ -482,34 +471,6 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                 <SelectContent>
                                     <SelectItem value="all">सर्व तालुके</SelectItem>
                                     {uniqueTalukas.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                         <div className="grid gap-2">
-                            <Label htmlFor="surveyor">फील्ड बॉय</Label>
-                            <Select
-                                value={table.getColumn("surveyedBy")?.getFilterValue() as string ?? ""}
-                                onValueChange={(value) => table.getColumn("surveyedBy")?.setFilterValue(value === "all" ? "" : value)}
-                            >
-                                <SelectTrigger><SelectValue placeholder="फील्ड बॉय निवडा" /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">सर्व फील्ड बॉय</SelectItem>
-                                    {uniqueSurveyors.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        
-                         <div className="grid gap-2">
-                            <Label htmlFor="warshir">वारशिर</Label>
-                           <Select
-                                value={table.getColumn("warshir")?.getFilterValue() as string ?? ""}
-                                onValueChange={(value) => table.getColumn("warshir")?.setFilterValue(value === "all" ? "" : value)}
-                           >
-                                <SelectTrigger><SelectValue placeholder="वारशिर निवडा" /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">सर्व वारशिर</SelectItem>
-                                    {uniqueWarshirs.map(w => <SelectItem key={w} value={w}>{w}</SelectItem>)}
                                 </SelectContent>
                             </Select>
                         </div>
@@ -911,9 +872,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-
-    
-
-    
-
-    

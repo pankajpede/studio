@@ -636,47 +636,47 @@ export default function NewFieldSurveyPage() {
                      <Separator />
                      <Label className="text-base font-medium">ओळखपत्र</Label>
                      {documents.map((doc) => (
-                         <div key={doc.id} className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto_auto] gap-2 items-center">
-                            <Select
-                                value={doc.type}
-                                onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
-                            >
-                                <SelectTrigger><SelectValue placeholder="ओळखपत्राचा प्रकार" /></SelectTrigger>
-                                <SelectContent>
-                                    {getAvailableDocTypes(doc.type).map(docType => (
-                                        <SelectItem key={docType.value} value={docType.value}>{docType.label}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <Input 
-                                placeholder="ओळखपत्र क्रमांक"
-                                value={doc.number}
-                                onChange={(e) => handleDocumentChange(doc.id, 'number', e.target.value)}
-                            />
-                            
-                            <Input 
-                                id={`doc-file-${doc.id}`} 
-                                type="file" 
-                                className="sr-only" 
-                                onChange={(e) => {
-                                    handleDocumentChange(doc.id, 'file', e.target.files ? e.target.files[0] : null);
-                                }}
-                            />
-                            <Button asChild variant="outline" size="icon">
-                                <Label htmlFor={`doc-file-${doc.id}`} className="cursor-pointer">
-                                    <UploadCloud className="h-4 w-4"/>
-                                </Label>
-                            </Button>
-                            
-                            {documents.length > 1 && (
-                                 <Button variant="ghost" size="icon" onClick={() => handleRemoveDocument(doc.id)}>
-                                    <MinusCircle className="text-destructive" />
-                                 </Button>
-                            )}
+                         <div key={doc.id} className="space-y-2">
+                             <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto_auto] gap-2 items-center">
+                                <Select
+                                    value={doc.type}
+                                    onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
+                                >
+                                    <SelectTrigger><SelectValue placeholder="ओळखपत्राचा प्रकार" /></SelectTrigger>
+                                    <SelectContent>
+                                        {getAvailableDocTypes(doc.type).map(docType => (
+                                            <SelectItem key={docType.value} value={docType.value}>{docType.label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <Input 
+                                    placeholder="ओळखपत्र क्रमांक"
+                                    value={doc.number}
+                                    onChange={(e) => handleDocumentChange(doc.id, 'number', e.target.value)}
+                                />
+                                
+                                <Input 
+                                    id={`doc-file-${doc.id}`} 
+                                    type="file" 
+                                    className="sr-only" 
+                                    onChange={(e) => {
+                                        handleDocumentChange(doc.id, 'file', e.target.files ? e.target.files[0] : null);
+                                    }}
+                                />
+                                <Button asChild variant="outline" size="icon">
+                                    <Label htmlFor={`doc-file-${doc.id}`} className="cursor-pointer">
+                                        <UploadCloud className="h-4 w-4"/>
+                                    </Label>
+                                </Button>
+                                
+                                {documents.length > 1 && (
+                                     <Button variant="ghost" size="icon" onClick={() => handleRemoveDocument(doc.id)}>
+                                        <MinusCircle className="text-destructive" />
+                                     </Button>
+                                )}
+                             </div>
                             {doc.file && (
-                                <div className="sm:col-span-full">
-                                    <FileUploadItem file={doc.file} onRemove={() => handleDocumentChange(doc.id, 'file', null)} />
-                                </div>
+                                <FileUploadItem file={doc.file} onRemove={() => handleDocumentChange(doc.id, 'file', null)} />
                             )}
                          </div>
                      ))}

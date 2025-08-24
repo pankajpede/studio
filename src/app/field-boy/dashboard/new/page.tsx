@@ -377,7 +377,7 @@ export default function NewFieldSurveyPage() {
         setIsOtpSent(false);
         setIsOtpVerified(false);
         setOtp("");
-    }, [partyName, selectedFarmer]);
+    }, [partyName]);
 
     const handleSendOtp = () => {
         // Simulate sending OTP
@@ -640,9 +640,9 @@ export default function NewFieldSurveyPage() {
                      <Label className="text-base font-medium">ओळखपत्र (Identification)</Label>
                      {documents.map((doc) => (
                          <div key={doc.id} className="space-y-2">
-                            <Label htmlFor={`doc-type-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्राचा प्रकार (Document Type)</Label>
-                             <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-center">
-                                 <div className="grid gap-2 w-full">
+                             <div className="grid grid-cols-1 sm:grid-cols-[2fr_3fr_auto_auto] gap-2 items-end">
+                                 <div className="grid gap-1.5">
+                                    <Label htmlFor={`doc-type-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्राचा प्रकार</Label>
                                     <Select
                                         value={doc.type}
                                         onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
@@ -656,7 +656,8 @@ export default function NewFieldSurveyPage() {
                                     </Select>
                                  </div>
 
-                                 <div className="grid gap-2 w-full">
+                                 <div className="grid gap-1.5">
+                                      <Label htmlFor={`doc-number-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्र क्रमांक</Label>
                                      <Input
                                          id={`doc-number-${doc.id}`}
                                          placeholder="ओळखपत्र क्रमांक"
@@ -922,3 +923,5 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    

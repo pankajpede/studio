@@ -88,26 +88,26 @@ const mockSurveyNumbers = [
 
 
 const mockFarmers = [
-    { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], nameAsPerPassbook: "रमेश एस कुलकर्णी", bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234" },
-    { value: "farmer-2", label: "सुरेश पाटील", mobile: "9876543211", docs: [{type: 'pan', number: 'BCDEF2345G'}], nameAsPerPassbook: "सुरेश पाटील", bankName: "HDFC बँक", accountNumber: "XXXX-XXXX-2345", ifsc: "HDFC0002345" },
-    { value: "farmer-3", label: "गणेश जाधव", mobile: "9876543212", docs: [{type: 'voter-id', number: 'GHI3456789'}], nameAsPerPassbook: "गणेश एम जाधव", bankName: "ICICI बँक", accountNumber: "XXXX-XXXX-3456", ifsc: "ICIC0003456" },
-    { value: "farmer-4", label: "प्रकाश शिंदे", mobile: "9876543213", docs: [{type: 'voter-id', number: 'JKL4567890'}], nameAsPerPassbook: "प्रकाश शिंदे", bankName: "ऍक्सिस बँक", accountNumber: "XXXX-XXXX-4567", ifsc: "UTIB0004567" },
-    { value: "farmer-5", label: "सचिन मोरे", mobile: "9876543214", docs: [{type: 'voter-id', number: 'MNO5678901'}], nameAsPerPassbook: "सचिन आर मोरे", bankName: "बँक ऑफ बडोदा", accountNumber: "XXXX-XXXX-5678", ifsc: "BARB0005678" },
-    { value: "farmer-6", label: "अनिल गायकवाड", mobile: "9876543215", docs: [{type: 'pan', number: 'FGHIJ6789K'}], nameAsPerPassbook: "अनिल गायकवाड", bankName: "पंजाब नॅशनल बँक", accountNumber: "XXXX-XXXX-6789", ifsc: "PUNB0006789" },
-    { value: "farmer-7", label: "दीपक चव्हाण", mobile: "9876543216", docs: [{type: 'voter-id', number: 'STU7890123'}], nameAsPerPassbook: "दीपक व्ही चव्हाण", bankName: "कॅनरा बँक", accountNumber: "XXXX-XXXX-7890", ifsc: "CNRB0007890" },
-    { value: "farmer-8", label: "संजय देशमुख", mobile: "9876543217", docs: [{type: 'voter-id', number: 'VWX8901234'}], nameAsPerPassbook: "संजय देशमुख", bankName: "युनियन बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-8901", ifsc: "UBIN0008901" },
-    { value: "farmer-9", label: "विशाल पवार", mobile: "9876543218", docs: [{type: 'pan', number: 'IJKLM9012N'}], nameAsPerPassbook: "विशाल एस पवार", bankName: "बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-9012", ifsc: "BKID0009012" },
-    { value: "farmer-10", label: "अमित भोसले", mobile: "9876543219", docs: [{type: 'voter-id', number: 'BCD0123456'}], nameAsPerPassbook: "अमित भोसले", bankName: "सेंट्रल बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-0123", ifsc: "CBIN0000123" },
-    { value: "farmer-11", label: "राहुल सावंत", mobile: "9876543220", docs: [{type: 'voter-id', number: 'EFG1234567'}], nameAsPerPassbook: "राहुल सावंत", bankName: "इंडियन बँक", accountNumber: "XXXX-XXXX-1234", ifsc: "IDIB0001234" },
-    { value: "farmer-12", label: "अजय कदम", mobile: "9876543221", docs: [{type: 'pan', number: 'LMNOP2345Q'}], nameAsPerPassbook: "अजय कदम", bankName: "IDBI बँक", accountNumber: "XXXX-XXXX-2345", ifsc: "IBKL0002345" },
-    { value: "farmer-13", label: "नितीन राऊत", mobile: "9876543222", docs: [{type: 'voter-id', number: 'KLM3456789'}], nameAsPerPassbook: "नितीन राऊत", bankName: "कोटक महिंद्रा बँक", accountNumber: "XXXX-XXXX-3456", ifsc: "KKBK0003456" },
-    { value: "farmer-14", label: "प्रशांत कांबळे", mobile: "9876543223", docs: [{type: 'voter-id', number: 'NOP4567890'}], nameAsPerPassbook: "प्रशांत कांबळे", bankName: "येस बँक", accountNumber: "XXXX-XXXX-4567", ifsc: "YESB0004567" },
-    { value: "farmer-15", label: "मनोज जगताप", mobile: "9876543224", docs: [{type: 'pan', number: 'OPQRS5678T'}], nameAsPerPassbook: "मनोज जगताप", bankName: "इंडसइंड बँक", accountNumber: "XXXX-XXXX-5678", ifsc: "INDB0005678" },
-    { value: "farmer-16", label: "योगेश यादव", mobile: "9876543225", docs: [{type: 'voter-id', number: 'STU6789012'}], nameAsPerPassbook: "योगेश यादव", bankName: "RBL बँक", accountNumber: "XXXX-XXXX-6789", ifsc: "RATN0006789" },
-    { value: "farmer-17", label: "महेश माने", mobile: "9876543226", docs: [{type: 'voter-id', number: 'VWX7890123'}], nameAsPerPassbook: "महेश माने", bankName: "फेडरल बँक", accountNumber: "XXXX-XXXX-7890", ifsc: "FDRL0007890" },
-    { value: "farmer-18", label: "अमोल थोरात", mobile: "9876543227", docs: [{type: 'pan', number: 'RSTUV8901W'}], nameAsPerPassbook: "अमोल थोरात", bankName: "साउथ इंडियन बँक", accountNumber: "XXXX-XXXX-8901", ifsc: "SIBL0008901" },
-    { value: "farmer-19", label: "किरण साळुंखे", mobile: "9876543228", docs: [{type: 'voter-id', number: 'BCD9012345'}], nameAsPerPassbook: "किरण साळुंखे", bankName: "कर्नाटक बँक", accountNumber: "XXXX-XXXX-9012", ifsc: "KARB0009012" },
-    { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", docs: [{type: 'voter-id', number: 'EFG0123456'}], nameAsPerPassbook: "संदीप सूर्यवंशी", bankName: "सिटी युनियन बँक", accountNumber: "XXXX-XXXX-0123", ifsc: "CIUB0000123" },
+    { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], nameAsPerPassbook: "रमेश एस कुलकर्णी", bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234", sabNumber: "SAB-A001", khataNumber: "KH-112233" },
+    { value: "farmer-2", label: "सुरेश पाटील", mobile: "9876543211", docs: [{type: 'pan', number: 'BCDEF2345G'}], nameAsPerPassbook: "सुरेश पाटील", bankName: "HDFC बँक", accountNumber: "XXXX-XXXX-2345", ifsc: "HDFC0002345", sabNumber: "SAB-B002", khataNumber: "KH-445566" },
+    { value: "farmer-3", label: "गणेश जाधव", mobile: "9876543212", docs: [{type: 'voter-id', number: 'GHI3456789'}], nameAsPerPassbook: "गणेश एम जाधव", bankName: "ICICI बँक", accountNumber: "XXXX-XXXX-3456", ifsc: "ICIC0003456", sabNumber: "SAB-C003", khataNumber: "KH-778899" },
+    { value: "farmer-4", label: "प्रकाश शिंदे", mobile: "9876543213", docs: [{type: 'voter-id', number: 'JKL4567890'}], nameAsPerPassbook: "प्रकाश शिंदे", bankName: "ऍक्सिस बँक", accountNumber: "XXXX-XXXX-4567", ifsc: "UTIB0004567", sabNumber: "SAB-D004", khataNumber: "KH-101112" },
+    { value: "farmer-5", label: "सचिन मोरे", mobile: "9876543214", docs: [{type: 'voter-id', number: 'MNO5678901'}], nameAsPerPassbook: "सचिन आर मोरे", bankName: "बँक ऑफ बडोदा", accountNumber: "XXXX-XXXX-5678", ifsc: "BARB0005678", sabNumber: "SAB-E005", khataNumber: "KH-131415" },
+    { value: "farmer-6", label: "अनिल गायकवाड", mobile: "9876543215", docs: [{type: 'pan', number: 'FGHIJ6789K'}], nameAsPerPassbook: "अनिल गायकवाड", bankName: "पंजाब नॅशनल बँक", accountNumber: "XXXX-XXXX-6789", ifsc: "PUNB0006789", sabNumber: "SAB-F006", khataNumber: "KH-161718" },
+    { value: "farmer-7", label: "दीपक चव्हाण", mobile: "9876543216", docs: [{type: 'voter-id', number: 'STU7890123'}], nameAsPerPassbook: "दीपक व्ही चव्हाण", bankName: "कॅनरा बँक", accountNumber: "XXXX-XXXX-7890", ifsc: "CNRB0007890", sabNumber: "SAB-G007", khataNumber: "KH-192021" },
+    { value: "farmer-8", label: "संजय देशमुख", mobile: "9876543217", docs: [{type: 'voter-id', number: 'VWX8901234'}], nameAsPerPassbook: "संजय देशमुख", bankName: "युनियन बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-8901", ifsc: "UBIN0008901", sabNumber: "SAB-H008", khataNumber: "KH-222324" },
+    { value: "farmer-9", label: "विशाल पवार", mobile: "9876543218", docs: [{type: 'pan', number: 'IJKLM9012N'}], nameAsPerPassbook: "विशाल एस पवार", bankName: "बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-9012", ifsc: "BKID0009012", sabNumber: "SAB-I009", khataNumber: "KH-252627" },
+    { value: "farmer-10", label: "अमित भोसले", mobile: "9876543219", docs: [{type: 'voter-id', number: 'BCD0123456'}], nameAsPerPassbook: "अमित भोसले", bankName: "सेंट्रल बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-0123", ifsc: "CBIN0000123", sabNumber: "SAB-J010", khataNumber: "KH-282930" },
+    { value: "farmer-11", label: "राहुल सावंत", mobile: "9876543220", docs: [{type: 'voter-id', number: 'EFG1234567'}], nameAsPerPassbook: "राहुल सावंत", bankName: "इंडियन बँक", accountNumber: "XXXX-XXXX-1234", ifsc: "IDIB0001234", sabNumber: "SAB-K011", khataNumber: "KH-313233" },
+    { value: "farmer-12", label: "अजय कदम", mobile: "9876543221", docs: [{type: 'pan', number: 'LMNOP2345Q'}], nameAsPerPassbook: "अजय कदम", bankName: "IDBI बँक", accountNumber: "XXXX-XXXX-2345", ifsc: "IBKL0002345", sabNumber: "SAB-L012", khataNumber: "KH-343536" },
+    { value: "farmer-13", label: "नितीन राऊत", mobile: "9876543222", docs: [{type: 'voter-id', number: 'KLM3456789'}], nameAsPerPassbook: "नितीन राऊत", bankName: "कोटक महिंद्रा बँक", accountNumber: "XXXX-XXXX-3456", ifsc: "KKBK0003456", sabNumber: "SAB-M013", khataNumber: "KH-373839" },
+    { value: "farmer-14", label: "प्रशांत कांबळे", mobile: "9876543223", docs: [{type: 'voter-id', number: 'NOP4567890'}], nameAsPerPassbook: "प्रशांत कांबळे", bankName: "येस बँक", accountNumber: "XXXX-XXXX-4567", ifsc: "YESB0004567", sabNumber: "SAB-N014", khataNumber: "KH-404142" },
+    { value: "farmer-15", label: "मनोज जगताप", mobile: "9876543224", docs: [{type: 'pan', number: 'OPQRS5678T'}], nameAsPerPassbook: "मनोज जगताप", bankName: "इंडसइंड बँक", accountNumber: "XXXX-XXXX-5678", ifsc: "INDB0005678", sabNumber: "SAB-O015", khataNumber: "KH-434445" },
+    { value: "farmer-16", label: "योगेश यादव", mobile: "9876543225", docs: [{type: 'voter-id', number: 'STU6789012'}], nameAsPerPassbook: "योगेश यादव", bankName: "RBL बँक", accountNumber: "XXXX-XXXX-6789", ifsc: "RATN0006789", sabNumber: "SAB-P016", khataNumber: "KH-464748" },
+    { value: "farmer-17", label: "महेश माने", mobile: "9876543226", docs: [{type: 'voter-id', number: 'VWX7890123'}], nameAsPerPassbook: "महेश माने", bankName: "फेडरल बँक", accountNumber: "XXXX-XXXX-7890", ifsc: "FDRL0007890", sabNumber: "SAB-Q017", khataNumber: "KH-495051" },
+    { value: "farmer-18", label: "अमोल थोरात", mobile: "9876543227", docs: [{type: 'pan', number: 'RSTUV8901W'}], nameAsPerPassbook: "अमोल थोरात", bankName: "साउथ इंडियन बँक", accountNumber: "XXXX-XXXX-8901", ifsc: "SIBL0008901", sabNumber: "SAB-R018", khataNumber: "KH-525354" },
+    { value: "farmer-19", label: "किरण साळुंखे", mobile: "9876543228", docs: [{type: 'voter-id', number: 'BCD9012345'}], nameAsPerPassbook: "किरण साळुंखे", bankName: "कर्नाटक बँक", accountNumber: "XXXX-XXXX-9012", ifsc: "KARB0009012", sabNumber: "SAB-S019", khataNumber: "KH-555657" },
+    { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", docs: [{type: 'voter-id', number: 'EFG0123456'}], nameAsPerPassbook: "संदीप सूर्यवंशी", bankName: "सिटी युनियन बँक", accountNumber: "XXXX-XXXX-0123", ifsc: "CIUB0000123", sabNumber: "SAB-T020", khataNumber: "KH-585960" },
 ];
 
 type DocumentType = 'voter-id' | 'pan' | 'driving-license';
@@ -352,6 +352,8 @@ export default function NewFieldSurveyPage() {
             setBankName(selectedFarmer.bankName);
             setAccountNumber(selectedFarmer.accountNumber);
             setIfscCode(selectedFarmer.ifsc)
+            setSabNumber(selectedFarmer.sabNumber);
+            setKhataNumber(selectedFarmer.khataNumber);
             setDocuments(selectedFarmer.docs.map((doc, index) => ({
                 id: index + 1,
                 type: doc.type as DocumentType,
@@ -366,6 +368,8 @@ export default function NewFieldSurveyPage() {
             setBankName("");
             setAccountNumber("");
             setIfscCode("");
+            setSabNumber("");
+            setKhataNumber("");
         }
         setIsOtpSent(false);
         setIsOtpVerified(false);
@@ -593,12 +597,12 @@ export default function NewFieldSurveyPage() {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="sab-number">सब नंबर</Label>
-                    <Input id="sab-number" placeholder="सब नंबर टाका" value={sabNumber} onChange={(e) => setSabNumber(e.target.value)} disabled={!partyName} />
+                    <Label htmlFor="sab-number">सब नंबर (Sab Number)</Label>
+                    <Input id="sab-number" placeholder="सब नंबर टाका" value={sabNumber} disabled />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="khata-number">खाता नंबर</Label>
-                    <Input id="khata-number" placeholder="खाता नंबर टाका" value={khataNumber} onChange={(e) => setKhataNumber(e.target.value)} disabled={!partyName} />
+                    <Label htmlFor="khata-number">खाता नंबर (Khata Number)</Label>
+                    <Input id="khata-number" placeholder="खाता नंबर टाका" value={khataNumber} disabled />
                 </div>
             </div>
           </TabsContent>

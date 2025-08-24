@@ -88,26 +88,26 @@ const mockSurveyNumbers = [
 
 
 const mockFarmers = [
-    { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], nameAsPerPassbook: "रमेश एस कुलकर्णी", bankName: "स्टेट बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234", sabNumber: "SAB-A001", khataNumber: "KH-112233" },
-    { value: "farmer-2", label: "सुरेश पाटील", mobile: "9876543211", docs: [{type: 'pan', number: 'BCDEF2345G'}], nameAsPerPassbook: "सुरेश पाटील", bankName: "HDFC बँक", accountNumber: "XXXX-XXXX-2345", ifsc: "HDFC0002345", sabNumber: "SAB-B002", khataNumber: "KH-445566" },
-    { value: "farmer-3", label: "गणेश जाधव", mobile: "9876543212", docs: [{type: 'voter-id', number: 'GHI3456789'}], nameAsPerPassbook: "गणेश एम जाधव", bankName: "ICICI बँक", accountNumber: "XXXX-XXXX-3456", ifsc: "ICIC0003456", sabNumber: "SAB-C003", khataNumber: "KH-778899" },
-    { value: "farmer-4", label: "प्रकाश शिंदे", mobile: "9876543213", docs: [{type: 'voter-id', number: 'JKL4567890'}], nameAsPerPassbook: "प्रकाश शिंदे", bankName: "ऍक्सिस बँक", accountNumber: "XXXX-XXXX-4567", ifsc: "UTIB0004567", sabNumber: "SAB-D004", khataNumber: "KH-101112" },
-    { value: "farmer-5", label: "सचिन मोरे", mobile: "9876543214", docs: [{type: 'voter-id', number: 'MNO5678901'}], nameAsPerPassbook: "सचिन आर मोरे", bankName: "बँक ऑफ बडोदा", accountNumber: "XXXX-XXXX-5678", ifsc: "BARB0005678", sabNumber: "SAB-E005", khataNumber: "KH-131415" },
-    { value: "farmer-6", label: "अनिल गायकवाड", mobile: "9876543215", docs: [{type: 'pan', number: 'FGHIJ6789K'}], nameAsPerPassbook: "अनिल गायकवाड", bankName: "पंजाब नॅशनल बँक", accountNumber: "XXXX-XXXX-6789", ifsc: "PUNB0006789", sabNumber: "SAB-F006", khataNumber: "KH-161718" },
-    { value: "farmer-7", label: "दीपक चव्हाण", mobile: "9876543216", docs: [{type: 'voter-id', number: 'STU7890123'}], nameAsPerPassbook: "दीपक व्ही चव्हाण", bankName: "कॅनरा बँक", accountNumber: "XXXX-XXXX-7890", ifsc: "CNRB0007890", sabNumber: "SAB-G007", khataNumber: "KH-192021" },
-    { value: "farmer-8", label: "संजय देशमुख", mobile: "9876543217", docs: [{type: 'voter-id', number: 'VWX8901234'}], nameAsPerPassbook: "संजय देशमुख", bankName: "युनियन बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-8901", ifsc: "UBIN0008901", sabNumber: "SAB-H008", khataNumber: "KH-222324" },
-    { value: "farmer-9", label: "विशाल पवार", mobile: "9876543218", docs: [{type: 'pan', number: 'IJKLM9012N'}], nameAsPerPassbook: "विशाल एस पवार", bankName: "बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-9012", ifsc: "BKID0009012", sabNumber: "SAB-I009", khataNumber: "KH-252627" },
-    { value: "farmer-10", label: "अमित भोसले", mobile: "9876543219", docs: [{type: 'voter-id', number: 'BCD0123456'}], nameAsPerPassbook: "अमित भोसले", bankName: "सेंट्रल बँक ऑफ इंडिया", accountNumber: "XXXX-XXXX-0123", ifsc: "CBIN0000123", sabNumber: "SAB-J010", khataNumber: "KH-282930" },
-    { value: "farmer-11", label: "राहुल सावंत", mobile: "9876543220", docs: [{type: 'voter-id', number: 'EFG1234567'}], nameAsPerPassbook: "राहुल सावंत", bankName: "इंडियन बँक", accountNumber: "XXXX-XXXX-1234", ifsc: "IDIB0001234", sabNumber: "SAB-K011", khataNumber: "KH-313233" },
-    { value: "farmer-12", label: "अजय कदम", mobile: "9876543221", docs: [{type: 'pan', number: 'LMNOP2345Q'}], nameAsPerPassbook: "अजय कदम", bankName: "IDBI बँक", accountNumber: "XXXX-XXXX-2345", ifsc: "IBKL0002345", sabNumber: "SAB-L012", khataNumber: "KH-343536" },
-    { value: "farmer-13", label: "नितीन राऊत", mobile: "9876543222", docs: [{type: 'voter-id', number: 'KLM3456789'}], nameAsPerPassbook: "नितीन राऊत", bankName: "कोटक महिंद्रा बँक", accountNumber: "XXXX-XXXX-3456", ifsc: "KKBK0003456", sabNumber: "SAB-M013", khataNumber: "KH-373839" },
-    { value: "farmer-14", label: "प्रशांत कांबळे", mobile: "9876543223", docs: [{type: 'voter-id', number: 'NOP4567890'}], nameAsPerPassbook: "प्रशांत कांबळे", bankName: "येस बँक", accountNumber: "XXXX-XXXX-4567", ifsc: "YESB0004567", sabNumber: "SAB-N014", khataNumber: "KH-404142" },
-    { value: "farmer-15", label: "मनोज जगताप", mobile: "9876543224", docs: [{type: 'pan', number: 'OPQRS5678T'}], nameAsPerPassbook: "मनोज जगताप", bankName: "इंडसइंड बँक", accountNumber: "XXXX-XXXX-5678", ifsc: "INDB0005678", sabNumber: "SAB-O015", khataNumber: "KH-434445" },
-    { value: "farmer-16", label: "योगेश यादव", mobile: "9876543225", docs: [{type: 'voter-id', number: 'STU6789012'}], nameAsPerPassbook: "योगेश यादव", bankName: "RBL बँक", accountNumber: "XXXX-XXXX-6789", ifsc: "RATN0006789", sabNumber: "SAB-P016", khataNumber: "KH-464748" },
-    { value: "farmer-17", label: "महेश माने", mobile: "9876543226", docs: [{type: 'voter-id', number: 'VWX7890123'}], nameAsPerPassbook: "महेश माने", bankName: "फेडरल बँक", accountNumber: "XXXX-XXXX-7890", ifsc: "FDRL0007890", sabNumber: "SAB-Q017", khataNumber: "KH-495051" },
-    { value: "farmer-18", label: "अमोल थोरात", mobile: "9876543227", docs: [{type: 'pan', number: 'RSTUV8901W'}], nameAsPerPassbook: "अमोल थोरात", bankName: "साउथ इंडियन बँक", accountNumber: "XXXX-XXXX-8901", ifsc: "SIBL0008901", sabNumber: "SAB-R018", khataNumber: "KH-525354" },
-    { value: "farmer-19", label: "किरण साळुंखे", mobile: "9876543228", docs: [{type: 'voter-id', number: 'BCD9012345'}], nameAsPerPassbook: "किरण साळुंखे", bankName: "कर्नाटक बँक", accountNumber: "XXXX-XXXX-9012", ifsc: "KARB0009012", sabNumber: "SAB-S019", khataNumber: "KH-555657" },
-    { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", docs: [{type: 'voter-id', number: 'EFG0123456'}], nameAsPerPassbook: "संदीप सूर्यवंशी", bankName: "सिटी युनियन बँक", accountNumber: "XXXX-XXXX-0123", ifsc: "CIUB0000123", sabNumber: "SAB-T020", khataNumber: "KH-585960" },
+    { value: "farmer-1", label: "रमेश कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], nameAsPerPassbook: "रमेश एस कुलकर्णी", bankName: "स्टेट बँक ऑफ इंडिया", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234", sabNumber: "SAB-A001", khataNumber: "KH-112233" },
+    { value: "farmer-2", label: "सुरेश पाटील", mobile: "9876543211", docs: [{type: 'pan', number: 'BCDEF2345G'}], nameAsPerPassbook: "सुरेश पाटील", bankName: "HDFC बँक", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-2345", ifsc: "HDFC0002345", sabNumber: "SAB-B002", khataNumber: "KH-445566" },
+    { value: "farmer-3", label: "गणेश जाधव", mobile: "9876543212", docs: [{type: 'voter-id', number: 'GHI3456789'}], nameAsPerPassbook: "गणेश एम जाधव", bankName: "ICICI बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-3456", ifsc: "ICIC0003456", sabNumber: "SAB-C003", khataNumber: "KH-778899" },
+    { value: "farmer-4", label: "प्रकाश शिंदे", mobile: "9876543213", docs: [{type: 'voter-id', number: 'JKL4567890'}], nameAsPerPassbook: "प्रकाश शिंदे", bankName: "ऍक्सिस बँक", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-4567", ifsc: "UTIB0004567", sabNumber: "SAB-D004", khataNumber: "KH-101112" },
+    { value: "farmer-5", label: "सचिन मोरे", mobile: "9876543214", docs: [{type: 'voter-id', number: 'MNO5678901'}], nameAsPerPassbook: "सचिन आर मोरे", bankName: "बँक ऑफ बडोदा", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-5678", ifsc: "BARB0005678", sabNumber: "SAB-E005", khataNumber: "KH-131415" },
+    { value: "farmer-6", label: "अनिल गायकवाड", mobile: "9876543215", docs: [{type: 'pan', number: 'FGHIJ6789K'}], nameAsPerPassbook: "अनिल गायकवाड", bankName: "पंजाब नॅशनल बँक", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-6789", ifsc: "PUNB0006789", sabNumber: "SAB-F006", khataNumber: "KH-161718" },
+    { value: "farmer-7", label: "दीपक चव्हाण", mobile: "9876543216", docs: [{type: 'voter-id', number: 'STU7890123'}], nameAsPerPassbook: "दीपक व्ही चव्हाण", bankName: "कॅनरा बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-7890", ifsc: "CNRB0007890", sabNumber: "SAB-G007", khataNumber: "KH-192021" },
+    { value: "farmer-8", label: "संजय देशमुख", mobile: "9876543217", docs: [{type: 'voter-id', number: 'VWX8901234'}], nameAsPerPassbook: "संजय देशमुख", bankName: "युनियन बँक ऑफ इंडिया", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-8901", ifsc: "UBIN0008901", sabNumber: "SAB-H008", khataNumber: "KH-222324" },
+    { value: "farmer-9", label: "विशाल पवार", mobile: "9876543218", docs: [{type: 'pan', number: 'IJKLM9012N'}], nameAsPerPassbook: "विशाल एस पवार", bankName: "बँक ऑफ इंडिया", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-9012", ifsc: "BKID0009012", sabNumber: "SAB-I009", khataNumber: "KH-252627" },
+    { value: "farmer-10", label: "अमित भोसले", mobile: "9876543219", docs: [{type: 'voter-id', number: 'BCD0123456'}], nameAsPerPassbook: "अमित भोसले", bankName: "सेंट्रल बँक ऑफ इंडिया", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-0123", ifsc: "CBIN0000123", sabNumber: "SAB-J010", khataNumber: "KH-282930" },
+    { value: "farmer-11", label: "राहुल सावंत", mobile: "9876543220", docs: [{type: 'voter-id', number: 'EFG1234567'}], nameAsPerPassbook: "राहुल सावंत", bankName: "इंडियन बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-1234", ifsc: "IDIB0001234", sabNumber: "SAB-K011", khataNumber: "KH-313233" },
+    { value: "farmer-12", label: "अजय कदम", mobile: "9876543221", docs: [{type: 'pan', number: 'LMNOP2345Q'}], nameAsPerPassbook: "अजय कदम", bankName: "IDBI बँक", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-2345", ifsc: "IBKL0002345", sabNumber: "SAB-L012", khataNumber: "KH-343536" },
+    { value: "farmer-13", label: "नितीन राऊत", mobile: "9876543222", docs: [{type: 'voter-id', number: 'KLM3456789'}], nameAsPerPassbook: "नितीन राऊत", bankName: "कोटक महिंद्रा बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-3456", ifsc: "KKBK0003456", sabNumber: "SAB-M013", khataNumber: "KH-373839" },
+    { value: "farmer-14", label: "प्रशांत कांबळे", mobile: "9876543223", docs: [{type: 'voter-id', number: 'NOP4567890'}], nameAsPerPassbook: "प्रशांत कांबळे", bankName: "येस बँक", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-4567", ifsc: "YESB0004567", sabNumber: "SAB-N014", khataNumber: "KH-404142" },
+    { value: "farmer-15", label: "मनोज जगताप", mobile: "9876543224", docs: [{type: 'pan', number: 'OPQRS5678T'}], nameAsPerPassbook: "मनोज जगताप", bankName: "इंडसइंड बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-5678", ifsc: "INDB0005678", sabNumber: "SAB-O015", khataNumber: "KH-434445" },
+    { value: "farmer-16", label: "योगेश यादव", mobile: "9876543225", docs: [{type: 'voter-id', number: 'STU6789012'}], nameAsPerPassbook: "योगेश यादव", bankName: "RBL बँक", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-6789", ifsc: "RATN0006789", sabNumber: "SAB-P016", khataNumber: "KH-464748" },
+    { value: "farmer-17", label: "महेश माने", mobile: "9876543226", docs: [{type: 'voter-id', number: 'VWX7890123'}], nameAsPerPassbook: "महेश माने", bankName: "फेडरल बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-7890", ifsc: "FDRL0007890", sabNumber: "SAB-Q017", khataNumber: "KH-495051" },
+    { value: "farmer-18", label: "अमोल थोरात", mobile: "9876543227", docs: [{type: 'pan', number: 'RSTUV8901W'}], nameAsPerPassbook: "अमोल थोरात", bankName: "साउथ इंडियन बँक", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-8901", ifsc: "SIBL0008901", sabNumber: "SAB-R018", khataNumber: "KH-525354" },
+    { value: "farmer-19", label: "किरण साळुंखे", mobile: "9876543228", docs: [{type: 'voter-id', number: 'BCD9012345'}], nameAsPerPassbook: "किरण साळुंखे", bankName: "कर्नाटक बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-9012", ifsc: "KARB0009012", sabNumber: "SAB-S019", khataNumber: "KH-555657" },
+    { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", docs: [{type: 'voter-id', number: 'EFG0123456'}], nameAsPerPassbook: "संदीप सूर्यवंशी", bankName: "सिटी युनियन बँक", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-0123", ifsc: "CIUB0000123", sabNumber: "SAB-T020", khataNumber: "KH-585960" },
 ];
 
 type DocumentType = 'voter-id' | 'pan' | 'driving-license';
@@ -306,6 +306,7 @@ export default function NewFieldSurveyPage() {
     const [documents, setDocuments] = React.useState<Document[]>([{ id: 1, type: '', number: '', file: null }]);
     const [nameAsPerPassbook, setNameAsPerPassbook] = React.useState("");
     const [bankName, setBankName] = React.useState("");
+    const [branchName, setBranchName] = React.useState("");
     const [accountNumber, setAccountNumber] = React.useState("");
     const [ifscCode, setIfscCode] = React.useState("");
 
@@ -350,6 +351,7 @@ export default function NewFieldSurveyPage() {
             setMobile(selectedFarmer.mobile);
             setNameAsPerPassbook(selectedFarmer.nameAsPerPassbook);
             setBankName(selectedFarmer.bankName);
+            setBranchName(selectedFarmer.branchName);
             setAccountNumber(selectedFarmer.accountNumber);
             setIfscCode(selectedFarmer.ifsc)
             setSabNumber(selectedFarmer.sabNumber);
@@ -366,6 +368,7 @@ export default function NewFieldSurveyPage() {
             setNameAsPerPassbook("");
             setDocuments([{ id: 1, type: '', number: '', file: null }]);
             setBankName("");
+            setBranchName("");
             setAccountNumber("");
             setIfscCode("");
             setSabNumber("");
@@ -471,19 +474,19 @@ export default function NewFieldSurveyPage() {
           </>
         ) : (
           <>
-            <CardTitle className="font-headline text-xl">नवीन शेत सर्वेक्षण</CardTitle>
-            <CardDescription>नवीन सर्वेक्षणासाठी टॅबमध्ये तपशील भरा.</CardDescription>
+            <CardTitle className="font-headline text-xl">नवीन शेत सर्वेक्षण (New Farm Survey)</CardTitle>
+            <CardDescription>नवीन सर्वेक्षणासाठी टॅबमध्ये तपशील भरा. (Fill details in the tabs for a new survey.)</CardDescription>
           </>
         )}
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
-            <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
-            <TabsTrigger value="farm-info">शेत</TabsTrigger>
-            <TabsTrigger value="media">मीडिया</TabsTrigger>
-            <TabsTrigger value="map">नकाशा</TabsTrigger>
+            <TabsTrigger value="farmer-selection">शेतकरी (Farmer)</TabsTrigger>
+            <TabsTrigger value="farmer-info">माहिती (Info)</TabsTrigger>
+            <TabsTrigger value="farm-info">शेत (Farm)</TabsTrigger>
+            <TabsTrigger value="media">मीडिया (Media)</TabsTrigger>
+            <TabsTrigger value="map">नकाशा (Map)</TabsTrigger>
           </TabsList>
           
           <TabsContent value="farmer-selection" className="pt-6">
@@ -611,10 +614,10 @@ export default function NewFieldSurveyPage() {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2 md:col-span-2">
                     <div className="flex items-center justify-between">
-                         <Label htmlFor="mobile">मोबाइल नंबर</Label>
+                         <Label htmlFor="mobile">मोबाइल नंबर (Mobile Number)</Label>
                          <Button variant="link" size="sm" onClick={handleSendOtp} disabled={isOtpSent || !mobile}>
                             <Send className="mr-2 h-4 w-4"/>
-                            ओटीपी पाठवा
+                            ओटीपी पाठवा (Send OTP)
                          </Button>
                     </div>
                     <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" value={mobile} onChange={(e) => setMobile(e.target.value)} />
@@ -622,38 +625,38 @@ export default function NewFieldSurveyPage() {
 
                 {isOtpSent && (
                     <div className="grid gap-2 md:col-span-2">
-                        <Label htmlFor="otp">ओटीपी</Label>
+                        <Label htmlFor="otp">ओटीपी (OTP)</Label>
                         <div className="flex gap-2">
                             <Input id="otp" type="text" placeholder="ओटीपी प्रविष्ट करा" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={isOtpVerified} />
                             <Button onClick={handleVerifyOtp} disabled={isOtpVerified || !otp}>
                                 {isOtpVerified ? <ShieldCheck /> : null}
-                                {isOtpVerified ? "सत्यापित" : "सत्यापित करा"}
+                                {isOtpVerified ? "सत्यापित (Verified)" : "सत्यापित करा (Verify)"}
                             </Button>
                         </div>
                     </div>
                 )}
                  <div className="md:col-span-2 space-y-4">
                      <Separator />
-                     <Label className="text-base font-medium">ओळखपत्र</Label>
+                     <Label className="text-base font-medium">ओळखपत्र (Identification)</Label>
                      {documents.map((doc) => (
                          <div key={doc.id} className="space-y-2">
-                             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-2 items-end">
-                                 <div>
-                                     <Label htmlFor={`doc-type-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्राचा प्रकार</Label>
-                                     <Select
-                                         value={doc.type}
-                                         onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
-                                     >
-                                         <SelectTrigger id={`doc-type-${doc.id}`}><SelectValue placeholder="ओळखपत्राचा प्रकार" /></SelectTrigger>
-                                         <SelectContent>
-                                             {getAvailableDocTypes(doc.type).map(docType => (
-                                                 <SelectItem key={docType.value} value={docType.value}>{docType.label}</SelectItem>
-                                             ))}
-                                         </SelectContent>
-                                     </Select>
-                                 </div>
+                            <Label htmlFor={`doc-type-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्राचा प्रकार (Document Type)</Label>
+                             <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-center">
                                  <div className="grid gap-2 w-full">
-                                     <Label htmlFor={`doc-number-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्र क्रमांक</Label>
+                                    <Select
+                                        value={doc.type}
+                                        onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
+                                    >
+                                        <SelectTrigger id={`doc-type-${doc.id}`}><SelectValue placeholder="ओळखपत्राचा प्रकार" /></SelectTrigger>
+                                        <SelectContent>
+                                            {getAvailableDocTypes(doc.type).map(docType => (
+                                                <SelectItem key={docType.value} value={docType.value}>{docType.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                 </div>
+
+                                 <div className="grid gap-2 w-full">
                                      <Input
                                          id={`doc-number-${doc.id}`}
                                          placeholder="ओळखपत्र क्रमांक"
@@ -691,28 +694,32 @@ export default function NewFieldSurveyPage() {
                      ))}
                      {documents.length < documentTypes.length && (
                         <Button variant="outline" onClick={handleAddDocument} className="w-full sm:w-auto justify-self-start" disabled={documents.length >= documentTypes.length}>
-                           <PlusCircle className="mr-2"/> आणखी जोडा
+                           <PlusCircle className="mr-2"/> आणखी जोडा (Add More)
                         </Button>
                      )}
                  </div>
                   <div className="md:col-span-2 space-y-4">
                      <Separator />
-                     <Label className="text-base font-medium">बँक तपशील</Label>
+                     <Label className="text-base font-medium">बँक तपशील (Bank Details)</Label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="grid gap-2">
-                             <Label htmlFor="passbook-name">पासबुक वरील नाव</Label>
+                             <Label htmlFor="passbook-name">पासबुक वरील नाव (Name as per Passbook)</Label>
                             <Input id="passbook-name" placeholder="पासबुकनुसार नाव टाका" value={nameAsPerPassbook} onChange={(e) => setNameAsPerPassbook(e.target.value)} />
                         </div>
                          <div className="grid gap-2">
-                            <Label htmlFor="bank-name">बँकेचे नाव</Label>
+                            <Label htmlFor="bank-name">बँकेचे नाव (Bank Name)</Label>
                             <Input id="bank-name" placeholder="बँकेचे नाव टाका" value={bankName} onChange={(e) => setBankName(e.target.value)} />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="account-number">खाते क्रमांक</Label>
+                            <Label htmlFor="branch-name">शाखा (Branch)</Label>
+                            <Input id="branch-name" placeholder="शाखेचे नाव टाका" value={branchName} onChange={(e) => setBranchName(e.target.value)} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="account-number">खाते क्रमांक (Account Number)</Label>
                             <Input id="account-number" placeholder="बँक खाते क्रमांक टाका" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="ifsc-code">IFSC कोड</Label>
+                            <Label htmlFor="ifsc-code">IFSC कोड (IFSC Code)</Label>
                             <Input id="ifsc-code" placeholder="IFSC कोड टाका" value={ifscCode} onChange={(e) => setIfscCode(e.target.value)} />
                         </div>
                       </div>
@@ -723,11 +730,11 @@ export default function NewFieldSurveyPage() {
           <TabsContent value="farm-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="area">क्षेत्र (एकरमध्ये)</Label>
+                    <Label htmlFor="area">क्षेत्र (एकरमध्ये) (Area in Acres)</Label>
                     <Input id="area" type="number" placeholder="उदा. २.५" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="planting-type">पिकाचा प्रकार</Label>
+                    <Label htmlFor="planting-type">पिकाचा प्रकार (Crop Type)</Label>
                     <Select>
                         <SelectTrigger id="planting-type"><SelectValue placeholder="पिकाचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -737,7 +744,7 @@ export default function NewFieldSurveyPage() {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="cane-type">उसाचा प्रकार</Label>
+                    <Label htmlFor="cane-type">उसाचा प्रकार (Cane Type)</Label>
                     <Select>
                         <SelectTrigger id="cane-type"><SelectValue placeholder="उसाचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -748,7 +755,7 @@ export default function NewFieldSurveyPage() {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="soil-type">मातीचा प्रकार</Label>
+                    <Label htmlFor="soil-type">मातीचा प्रकार (Soil Type)</Label>
                      <Select>
                         <SelectTrigger id="soil-type"><SelectValue placeholder="मातीचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -758,7 +765,7 @@ export default function NewFieldSurveyPage() {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="irrigation-type">सिंचनाचा प्रकार</Label>
+                    <Label htmlFor="irrigation-type">सिंचनाचा प्रकार (Irrigation Type)</Label>
                     <Select>
                         <SelectTrigger id="irrigation-type"><SelectValue placeholder="सिंचनाचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -774,7 +781,7 @@ export default function NewFieldSurveyPage() {
            <TabsContent value="media" className="pt-6">
                 <div className="flex flex-col gap-6">
                     <div>
-                        <Label className="text-base font-medium">शेताचे फोटो (४ आवश्यक)</Label>
+                        <Label className="text-base font-medium">शेताचे फोटो (४ आवश्यक) (Farm Photos - 4 required)</Label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
                             {farmPhotos.map((photo, index) => (
                                 <ImageUploader
@@ -792,28 +799,28 @@ export default function NewFieldSurveyPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                         <ImageUploader
                             id="farmer-photo"
-                            label="शेतकरी फोटो"
+                            label="शेतकरी फोटो (Farmer Photo)"
                             file={farmerPhoto}
                             onFileChange={setFarmerPhoto}
                             capture="environment"
                         />
                         <ImageUploader
                             id="field-boy-photo"
-                            label="फील्ड बॉय फोटो"
+                            label="फील्ड बॉय फोटो (Field Boy Photo)"
                             file={fieldBoyPhoto}
                             onFileChange={setFieldBoyPhoto}
                             capture="user"
                         />
                     
                         <div className="grid gap-2">
-                            <Label htmlFor="audio-note" className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट (पर्यायी)</Label>
+                            <Label htmlFor="audio-note" className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट (पर्यायी) (Audio Note - Optional)</Label>
                             <AudioRecorder
                                 onRecordingComplete={(file) => setAudioNote(file)}
                             />
                         </div>
 
                          <div className="grid gap-4">
-                            <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया (पर्यायी)</Label>
+                            <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया (पर्यायी) (Other Media - Optional)</Label>
                             {otherMedia.map((item, index) => (
                                 <div key={item.id} className="grid gap-2">
                                      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-2 items-center">
@@ -853,7 +860,7 @@ export default function NewFieldSurveyPage() {
                             ))}
                              {otherMedia.length < 3 && (
                                 <Button variant="outline" onClick={handleAddOtherMedia} className="w-full sm:w-auto justify-self-start">
-                                   <PlusCircle className="mr-2"/> आणखी जोडा
+                                   <PlusCircle className="mr-2"/> आणखी जोडा (Add More)
                                 </Button>
                              )}
                         </div>
@@ -868,10 +875,10 @@ export default function NewFieldSurveyPage() {
                         <div className="space-y-1.5">
                            <CardTitle className="font-headline text-lg flex items-center gap-2">
                                 <LocateFixed className="w-5 h-5 text-primary"/>
-                                फील्ड बॉयचे स्थान
+                                फील्ड बॉयचे स्थान (Field Boy's Location)
                             </CardTitle>
                             <CardDescription>
-                                शेतापासून अंदाजित अंतर: <strong>०.२ किमी</strong>
+                                शेतापासून अंदाजित अंतर: <strong>०.२ किमी</strong> (Est. distance from farm: 0.2 km)
                             </CardDescription>
                         </div>
                          <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()}>
@@ -885,16 +892,16 @@ export default function NewFieldSurveyPage() {
                 </Card>
                  <Card>
                     <CardHeader>
-                        <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
-                        <CardDescription>शेताची सीमा निश्चित करण्यासाठी खालील बटणे वापरा.</CardDescription>
+                        <CardTitle className="font-headline text-lg">शेताची सीमा (Farm Boundary)</CardTitle>
+                        <CardDescription>शेताची सीमा निश्चित करण्यासाठी खालील बटणे वापरा. (Use the buttons below to mark the farm boundary.)</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="w-full h-64 bg-muted rounded-lg">
                            <FieldBoyMap />
                         </div>
                         <div className="flex flex-col sm:flex-row gap-4 w-full mt-4">
-                            <Button variant="outline" className="w-full"><Pin className="mr-2" /> ड्रॉ बटण</Button>
-                            <Button variant="outline" className="w-full"><Footprints className="mr-2" /> वॉक बटण</Button>
+                            <Button variant="outline" className="w-full"><Pin className="mr-2" /> ड्रॉ बटण (Draw Button)</Button>
+                            <Button variant="outline" className="w-full"><Footprints className="mr-2" /> वॉक बटण (Walk Button)</Button>
                         </div>
                     </CardContent>
                 </Card>
@@ -904,16 +911,14 @@ export default function NewFieldSurveyPage() {
       </CardContent>
       <CardFooter className="flex justify-end gap-2 mt-4">
         <Button variant="outline" asChild>
-            <Link href="/field-boy/dashboard">रद्द करा</Link>
+            <Link href="/field-boy/dashboard">रद्द करा (Cancel)</Link>
         </Button>
         {activeTab !== 'map' ? (
-             <Button onClick={handleNext}>जतन करा आणि पुढे जा</Button>
+             <Button onClick={handleNext}>जतन करा आणि पुढे जा (Save & Next)</Button>
         ) : (
-             <Button onClick={handleFinalSubmit}>सर्वेक्षण सबमिट करा</Button>
+             <Button onClick={handleFinalSubmit}>सर्वेक्षण सबमिट करा (Submit Survey)</Button>
         )}
       </CardFooter>
     </Card>
   )
 }
-
-    

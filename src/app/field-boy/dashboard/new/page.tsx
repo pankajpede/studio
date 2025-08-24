@@ -659,7 +659,7 @@ export default function NewFieldSurveyPage() {
                                      </SelectContent>
                                  </Select>
                              </div>
-                             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-2 items-end">
+                             <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-end">
                                  <div className="grid gap-1.5">
                                       <Label htmlFor={`doc-number-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्र क्रमांक (Document Number)</Label>
                                      <Input
@@ -877,7 +877,7 @@ export default function NewFieldSurveyPage() {
                             <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया (पर्यायी) (Other Media - Optional)</Label>
                             {otherMedia.map((item, index) => (
                                 <div key={item.id} className="grid gap-2">
-                                     <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-2 items-center">
+                                     <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-center">
                                         <Input
                                             placeholder="फाइलचे नाव"
                                             value={item.name}

@@ -56,7 +56,7 @@ const generateSurveyData = (count: number): Survey[] => {
       shiwar: `शिवार ${(i % 5) + 1}`,
       gatGroupNumber: `GAT-${String(123 + i)}`,
       surveyNumber: `SN-${String(456 + i)}`,
-      areaAcre: Number((Math.random() * 5 + 1).toFixed(1)),
+      areaHector: Number((Math.random() * 2 + 0.5).toFixed(2)),
       gpsCoordinates: `${(18.40 + Math.random() * 0.1).toFixed(4)}, ${(76.57 + Math.random() * 0.1).toFixed(4)}`,
       caneType: ['अडसाली', 'पूर्व-हंगामी', 'सुरू'][i % 3],
       caneVariety: ['को-86032', 'कोएम-0265', 'एमएस-10001'][i % 3],
@@ -222,7 +222,7 @@ export default function FarmerDetailPage() {
       farmDetails: {
           surveyNumber: surveyData.surveyNumber,
           gatGroupNumber: surveyData.gatGroupNumber,
-          area: `${surveyData.areaAcre} एकर`,
+          area: `${surveyData.areaHector} हेक्टर`,
           gpsCoordinates: surveyData.gpsCoordinates,
           caneType: surveyData.caneType,
           caneVariety: surveyData.caneVariety,
@@ -356,7 +356,7 @@ export default function FarmerDetailPage() {
                                     </Badge>
                                 </TableCell>
                                 <TableCell>{survey.surveyedBy}</TableCell>
-                                <TableCell>{survey.areaAcre} एकर</TableCell>
+                                <TableCell>{survey.areaHector} हेक्टर</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -490,3 +490,5 @@ export default function FarmerDetailPage() {
     </div>
   );
 }
+
+    

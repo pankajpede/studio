@@ -74,7 +74,7 @@ export default function SurveyMap({ surveys }: SurveyMapProps) {
               >
                 <div className="p-1 max-w-xs">
                   <h3 className="font-bold text-md mb-1">{marker.farmerName}</h3>
-                  <p className="text-sm"><strong>क्षेत्र:</strong> {marker.areaAcre} एकर</p>
+                  <p className="text-sm"><strong>क्षेत्र:</strong> {marker.areaHector} हेक्टर</p>
                   <p className="text-sm"><strong>उसाचा प्रकार:</strong> {marker.caneType}</p>
                   <p className="text-sm"><strong>सर्वेक्षण तारीख:</strong> {marker.surveyDate}</p>
                 </div>
@@ -85,3 +85,5 @@ export default function SurveyMap({ surveys }: SurveyMapProps) {
       </GoogleMap>
   );
 }
+
+    

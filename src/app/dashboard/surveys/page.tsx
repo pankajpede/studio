@@ -73,7 +73,7 @@ const data: Survey[] = [
     district: "लातूर",
     gatGroupNumber: "GAT-123",
     surveyNumber: "SN-456",
-    areaAcre: 5.2,
+    areaHector: 2.1,
     gpsCoordinates: "18.40, 76.57",
     caneType: "अडसाली",
     caneVariety: "को-86032",
@@ -110,7 +110,7 @@ const data: Survey[] = [
     district: "लातूर",
     gatGroupNumber: "GAT-124",
     surveyNumber: "SN-457",
-    areaAcre: 3.1,
+    areaHector: 1.25,
     gpsCoordinates: "18.35, 76.50",
     caneType: "पूर्व-हंगामी",
     caneVariety: "कोएम-0265",
@@ -151,7 +151,7 @@ export type Survey = {
   district: string;
   gatGroupNumber: string;
   surveyNumber: string;
-  areaAcre: number;
+  areaHector: number;
   gpsCoordinates: string;
   caneType: string;
   caneVariety: string;
@@ -287,8 +287,8 @@ export const columns: ColumnDef<Survey>[] = [
     header: "सर्वेक्षण नंबर",
   },
   {
-    accessorKey: "areaAcre",
-    header: "क्षेत्र (एकर)",
+    accessorKey: "areaHector",
+    header: "क्षेत्र (हेक्टर)",
   },
   {
     accessorKey: "gpsCoordinates",
@@ -449,7 +449,7 @@ function AdvancedFilters({ table }: { table: ReturnType<typeof useReactTable> })
         });
 
         // Area filter
-        table.getColumn("areaAcre")?.setFilterValue((old: [number, number]) => {
+        table.getColumn("areaHector")?.setFilterValue((old: [number, number]) => {
             const min = parseFloat(minArea);
             const max = parseFloat(maxArea);
             return [isNaN(min) ? old?.[0] : min, isNaN(max) ? old?.[1] : max];
@@ -461,7 +461,7 @@ function AdvancedFilters({ table }: { table: ReturnType<typeof useReactTable> })
         setMinArea("");
         setMaxArea("");
         table.getColumn("surveyDate")?.setFilterValue(undefined);
-        table.getColumn("areaAcre")?.setFilterValue(undefined);
+        table.getColumn("areaHector")?.setFilterValue(undefined);
         table.getColumn("surveyedBy")?.setFilterValue("");
         table.getColumn("warshir")?.setFilterValue("");
     }
@@ -549,7 +549,7 @@ function AdvancedFilters({ table }: { table: ReturnType<typeof useReactTable> })
                         </div>
                         
                         <div className="grid gap-2">
-                            <Label>क्षेत्र (एकर)</Label>
+                            <Label>क्षेत्र (हेक्टर)</Label>
                             <div className="flex items-center gap-2">
                                 <Input type="number" placeholder="किमान" value={minArea} onChange={e => setMinArea(e.target.value)} />
                                 <span className="text-muted-foreground">-</span>
@@ -864,5 +864,7 @@ export default function SurveyDataTable() {
     </Card>
   )
 }
+
+    
 
     

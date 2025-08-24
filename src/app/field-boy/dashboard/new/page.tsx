@@ -611,7 +611,7 @@ export default function NewFieldSurveyPage() {
           </TabsContent>
 
           <TabsContent value="farmer-info" className="pt-6">
-             <div className="grid grid-cols-1 gap-6">
+             <div className="flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="grid gap-2 md:col-span-2">
                         <div className="flex items-center justify-between">
@@ -641,29 +641,22 @@ export default function NewFieldSurveyPage() {
                      <Separator />
                      <Label className="text-base font-medium">ओळखपत्र (Identification)</Label>
                      {documents.map((doc) => (
-                         <div key={doc.id} className="space-y-2">
-                            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-end">
-                                <div className="grid gap-1.5">
-                                <Label htmlFor={`doc-type-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्राचा प्रकार</Label>
-                                <Select
-                                    value={doc.type}
-                                    onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
-                                >
-                                    <SelectTrigger id={`doc-type-${doc.id}`}><SelectValue placeholder="ओळखपत्राचा प्रकार" /></SelectTrigger>
-                                    <SelectContent>
-                                        {getAvailableDocTypes(doc.type).map(docType => (
-                                            <SelectItem key={docType.value} value={docType.value}>{docType.label}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                </div>
-                                {documents.length > 1 && (
-                                    <Button variant="ghost" size="icon" onClick={() => handleRemoveDocument(doc.id)}>
-                                        <MinusCircle className="text-destructive" />
-                                    </Button>
-                                )}
-                            </div>
-                             <div className="grid grid-cols-[1fr_auto] gap-2 items-end">
+                         <div key={doc.id} className="grid grid-cols-1 gap-2">
+                             <div className="grid gap-1.5">
+                                 <Label htmlFor={`doc-type-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्राचा प्रकार</Label>
+                                 <Select
+                                     value={doc.type}
+                                     onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
+                                 >
+                                     <SelectTrigger id={`doc-type-${doc.id}`}><SelectValue placeholder="ओळखपत्राचा प्रकार" /></SelectTrigger>
+                                     <SelectContent>
+                                         {getAvailableDocTypes(doc.type).map(docType => (
+                                             <SelectItem key={docType.value} value={docType.value}>{docType.label}</SelectItem>
+                                         ))}
+                                     </SelectContent>
+                                 </Select>
+                             </div>
+                             <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-end">
                                  <div className="grid gap-1.5">
                                       <Label htmlFor={`doc-number-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्र क्रमांक</Label>
                                      <Input
@@ -686,6 +679,11 @@ export default function NewFieldSurveyPage() {
                                             <UploadCloud className="h-4 w-4"/>
                                         </Label>
                                     </Button>
+                                     {documents.length > 1 && (
+                                    <Button variant="ghost" size="icon" onClick={() => handleRemoveDocument(doc.id)}>
+                                        <MinusCircle className="text-destructive" />
+                                    </Button>
+                                )}
                              </div>
                             {doc.file && (
                                 <FileUploadItem file={doc.file} onRemove={() => handleDocumentChange(doc.id, 'file', null)} />
@@ -730,8 +728,8 @@ export default function NewFieldSurveyPage() {
           <TabsContent value="farm-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="area">क्षेत्र (एकरमध्ये) (Area in Acres)</Label>
-                    <Input id="area" type="number" placeholder="उदा. २.५" />
+                    <Label htmlFor="area">क्षेत्र (हेक्टर) (Area in Hectare)</Label>
+                    <Input id="area" type="number" placeholder="उदा. १.०" />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="planting-type">पिकाचा प्रकार (Crop Type)</Label>

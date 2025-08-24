@@ -102,8 +102,8 @@ export default function NewSurveyPage() {
                         <Input id="farmer-contact" type="tel" placeholder="संपर्क क्रमांक टाका" />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="area">क्षेत्र (एकरमध्ये)</Label>
-                        <Input id="area" type="number" placeholder="उदा. ५.२" />
+                        <Label htmlFor="area">क्षेत्र (हेक्टर)</Label>
+                        <Input id="area" type="number" placeholder="उदा. २.१" />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="cane-type">उसाचा प्रकार</Label>
@@ -182,3 +182,5 @@ export default function NewSurveyPage() {
     </div>
   )
 }
+
+    

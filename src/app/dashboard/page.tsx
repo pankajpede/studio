@@ -88,7 +88,7 @@ const generateSurveyData = (count: number): Survey[] => {
       shiwar: `शिवार ${(i % 5) + 1}`,
       gatGroupNumber: `GAT-${String(123 + i)}`,
       surveyNumber: `SN-${String(456 + i)}`,
-      areaAcre: Number((Math.random() * 5 + 1).toFixed(1)),
+      areaHector: Number((Math.random() * 2 + 0.5).toFixed(2)),
       gpsCoordinates: `${(18.4088 + (Math.random() - 0.5) * 0.5).toFixed(4)}, ${(76.5702 + (Math.random() - 0.5) * 0.5).toFixed(4)}`,
       caneType: ["अडसाली", "पूर्व-हंगामी", "सुरू"][i % 3],
       caneVariety: ["को-86032", "कोएम-0265", "एमएस-10001"][i % 3],
@@ -132,7 +132,7 @@ export type Survey = {
   shiwar: string;
   gatGroupNumber: string;
   surveyNumber: string;
-  areaAcre: number;
+  areaHector: number;
   gpsCoordinates: string;
   caneType: string;
   caneVariety: string;
@@ -226,8 +226,8 @@ export const columns: ColumnDef<Survey>[] = [
     header: "जिल्हा",
   },
   {
-    accessorKey: "areaAcre",
-    header: "क्षेत्र (एकर)",
+    accessorKey: "areaHector",
+    header: "क्षेत्र (हेक्टर)",
   },
    {
     accessorKey: "gpsCoordinates",
@@ -305,7 +305,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
         table.getColumn("taluka")?.setFilterValue(taluka === "all" ? "" : taluka);
         table.getColumn("surveyDate")?.setFilterValue(surveyDate ? [surveyDate.from, surveyDate.to] : undefined);
         table.getColumn("tokenDate")?.setFilterValue(cuttingDate ? [cuttingDate.from, cuttingDate.to] : undefined);
-        table.getColumn("areaAcre")?.setFilterValue([minArea, maxArea]);
+        table.getColumn("areaHector")?.setFilterValue([minArea, maxArea]);
         table.getColumn("gpsCoordinates")?.setFilterValue(radius[0] < 100 ? radius[0] : undefined);
     }
 
@@ -460,7 +460,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                         </div>
 
                          <div className="grid gap-2">
-                            <Label>क्षेत्र (एकर)</Label>
+                            <Label>क्षेत्र (हेक्टर)</Label>
                             <div className="flex items-center gap-2">
                                 <Input type="number" placeholder="किमान" value={minArea} onChange={e => setMinArea(e.target.value)} />
                                 <span className="text-muted-foreground">-</span>
@@ -634,11 +634,11 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                            if(start && end) valueText = `${format(start, 'dd/MM/yy')} - ${format(end, 'dd/MM/yy')}`;
                            else if (start) valueText = `from ${format(start, 'dd/MM/yy')}`;
                            else if (end) valueText = `to ${format(end, 'dd/MM/yy')}`;
-                        } else if (filter.id === 'areaAcre' && Array.isArray(filter.value)) {
+                        } else if (filter.id === 'areaHector' && Array.isArray(filter.value)) {
                             const [min, max] = filter.value as string[];
-                            if(min && max) valueText = `${min}-${max} एकर`;
-                            else if (min) valueText = `>= ${min} एकर`;
-                            else if (max) valueText = `<= ${max} एकर`;
+                            if(min && max) valueText = `${min}-${max} हेक्टर`;
+                            else if (min) valueText = `>= ${min} हेक्टर`;
+                            else if (max) valueText = `<= ${max} हेक्टर`;
                         } else if (filter.id === 'gpsCoordinates' && typeof filter.value === 'number') {
                            valueText = `<= ${filter.value} km`;
                         }
@@ -904,5 +904,7 @@ export default function DashboardPage() {
     </div>
   )
 }
+
+    
 
     

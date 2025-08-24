@@ -29,7 +29,7 @@ const getSurveyById = (id: string | null) => {
     panCard: "ABCDE1234F",
     bankName: "स्टेट बँक ऑफ इंडिया",
     accountNumber: "XXXX-XXXX-1234",
-    area: "२.५",
+    area: "1.0",
     cropType: "रोप",
     soilType: "काळी कापूस",
     irrigationType: "ठिबक",
@@ -204,7 +204,7 @@ export default function SurveyDetailPage() {
                 <TabsContent value="farm-info" className="pt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="area">क्षेत्र (एकरमध्ये)</Label>
+                            <Label htmlFor="area">क्षेत्र (हेक्टर)</Label>
                             <Input id="area" value={survey.area} disabled />
                         </div>
                         <div className="grid gap-2">
@@ -245,3 +245,5 @@ export default function SurveyDetailPage() {
     </div>
   );
 }
+
+    

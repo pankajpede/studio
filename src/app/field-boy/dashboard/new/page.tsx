@@ -295,6 +295,8 @@ export default function NewFieldSurveyPage() {
     const [surveyNumber, setSurveyNumber] = React.useState("");
     const [partyName, setPartyName] = React.useState("");
     const [growerType, setGrowerType] = React.useState("");
+    const [sabNumber, setSabNumber] = React.useState("");
+    const [khataNumber, setKhataNumber] = React.useState("");
 
     // State for farmer info tab
     const [mobile, setMobile] = React.useState("");
@@ -581,7 +583,7 @@ export default function NewFieldSurveyPage() {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="grower-type">उत्पादक प्रकार</Label>
+                    <Label htmlFor="grower-type">उत्पादक प्रकार (Grower Type)</Label>
                     <Select value={growerType} onValueChange={setGrowerType} disabled={!partyName}>
                         <SelectTrigger id="grower-type"><SelectValue placeholder="उत्पादक प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -589,6 +591,14 @@ export default function NewFieldSurveyPage() {
                             <SelectItem value="non-member">बिगर सभासद</SelectItem>
                         </SelectContent>
                     </Select>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="sab-number">सब नंबर</Label>
+                    <Input id="sab-number" placeholder="सब नंबर टाका" value={sabNumber} onChange={(e) => setSabNumber(e.target.value)} disabled={!partyName} />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="khata-number">खाता नंबर</Label>
+                    <Input id="khata-number" placeholder="खाता नंबर टाका" value={khataNumber} onChange={(e) => setKhataNumber(e.target.value)} disabled={!partyName} />
                 </div>
             </div>
           </TabsContent>

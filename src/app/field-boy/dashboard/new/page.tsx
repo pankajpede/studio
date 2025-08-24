@@ -38,7 +38,7 @@ import AudioRecorder from "@/components/audio-recorder"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { Calendar } from "@/components/ui/calendar"
-import { format } from "date-fns"
+import { format, addMonths } from "date-fns"
 
 const mockStates = [
     { value: "maharashtra", label: "महाराष्ट्र" },
@@ -300,6 +300,8 @@ export default function NewFieldSurveyPage() {
     const [sabNumber, setSabNumber] = React.useState("");
     const [khataNumber, setKhataNumber] = React.useState("");
     const [plantationDate, setPlantationDate] = React.useState<Date>();
+    const [caneType, setCaneType] = React.useState('');
+    const [caneMaturityDate, setCaneMaturityDate] = React.useState<Date | null>(null);
 
     // State for farmer info tab
     const [mobile, setMobile] = React.useState("");
@@ -320,7 +322,6 @@ export default function NewFieldSurveyPage() {
     const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File | null>(null);
     const [audioNote, setAudioNote] = React.useState<File | null>(null);
     const [otherMedia, setOtherMedia] = React.useState<OtherMedia[]>([{ id: 1, name: '', file: null }]);
-
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
@@ -381,6 +382,24 @@ export default function NewFieldSurveyPage() {
         setIsOtpVerified(false);
         setOtp("");
     }, [partyName]);
+
+    React.useEffect(() => {
+        if (caneType && plantationDate) {
+            let monthsToAdd = 0;
+            if (caneType === 'type-1') {
+                monthsToAdd = 12; // Adsali
+            } else if (caneType === 'type-2') {
+                monthsToAdd = 14; // Pre-seasonal
+            }
+            if (monthsToAdd > 0) {
+                setCaneMaturityDate(addMonths(plantationDate, monthsToAdd));
+            } else {
+                setCaneMaturityDate(null);
+            }
+        } else {
+            setCaneMaturityDate(null);
+        }
+    }, [caneType, plantationDate]);
 
     const handleSendOtp = () => {
         // Simulate sending OTP
@@ -644,9 +663,9 @@ export default function NewFieldSurveyPage() {
                      <Separator />
                      <Label className="text-base font-medium">ओळखपत्र (Identification)</Label>
                      {documents.map((doc) => (
-                         <div key={doc.id} className="grid grid-cols-1 gap-2">
-                            <div className="grid gap-1.5">
-                                 <Label htmlFor={`doc-type-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्राचा प्रकार (Document Type)</Label>
+                         <div key={doc.id} className="grid grid-cols-1 gap-4">
+                            <div className="grid grid-cols-1 gap-2">
+                                 <Label htmlFor={`doc-type-${doc.id}`} className="text-sm">ओळखपत्राचा प्रकार (Document Type)</Label>
                                  <Select
                                      value={doc.type}
                                      onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
@@ -659,9 +678,9 @@ export default function NewFieldSurveyPage() {
                                      </SelectContent>
                                  </Select>
                              </div>
-                             <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-end">
-                                 <div className="grid gap-1.5">
-                                      <Label htmlFor={`doc-number-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्र क्रमांक (Document Number)</Label>
+                             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-2 items-end">
+                                 <div className="grid gap-2">
+                                      <Label htmlFor={`doc-number-${doc.id}`} className="text-sm">ओळखपत्र क्रमांक (Document Number)</Label>
                                      <Input
                                          id={`doc-number-${doc.id}`}
                                          placeholder="ओळखपत्र क्रमांक"
@@ -769,23 +788,13 @@ export default function NewFieldSurveyPage() {
                         </SelectContent>
                     </Select>
                 </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="cane-maturity">उसाची पक्वता (Cane Maturity)</Label>
-                    <Select>
-                        <SelectTrigger id="cane-maturity"><SelectValue placeholder="उसाची पक्वता निवडा" /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="early">लवकर</SelectItem>
-                            <SelectItem value="mid-late">मध्यम-उशिरा</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
                 <div className="grid gap-2">
                     <Label htmlFor="cane-type">उसाचा प्रकार (Cane Type)</Label>
-                    <Select>
+                    <Select value={caneType} onValueChange={setCaneType}>
                         <SelectTrigger id="cane-type"><SelectValue placeholder="उसाचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="type-1">प्रकार १</SelectItem>
-                            <SelectItem value="type-2">प्रकार २</SelectItem>
+                            <SelectItem value="type-1">प्रकार १ (12 महिने)</SelectItem>
+                            <SelectItem value="type-2">प्रकार २ (14 महिने)</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -828,6 +837,10 @@ export default function NewFieldSurveyPage() {
                             <SelectItem value="method-b">पद्धत ब</SelectItem>
                         </SelectContent>
                     </Select>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="cane-maturity">उसाची पक्वता (Cane Maturity)</Label>
+                    <Input id="cane-maturity" value={caneMaturityDate ? format(caneMaturityDate, "PPP") : 'पक्वता तारीख'} disabled />
                 </div>
             </div>
           </TabsContent>

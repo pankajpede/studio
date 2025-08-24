@@ -64,6 +64,16 @@ const talukas: MasterDataItem[] = [
   { id: "5", name: "अहमदपूर", linkedTo: "लातूर" },
 ]
 
+const circles: MasterDataItem[] = [
+  { id: "1", name: "सर्कल १", linkedTo: "लातूर" },
+  { id: "2", name: "सर्कल २", linkedTo: "अहमदपूर" },
+]
+
+const guts: MasterDataItem[] = [
+  { id: "1", name: "गट १०१", linkedTo: "सर्कल १" },
+  { id: "2", name: "गट १०२", linkedTo: "सर्कल २" },
+]
+
 const villages: MasterDataItem[] = [
   { id: "1", name: "चाकूर", linkedTo: "अहमदपूर" },
   { id: "2", name: "मोहगाव", linkedTo: "अहमदपूर" },
@@ -71,24 +81,68 @@ const villages: MasterDataItem[] = [
   { id: "4", name: "कासारवाडी", linkedTo: "लातूर" },
 ]
 
-const caneTypes: MasterDataItem[] = [
+const shivars: MasterDataItem[] = [
+  { id: "1", name: "शिवार अ", linkedTo: "चाकूर" },
+  { id: "2", name: "शिवार ब", linkedTo: "मोहगाव" },
+]
+
+const surveyNumbers: MasterDataItem[] = [
+  { id: "1", name: "SN-123", linkedTo: "शिवार अ" },
+  { id: "2", name: "SN-456", linkedTo: "शिवार ब" },
+]
+
+const caneVarieties: MasterDataItem[] = [
   { id: "1", name: "को-८६०३२", category: "लवकर" },
   { id: "2", name: "कोएम-०२६५", category: "मध्यम-उशिरा" },
   { id: "3", name: "एमएस-१०००१", category: "लवकर" },
 ]
 
-const soilTypes: MasterDataItem[] = [
-  { id: "1", name: "काळी कापूस" },
-  { id: "2", name: "लाल चिकणमाती" },
+const caneMaturities: MasterDataItem[] = [
+  { id: "1", name: "प्रकार १ (12 महिने)", linkedTo: "को-८६०३२" },
+  { id: "2", name: "प्रकार २ (14 महिने)", linkedTo: "कोएम-०२६५" },
+]
+
+const caneTypes: MasterDataItem[] = [
+  { id: "1", name: "रोप", linkedTo: "को-८६०३२" },
+  { id: "2", name: "लागवड", linkedTo: "कोएम-०२६५" },
+]
+
+const irrigationTypes: MasterDataItem[] = [
+  { id: "1", name: "ठिबक" },
+  { id: "2", name: "प्रवाही" },
+]
+
+const irrigationSources: MasterDataItem[] = [
+  { id: "1", name: "विहीर" },
+  { id: "2", name: "कालवा" },
+]
+
+const irrigationMethods: MasterDataItem[] = [
+  { id: "1", name: "पद्धत १" },
+  { id: "2", name: "पद्धत २" },
+]
+
+const plantationMethods: MasterDataItem[] = [
+  { id: "1", name: "पद्धत अ" },
+  { id: "2", name: "पद्धत ब" },
 ]
 
 const masterDataMap = {
   states: { data: states, linkedEntity: null, category: null, entityName: "राज्य" },
   districts: { data: districts, linkedEntity: "राज्य", category: null, entityName: "जिल्हा" },
   talukas: { data: talukas, linkedEntity: "जिल्हा", category: null, entityName: "तालुका" },
+  circles: { data: circles, linkedEntity: "तालुका", category: null, entityName: "सर्कल" },
+  guts: { data: guts, linkedEntity: "सर्कल", category: null, entityName: "गट" },
   villages: { data: villages, linkedEntity: "तालुका", category: null, entityName: "गाव" },
-  caneTypes: { data: caneTypes, linkedEntity: null, category: "पक्वता श्रेणी", entityName: "उसाचा प्रकार" },
-  soilTypes: { data: soilTypes, linkedEntity: null, category: null, entityName: "मातीचा प्रकार" },
+  shivars: { data: shivars, linkedEntity: "गाव", category: null, entityName: "शिवार" },
+  surveyNumbers: { data: surveyNumbers, linkedEntity: "शिवार", category: null, entityName: "सर्वेक्षण नंबर" },
+  caneVarieties: { data: caneVarieties, linkedEntity: null, category: "पक्वता श्रेणी", entityName: "उसाची जात" },
+  caneMaturities: { data: caneMaturities, linkedEntity: "उसाची जात", category: null, entityName: "उसाची पक्वता" },
+  caneTypes: { data: caneTypes, linkedEntity: "उसाची जात", category: null, entityName: "उसाचा प्रकार" },
+  irrigationTypes: { data: irrigationTypes, linkedEntity: null, category: null, entityName: "सिंचनाचा प्रकार" },
+  irrigationSources: { data: irrigationSources, linkedEntity: null, category: null, entityName: "सिंचनाचा स्रोत" },
+  irrigationMethods: { data: irrigationMethods, linkedEntity: null, category: null, entityName: "सिंचन पद्धत" },
+  plantationMethods: { data: plantationMethods, linkedEntity: null, category: null, entityName: "लागवड पद्धत" },
 }
 
 type MasterDataKey = keyof typeof masterDataMap
@@ -317,6 +371,42 @@ function MasterDataModal({
             </div>
           </div>
         );
+        case "सर्कल":
+        return (
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="circle-name">सर्कलचे नाव</Label>
+              <Input id="circle-name" placeholder="सर्कलचे नाव प्रविष्ट करा" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="parent-taluka">जोडलेला तालुका</Label>
+              <Select>
+                <SelectTrigger id="parent-taluka"><SelectValue placeholder="तालुका निवडा" /></SelectTrigger>
+                <SelectContent>
+                  {talukas.map(t => <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+      case "गट":
+        return (
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="gut-name">गटाचे नाव</Label>
+              <Input id="gut-name" placeholder="गटाचे नाव प्रविष्ट करा" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="parent-circle">जोडलेले सर्कल</Label>
+              <Select>
+                <SelectTrigger id="parent-circle"><SelectValue placeholder="सर्कल निवडा" /></SelectTrigger>
+                <SelectContent>
+                  {circles.map(c => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
        case "गाव":
         return (
           <div className="grid gap-4">
@@ -335,12 +425,48 @@ function MasterDataModal({
             </div>
           </div>
         );
-      case "उसाचा प्रकार":
+       case "शिवार":
         return (
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="cane-type-name">उसाच्या प्रकाराचे नाव</Label>
-              <Input id="cane-type-name" placeholder="उसाच्या प्रकाराचे नाव प्रविष्ट करा" />
+              <Label htmlFor="shivar-name">शिवाराचे नाव</Label>
+              <Input id="shivar-name" placeholder="शिवाराचे नाव प्रविष्ट करा" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="parent-village">जोडलेले गाव</Label>
+              <Select>
+                <SelectTrigger id="parent-village"><SelectValue placeholder="गाव निवडा" /></SelectTrigger>
+                <SelectContent>
+                  {villages.map(v => <SelectItem key={v.id} value={v.name}>{v.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+      case "सर्वेक्षण नंबर":
+        return (
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="survey-no-name">सर्वेक्षण नंबर</Label>
+              <Input id="survey-no-name" placeholder="सर्वेक्षण नंबर प्रविष्ट करा" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="parent-shivar">जोडलेले शिवार</Label>
+              <Select>
+                <SelectTrigger id="parent-shivar"><SelectValue placeholder="शिवार निवडा" /></SelectTrigger>
+                <SelectContent>
+                  {shivars.map(s => <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+      case "उसाची जात":
+        return (
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="cane-variety-name">उसाच्या जातीचे नाव</Label>
+              <Input id="cane-variety-name" placeholder="उसाच्या जातीचे नाव प्रविष्ट करा" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="maturity-category">पक्वता श्रेणी</Label>
@@ -355,11 +481,50 @@ function MasterDataModal({
             </div>
           </div>
         );
-      case "मातीचा प्रकार":
+      case "उसाची पक्वता":
+        return (
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="cane-maturity-name">पक्वता प्रकार</Label>
+              <Input id="cane-maturity-name" placeholder="उदा. प्रकार १ (12 महिने)" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="parent-cane-variety">जोडलेली उसाची जात</Label>
+              <Select>
+                <SelectTrigger id="parent-cane-variety"><SelectValue placeholder="उसाची जात निवडा" /></SelectTrigger>
+                <SelectContent>
+                  {caneVarieties.map(v => <SelectItem key={v.id} value={v.name}>{v.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+      case "उसाचा प्रकार":
+        return (
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="cane-type-name">उसाच्या प्रकाराचे नाव</Label>
+              <Input id="cane-type-name" placeholder="उदा. रोप, लागवड" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="parent-cane-variety">जोडलेली उसाची जात</Label>
+              <Select>
+                <SelectTrigger id="parent-cane-variety"><SelectValue placeholder="उसाची जात निवडा" /></SelectTrigger>
+                <SelectContent>
+                  {caneVarieties.map(v => <SelectItem key={v.id} value={v.name}>{v.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+      case "सिंचनाचा प्रकार":
+      case "सिंचनाचा स्रोत":
+      case "सिंचन पद्धत":
+      case "लागवड पद्धत":
         return (
           <div className="grid gap-2">
-            <Label htmlFor="soil-type-name">मातीच्या प्रकाराचे नाव</Label>
-            <Input id="soil-type-name" placeholder="मातीच्या प्रकाराचे नाव प्रविष्ट करा" />
+            <Label htmlFor={`${entityType}-name`}>{entityType} नाव</Label>
+            <Input id={`${entityType}-name`} placeholder={`${entityType} नाव प्रविष्ट करा`} />
           </div>
         );
       default:
@@ -393,9 +558,18 @@ export default function SettingsPage() {
     { value: "states", label: "राज्य", dataKey: "states" as MasterDataKey },
     { value: "districts", label: "जिल्हा", dataKey: "districts" as MasterDataKey },
     { value: "talukas", label: "तालुका", dataKey: "talukas" as MasterDataKey },
+    { value: "circles", label: "सर्कल", dataKey: "circles" as MasterDataKey },
+    { value: "guts", label: "गट", dataKey: "guts" as MasterDataKey },
     { value: "villages", label: "गाव", dataKey: "villages" as MasterDataKey },
+    { value: "shivars", label: "शिवार", dataKey: "shivars" as MasterDataKey },
+    { value: "surveyNumbers", label: "सर्वेक्षण नंबर", dataKey: "surveyNumbers" as MasterDataKey },
+    { value: "caneVarieties", label: "उसाची जात", dataKey: "caneVarieties" as MasterDataKey },
+    { value: "caneMaturities", label: "उसाची पक्वता", dataKey: "caneMaturities" as MasterDataKey },
     { value: "caneTypes", label: "उसाचा प्रकार", dataKey: "caneTypes" as MasterDataKey },
-    { value: "soilTypes", label: "मातीचा प्रकार", dataKey: "soilTypes" as MasterDataKey },
+    { value: "irrigationTypes", label: "सिंचनाचा प्रकार", dataKey: "irrigationTypes" as MasterDataKey },
+    { value: "irrigationSources", label: "सिंचनाचा स्रोत", dataKey: "irrigationSources" as MasterDataKey },
+    { value: "irrigationMethods", label: "सिंचन पद्धत", dataKey: "irrigationMethods" as MasterDataKey },
+    { value: "plantationMethods", label: "लागवड पद्धत", dataKey: "plantationMethods" as MasterDataKey },
   ]
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -429,7 +603,7 @@ export default function SettingsPage() {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="states" className="w-full">
-          <TabsList className="overflow-x-auto w-full justify-start">
+          <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
             {masterDataTabs.map(tab => (
               <TabsTrigger key={tab.value} value={tab.value}>{tab.label}</TabsTrigger>
             ))}

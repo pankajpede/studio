@@ -196,7 +196,7 @@ const ImageUploader = ({
             <div className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 relative aspect-video">
                 <UploadCloud className="w-8 h-8 text-muted-foreground" />
                 <p className="mt-2 text-sm text-center text-muted-foreground">
-                    <span className="font-semibold">{capture ? 'फोटो काढा' : 'अपलोड करा'}</span>
+                    <span className="font-semibold">{capture ? 'फोटो काढा (Capture)' : 'अपलोड करा (Upload)'}</span>
                 </p>
                 <Input
                     id={id}
@@ -312,7 +312,7 @@ export default function NewFieldSurveyPage() {
 
     // State for media tab
     const [farmPhotos, setFarmPhotos] = React.useState<(File | null)[]>(Array(4).fill(null));
-    const farmPhotoLabels = ["शेताचे फोटो", "उसाची जात", "मातीचा प्रकार", "सिंचनाचा प्रकार"];
+    const farmPhotoLabels = ["शेताचे फोटो (Farm Photo)", "उसाची जात (Cane Variety)", "मातीचा प्रकार (Soil Type)", "सिंचनाचा प्रकार (Irrigation Type)"];
     const [farmerPhoto, setFarmerPhoto] = React.useState<File | null>(null);
     const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File | null>(null);
     const [audioNote, setAudioNote] = React.useState<File | null>(null);
@@ -325,8 +325,8 @@ export default function NewFieldSurveyPage() {
         window.scrollTo(0, 0);
         const currentIndex = tabs.indexOf(activeTab);
         toast({
-            title: "यशस्वी!",
-            description: "तुमचा डेटा यशस्वीरित्या जतन झाला आहे.",
+            title: "यशस्वी! (Success!)",
+            description: "तुमचा डेटा यशस्वीरित्या जतन झाला आहे. (Your data has been saved successfully.)",
         });
         if (currentIndex < tabs.length - 1) {
             setActiveTab(tabs[currentIndex + 1]);
@@ -337,8 +337,8 @@ export default function NewFieldSurveyPage() {
         // Logic for final submission
         console.log("Survey submitted!");
         toast({
-            title: "सर्वेक्षण सबमिट केले!",
-            description: "तुमचे सर्वेक्षण यशस्वीरित्या सबमिट झाले आहे.",
+            title: "सर्वेक्षण सबमिट केले! (Survey Submitted!)",
+            description: "तुमचे सर्वेक्षण यशस्वीरित्या सबमिट झाले आहे. (Your survey has been submitted successfully.)",
         });
         window.scrollTo(0, 0);
         router.push('/field-boy/dashboard');
@@ -384,14 +384,14 @@ export default function NewFieldSurveyPage() {
         if (mobile && mobile.length === 10) {
             setIsOtpSent(true);
             toast({
-                title: "ओटीपी पाठवला",
-                description: `ओटीपी ${mobile} वर पाठवला आहे.`,
+                title: "ओटीपी पाठवला (OTP Sent)",
+                description: `ओटीपी ${mobile} वर पाठवला आहे. (OTP has been sent to ${mobile}.)`,
             });
         } else {
             toast({
                 variant: "destructive",
-                title: "अवैध मोबाईल नंबर",
-                description: "कृपया १०-अंकी मोबाईल नंबर प्रविष्ट करा.",
+                title: "अवैध मोबाईल नंबर (Invalid Mobile Number)",
+                description: "कृपया १०-अंकी मोबाईल नंबर प्रविष्ट करा. (Please enter a 10-digit mobile number.)",
             });
         }
     };
@@ -401,14 +401,14 @@ export default function NewFieldSurveyPage() {
         if (otp === "1234") { // Mock OTP
             setIsOtpVerified(true);
             toast({
-                title: "यशस्वी!",
-                description: "ओटीपी यशस्वीरित्या सत्यापित झाला आहे.",
+                title: "यशस्वी! (Success!)",
+                description: "ओटीपी यशस्वीरित्या सत्यापित झाला आहे. (OTP has been verified successfully.)",
             });
         } else {
             toast({
                 variant: "destructive",
-                title: "अवैध ओटीपी",
-                description: "प्रविष्ट केलेला ओटीपी चुकीचा आहे.",
+                title: "अवैध ओटीपी (Invalid OTP)",
+                description: "प्रविष्ट केलेला ओटीपी चुकीचा आहे. (The entered OTP is incorrect.)",
             });
         }
     };
@@ -642,13 +642,13 @@ export default function NewFieldSurveyPage() {
                      <Label className="text-base font-medium">ओळखपत्र (Identification)</Label>
                      {documents.map((doc) => (
                          <div key={doc.id} className="grid grid-cols-1 gap-2">
-                             <div className="grid gap-1.5">
-                                 <Label htmlFor={`doc-type-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्राचा प्रकार</Label>
+                            <div className="grid gap-1.5">
+                                 <Label htmlFor={`doc-type-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्राचा प्रकार (Document Type)</Label>
                                  <Select
                                      value={doc.type}
                                      onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
                                  >
-                                     <SelectTrigger id={`doc-type-${doc.id}`}><SelectValue placeholder="ओळखपत्राचा प्रकार" /></SelectTrigger>
+                                     <SelectTrigger id={`doc-type-${doc.id}`}><SelectValue placeholder="ओळखपत्राचा प्रकार निवडा" /></SelectTrigger>
                                      <SelectContent>
                                          {getAvailableDocTypes(doc.type).map(docType => (
                                              <SelectItem key={docType.value} value={docType.value}>{docType.label}</SelectItem>
@@ -658,7 +658,7 @@ export default function NewFieldSurveyPage() {
                              </div>
                              <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-end">
                                  <div className="grid gap-1.5">
-                                      <Label htmlFor={`doc-number-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्र क्रमांक</Label>
+                                      <Label htmlFor={`doc-number-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्र क्रमांक (Document Number)</Label>
                                      <Input
                                          id={`doc-number-${doc.id}`}
                                          placeholder="ओळखपत्र क्रमांक"
@@ -732,12 +732,22 @@ export default function NewFieldSurveyPage() {
                     <Input id="area" type="number" placeholder="उदा. १.०" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="planting-type">पिकाचा प्रकार (Crop Type)</Label>
+                    <Label htmlFor="cane-variety">उसाची जात (Cane Variety)</Label>
                     <Select>
-                        <SelectTrigger id="planting-type"><SelectValue placeholder="पिकाचा प्रकार निवडा" /></SelectTrigger>
+                        <SelectTrigger id="cane-variety"><SelectValue placeholder="उसाची जात निवडा" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="plant">रोप</SelectItem>
-                            <SelectItem value="ratoon">खोडवा</SelectItem>
+                            <SelectItem value="variety-1">जात १</SelectItem>
+                            <SelectItem value="variety-2">जात २</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <div className="grid gap-2">
+                    <Label htmlFor="cane-maturity">उसाची पक्वता (Cane Maturity)</Label>
+                    <Select>
+                        <SelectTrigger id="cane-maturity"><SelectValue placeholder="उसाची पक्वता निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="early">लवकर</SelectItem>
+                            <SelectItem value="mid-late">मध्यम-उशिरा</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -746,19 +756,8 @@ export default function NewFieldSurveyPage() {
                     <Select>
                         <SelectTrigger id="cane-type"><SelectValue placeholder="उसाचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="adsali">अडसाली</SelectItem>
-                            <SelectItem value="preseasonal">पूर्व-हंगामी</SelectItem>
-                             <SelectItem value="suru">सुरू</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="soil-type">मातीचा प्रकार (Soil Type)</Label>
-                     <Select>
-                        <SelectTrigger id="soil-type"><SelectValue placeholder="मातीचा प्रकार निवडा" /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="black-cotton">काळी कापूस</SelectItem>
-                            <SelectItem value="red-loam">लाल चिकणमाती</SelectItem>
+                            <SelectItem value="type-1">प्रकार १</SelectItem>
+                            <SelectItem value="type-2">प्रकार २</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -769,7 +768,36 @@ export default function NewFieldSurveyPage() {
                         <SelectContent>
                             <SelectItem value="drip">ठिबक</SelectItem>
                             <SelectItem value="flood">प्रवाही</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <div className="grid gap-2">
+                    <Label htmlFor="irrigation-source">सिंचनाचा स्रोत (Irrigation Source)</Label>
+                    <Select>
+                        <SelectTrigger id="irrigation-source"><SelectValue placeholder="सिंचनाचा स्रोत निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="well">विहीर</SelectItem>
                             <SelectItem value="canal">कालवा</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <div className="grid gap-2">
+                    <Label htmlFor="irrigation-method">सिंचन पद्धत (Irrigation Method)</Label>
+                    <Select>
+                        <SelectTrigger id="irrigation-method"><SelectValue placeholder="सिंचन पद्धत निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="method-1">पद्धत १</SelectItem>
+                            <SelectItem value="method-2">पद्धत २</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="plantation-method">लागवड पद्धत (Plantation Method)</Label>
+                    <Select>
+                        <SelectTrigger id="plantation-method"><SelectValue placeholder="लागवड पद्धत निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="method-a">पद्धत अ</SelectItem>
+                            <SelectItem value="method-b">पद्धत ब</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -920,5 +948,3 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
-
-    

@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import type { Survey } from '@/app/dashboard/page';
 import { Skeleton } from './ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 const containerStyle = {
   width: '100%',
@@ -48,7 +49,16 @@ export default function SurveyMap({ surveys }: SurveyMapProps) {
   };
 
   if (loadError) {
-    return <div>नकाशे लोड करताना त्रुटी. कृपया तुमचा API की तपासा.</div>;
+    return (
+      <div className="h-full flex items-center justify-center p-4">
+        <Alert variant="destructive">
+          <AlertTitle>Google Maps Error</AlertTitle>
+          <AlertDescription>
+            The map could not be loaded. This is often due to an invalid API key, missing billing information, or the Google Maps JavaScript API not being enabled in your Google Cloud project. Please check your project configuration.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
   }
   
   if (!isLoaded) {
@@ -85,5 +95,3 @@ export default function SurveyMap({ surveys }: SurveyMapProps) {
       </GoogleMap>
   );
 }
-
-    

@@ -79,7 +79,16 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation }: FieldBoy
   });
 
   if (loadError) {
-    return <div className="p-4 text-center">नकाशे लोड करताना त्रुटी. कृपया तुमचा API की तपासा.</div>;
+    return (
+      <div className="h-full flex items-center justify-center p-4">
+        <Alert variant="destructive">
+          <AlertTitle>Google Maps Error</AlertTitle>
+          <AlertDescription>
+            The map could not be loaded. This is often due to an invalid API key, missing billing information, or the Google Maps JavaScript API not being enabled in your Google Cloud project. Please check your project configuration.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
   }
   
   if (!isLoaded || isFetching) {

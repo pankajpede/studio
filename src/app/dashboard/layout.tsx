@@ -43,12 +43,8 @@ export default function DashboardLayout({
         if(segments[1] === 'users' && segments[2] === 'new'){
             return 'नवीन वापरकर्ता तयार करा'
         }
-         if(segments[1] === 'surveys' && segments[2] === 'new'){
-            return 'नवीन शेत सर्वेक्षण'
-        }
         
         const segmentTranslations: { [key: string]: string } = {
-            'surveys': 'सर्वेक्षण',
             'users': 'वापरकर्ता व्यवस्थापन',
             'settings': 'सेटिंग्ज'
         };
@@ -81,14 +77,6 @@ export default function DashboardLayout({
                 <Link href="/dashboard">
                   <LayoutGrid />
                   <span>डॅशबोर्ड</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="सर्वेक्षण" isActive={pathname.startsWith('/dashboard/surveys')}>
-                <Link href="/dashboard/surveys">
-                  <ClipboardList />
-                  <span>सर्वेक्षण</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

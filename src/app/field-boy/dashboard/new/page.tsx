@@ -36,6 +36,7 @@ import FieldBoyMap from "@/components/field-boy-map"
 import Image from "next/image"
 import AudioRecorder from "@/components/audio-recorder"
 import { useToast } from "@/hooks/use-toast"
+import { Separator } from "@/components/ui/separator"
 
 const mockStates = [
     { value: "maharashtra", label: "महाराष्ट्र" },
@@ -563,7 +564,7 @@ export default function NewFieldSurveyPage() {
                 <div className="grid gap-2 md:col-span-2">
                     <div className="flex items-center justify-between">
                          <Label htmlFor="mobile">मोबाइल नंबर</Label>
-                         <Button variant="link" size="sm" onClick={handleSendOtp} disabled={isOtpSent}>
+                         <Button variant="link" size="sm" onClick={handleSendOtp} disabled={isOtpSent || !mobile}>
                             <Send className="mr-2 h-4 w-4"/>
                             ओटीपी पाठवा
                          </Button>
@@ -576,20 +577,17 @@ export default function NewFieldSurveyPage() {
                         <Label htmlFor="otp">ओटीपी</Label>
                         <div className="flex gap-2">
                             <Input id="otp" type="text" placeholder="ओटीपी प्रविष्ट करा" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={isOtpVerified} />
-                            <Button onClick={handleVerifyOtp} disabled={isOtpVerified}>
+                            <Button onClick={handleVerifyOtp} disabled={isOtpVerified || !otp}>
                                 {isOtpVerified ? <ShieldCheck /> : null}
                                 {isOtpVerified ? "सत्यापित" : "सत्यापित करा"}
                             </Button>
                         </div>
                     </div>
                 )}
-                <div className="grid gap-2">
-                    <Label htmlFor="passbook-name">पासबुक वरील नाव</Label>
-                    <Input id="passbook-name" placeholder="पासबुकनुसार नाव टाका" value={nameAsPerPassbook} onChange={(e) => setNameAsPerPassbook(e.target.value)} />
-                </div>
-                 <div className="md:col-span-2 grid gap-4">
-                     <Label>ओळखपत्र</Label>
-                     {documents.map((doc, index) => (
+                 <div className="md:col-span-2 space-y-4">
+                     <Separator />
+                     <Label className="text-base font-medium">ओळखपत्र</Label>
+                     {documents.map((doc) => (
                          <div key={doc.id} className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto_auto] gap-2 items-center">
                             <Select
                                 value={doc.type}
@@ -640,18 +638,28 @@ export default function NewFieldSurveyPage() {
                         </Button>
                      )}
                  </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="bank-name">बँकेचे नाव</Label>
-                    <Input id="bank-name" placeholder="बँकेचे नाव टाका" value={bankName} onChange={(e) => setBankName(e.target.value)} />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="account-number">खाते क्रमांक</Label>
-                    <Input id="account-number" placeholder="बँक खाते क्रमांक टाका" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="ifsc-code">IFSC कोड</Label>
-                    <Input id="ifsc-code" placeholder="IFSC कोड टाका" value={ifscCode} onChange={(e) => setIfscCode(e.target.value)} />
-                </div>
+                  <div className="md:col-span-2 space-y-4">
+                     <Separator />
+                     <Label className="text-base font-medium">बँक तपशील</Label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid gap-2">
+                             <Label htmlFor="passbook-name">पासबुक वरील नाव</Label>
+                            <Input id="passbook-name" placeholder="पासबुकनुसार नाव टाका" value={nameAsPerPassbook} onChange={(e) => setNameAsPerPassbook(e.target.value)} />
+                        </div>
+                         <div className="grid gap-2">
+                            <Label htmlFor="bank-name">बँकेचे नाव</Label>
+                            <Input id="bank-name" placeholder="बँकेचे नाव टाका" value={bankName} onChange={(e) => setBankName(e.target.value)} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="account-number">खाते क्रमांक</Label>
+                            <Input id="account-number" placeholder="बँक खाते क्रमांक टाका" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="ifsc-code">IFSC कोड</Label>
+                            <Input id="ifsc-code" placeholder="IFSC कोड टाका" value={ifscCode} onChange={(e) => setIfscCode(e.target.value)} />
+                        </div>
+                      </div>
+                 </div>
             </div>
           </TabsContent>
 
@@ -850,5 +858,3 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
-
-    

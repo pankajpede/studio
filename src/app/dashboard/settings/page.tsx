@@ -86,9 +86,9 @@ const surveyNumbers: MasterDataItem[] = [
 ]
 
 const caneVarieties: MasterDataItem[] = [
-  { id: "1", name: "को-८६०३२", category: "लवकर" },
-  { id: "2", name: "कोएम-०२६५", category: "मध्यम-उशिरा" },
-  { id: "3", name: "एमएस-१०००१", category: "लवकर" },
+  { id: "1", name: "को-८६०३२" },
+  { id: "2", name: "कोएम-०२६५" },
+  { id: "3", name: "एमएस-१०००१" },
 ]
 
 const caneMaturities: MasterDataItem[] = [
@@ -130,7 +130,7 @@ const masterDataMap = {
   villages: { data: villages, linkedEntity: "तालुका", category: null, entityName: "गाव", label: "गाव" },
   shivars: { data: shivars, linkedEntity: "गाव", category: null, entityName: "शिवार", label: "शिवार" },
   surveyNumbers: { data: surveyNumbers, linkedEntity: "शिवार", category: null, entityName: "सर्वेक्षण नंबर", label: "सर्वेक्षण नंबर" },
-  caneVarieties: { data: caneVarieties, linkedEntity: null, category: "पक्वता श्रेणी", entityName: "उसाची जात", label: "उसाची जात" },
+  caneVarieties: { data: caneVarieties, linkedEntity: null, category: null, entityName: "उसाची जात", label: "उसाची जात" },
   caneMaturities: { data: caneMaturities, linkedEntity: "उसाची जात", category: null, entityName: "उसाची पक्वता", label: "उसाची पक्वता" },
   caneTypes: { data: caneTypes, linkedEntity: "उसाची जात", category: null, entityName: "उसाचा प्रकार", label: "उसाचा प्रकार" },
   irrigationTypes: { data: irrigationTypes, linkedEntity: null, category: null, entityName: "सिंचनाचा प्रकार", label: "सिंचनाचा प्रकार" },
@@ -457,22 +457,9 @@ function MasterDataModal({
         );
       case "उसाची जात":
         return (
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="cane-variety-name">उसाच्या जातीचे नाव</Label>
-              <Input id="cane-variety-name" placeholder="उसाच्या जातीचे नाव प्रविष्ट करा" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="maturity-category">पक्वता श्रेणी</Label>
-              <Select>
-                <SelectTrigger id="maturity-category"><SelectValue placeholder="श्रेणी निवडा" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Early">लवकर</SelectItem>
-                  <SelectItem value="Mid-late">मध्यम-उशिरा</SelectItem>
-                  <SelectItem value="Late">उशिरा</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="grid gap-2">
+            <Label htmlFor="cane-variety-name">उसाच्या जातीचे नाव</Label>
+            <Input id="cane-variety-name" placeholder="उसाच्या जातीचे नाव प्रविष्ट करा" />
           </div>
         );
       case "उसाची पक्वता":
@@ -608,5 +595,3 @@ export default function SettingsPage() {
     </Card>
   )
 }
-
-    

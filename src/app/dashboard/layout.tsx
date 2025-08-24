@@ -14,7 +14,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar"
 import { UserNav } from "@/components/user-nav"
-import { Bell, BarChart3, ChevronLeft, ClipboardList, LayoutGrid, Leaf, Settings, Users } from "lucide-react"
+import { Bell, BarChart3, ChevronLeft, ClipboardList, LayoutGrid, Leaf, Settings, Users, Map } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { usePathname } from "next/navigation"
@@ -46,7 +46,8 @@ export default function DashboardLayout({
         
         const segmentTranslations: { [key: string]: string } = {
             'users': 'वापरकर्ता व्यवस्थापन',
-            'settings': 'सेटिंग्ज'
+            'settings': 'सेटिंग्ज',
+            'map': 'सर्वेक्षण नकाशा'
         };
         
         return segmentTranslations[segments[1]] || capitalize(segments[1]);
@@ -77,6 +78,14 @@ export default function DashboardLayout({
                 <Link href="/dashboard">
                   <LayoutGrid />
                   <span>डॅशबोर्ड</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="सर्वेक्षण नकाशा" isActive={pathname.startsWith('/dashboard/map')}>
+                <Link href="/dashboard/map">
+                  <Map />
+                  <span>सर्वेक्षण नकाशा</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

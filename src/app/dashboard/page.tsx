@@ -856,19 +856,6 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 gap-4">
         <SurveyDataTable data={surveys} isLoading={isLoading} />
       </div>
-
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-headline">सर्वेक्षण क्षेत्र नकाशा</CardTitle>
-          <CardDescription>लातूर, महाराष्ट्र मधील सर्वेक्षण घनतेचे दृश्य प्रतिनिधित्व.</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <div className="w-full h-96 rounded-lg overflow-hidden relative bg-muted flex items-center justify-center">
-                 <SurveyMap surveys={surveys} />
-            </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }

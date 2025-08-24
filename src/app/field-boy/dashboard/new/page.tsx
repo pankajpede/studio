@@ -281,6 +281,7 @@ export default function NewFieldSurveyPage() {
     const [gut, setGut] = React.useState("");
     const [village, setVillage] = React.useState("");
     const [partyName, setPartyName] = React.useState("");
+    const [growerType, setGrowerType] = React.useState("");
 
     // State for farmer info tab
     const [mobile, setMobile] = React.useState("");
@@ -493,7 +494,7 @@ export default function NewFieldSurveyPage() {
                         disabled={!gut}
                     />
                 </div>
-                 <div className="grid gap-2 md:col-span-2">
+                <div className="grid gap-2">
                     <Label htmlFor="party-name">शेतकरी (Party Name)</Label>
                     <Combobox
                         options={mockFarmers}
@@ -503,6 +504,16 @@ export default function NewFieldSurveyPage() {
                         searchPlaceholder="शेतकरी शोधा..."
                         disabled={!village}
                     />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="grower-type">उत्पादक प्रकार</Label>
+                    <Select value={growerType} onValueChange={setGrowerType} disabled={!partyName}>
+                        <SelectTrigger id="grower-type"><SelectValue placeholder="उत्पादक प्रकार निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="member">सभासद</SelectItem>
+                            <SelectItem value="non-member">बिगर सभासद</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
           </TabsContent>

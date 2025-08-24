@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/tabs"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck } from "lucide-react"
+import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck, CalendarIcon } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
@@ -37,6 +37,8 @@ import Image from "next/image"
 import AudioRecorder from "@/components/audio-recorder"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
+import { Calendar } from "@/components/ui/calendar"
+import { format } from "date-fns"
 
 const mockStates = [
     { value: "maharashtra", label: "महाराष्ट्र" },
@@ -297,6 +299,7 @@ export default function NewFieldSurveyPage() {
     const [growerType, setGrowerType] = React.useState("");
     const [sabNumber, setSabNumber] = React.useState("");
     const [khataNumber, setKhataNumber] = React.useState("");
+    const [plantationDate, setPlantationDate] = React.useState<Date>();
 
     // State for farmer info tab
     const [mobile, setMobile] = React.useState("");
@@ -656,7 +659,7 @@ export default function NewFieldSurveyPage() {
                                      </SelectContent>
                                  </Select>
                              </div>
-                             <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-end">
+                             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-2 items-end">
                                  <div className="grid gap-1.5">
                                       <Label htmlFor={`doc-number-${doc.id}`} className="text-xs text-muted-foreground">ओळखपत्र क्रमांक (Document Number)</Label>
                                      <Input
@@ -730,6 +733,31 @@ export default function NewFieldSurveyPage() {
                 <div className="grid gap-2">
                     <Label htmlFor="area">क्षेत्र (हेक्टर) (Area in Hectare)</Label>
                     <Input id="area" type="number" placeholder="उदा. १.०" />
+                </div>
+                 <div className="grid gap-2">
+                    <Label>लागवड तारीख (Plantation Date)</Label>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                        <Button
+                            variant={"outline"}
+                            className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !plantationDate && "text-muted-foreground"
+                            )}
+                        >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {plantationDate ? format(plantationDate, "PPP") : <span>एक तारीख निवडा</span>}
+                        </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                        <Calendar
+                            mode="single"
+                            selected={plantationDate}
+                            onSelect={setPlantationDate}
+                            initialFocus
+                        />
+                        </PopoverContent>
+                    </Popover>
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="cane-variety">उसाची जात (Cane Variety)</Label>

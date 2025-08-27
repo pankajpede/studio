@@ -9,7 +9,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -99,10 +98,10 @@ export default function LoginPage() {
             </Button>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-center text-xs text-muted-foreground">
-            <p>Developed & Maintained by Onella Soft</p>
-        </CardFooter>
       </Card>
+      <div className="fixed bottom-4 left-0 right-0 text-center text-xs text-muted-foreground">
+        <p>Developed & Maintained by Onella Soft</p>
+      </div>
     </div>
   )
 }

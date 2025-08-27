@@ -291,7 +291,6 @@ export default function NewFieldSurveyPage() {
     const [mobile, setMobile] = React.useState("");
     const [linkNumber, setLinkNumber] = React.useState("");
     const [napNumber, setNapNumber] = React.useState("");
-    const [nameAsPerPassbook, setNameAsPerPassbook] = React.useState("");
     const [bankName, setBankName] = React.useState("");
     const [branchName, setBranchName] = React.useState("");
     const [accountNumber, setAccountNumber] = React.useState("");
@@ -340,7 +339,6 @@ export default function NewFieldSurveyPage() {
     React.useEffect(() => {
         if (selectedFarmer) {
             setMobile(selectedFarmer.mobile);
-            setNameAsPerPassbook(selectedFarmer.nameAsPerPassbook);
             setBankName(selectedFarmer.bankName);
             setBranchName(selectedFarmer.branchName);
             setAccountNumber(selectedFarmer.accountNumber);
@@ -353,7 +351,6 @@ export default function NewFieldSurveyPage() {
         } else {
             // Clear fields if no farmer is selected
             setMobile("");
-            setNameAsPerPassbook("");
             setBankName("");
             setBranchName("");
             setAccountNumber("");
@@ -626,10 +623,6 @@ export default function NewFieldSurveyPage() {
                      <Separator />
                      <Label className="text-base font-medium">बँक तपशील (Bank Details)</Label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="grid gap-2">
-                             <Label htmlFor="passbook-name">पासबुक वरील नाव (Name as per Passbook)</Label>
-                            <Input id="passbook-name" placeholder="पासबुकनुसार नाव टाका" value={nameAsPerPassbook} onChange={(e) => setNameAsPerPassbook(e.target.value)} />
-                        </div>
                          <div className="grid gap-2">
                             <Label htmlFor="bank-name">बँकेचे नाव (Bank Name)</Label>
                             <Input id="bank-name" placeholder="बँकेचे नाव टाका" value={bankName} onChange={(e) => setBankName(e.target.value)} />

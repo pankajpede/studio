@@ -24,7 +24,7 @@ const LegalContent = ({ title, children }: { title: string, children: React.Reac
             <DialogTitle className="font-headline text-2xl">{title}</DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-full pr-4 -mr-4">
-            <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground text-justify">
+            <div className="prose prose-sm dark:prose-invert max-w-none text-foreground/80 text-justify">
                 {children}
             </div>
         </ScrollArea>

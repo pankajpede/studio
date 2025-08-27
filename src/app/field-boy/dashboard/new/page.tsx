@@ -305,9 +305,6 @@ export default function NewFieldSurveyPage() {
 
     // State for farmer info tab
     const [mobile, setMobile] = React.useState("");
-    const [otp, setOtp] = React.useState("");
-    const [isOtpSent, setIsOtpSent] = React.useState(false);
-    const [isOtpVerified, setIsOtpVerified] = React.useState(false);
     const [documents, setDocuments] = React.useState<Document[]>([{ id: 1, type: '', number: '', file: null }]);
     const [nameAsPerPassbook, setNameAsPerPassbook] = React.useState("");
     const [bankName, setBankName] = React.useState("");
@@ -378,9 +375,6 @@ export default function NewFieldSurveyPage() {
             setSabNumber("");
             setKhataNumber("");
         }
-        setIsOtpSent(false);
-        setIsOtpVerified(false);
-        setOtp("");
     }, [partyName]);
 
     React.useEffect(() => {
@@ -400,41 +394,6 @@ export default function NewFieldSurveyPage() {
             setCaneMaturityDate(null);
         }
     }, [caneType, plantationDate]);
-
-    const handleSendOtp = () => {
-        // Simulate sending OTP
-        if (mobile && mobile.length === 10) {
-            setIsOtpSent(true);
-            toast({
-                title: "ओटीपी पाठवला (OTP Sent)",
-                description: `ओटीपी ${mobile} वर पाठवला आहे. (OTP has been sent to ${mobile}.)`,
-            });
-        } else {
-            toast({
-                variant: "destructive",
-                title: "अवैध मोबाईल नंबर (Invalid Mobile Number)",
-                description: "कृपया १०-अंकी मोबाईल नंबर प्रविष्ट करा. (Please enter a 10-digit mobile number.)",
-            });
-        }
-    };
-
-    const handleVerifyOtp = () => {
-        // Simulate verifying OTP
-        if (otp === "1234") { // Mock OTP
-            setIsOtpVerified(true);
-            toast({
-                title: "यशस्वी! (Success!)",
-                description: "ओटीपी यशस्वीरित्या सत्यापित झाला आहे. (OTP has been verified successfully.)",
-            });
-        } else {
-            toast({
-                variant: "destructive",
-                title: "अवैध ओटीपी (Invalid OTP)",
-                description: "प्रविष्ट केलेला ओटीपी चुकीचा आहे. (The entered OTP is incorrect.)",
-            });
-        }
-    };
-
 
     const getBreadcrumb = () => {
         const stateLabel = selectedState ? `${mockStates.find(s => s.value === selectedState)?.label}` : '';
@@ -636,28 +595,9 @@ export default function NewFieldSurveyPage() {
              <div className="flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="grid gap-2 md:col-span-2">
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="mobile">मोबाइल नंबर (Mobile Number)</Label>
-                            <Button variant="link" size="sm" onClick={handleSendOtp} disabled={isOtpSent || !mobile}>
-                                <Send className="mr-2 h-4 w-4"/>
-                                ओटीपी पाठवा (Send OTP)
-                            </Button>
-                        </div>
+                        <Label htmlFor="mobile">मोबाइल नंबर (Mobile Number)</Label>
                         <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" value={mobile} onChange={(e) => setMobile(e.target.value)} />
                     </div>
-
-                    {isOtpSent && (
-                        <div className="grid gap-2 md:col-span-2">
-                            <Label htmlFor="otp">ओटीपी (OTP)</Label>
-                            <div className="flex gap-2">
-                                <Input id="otp" type="text" placeholder="ओटीपी प्रविष्ट करा" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={isOtpVerified} />
-                                <Button onClick={handleVerifyOtp} disabled={isOtpVerified || !otp}>
-                                    {isOtpVerified ? <ShieldCheck /> : null}
-                                    {isOtpVerified ? "सत्यापित (Verified)" : "सत्यापित करा (Verify)"}
-                                </Button>
-                            </div>
-                        </div>
-                    )}
                 </div>
                  <div className="space-y-4">
                      <Separator />

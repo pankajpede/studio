@@ -623,11 +623,11 @@ export default function NewFieldSurveyPage() {
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="sab-number">सब नंबर (Sab Number)</Label>
-                    <Input id="sab-number" placeholder="सब नंबर टाका" value={sabNumber} disabled />
+                    <Input id="sab-number" placeholder="सब नंबर टाका" value={sabNumber} onChange={(e) => setSabNumber(e.target.value)} />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="khata-number">खाता नंबर (Khata Number)</Label>
-                    <Input id="khata-number" placeholder="खाता नंबर टाका" value={khataNumber} disabled />
+                    <Input id="khata-number" placeholder="खाता नंबर टाका" value={khataNumber} onChange={(e) => setKhataNumber(e.target.value)} />
                 </div>
             </div>
           </TabsContent>

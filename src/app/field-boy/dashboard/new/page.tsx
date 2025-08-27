@@ -781,7 +781,7 @@ export default function NewFieldSurveyPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
                         <ImageUploader
                             id="farmer-photo"
                             label="शेतकरी फोटो (Farmer Photo)"
@@ -803,7 +803,8 @@ export default function NewFieldSurveyPage() {
                             onFileChange={setSaatBaaraPhoto}
                             capture="environment"
                         />
-                    
+                    </div>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                         <div className="grid gap-2">
                             <Label htmlFor="audio-note" className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट (पर्यायी) (Audio Note - Optional)</Label>
                             <AudioRecorder
@@ -914,3 +915,5 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    

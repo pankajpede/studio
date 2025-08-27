@@ -202,8 +202,7 @@ export default function LoginPage() {
       </div>
 
        <div className="fixed bottom-4 left-0 right-0 text-center text-xs text-muted-foreground">
-            <p>Developed & Maintained by Onella Soft</p>
-            <div className="flex items-center justify-center gap-2 mt-1">
+            <div className="flex items-center justify-center gap-2 mb-1">
                  <Dialog>
                     <DialogTrigger asChild>
                         <Button variant="link" className="text-xs h-auto p-0">Terms</Button>
@@ -222,6 +221,7 @@ export default function LoginPage() {
                     </LegalContent>
                 </Dialog>
             </div>
+            <p>Developed & Maintained by Onella Soft</p>
         </div>
     </>
   )

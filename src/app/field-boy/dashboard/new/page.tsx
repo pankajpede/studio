@@ -112,20 +112,6 @@ const mockFarmers = [
     { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", docs: [{type: 'voter-id', number: 'EFG0123456'}], nameAsPerPassbook: "संदीप सूर्यवंशी", bankName: "सिटी युनियन बँक", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-0123", ifsc: "CIUB0000123", sabNumber: "SAB-T020", khataNumber: "KH-585960" },
 ];
 
-type DocumentType = 'voter-id' | 'pan' | 'driving-license';
-const documentTypes: {value: DocumentType, label: string}[] = [
-    {value: 'voter-id', label: 'मतदार ओळखपत्र'},
-    {value: 'pan', label: 'पॅन कार्ड'},
-    {value: 'driving-license', label: 'ड्रायविंग लायसन्स'},
-];
-
-type Document = {
-    id: number;
-    type: DocumentType | '';
-    number: string;
-    file: File | null;
-}
-
 type OtherMedia = {
     id: number;
     name: string;
@@ -305,7 +291,8 @@ export default function NewFieldSurveyPage() {
 
     // State for farmer info tab
     const [mobile, setMobile] = React.useState("");
-    const [documents, setDocuments] = React.useState<Document[]>([{ id: 1, type: '', number: '', file: null }]);
+    const [linkNumber, setLinkNumber] = React.useState("");
+    const [napNumber, setNapNumber] = React.useState("");
     const [nameAsPerPassbook, setNameAsPerPassbook] = React.useState("");
     const [bankName, setBankName] = React.useState("");
     const [branchName, setBranchName] = React.useState("");
@@ -357,23 +344,20 @@ export default function NewFieldSurveyPage() {
             setIfscCode(selectedFarmer.ifsc)
             setSabNumber(selectedFarmer.sabNumber);
             setKhataNumber(selectedFarmer.khataNumber);
-            setDocuments(selectedFarmer.docs.map((doc, index) => ({
-                id: index + 1,
-                type: doc.type as DocumentType,
-                number: doc.number,
-                file: null
-            })))
+            setLinkNumber(""); // Clear these for new farmer selection
+            setNapNumber("");
         } else {
             // Clear fields if no farmer is selected
             setMobile("");
             setNameAsPerPassbook("");
-            setDocuments([{ id: 1, type: '', number: '', file: null }]);
             setBankName("");
             setBranchName("");
             setAccountNumber("");
             setIfscCode("");
             setSabNumber("");
             setKhataNumber("");
+            setLinkNumber("");
+            setNapNumber("");
         }
     }, [partyName]);
 
@@ -404,26 +388,7 @@ export default function NewFieldSurveyPage() {
 
         return `${stateLabel}${districtLabel}${talukaLabel}${villageLabel}${partyNameLabel}`;
     };
-    
-    const handleDocumentChange = (id: number, field: keyof Document, value: string | File | null) => {
-        setDocuments(documents.map(doc => doc.id === id ? { ...doc, [field]: value } : doc));
-    };
-
-    const handleAddDocument = () => {
-        if (documents.length < documentTypes.length) {
-            setDocuments([...documents, { id: Date.now(), type: '', number: '', file: null }]);
-        }
-    };
-
-    const handleRemoveDocument = (id: number) => {
-        setDocuments(documents.filter(doc => doc.id !== id));
-    };
-    
-    const getAvailableDocTypes = (currentDocType: DocumentType | '') => {
-        const selectedTypes = documents.map(d => d.type).filter(t => t && t !== currentDocType);
-        return documentTypes.filter(type => !selectedTypes.includes(type.value));
-    };
-        
+            
     const handleOtherMediaChange = (id: number, field: keyof OtherMedia, value: string | File | null) => {
         setOtherMedia(otherMedia.map(item => item.id === id ? { ...item, [field]: value } : item));
     };
@@ -594,70 +559,19 @@ export default function NewFieldSurveyPage() {
           <TabsContent value="farmer-info" className="pt-6">
              <div className="flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="grid gap-2 md:col-span-2">
+                    <div className="grid gap-2">
                         <Label htmlFor="mobile">मोबाइल नंबर (Mobile Number)</Label>
                         <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" value={mobile} onChange={(e) => setMobile(e.target.value)} />
                     </div>
+                     <div className="grid gap-2">
+                        <Label htmlFor="link-number">लिंक नंबर (Link Number)</Label>
+                        <Input id="link-number" placeholder="लिंक नंबर टाका" value={linkNumber} onChange={(e) => setLinkNumber(e.target.value)} />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="nap-number">NAP नंबर (NAP Number)</Label>
+                        <Input id="nap-number" placeholder="NAP नंबर टाका" value={napNumber} onChange={(e) => setNapNumber(e.target.value)} />
+                    </div>
                 </div>
-                 <div className="space-y-4">
-                     <Separator />
-                     <Label className="text-base font-medium">ओळखपत्र (Identification)</Label>
-                     {documents.map((doc) => (
-                        <div key={doc.id} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto_auto] gap-4 items-end">
-                            <div className="grid gap-2">
-                                 <Label htmlFor={`doc-type-${doc.id}`} className="text-sm">ओळखपत्राचा प्रकार (Document Type)</Label>
-                                 <Select
-                                     value={doc.type}
-                                     onValueChange={(value: DocumentType) => handleDocumentChange(doc.id, 'type', value)}
-                                 >
-                                     <SelectTrigger id={`doc-type-${doc.id}`}><SelectValue placeholder="ओळखपत्राचा प्रकार निवडा" /></SelectTrigger>
-                                     <SelectContent>
-                                         {getAvailableDocTypes(doc.type).map(docType => (
-                                             <SelectItem key={docType.value} value={docType.value}>{docType.label}</SelectItem>
-                                         ))}
-                                     </SelectContent>
-                                 </Select>
-                             </div>
-                             <div className="grid gap-2">
-                                  <Label htmlFor={`doc-number-${doc.id}`} className="text-sm">ओळखपत्र क्रमांक (Document Number)</Label>
-                                 <Input
-                                     id={`doc-number-${doc.id}`}
-                                     placeholder="ओळखपत्र क्रमांक"
-                                     value={doc.number}
-                                     onChange={(e) => handleDocumentChange(doc.id, 'number', e.target.value)}
-                                 />
-                             </div>
-                            <Input
-                                id={`doc-file-${doc.id}`}
-                                type="file"
-                                className="sr-only"
-                                onChange={(e) => {
-                                    handleDocumentChange(doc.id, 'file', e.target.files ? e.target.files[0] : null);
-                                }}
-                            />
-                            <Button asChild variant="outline" size="icon">
-                                <Label htmlFor={`doc-file-${doc.id}`} className="cursor-pointer">
-                                    <UploadCloud className="h-4 w-4"/>
-                                </Label>
-                            </Button>
-                             {documents.length > 1 && (
-                            <Button variant="ghost" size="icon" onClick={() => handleRemoveDocument(doc.id)}>
-                                <MinusCircle className="text-destructive" />
-                            </Button>
-                        )}
-                        {doc.file && (
-                            <div className="md:col-span-4">
-                                <FileUploadItem file={doc.file} onRemove={() => handleDocumentChange(doc.id, 'file', null)} />
-                             </div>
-                        )}
-                         </div>
-                     ))}
-                     {documents.length < documentTypes.length && (
-                        <Button variant="outline" onClick={handleAddDocument} className="w-full sm:w-auto justify-self-start" disabled={documents.length >= documentTypes.length}>
-                           <PlusCircle className="mr-2"/> आणखी जोडा (Add More)
-                        </Button>
-                     )}
-                 </div>
                   <div className="space-y-4">
                      <Separator />
                      <Label className="text-base font-medium">बँक तपशील (Bank Details)</Label>
@@ -945,3 +859,5 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+    

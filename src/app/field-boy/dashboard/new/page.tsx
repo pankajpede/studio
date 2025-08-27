@@ -306,6 +306,7 @@ export default function NewFieldSurveyPage() {
     const farmPhotoLabels = ["शेताचे फोटो (Farm Photo)", "उसाची जात (Cane Variety)", "मातीचा प्रकार (Soil Type)", "सिंचनाचा प्रकार (Irrigation Type)"];
     const [farmerPhoto, setFarmerPhoto] = React.useState<File | null>(null);
     const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File | null>(null);
+    const [saatBaaraPhoto, setSaatBaaraPhoto] = React.useState<File | null>(null);
     const [audioNote, setAudioNote] = React.useState<File | null>(null);
     const [otherMedia, setOtherMedia] = React.useState<OtherMedia[]>([{ id: 1, name: '', file: null }]);
 
@@ -620,7 +621,7 @@ export default function NewFieldSurveyPage() {
                     </div>
                 </div>
                   <div className="space-y-4">
-                     <div className="relative">
+                    <div className="relative">
                         <Separator />
                         <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-card px-2">
                             <span className="text-sm font-medium text-muted-foreground">बँक तपशील (Bank Details)</span>
@@ -794,6 +795,13 @@ export default function NewFieldSurveyPage() {
                             file={fieldBoyPhoto}
                             onFileChange={setFieldBoyPhoto}
                             capture="user"
+                        />
+                         <ImageUploader
+                            id="saat-baara-photo"
+                            label="७/१२ कागदपत्र (7/12 Document)"
+                            file={saatBaaraPhoto}
+                            onFileChange={setSaatBaaraPhoto}
+                            capture="environment"
                         />
                     
                         <div className="grid gap-2">

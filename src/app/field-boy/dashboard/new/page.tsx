@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/tabs"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck, CalendarIcon } from "lucide-react"
+import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck, CalendarIcon, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
@@ -299,6 +299,8 @@ export default function NewFieldSurveyPage() {
     const [sabNumber, setSabNumber] = React.useState("");
     const [khataNumber, setKhataNumber] = React.useState("");
     const [mobileUsageCount, setMobileUsageCount] = React.useState(0);
+    const [isVerifyingMobile, setIsVerifyingMobile] = React.useState(false);
+
 
     // State for media tab
     const [farmPhotos, setFarmPhotos] = React.useState<(File | null)[]>(Array(4).fill(null));
@@ -373,13 +375,17 @@ export default function NewFieldSurveyPage() {
             });
             return;
         }
-        // In a real app, this would be an API call.
-        const usedCount = Math.floor(Math.random() * 5) + 1;
-        setMobileUsageCount(usedCount);
-        toast({
-            title: "मोबाइल सत्यापित",
-            description: `हा नंबर ${usedCount} वेळा वापरला गेला आहे.`
-        })
+        setIsVerifyingMobile(true);
+        // Simulate an API call
+        setTimeout(() => {
+            const usedCount = Math.floor(Math.random() * 5) + 1;
+            setMobileUsageCount(usedCount);
+            setIsVerifyingMobile(false);
+            toast({
+                title: "मोबाइल सत्यापित",
+                description: `हा नंबर ${usedCount} वेळा वापरला गेला आहे.`
+            })
+        }, 3000);
     };
 
 
@@ -589,9 +595,21 @@ export default function NewFieldSurveyPage() {
                             )}
                         </div>
                         <div className="relative flex items-center">
-                            <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" value={mobile} onChange={(e) => setMobile(e.target.value)} className="pr-10" />
-                             <Button type="button" variant="ghost" size="icon" className="absolute right-1 h-8 w-8" onClick={handleVerifyMobile}>
-                                <ShieldCheck className="h-5 w-5 text-muted-foreground" />
+                            <Input
+                                id="mobile"
+                                type="tel"
+                                placeholder={isVerifyingMobile ? "तपासत आहे..." : "मोबाइल नंबर टाका"}
+                                value={mobile}
+                                onChange={(e) => setMobile(e.target.value)}
+                                className="pr-10"
+                                disabled={isVerifyingMobile}
+                            />
+                             <Button type="button" variant="ghost" size="icon" className="absolute right-1 h-8 w-8" onClick={handleVerifyMobile} disabled={isVerifyingMobile}>
+                                {isVerifyingMobile ? (
+                                    <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
+                                ) : (
+                                    <ShieldCheck className="h-5 w-5 text-muted-foreground" />
+                                )}
                             </Button>
                         </div>
                     </div>

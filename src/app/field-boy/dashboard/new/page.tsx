@@ -283,8 +283,6 @@ export default function NewFieldSurveyPage() {
     const [surveyNumber, setSurveyNumber] = React.useState("");
     const [partyName, setPartyName] = React.useState("");
     const [growerType, setGrowerType] = React.useState("");
-    const [sabNumber, setSabNumber] = React.useState("");
-    const [khataNumber, setKhataNumber] = React.useState("");
     const [plantationDate, setPlantationDate] = React.useState<Date>();
     const [caneType, setCaneType] = React.useState('');
     const [caneMaturityDate, setCaneMaturityDate] = React.useState<Date | null>(null);
@@ -298,6 +296,9 @@ export default function NewFieldSurveyPage() {
     const [branchName, setBranchName] = React.useState("");
     const [accountNumber, setAccountNumber] = React.useState("");
     const [ifscCode, setIfscCode] = React.useState("");
+    const [sabNumber, setSabNumber] = React.useState("");
+    const [khataNumber, setKhataNumber] = React.useState("");
+    const [mobileUsageCount, setMobileUsageCount] = React.useState(0);
 
     // State for media tab
     const [farmPhotos, setFarmPhotos] = React.useState<(File | null)[]>(Array(4).fill(null));
@@ -346,6 +347,7 @@ export default function NewFieldSurveyPage() {
             setKhataNumber(selectedFarmer.khataNumber);
             setLinkNumber(""); // Clear these for new farmer selection
             setNapNumber("");
+            setMobileUsageCount(0); // Reset count on farmer change
         } else {
             // Clear fields if no farmer is selected
             setMobile("");
@@ -358,8 +360,28 @@ export default function NewFieldSurveyPage() {
             setKhataNumber("");
             setLinkNumber("");
             setNapNumber("");
+            setMobileUsageCount(0);
         }
     }, [partyName]);
+    
+    const handleVerifyMobile = () => {
+        if (!mobile || mobile.length < 10) {
+            toast({
+                variant: "destructive",
+                title: "अवैध मोबाइल नंबर",
+                description: "कृपया वैध १०-अंकी मोबाइल नंबर प्रविष्ट करा."
+            });
+            return;
+        }
+        // In a real app, this would be an API call.
+        const usedCount = Math.floor(Math.random() * 5) + 1;
+        setMobileUsageCount(usedCount);
+        toast({
+            title: "मोबाइल सत्यापित",
+            description: `हा नंबर ${usedCount} वेळा वापरला गेला आहे.`
+        })
+    };
+
 
     React.useEffect(() => {
         if (caneType && plantationDate) {
@@ -560,8 +582,18 @@ export default function NewFieldSurveyPage() {
              <div className="flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="mobile">मोबाइल नंबर (Mobile Number)</Label>
-                        <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" value={mobile} onChange={(e) => setMobile(e.target.value)} />
+                       <div className="flex justify-between items-center">
+                            <Label htmlFor="mobile">मोबाइल नंबर (Mobile Number)</Label>
+                            {mobileUsageCount > 0 && (
+                                <span className="text-sm font-medium text-muted-foreground">{mobileUsageCount}/5</span>
+                            )}
+                        </div>
+                        <div className="relative flex items-center">
+                            <Input id="mobile" type="tel" placeholder="मोबाइल नंबर टाका" value={mobile} onChange={(e) => setMobile(e.target.value)} className="pr-10" />
+                             <Button type="button" variant="ghost" size="icon" className="absolute right-1 h-8 w-8" onClick={handleVerifyMobile}>
+                                <ShieldCheck className="h-5 w-5 text-muted-foreground" />
+                            </Button>
+                        </div>
                     </div>
                      <div className="grid gap-2">
                         <Label htmlFor="link-number">लिंक नंबर (Link Number)</Label>

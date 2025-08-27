@@ -201,28 +201,28 @@ export default function LoginPage() {
         </Card>
       </div>
 
-       <div className="fixed bottom-4 left-0 right-0 text-center text-xs text-muted-foreground">
-            <div className="flex items-center justify-center gap-2 mb-1">
-                 <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="link" className="text-xs h-auto p-0">Terms</Button>
-                    </DialogTrigger>
-                    <LegalContent title="Terms of Service">
-                        <TermsOfService />
-                    </LegalContent>
-                </Dialog>
-                <span>|</span>
-                 <Dialog>
-                    <DialogTrigger asChild>
-                       <Button variant="link" className="text-xs h-auto p-0">Policy</Button>
-                    </DialogTrigger>
-                    <LegalContent title="Privacy Policy">
-                        <PrivacyPolicy />
-                    </LegalContent>
-                </Dialog>
-            </div>
-            <p>Developed & Maintained by Onella Soft</p>
+      <div className="fixed bottom-4 left-0 right-0 text-center text-xs text-muted-foreground">
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="link" className="text-xs h-auto p-0">Terms</Button>
+            </DialogTrigger>
+            <LegalContent title="Terms of Service">
+              <TermsOfService />
+            </LegalContent>
+          </Dialog>
+          <span>|</span>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="link" className="text-xs h-auto p-0">Policy</Button>
+            </DialogTrigger>
+            <LegalContent title="Privacy Policy">
+              <PrivacyPolicy />
+            </LegalContent>
+          </Dialog>
         </div>
+        <p>Developed & Maintained by Onella Soft</p>
+      </div>
     </>
   )
 }

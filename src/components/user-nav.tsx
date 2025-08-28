@@ -24,7 +24,7 @@ import { usePathname } from "next/navigation"
 export function UserNav() {
   const pathname = usePathname();
   const isFieldBoy = pathname.startsWith('/field-boy');
-  const isOverseer = pathname.startsWith('/overseer');
+  const isOversheer = pathname.startsWith('/oversheer');
   const isAdmin = pathname.startsWith('/dashboard');
 
   let userName: string;
@@ -37,11 +37,11 @@ export function UserNav() {
     userEmail = "sunil.pawar@example.com";
     userFallback = "सुप";
     profileLink = "/field-boy/profile";
-  } else if (isOverseer) {
+  } else if (isOversheer) {
     userName = "संजय गायकवाड";
     userEmail = "sanjay.gaikwad@example.com";
     userFallback = "संग";
-    profileLink = "/overseer/profile";
+    profileLink = "/oversheer/profile";
   } else {
     userName = "महेश देशमुख";
     userEmail = "mahesh.deshmukh@canevision.com";

@@ -122,8 +122,8 @@ export default function LoginPage() {
         router.push('/field-boy/dashboard');
       } else if (email === 'admin@gmail.com') {
         router.push('/dashboard');
-      } else if (email === 'overseer@gmail.com' && password === 'over123') {
-        router.push('/overseer/dashboard');
+      } else if (email === 'oversheer@gmail.com' && password === 'over123') {
+        router.push('/oversheer/dashboard');
       }
       else {
         toast({

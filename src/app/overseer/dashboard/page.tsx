@@ -45,6 +45,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Assigned";
 

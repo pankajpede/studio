@@ -3,7 +3,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Plus, Search, Check, X, MoreHorizontal, UserPlus, Clock } from "lucide-react"
+import { Plus, Search, Check, X, MoreHorizontal, UserPlus, Clock, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -21,7 +21,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
 
 type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Assigned";
 
@@ -82,6 +84,14 @@ const statusIcon: Record<SurveyStatus, React.ReactNode> = {
     "Assigned": <UserPlus className="h-4 w-4" />
 }
 
+const statusOptions: { value: SurveyStatus, label: string }[] = [
+    { value: "Pending", label: "प्रलंबित" },
+    { value: "Approved", label: "मंजूर" },
+    { value: "Rejected", label: "नाकारलेले" },
+    { value: "Assigned", label: "नियुक्त" },
+];
+
+
 const SurveyCard = ({ survey }: { survey: Survey }) => {
     return (
         <div className="bg-card text-card-foreground rounded-lg shadow-sm border overflow-hidden">
@@ -128,7 +138,8 @@ export default function OversheerDashboard() {
   const [data, setData] = React.useState<Survey[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [search, setSearch] = React.useState("")
-  const [statusFilter, setStatusFilter] = React.useState("all")
+  const [statusFilter, setStatusFilter] = React.useState<string[]>([])
+  const [fieldBoyFilter, setFieldBoyFilter] = React.useState<string[]>([])
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -138,11 +149,14 @@ export default function OversheerDashboard() {
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
+  
+  const uniqueFieldBoys = React.useMemo(() => Array.from(new Set(data.map(s => s.fieldBoy))), [data]);
 
   const filteredSurveys = data.filter(survey => {
     const matchesSearch = survey.farmerName.toLowerCase().includes(search.toLowerCase()) || survey.village.toLowerCase().includes(search.toLowerCase()) || survey.fieldBoy.toLowerCase().includes(search.toLowerCase())
-    const matchesStatus = statusFilter === "all" || survey.status.toLowerCase() === statusFilter
-    return matchesSearch && matchesStatus
+    const matchesStatus = statusFilter.length === 0 || statusFilter.includes(survey.status)
+    const matchesFieldBoy = fieldBoyFilter.length === 0 || fieldBoyFilter.includes(survey.fieldBoy)
+    return matchesSearch && matchesStatus && matchesFieldBoy
   })
 
   return (
@@ -158,18 +172,64 @@ export default function OversheerDashboard() {
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-auto h-9">
-                    <SelectValue placeholder="स्थिती" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="all">सर्व स्थिती</SelectItem>
-                    <SelectItem value="Pending">प्रलंबित</SelectItem>
-                    <SelectItem value="Approved">मंजूर</SelectItem>
-                    <SelectItem value="Rejected">नाकारलेले</SelectItem>
-                    <SelectItem value="Assigned">नियुक्त</SelectItem>
-                </SelectContent>
-            </Select>
+             <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="h-9">
+                        <span>फील्ड बॉय</span>
+                        {fieldBoyFilter.length > 0 && <Badge variant="secondary" className="ml-2">{fieldBoyFilter.length}</Badge>}
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                    <DropdownMenuLabel>फील्ड बॉयनुसार फिल्टर करा</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {uniqueFieldBoys.map(boy => (
+                        <DropdownMenuCheckboxItem
+                            key={boy}
+                            checked={fieldBoyFilter.includes(boy)}
+                            onCheckedChange={(checked) => {
+                                setFieldBoyFilter(
+                                    checked
+                                    ? [...fieldBoyFilter, boy]
+                                    : fieldBoyFilter.filter(b => b !== boy)
+                                )
+                            }}
+                        >
+                            {boy}
+                        </DropdownMenuCheckboxItem>
+                    ))}
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                     <Button variant="outline" className="h-9">
+                        <span>स्थिती</span>
+                        {statusFilter.length > 0 && <Badge variant="secondary" className="ml-2">{statusFilter.length}</Badge>}
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                    <DropdownMenuLabel>स्थितीनुसार फिल्टर करा</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {statusOptions.map(option => (
+                         <DropdownMenuCheckboxItem
+                            key={option.value}
+                            checked={statusFilter.includes(option.value)}
+                            onCheckedChange={(checked) => {
+                                setStatusFilter(
+                                    checked
+                                    ? [...statusFilter, option.value]
+                                    : statusFilter.filter(s => s !== option.value)
+                                )
+                            }}
+                        >
+                            {option.label}
+                        </DropdownMenuCheckboxItem>
+                    ))}
+                </DropdownMenuContent>
+            </DropdownMenu>
+
         </div>
 
         <div className="flex-grow flex flex-col gap-3 pb-24">

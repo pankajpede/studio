@@ -31,17 +31,17 @@ type Survey = {
 }
 
 const mockSurveys: Survey[] = [
-  { id: "SUR001", day: "३०", month: "जून", farmerName: "सचिन कुलकर्णी", surveyCode: "को ०२३८", date: "२०२४-०८-१२", taluka: "अहमदपूर", village: "मोहगाव", status: "Pending", daysLeft: 2 },
-  { id: "SUR002", day: "२९", month: "जून", farmerName: "विशाल मोरे", surveyCode: "को ०२३८", date: "२०२४-०८-१२", taluka: "अहमदपूर", village: "मोहगाव", status: "Approved" },
-  { id: "SUR003", day: "२८", month: "जून", farmerName: "अजय पाटील", surveyCode: "को ०२३८", date: "२०२४-०८-१२", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected" },
-  { id: "SUR004", day: "२७", month: "जून", farmerName: "सुनीता मोरे", surveyCode: "को ०२३८", date: "२०२४-०८-१२", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 4 },
-  { id: "SUR005", day: "२६", month: "जून", farmerName: "कविता देशमुख", surveyCode: "को ०२३८", date: "२०२४-०८-१२", taluka: "औसा", village: "लामजना", status: "Approved" },
-  { id: "SUR006", day: "२५", month: "जून", farmerName: "राहुल जाधव", surveyCode: "को ०२३८", date: "२०२४-०८-१२", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
-  { id: "SUR007", day: "२४", month: "जून", farmerName: "रमेश शिंदे", surveyCode: "को ८६०३२", date: "२०२४-०८-१४", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 5 },
-  { id: "SUR008", day: "२३", month: "जून", farmerName: "नवीन ड्राफ्ट", surveyCode: "को ८६०३२", date: "२०२४-०८-१५", taluka: "अहमदपूर", village: "मोहगाव", status: "Draft" },
-  { id: "SUR009", day: "२२", month: "जून", farmerName: "दुसरे प्रलंबित", surveyCode: "को ८६०३२", date: "२०२४-०८-१३", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 1 },
-  { id: "SUR010", day: "२१", month: "जून", farmerName: "नवीन नाकारलेले", surveyCode: "को ८६०३२", date: "२०२४-०८-१६", taluka: "औसा", village: "लामजना", status: "Rejected" },
-  { id: "SUR011", day: "२०", month: "जून", farmerName: "दुसरे नियुक्त", surveyCode: "को ८६०३२", date: "२०२४-०८-१४", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 3 },
+  { id: "SUR001", day: "३०", month: "जून", farmerName: "सचिन कुलकर्णी", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Pending", daysLeft: 2 },
+  { id: "SUR002", day: "२९", month: "जून", farmerName: "विशाल मोरे", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Approved" },
+  { id: "SUR003", day: "२८", month: "जून", farmerName: "अजय पाटील", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected" },
+  { id: "SUR004", day: "२७", month: "जून", farmerName: "सुनीता मोरे", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 4 },
+  { id: "SUR005", day: "२६", month: "जून", farmerName: "कविता देशमुख", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "औसा", village: "लामजना", status: "Approved" },
+  { id: "SUR006", day: "२५", month: "जून", farmerName: "राहुल जाधव", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
+  { id: "SUR007", day: "२४", month: "जून", farmerName: "रमेश शिंदे", surveyCode: "को ८६०३२", date: "2024-08-14", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 5 },
+  { id: "SUR008", day: "२३", month: "जून", farmerName: "नवीन ड्राफ्ट", surveyCode: "को ८६०३२", date: "2024-08-15", taluka: "अहमदपूर", village: "मोहगाव", status: "Draft" },
+  { id: "SUR009", day: "२२", month: "जून", farmerName: "दुसरे प्रलंबित", surveyCode: "को ८६०३२", date: "2024-08-13", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 1 },
+  { id: "SUR010", day: "२१", month: "जून", farmerName: "नवीन नाकारलेले", surveyCode: "को ८६०३२", date: "2024-08-16", taluka: "औसा", village: "लामजना", status: "Rejected" },
+  { id: "SUR011", day: "२०", month: "जून", farmerName: "दुसरे नियुक्त", surveyCode: "को ८६०३२", date: "2024-08-14", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 3 },
 ]
 
 const statusTranslations: Record<SurveyStatus, string> = {
@@ -125,9 +125,9 @@ export default function FieldBoyDashboard() {
     .sort((a, b) => {
         const statusOrder: Record<SurveyStatus, number> = {
             'Draft': 1,
-            'Assigned': 2,
+            'Approved': 2,
             'Pending': 3,
-            'Approved': 4,
+            'Assigned': 4,
             'Rejected': 5,
         };
 
@@ -137,8 +137,8 @@ export default function FieldBoyDashboard() {
 
         // Secondary sorting logic
         switch (a.status) {
-            case 'Assigned':
             case 'Pending':
+            case 'Assigned':
                 return (a.daysLeft ?? Infinity) - (b.daysLeft ?? Infinity);
             case 'Draft':
             case 'Approved':

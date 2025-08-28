@@ -2,21 +2,18 @@
 "use client"
 
 import * as React from "react"
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Check, X, Clock, UserPlus } from "lucide-react"
-
+import Link from "next/link"
+import { Plus, Search, Check, X, MoreHorizontal, UserPlus, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,27 +22,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Skeleton } from "@/components/ui/skeleton"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
 
 type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Assigned";
 
@@ -91,98 +67,76 @@ const statusTranslations: Record<SurveyStatus, string> = {
     "Rejected": "नाकारलेले",
     "Assigned": "नियुक्त"
 }
-const statusStyles: Record<SurveyStatus, string> = {
-    "Pending": "bg-yellow-100 text-yellow-800",
-    "Approved": "bg-green-100 text-green-800",
-    "Rejected": "bg-red-100 text-red-800",
-    "Assigned": "bg-blue-100 text-blue-800"
+const statusTextStyles: Record<SurveyStatus, string> = {
+    "Pending": "text-yellow-600",
+    "Approved": "text-green-600",
+    "Rejected": "text-red-600",
+    "Assigned": "text-blue-600"
+}
+const statusIcon: Record<SurveyStatus, React.ReactNode> = {
+    "Pending": <Clock className="h-4 w-4" />,
+    "Approved": <Check className="h-4 w-4" />,
+    "Rejected": <X className="h-4 w-4" />,
+    "Assigned": <UserPlus className="h-4 w-4" />
 }
 
+const SurveyCard = ({ survey }: { survey: Survey }) => {
+    return (
+        <div className="bg-card text-card-foreground rounded-lg shadow-sm border overflow-hidden">
+            <div className="p-4 space-y-3">
+                <div className="flex justify-between items-start">
+                    <div>
+                        <h3 className="font-bold text-lg">{survey.farmerName}</h3>
+                        <p className="text-sm text-muted-foreground">{survey.village}</p>
+                    </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">मेनू उघडा</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem>तपशील पहा</DropdownMenuItem>
+                            <DropdownMenuItem>पुन्हा नियुक्त करा</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-destructive">हटवा</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
 
-export const columns: ColumnDef<Survey>[] = [
-  {
-    accessorKey: "surveyId",
-    header: "सर्वेक्षण आयडी",
-  },
-  {
-    accessorKey: "farmerName",
-    header: "शेतकऱ्याचे नाव",
-  },
-  {
-    accessorKey: "fieldBoy",
-    header: "फील्ड बॉय",
-  },
-  {
-    accessorKey: "village",
-    header: "गाव",
-  },
-  {
-    accessorKey: "area",
-    header: "क्षेत्र (हेक्टर)",
-  },
-  {
-    accessorKey: "status",
-    header: "स्थिती",
-    cell: ({ row }) => {
-      const status = row.getValue("status") as SurveyStatus;
-      return <Badge className={cn("border-transparent", statusStyles[status])}>{statusTranslations[status]}</Badge>;
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const survey = row.original;
-      const isPending = survey.status === 'Pending';
-      return (
-        <div className="flex items-center gap-2">
-            {isPending && (
-                <>
-                <Button variant="outline" size="sm" className="h-8 border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700">
-                    <Check className="h-4 w-4 mr-1"/> मंजूर करा
-                </Button>
-                <Button variant="outline" size="sm" className="h-8 border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
-                    <X className="h-4 w-4 mr-1"/> नाकारा
-                </Button>
-                </>
-            )}
-             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">मेनू उघडा</span>
-                    <MoreHorizontal className="h-4 w-4" />
+                <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>फील्ड बॉय: <span className="font-medium text-foreground">{survey.fieldBoy}</span></span>
+                    <span>क्षेत्र: <span className="font-medium text-foreground">{survey.area} हेक्टर</span></span>
+                </div>
+                
+                 <div className={cn("flex items-center gap-2 p-2 rounded-md", statusTextStyles[survey.status])}>
+                    {statusIcon[survey.status]}
+                    <span className="font-semibold text-sm">{statusTranslations[survey.status]}</span>
+                    <span className="text-xs ml-auto">{survey.submissionDate || survey.assignedDate}</span>
+                </div>
+
+            </div>
+            {survey.status === 'Pending' && (
+                <div className="bg-muted/50 px-4 py-2 flex gap-2 border-t">
+                    <Button variant="outline" size="sm" className="w-full h-8 border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700">
+                        <Check className="h-4 w-4 mr-1"/> मंजूर करा
                     </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>क्रिया</DropdownMenuLabel>
-                    <DropdownMenuItem>तपशील पहा</DropdownMenuItem>
-                    <DropdownMenuItem>पुन्हा नियुक्त करा</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-destructive">हटवा</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+                    <Button variant="outline" size="sm" className="w-full h-8 border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                        <X className="h-4 w-4 mr-1"/> नाकारा
+                    </Button>
+                </div>
+            )}
         </div>
-      )
-    },
-  },
-];
+    );
+};
 
-const StatCard = ({ title, value, icon: Icon }: { title: string; value: string; icon: React.ElementType }) => (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-      </CardContent>
-    </Card>
-);
 
 export default function OverseerDashboard() {
   const [data, setData] = React.useState<Survey[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [search, setSearch] = React.useState("")
+  const [statusFilter, setStatusFilter] = React.useState("all")
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -193,152 +147,59 @@ export default function OverseerDashboard() {
     return () => clearTimeout(timer);
   }, []);
 
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-    },
-    initialState: {
-      pagination: {
-        pageSize: 10,
-      },
-    },
-  });
-  
-  const stats = React.useMemo(() => {
-    return {
-        pending: data.filter(s => s.status === 'Pending').length,
-        approved: data.filter(s => s.status === 'Approved').length,
-        rejected: data.filter(s => s.status === 'Rejected').length,
-        assigned: data.filter(s => s.status === 'Assigned').length
-    }
-  }, [data])
+  const filteredSurveys = data.filter(survey => {
+    const matchesSearch = survey.farmerName.toLowerCase().includes(search.toLowerCase()) || survey.village.toLowerCase().includes(search.toLowerCase()) || survey.fieldBoy.toLowerCase().includes(search.toLowerCase())
+    const matchesStatus = statusFilter === "all" || survey.status.toLowerCase() === statusFilter
+    return matchesSearch && matchesStatus
+  })
 
   return (
-    <div className="flex flex-col gap-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <StatCard title="प्रलंबित सर्वेक्षण" value={stats.pending.toString()} icon={Clock} />
-            <StatCard title="मंजूर सर्वेक्षण" value={stats.approved.toString()} icon={Check} />
-            <StatCard title="नाकारलेले सर्वेक्षण" value={stats.rejected.toString()} icon={X} />
-            <StatCard title="नियुक्त सर्वेक्षण" value={stats.assigned.toString()} icon={UserPlus} />
+    <div className="flex flex-col gap-4 h-full">
+         <div className="flex items-center gap-2 p-2 bg-card rounded-lg border">
+            <div className="relative flex-grow">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                    type="search"
+                    placeholder="शेतकरी, फील्ड बॉय, गाव शोधा..."
+                    className="w-full rounded-lg bg-background pl-8 h-9"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-auto h-9">
+                    <SelectValue placeholder="स्थिती" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="all">सर्व स्थिती</SelectItem>
+                    <SelectItem value="Pending">प्रलंबित</SelectItem>
+                    <SelectItem value="Approved">मंजूर</SelectItem>
+                    <SelectItem value="Rejected">नाकारलेले</SelectItem>
+                    <SelectItem value="Assigned">नियुक्त</SelectItem>
+                </SelectContent>
+            </Select>
         </div>
 
-        <Card>
-        <CardHeader>
-            <div className="flex items-center justify-between">
-                <div>
-                    <CardTitle className="font-headline">सर्वेक्षण प्रमाणीकरण</CardTitle>
-                    <CardDescription>
-                        तुमच्या फील्ड बॉयने सबमिट केलेली सर्वेक्षणे सत्यापित करा.
-                    </CardDescription>
+        <div className="flex-grow flex flex-col gap-3 pb-24">
+            {filteredSurveys.length > 0 ? (
+                filteredSurveys.map((survey) => (
+                    <SurveyCard key={survey.surveyId} survey={survey} />
+                ))
+            ) : (
+                <div className="flex-grow flex items-center justify-center">
+                    <p className="text-muted-foreground">सर्वेक्षण आढळले नाहीत.</p>
                 </div>
-                <Button asChild>
-                    <Link href="/overseer/dashboard/new">
-                        <UserPlus className="mr-2" /> नवीन सर्वेक्षण नियुक्त करा
-                    </Link>
-                </Button>
-            </div>
-        </CardHeader>
-        <CardContent>
-            <div className="flex items-center gap-4 py-4">
-                <Input
-                    placeholder="शेतकऱ्याच्या नावाने फिल्टर करा..."
-                    value={(table.getColumn("farmerName")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => table.getColumn("farmerName")?.setFilterValue(event.target.value)}
-                    className="max-w-sm"
-                />
-                <Select
-                    onValueChange={(value) => table.getColumn("status")?.setFilterValue(value === "all" ? undefined : value)}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="स्थितीनुसार फिल्टर करा" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">सर्व स्थिती</SelectItem>
-                        <SelectItem value="Pending">प्रलंबित</SelectItem>
-                        <SelectItem value="Approved">मंजूर</SelectItem>
-                        <SelectItem value="Rejected">नाकारलेले</SelectItem>
-                        <SelectItem value="Assigned">नियुक्त</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="rounded-md border">
-            <Table>
-                <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                        return (
-                        <TableHead key={header.id}>
-                            {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                                )}
-                        </TableHead>
-                        );
-                    })}
-                    </TableRow>
-                ))}
-                </TableHeader>
-                <TableBody>
-                {isLoading ? (
-                    [...Array(10)].map((_, i) => (
-                        <TableRow key={i}>
-                        <TableCell colSpan={columns.length}>
-                            <Skeleton className="h-8 w-full" />
-                        </TableCell>
-                        </TableRow>
-                    ))
-                ) : table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
-                        {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </TableCell>
-                        ))}
-                    </TableRow>
-                    ))
-                ) : (
-                    <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                        परिणाम नाहीत.
-                    </TableCell>
-                    </TableRow>
-                )}
-                </TableBody>
-            </Table>
-            </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    मागील
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    पुढील
-                </Button>
-            </div>
-        </CardContent>
-        </Card>
+            )}
+        </div>
+
+        <div className="fixed bottom-6 right-6 z-50">
+            <Button asChild className="h-16 w-auto px-6 rounded-full shadow-lg text-lg bg-primary hover:bg-primary/90">
+                <Link href="/overseer/dashboard/new">
+                    <UserPlus className="mr-2 h-6 w-6" />
+                    सर्वेक्षण नियुक्त करा
+                </Link>
+            </Button>
+        </div>
     </div>
   )
 }

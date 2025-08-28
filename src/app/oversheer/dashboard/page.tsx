@@ -34,6 +34,7 @@ type Survey = {
   status: SurveyStatus;
   assignedDate: string;
   submissionDate?: string;
+  daysLeft?: number;
 }
 
 const generateSurveyData = (count: number): Survey[] => {
@@ -55,6 +56,7 @@ const generateSurveyData = (count: number): Survey[] => {
       status,
       assignedDate: `2024-07-${String((i % 28) + 1).padStart(2, '0')}`,
       submissionDate: status !== 'Assigned' ? `2024-07-${String((i % 28) + 2).padStart(2, '0')}` : undefined,
+      daysLeft: status === 'Pending' ? Math.floor(Math.random() * 7) + 1 : undefined
     });
   }
   return data;
@@ -83,48 +85,38 @@ const statusIcon: Record<SurveyStatus, React.ReactNode> = {
 const SurveyCard = ({ survey }: { survey: Survey }) => {
     return (
         <div className="bg-card text-card-foreground rounded-lg shadow-sm border overflow-hidden">
-            <div className="p-4 space-y-3">
+            <Link href={`/oversheer/dashboard/survey/${survey.surveyId}`} className="block p-4 space-y-3 hover:bg-muted/50">
                 <div className="flex justify-between items-start">
                     <div>
                         <h3 className="font-bold text-lg">{survey.farmerName}</h3>
                         <p className="text-sm text-muted-foreground">{survey.village}</p>
                     </div>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">मेनू उघडा</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem>तपशील पहा</DropdownMenuItem>
-                            <DropdownMenuItem>पुन्हा नियुक्त करा</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive">हटवा</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className={cn("flex items-center gap-2 p-2 rounded-md", statusTextStyles[survey.status])}>
+                        {statusIcon[survey.status]}
+                        <span className="font-semibold text-sm">{statusTranslations[survey.status]}</span>
+                    </div>
                 </div>
 
                 <div className="flex justify-between text-sm text-muted-foreground">
                     <span>फील्ड बॉय: <span className="font-medium text-foreground">{survey.fieldBoy}</span></span>
                     <span>क्षेत्र: <span className="font-medium text-foreground">{survey.area} हेक्टर</span></span>
                 </div>
-                
-                 <div className={cn("flex items-center gap-2 p-2 rounded-md", statusTextStyles[survey.status])}>
-                    {statusIcon[survey.status]}
-                    <span className="font-semibold text-sm">{statusTranslations[survey.status]}</span>
-                    <span className="text-xs ml-auto">{survey.submissionDate || survey.assignedDate}</span>
-                </div>
+            </Link>
 
-            </div>
             {survey.status === 'Pending' && (
-                <div className="bg-muted/50 px-4 py-2 flex gap-2 border-t">
-                    <Button variant="outline" size="sm" className="w-full h-8 border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700">
-                        <Check className="h-4 w-4 mr-1"/> मंजूर करा
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full h-8 border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
-                        <X className="h-4 w-4 mr-1"/> नाकारा
-                    </Button>
+                <div className="bg-muted/50 px-4 py-2 flex items-center justify-between border-t">
+                     <div className="flex items-center text-xs text-yellow-600 font-medium">
+                        <Clock className="h-3 w-3 mr-1"/>
+                        <span>{survey.daysLeft} दिवस बाकी</span>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button variant="outline" size="sm" className="h-8 border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700">
+                            <Check className="h-4 w-4 mr-1"/> मंजूर करा
+                        </Button>
+                        <Button variant="outline" size="sm" className="h-8 border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                            <X className="h-4 w-4 mr-1"/> नाकारा
+                        </Button>
+                    </div>
                 </div>
             )}
         </div>

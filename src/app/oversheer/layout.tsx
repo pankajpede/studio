@@ -23,6 +23,7 @@ export default function OversheerLayout({
     if (segments.length > 1) {
         if(segments[1] === 'dashboard' && !segments[2]) return 'साई शुगर';
         if(segments[2] === 'new') return 'नवीन सर्वेक्षण नियुक्त करा';
+        if(segments[2] === 'survey' && segments[3]) return 'सर्वेक्षण पुनरावलोकन';
     }
     return 'ओव्हरशीअर डॅशबोर्ड';
   };

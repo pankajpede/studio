@@ -5,11 +5,10 @@ import * as React from 'react';
 import { useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, CalendarClock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { FileText, CalendarClock, CheckCircle, XCircle, AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { format, addMonths } from 'date-fns';
 import Image from 'next/image';
 import FieldBoyMap from '@/components/field-boy-map';
@@ -147,6 +146,9 @@ export default function SurveyDetailPage() {
   const id = params.id as string;
   const [survey, setSurvey] = React.useState<SurveyData>(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [activeTab, setActiveTab] = React.useState("farmer-selection");
+
+  const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -156,6 +158,20 @@ export default function SurveyDetailPage() {
     }, 1000);
     return () => clearTimeout(timer);
   }, [id]);
+
+  const handleNext = () => {
+    const currentIndex = tabs.indexOf(activeTab);
+    if (currentIndex < tabs.length - 1) {
+        setActiveTab(tabs[currentIndex + 1]);
+    }
+  };
+
+  const handleBack = () => {
+      const currentIndex = tabs.indexOf(activeTab);
+      if (currentIndex > 0) {
+          setActiveTab(tabs[currentIndex - 1]);
+      }
+  };
 
   if (isLoading) {
     return (
@@ -200,13 +216,13 @@ export default function SurveyDetailPage() {
                 <CardDescription>{survey.location.village}, {survey.location.taluka}</CardDescription>
             </CardHeader>
             <CardContent>
-                <Tabs defaultValue="farmer-selection" className="w-full">
+                <Tabs value={activeTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-5">
-                        <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
-                        <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
-                        <TabsTrigger value="farm-info">शेत</TabsTrigger>
-                        <TabsTrigger value="media">मीडिया</TabsTrigger>
-                        <TabsTrigger value="map">नकाशा</TabsTrigger>
+                        <TabsTrigger value="farmer-selection" disabled>शेतकरी</TabsTrigger>
+                        <TabsTrigger value="farmer-info" disabled>माहिती</TabsTrigger>
+                        <TabsTrigger value="farm-info" disabled>शेत</TabsTrigger>
+                        <TabsTrigger value="media" disabled>मीडिया</TabsTrigger>
+                        <TabsTrigger value="map" disabled>नकाशा</TabsTrigger>
                     </TabsList>
                 
                     <TabsContent value="farmer-selection" className="pt-6">
@@ -318,10 +334,19 @@ export default function SurveyDetailPage() {
                     </TabsContent>
                 </Tabs>
             </CardContent>
-             <CardFooter>
-                <Button variant="outline" asChild className="w-full">
-                    <Link href="/field-boy/dashboard">डॅशबोर्डवर परत जा</Link>
+             <CardFooter className="border-t pt-6 mt-6 flex justify-between">
+                <Button variant="outline" onClick={handleBack} disabled={activeTab === 'farmer-selection'}>
+                    <ArrowLeft className="mr-2" /> मागे (Back)
                 </Button>
+                {activeTab === 'map' ? (
+                     <Button variant="outline" asChild>
+                        <Link href="/field-boy/dashboard">डॅशबोर्डवर परत जा</Link>
+                    </Button>
+                ) : (
+                    <Button onClick={handleNext}>
+                        पुढे (Next) <ArrowRight className="ml-2" />
+                    </Button>
+                )}
             </CardFooter>
         </Card>
     </div>

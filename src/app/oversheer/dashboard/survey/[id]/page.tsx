@@ -40,6 +40,7 @@ import { Separator } from "@/components/ui/separator"
 import { Calendar } from "@/components/ui/calendar"
 import { format, addMonths } from "date-fns"
 import { Textarea } from "@/components/ui/textarea"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 
 const mockStates = [
@@ -255,18 +256,29 @@ export default function SurveyReviewPage() {
     const [audioNote, setAudioNote] = React.useState<File | null>(null);
     const [otherMedia, setOtherMedia] = React.useState<OtherMedia[]>([{ id: 1, name: '', file: null }]);
     
-    // State for review
+    // State for review modal
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [modalAction, setModalAction] = React.useState<'approve' | 'reject' | null>(null);
     const [remark, setRemark] = React.useState("");
     const [reviewAudio, setReviewAudio] = React.useState<File | null>(null);
 
-    const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
-    const handleAction = (action: 'approve' | 'reject') => {
+    const handleOpenModal = (action: 'approve' | 'reject') => {
+        setModalAction(action);
+        setIsModalOpen(true);
+    };
+
+    const handleFinalSubmit = () => {
+        if (!modalAction) return;
+
         toast({
-            title: `सर्वेक्षण ${action === 'approve' ? 'मंजूर' : 'नाकारले'}!`,
-            description: `शेती सर्वेक्षण यशस्वीरित्या ${action === 'approve' ? 'मंजूर' : 'नाकारले'} आहे.`,
+            title: `सर्वेक्षण ${modalAction === 'approve' ? 'मंजूर' : 'नाकारले'}!`,
+            description: `शेती सर्वेक्षण यशस्वीरित्या ${modalAction === 'approve' ? 'मंजूर' : 'नाकारले'} आहे.`,
         });
-        window.scrollTo(0, 0);
+        setIsModalOpen(false);
+        setRemark("");
+        setReviewAudio(null);
+        setModalAction(null);
         router.push('/oversheer/dashboard');
     }
     
@@ -322,7 +334,7 @@ export default function SurveyReviewPage() {
 
 
   return (
-    <div className="flex flex-col gap-6">
+    <>
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         {selectedFarmer ? (
@@ -563,37 +575,53 @@ export default function SurveyReviewPage() {
           </TabsContent>
         </Tabs>
       </CardContent>
+      <CardFooter className="flex justify-end gap-2 border-t pt-6">
+            <Button variant="outline" onClick={() => handleOpenModal('reject')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                <XCircle className="mr-2" /> नाकारा
+            </Button>
+            <Button onClick={() => handleOpenModal('approve')} className="bg-green-600 hover:bg-green-700 text-white">
+                <CheckCircle className="mr-2" /> मंजूर करा
+            </Button>
+      </CardFooter>
     </Card>
 
-    <Card>
-        <CardHeader>
-            <CardTitle>पुनरावलोकन आणि क्रिया</CardTitle>
-            <CardDescription>सर्वेक्षण मंजूर किंवा नाकारण्यापूर्वी तुमचा अभिप्राय जोडा.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-            <div className="grid gap-2">
-                <Label htmlFor="remark">शेरा (Remark)</Label>
-                <Textarea 
-                    id="remark" 
-                    placeholder="तुमचा शेरा येथे लिहा..." 
-                    value={remark}
-                    onChange={(e) => setRemark(e.target.value)}
-                />
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>
+                    {modalAction === 'approve' ? 'सर्वेक्षण मंजूर करा' : 'सर्वेक्षण नाकारा'}
+                </DialogTitle>
+                <DialogDescription>
+                  {modalAction === 'approve' ? 'हे सर्वेक्षण मंजूर करण्यापूर्वी तुम्ही कोणताही अतिरिक्त शेरा जोडू शकता.' : 'कृपया हे सर्वेक्षण नाकारण्याचे कारण द्या.'}
+                </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-6 py-4">
+                <div className="grid gap-2">
+                    <Label htmlFor="remark">शेरा (Remark)</Label>
+                    <Textarea 
+                        id="remark" 
+                        placeholder="तुमचा शेरा येथे लिहा..." 
+                        value={remark}
+                        onChange={(e) => setRemark(e.target.value)}
+                    />
+                </div>
+                 <div className="grid gap-2">
+                    <Label htmlFor="audio-review" className="flex items-center gap-2"><AudioLines /> ऑडिओ शेरा (Audio Remark)</Label>
+                    <AudioRecorder onRecordingComplete={(file) => setReviewAudio(file)} />
+                </div>
             </div>
-             <div className="grid gap-2">
-                <Label htmlFor="audio-review" className="flex items-center gap-2"><AudioLines /> ऑडिओ शेरा (Audio Remark)</Label>
-                <AudioRecorder onRecordingComplete={(file) => setReviewAudio(file)} />
-            </div>
-        </CardContent>
-        <CardFooter className="flex justify-end gap-2">
-             <Button variant="outline" onClick={() => handleAction('reject')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
-                <XCircle className="mr-2" /> नाकारा
-             </Button>
-             <Button onClick={() => handleAction('approve')} className="bg-green-600 hover:bg-green-700 text-white">
-                <CheckCircle className="mr-2" /> मंजूर करा
-             </Button>
-        </CardFooter>
-    </Card>
-    </div>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button variant="ghost">रद्द करा</Button>
+                </DialogClose>
+                <Button onClick={handleFinalSubmit}>
+                    {modalAction === 'approve' ? 'मंजुरीची पुष्टी करा' : 'नकारची पुष्टी करा'}
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+    </>
   )
 }
+
+    

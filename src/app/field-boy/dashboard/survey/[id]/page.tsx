@@ -3,18 +3,22 @@
 
 import * as React from 'react';
 import { useParams } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import Image from 'next/image';
-import { FileText, User, Tractor, MapPin, CheckCircle, XCircle, AlertCircle, Pin, Footprints } from 'lucide-react';
-import { DetailItem } from '@/components/detail-item';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { FileText, User, Tractor, MapPin, CheckCircle, XCircle, AlertCircle, Pin, Footprints, AudioLines, FileImage, LocateFixed, RefreshCw } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { format, addMonths } from 'date-fns';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Image from 'next/image';
+import FieldBoyMap from '@/components/field-boy-map';
+import Link from 'next/link';
 
 // Mock data - in a real app, this would be fetched from a database
 const getSurveyById = (id: string | null) => {
@@ -23,17 +27,6 @@ const getSurveyById = (id: string | null) => {
     const status = statuses[id.length % 3] as "Pending" | "Approved" | "Rejected";
   return {
     id,
-    farmerName: "सचिन कुलकर्णी",
-    mobileNumber: "9876543210",
-    voterId: "ABC1234567",
-    panCard: "ABCDE1234F",
-    bankName: "स्टेट बँक ऑफ इंडिया",
-    accountNumber: "XXXX-XXXX-1234",
-    area: "1.0",
-    cropType: "रोप",
-    soilType: "काळी कापूस",
-    irrigationType: "ठिबक",
-    mapImage: "https://placehold.co/600x400.png",
     status,
     rejectionReason: status === "Rejected" ? "अपूर्ण कागदपत्रे सादर केली." : "-",
     submittedOn: "2024-06-30",
@@ -41,7 +34,55 @@ const getSurveyById = (id: string | null) => {
         state: "महाराष्ट्र",
         district: "लातूर",
         taluka: "अहमदपूर",
+        circle: "सर्कल १",
+        gut: "गट १०१",
         village: "मोहगाव",
+        shivar: "शिवार अ",
+        surveyNumber: "SN-123",
+    },
+    farmer: {
+        name: "सचिन कुलकर्णी",
+        growerType: "member",
+        sabNumber: "SAB-A001",
+        khataNumber: "KH-112233",
+        mobile: "9876543210",
+        linkNumber: "LNK-54321",
+        napNumber: "NAP-98765",
+        bankName: "स्टेट बँक ऑफ इंडिया",
+        branchName: "लातूर शाखा",
+        accountNumber: "XXXX-XXXX-1234",
+        ifsc: "SBIN0001234",
+    },
+    farm: {
+        area: "1.0",
+        plantationDate: new Date('2023-08-12'),
+        caneVariety: 'variety-1',
+        caneType: 'type-1',
+        irrigationType: 'drip',
+        irrigationSource: 'well',
+        irrigationMethod: 'method-1',
+        plantationMethod: 'method-a',
+        caneMaturityDate: addMonths(new Date('2023-08-12'), 12),
+        east: "शेजारील शेत (Neighboring Farm)",
+        west: "रस्ता (Road)",
+        north: "ओढा (Stream)",
+        south: "पडीक जमीन (Fallow Land)",
+    },
+    media: {
+        farmPhotos: [
+            "https://placehold.co/400x300.png",
+            "https://placehold.co/400x300.png",
+            "https://placehold.co/400x300.png",
+            "https://placehold.co/400x300.png",
+        ],
+        farmPhotoLabels: ["शेताचे फोटो", "उसाची जात", "मातीचा प्रकार", "सिंचनाचा प्रकार"],
+        farmerPhoto: "https://placehold.co/400x300.png",
+        fieldBoyPhoto: "https://placehold.co/400x300.png",
+        saatBaaraPhoto: "https://placehold.co/400x300.png",
+        audioNote: "data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=",
+        otherMedia: [
+            { name: "नोंदणी कागदपत्र", url: "https://placehold.co/200x100.png" },
+        ]
     }
   };
 };
@@ -89,6 +130,13 @@ const StatusInfo = ({ status, reason }: { status: string, reason?: string }) => 
     );
 };
 
+const ReadOnlyInput = ({ label, value }: { label: string, value?: string | number }) => (
+    <div className="grid gap-1.5">
+        <Label className="text-muted-foreground">{label}</Label>
+        <Input value={value || '-'} disabled className="bg-muted/50"/>
+    </div>
+);
+
 
 export default function SurveyDetailPage() {
   const params = useParams();
@@ -113,8 +161,9 @@ export default function SurveyDetailPage() {
                 <CardHeader>
                     <Skeleton className="h-8 w-48" />
                 </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                <CardContent className="pt-6">
+                    <Skeleton className="h-10 w-full mb-4" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Skeleton className="h-10 w-full" />
                         <Skeleton className="h-10 w-full" />
                         <Skeleton className="h-10 w-full" />
@@ -141,109 +190,142 @@ export default function SurveyDetailPage() {
       
       <StatusInfo status={survey.status} reason={survey.rejectionReason} />
 
-        <Card className="w-full">
-            <CardContent className="pt-6">
+        <Card className="w-full max-w-4xl mx-auto">
+            <CardHeader>
+                <CardTitle className="font-headline text-xl">{survey.farmer.name} - {survey.id}</CardTitle>
+                <CardDescription>{survey.location.village}, {survey.location.taluka}</CardDescription>
+            </CardHeader>
+            <CardContent>
                 <Tabs defaultValue="farmer-selection" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
-                    <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
-                    <TabsTrigger value="farm-info">शेत</TabsTrigger>
-                    <TabsTrigger value="map">नकाशा</TabsTrigger>
-                </TabsList>
+                    <TabsList className="grid w-full grid-cols-5">
+                        <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
+                        <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
+                        <TabsTrigger value="farm-info">शेत</TabsTrigger>
+                        <TabsTrigger value="media">मीडिया</TabsTrigger>
+                        <TabsTrigger value="map">नकाशा</TabsTrigger>
+                    </TabsList>
                 
-                <TabsContent value="farmer-selection" className="pt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="state">राज्य</Label>
-                            <Input id="state" value={survey.location.state} disabled />
+                    <TabsContent value="farmer-selection" className="pt-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <ReadOnlyInput label="राज्य" value={survey.location.state} />
+                            <ReadOnlyInput label="जिल्हा" value={survey.location.district} />
+                            <ReadOnlyInput label="तालुका" value={survey.location.taluka} />
+                            <ReadOnlyInput label="सर्कल" value={survey.location.circle} />
+                            <ReadOnlyInput label="गट" value={survey.location.gut} />
+                            <ReadOnlyInput label="गाव" value={survey.location.village} />
+                            <ReadOnlyInput label="शिवार" value={survey.location.shivar} />
+                            <ReadOnlyInput label="सर्वेक्षण क्र." value={survey.location.surveyNumber} />
+                            <ReadOnlyInput label="शेतकरी" value={survey.farmer.name} />
+                            <ReadOnlyInput label="उत्पादक प्रकार" value={survey.farmer.growerType} />
+                            <ReadOnlyInput label="सब नंबर" value={survey.farmer.sabNumber} />
+                            <ReadOnlyInput label="खाता नंबर" value={survey.farmer.khataNumber} />
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="district">जिल्हा</Label>
-                            <Input id="district" value={survey.location.district} disabled />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="taluka">तालुका</Label>
-                            <Input id="taluka" value={survey.location.taluka} disabled />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="village">गाव</Label>
-                            <Input id="village" value={survey.location.village} disabled />
-                        </div>
-                    </div>
-                </TabsContent>
+                    </TabsContent>
 
-                <TabsContent value="farmer-info" className="pt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="farmer-name">शेतकऱ्याचे नाव</Label>
-                            <Input id="farmer-name" value={survey.farmerName} disabled />
+                    <TabsContent value="farmer-info" className="pt-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <ReadOnlyInput label="मोबाइल नंबर" value={survey.farmer.mobile} />
+                            <ReadOnlyInput label="लिंक नंबर" value={survey.farmer.linkNumber} />
+                            <ReadOnlyInput label="NAP नंबर" value={survey.farmer.napNumber} />
+                            <ReadOnlyInput label="बँकेचे नाव" value={survey.farmer.bankName} />
+                            <ReadOnlyInput label="शाखा" value={survey.farmer.branchName} />
+                            <ReadOnlyInput label="खाते क्रमांक" value={survey.farmer.accountNumber} />
+                            <ReadOnlyInput label="IFSC कोड" value={survey.farmer.ifsc} />
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="mobile">मोबाइल नंबर</Label>
-                            <Input id="mobile" value={survey.mobileNumber} disabled />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="voter-id">मतदार ओळखपत्र</Label>
-                            <Input id="voter-id" value={survey.voterId} disabled />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="pan">पॅन कार्ड</Label>
-                            <Input id="pan" value={survey.panCard} disabled />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="bank-name">बँकेचे नाव</Label>
-                            <Input id="bank-name" value={survey.bankName} disabled />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="account-number">खाते क्रमांक</Label>
-                            <Input id="account-number" value={survey.accountNumber} disabled />
-                        </div>
-                    </div>
-                </TabsContent>
+                    </TabsContent>
 
-                <TabsContent value="farm-info" className="pt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="area">क्षेत्र (हेक्टर)</Label>
-                            <Input id="area" value={survey.area} disabled />
+                    <TabsContent value="farm-info" className="pt-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                             <ReadOnlyInput label="क्षेत्र (हेक्टर)" value={survey.farm.area} />
+                            <div className="grid gap-1.5">
+                                <Label className="text-muted-foreground">लागवड तारीख</Label>
+                                <Input value={format(survey.farm.plantationDate, "PPP")} disabled className="bg-muted/50" />
+                            </div>
+                            <ReadOnlyInput label="उसाची जात" value={survey.farm.caneVariety} />
+                            <ReadOnlyInput label="उसाचा प्रकार" value={survey.farm.caneType} />
+                            <ReadOnlyInput label="सिंचनाचा प्रकार" value={survey.farm.irrigationType} />
+                            <ReadOnlyInput label="सिंचनाचा स्रोत" value={survey.farm.irrigationSource} />
+                            <ReadOnlyInput label="सिंचन पद्धत" value={survey.farm.irrigationMethod} />
+                            <ReadOnlyInput label="लागवड पद्धत" value={survey.farm.plantationMethod} />
+                             <div className="grid gap-1.5">
+                                <Label className="text-muted-foreground">उसाची पक्वता</Label>
+                                <Input value={survey.farm.caneMaturityDate ? format(survey.farm.caneMaturityDate, "PPP") : '-'} disabled className="bg-muted/50" />
+                            </div>
+                            <ReadOnlyInput label="पूर्व" value={survey.farm.east} />
+                            <ReadOnlyInput label="पश्चिम" value={survey.farm.west} />
+                            <ReadOnlyInput label="उत्तर" value={survey.farm.north} />
+                            <ReadOnlyInput label="दक्षिण" value={survey.farm.south} />
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="crop-type">पिकाचा प्रकार</Label>
-                            <Input id="crop-type" value={survey.cropType} disabled />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="soil-type">मातीचा प्रकार</Label>
-                             <Input id="soil-type" value={survey.soilType} disabled />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="irrigation-type">सिंचनाचा प्रकार</Label>
-                            <Input id="irrigation-type" value={survey.irrigationType} disabled />
-                        </div>
-                    </div>
-                </TabsContent>
+                    </TabsContent>
 
-                <TabsContent value="map" className="pt-6">
-                    <div className="flex flex-col items-center gap-4">
-                        <div className="w-full h-64 bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
-                            <Image
-                                src={survey.mapImage}
-                                alt="Farm Map"
-                                layout="fill"
-                                objectFit="cover"
-                                data-ai-hint="farm map"
-                            />
+                    <TabsContent value="media" className="pt-6">
+                        <div className="flex flex-col gap-6">
+                            <div>
+                                <Label className="text-base font-medium">शेताचे फोटो</Label>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                                    {survey.media.farmPhotos.map((photo, index) => (
+                                        <div key={index} className="grid gap-2">
+                                            <Label className="text-sm">{survey.media.farmPhotoLabels[index]}</Label>
+                                            <Image src={photo} alt={survey.media.farmPhotoLabels[index]} width={400} height={300} className="rounded-lg border aspect-video object-cover" data-ai-hint="farm photo" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
+                                <div className="grid gap-2">
+                                    <Label>शेतकरी फोटो</Label>
+                                    <Image src={survey.media.farmerPhoto} alt="Farmer Photo" width={400} height={300} className="rounded-lg border aspect-video object-cover" data-ai-hint="person photo" />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label>फील्ड बॉय फोटो</Label>
+                                    <Image src={survey.media.fieldBoyPhoto} alt="Field Boy Photo" width={400} height={300} className="rounded-lg border aspect-video object-cover" data-ai-hint="person photo" />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label>७/१२ कागदपत्र</Label>
+                                    <Image src={survey.media.saatBaaraPhoto} alt="7/12 Document" width={400} height={300} className="rounded-lg border aspect-video object-cover" data-ai-hint="document photo" />
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                                <div className="grid gap-2">
+                                    <Label className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट</Label>
+                                    <audio src={survey.media.audioNote} controls className="w-full" />
+                                </div>
+                                 <div className="grid gap-4">
+                                    <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया</Label>
+                                    {survey.media.otherMedia.map((item, index) => (
+                                        <div key={index} className="flex items-center gap-2 p-2 border rounded-md">
+                                            <FileText className="h-5 w-5 text-muted-foreground"/>
+                                            <span className="font-medium text-sm">{item.name}</span>
+                                            <Button asChild variant="link" size="sm" className="ml-auto">
+                                                <a href={item.url} target="_blank" rel="noopener noreferrer">पहा</a>
+                                            </Button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-4 w-full">
-                            <Button variant="outline" className="w-full" disabled><Pin className="mr-2" /> ड्रॉ बटण</Button>
-                            <Button variant="outline" className="w-full" disabled><Footprints className="mr-2" /> वॉक बटण</Button>
+                    </TabsContent>
+
+                    <TabsContent value="map" className="pt-6">
+                        <div className="flex flex-col gap-6">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
+                                </CardHeader>
+                                <CardContent className="h-96">
+                                    <FieldBoyMap farmLocation={{lat: 18.4088, lng: 76.5702}} />
+                                </CardContent>
+                            </Card>
                         </div>
-                    </div>
-                </TabsContent>
+                    </TabsContent>
                 </Tabs>
             </CardContent>
+             <CardFooter>
+                <Button variant="outline" asChild className="w-full">
+                    <Link href="/field-boy/dashboard">डॅशबोर्डवर परत जा</Link>
+                </Button>
+            </CardFooter>
         </Card>
     </div>
   );
 }
-
-    

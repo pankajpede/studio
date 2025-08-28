@@ -55,8 +55,24 @@ const mockTalukas = [
     { value: "ahmedpur", label: "अहमदपूर" },
 ];
 
+const mockCircles = [
+    { value: "circle-1", label: "सर्कल १" },
+];
+
+const mockGuts = [
+    { value: "gut-101", label: "गट १०१" },
+];
+
 const mockVillages = [
     { value: "mohgaon", label: "मोहगाव" },
+];
+
+const mockShivars = [
+    { value: "shivar-a", label: "शिवार अ" },
+];
+
+const mockSurveyNumbers = [
+    { value: "sn-123", label: "SN-123" },
 ];
 
 const mockFarmers = [
@@ -120,7 +136,7 @@ const ImageUploader = ({
             <div className="grid gap-2">
                  <Label>{label}</Label>
                  <div className="relative w-full aspect-video rounded-lg overflow-hidden border">
-                     <Image src={previewUrl} alt={label} layout="fill" objectFit="cover" />
+                     <Image src={previewUrl} alt={label} layout="fill" objectFit="cover" data-ai-hint="photo image" />
                      <Button size="icon" variant="destructive" className="absolute top-1 right-1 h-7 w-7 z-10" onClick={() => onFileChange(null)}>
                          <X className="h-4 w-4" />
                      </Button>
@@ -230,8 +246,15 @@ export default function SurveyReviewPage() {
     const [selectedState, setSelectedState] = React.useState("maharashtra");
     const [district, setDistrict] = React.useState("latur");
     const [taluka, setTaluka] = React.useState("ahmedpur");
+    const [circle, setCircle] = React.useState("circle-1");
+    const [gut, setGut] = React.useState("gut-101");
     const [village, setVillage] = React.useState("mohgaon");
+    const [shivar, setShivar] = React.useState("shivar-a");
+    const [surveyNumber, setSurveyNumber] = React.useState("sn-123");
     const [partyName, setPartyName] = React.useState("farmer-1");
+    const [growerType, setGrowerType] = React.useState('member');
+    const [sabNumber, setSabNumber] = React.useState("SAB-A001");
+    const [khataNumber, setKhataNumber] = React.useState("KH-112233");
 
     // State for farmer info tab
     const [mobile, setMobile] = React.useState("9876543210");
@@ -243,7 +266,7 @@ export default function SurveyReviewPage() {
     const [ifscCode, setIfscCode] = React.useState("SBIN0001234");
     
     // State for farm info
-    const [plantationDate, setPlantationDate] = React.useState<Date>(new Date('2023-08-12'));
+    const [plantationDate, setPlantationDate] = React.useState<Date | undefined>(new Date('2023-08-12'));
     const [caneType, setCaneType] = React.useState('type-1');
     const [caneMaturityDate, setCaneMaturityDate] = React.useState<Date | null>(null);
 
@@ -393,6 +416,28 @@ export default function SurveyReviewPage() {
                         disabled={!district}
                     />
                 </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="circle">सर्कल (Circle)</Label>
+                    <Combobox
+                        options={mockCircles}
+                        value={circle}
+                        onValueChange={setCircle}
+                        placeholder="सर्कल निवडा..."
+                        searchPlaceholder="सर्कल शोधा..."
+                        disabled={!taluka}
+                    />
+                </div>
+                 <div className="grid gap-2">
+                    <Label htmlFor="gut">गट (Gut)</Label>
+                    <Combobox
+                        options={mockGuts}
+                        value={gut}
+                        onValueChange={setGut}
+                        placeholder="गट निवडा..."
+                        searchPlaceholder="गट शोधा..."
+                        disabled={!circle}
+                    />
+                </div>
                  <div className="grid gap-2">
                     <Label htmlFor="village">गाव (Village)</Label>
                      <Combobox
@@ -401,7 +446,29 @@ export default function SurveyReviewPage() {
                         onValueChange={setVillage}
                         placeholder="गाव निवडा..."
                         searchPlaceholder="गाव शोधा..."
-                        disabled={!taluka}
+                        disabled={!gut}
+                    />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="shivar">शिवार (Shivar)</Label>
+                    <Combobox
+                        options={mockShivars}
+                        value={shivar}
+                        onValueChange={setShivar}
+                        placeholder="शिवार निवडा..."
+                        searchPlaceholder="शिवार शोधा..."
+                        disabled={!village}
+                    />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="survey-number">सर्वेक्षण क्र. (Survey No.)</Label>
+                    <Combobox
+                        options={mockSurveyNumbers}
+                        value={surveyNumber}
+                        onValueChange={setSurveyNumber}
+                        placeholder="सर्वेक्षण क्र. निवडा..."
+                        searchPlaceholder="सर्वेक्षण क्र. शोधा..."
+                        disabled={!shivar}
                     />
                 </div>
                 <div className="grid gap-2">
@@ -412,8 +479,26 @@ export default function SurveyReviewPage() {
                         onValueChange={setPartyName}
                         placeholder="शेतकरी निवडा..."
                         searchPlaceholder="शेतकरी शोधा..."
-                        disabled={!village}
+                        disabled={!surveyNumber}
                     />
+                </div>
+                 <div className="grid gap-2">
+                    <Label htmlFor="grower-type">उत्पादक प्रकार (Grower Type)</Label>
+                    <Select value={growerType} onValueChange={setGrowerType} disabled={!partyName}>
+                        <SelectTrigger id="grower-type"><SelectValue placeholder="उत्पादक प्रकार निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="member">सभासद</SelectItem>
+                            <SelectItem value="non-member">बिगर सभासद</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="sab-number">सब नंबर (Sab Number)</Label>
+                    <Input id="sab-number" placeholder="सब नंबर टाका" value={sabNumber} onChange={(e) => setSabNumber(e.target.value)} />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="khata-number">खाता नंबर (Khata Number)</Label>
+                    <Input id="khata-number" placeholder="खाता नंबर टाका" value={khataNumber} onChange={(e) => setKhataNumber(e.target.value)} />
                 </div>
             </div>
           </TabsContent>
@@ -507,6 +592,62 @@ export default function SurveyReviewPage() {
                     <Label>उसाची पक्वता</Label>
                     <Input value={caneMaturityDate ? format(caneMaturityDate, "PPP") : 'पक्वता तारीख'} disabled />
                 </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="irrigation-type">सिंचनाचा प्रकार</Label>
+                    <Select defaultValue="drip">
+                        <SelectTrigger id="irrigation-type"><SelectValue placeholder="सिंचनाचा प्रकार निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="drip">ठिबक</SelectItem>
+                            <SelectItem value="flood">प्रवाही</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <div className="grid gap-2">
+                    <Label htmlFor="irrigation-source">सिंचनाचा स्रोत</Label>
+                    <Select defaultValue="well">
+                        <SelectTrigger id="irrigation-source"><SelectValue placeholder="सिंचनाचा स्रोत निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="well">विहीर</SelectItem>
+                            <SelectItem value="canal">कालवा</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <div className="grid gap-2">
+                    <Label htmlFor="irrigation-method">सिंचन पद्धत</Label>
+                    <Select defaultValue="method-1">
+                        <SelectTrigger id="irrigation-method"><SelectValue placeholder="सिंचन पद्धत निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="method-1">पद्धत १</SelectItem>
+                            <SelectItem value="method-2">पद्धत २</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="plantation-method">लागवड पद्धत</Label>
+                    <Select defaultValue="method-a">
+                        <SelectTrigger id="plantation-method"><SelectValue placeholder="लागवड पद्धत निवडा" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="method-a">पद्धत अ</SelectItem>
+                            <SelectItem value="method-b">पद्धत ब</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="east">पूर्व (East)</Label>
+                    <Input id="east" placeholder="पूर्व सीमा तपशील" />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="west">पश्चिम (West)</Label>
+                    <Input id="west" placeholder="पश्चिम सीमा तपशील" />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="north">उत्तर (North)</Label>
+                    <Input id="north" placeholder="उत्तर सीमा तपशील" />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="south">दक्षिण (South)</Label>
+                    <Input id="south" placeholder="दक्षिण सीमा तपशील" />
+                </div>
             </div>
           </TabsContent>
 
@@ -565,10 +706,8 @@ export default function SurveyReviewPage() {
                     <CardHeader>
                         <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="w-full h-64 bg-muted rounded-lg">
-                           <FieldBoyMap />
-                        </div>
+                    <CardContent className="h-96">
+                       <FieldBoyMap />
                     </CardContent>
                 </Card>
             </div>
@@ -623,5 +762,3 @@ export default function SurveyReviewPage() {
     </>
   )
 }
-
-    

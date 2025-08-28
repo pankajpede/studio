@@ -122,7 +122,10 @@ export default function LoginPage() {
         router.push('/field-boy/dashboard');
       } else if (email === 'admin@gmail.com') {
         router.push('/dashboard');
-      } else {
+      } else if (email === 'overseer@gmail.com' && password === 'over123') {
+        router.push('/overseer/dashboard');
+      }
+      else {
         toast({
           variant: "destructive",
           title: "लॉगिन अयशस्वी",
@@ -202,7 +205,7 @@ export default function LoginPage() {
         </Card>
       </div>
 
-      <div className="fixed bottom-4 left-0 right-0 text-center text-xs text-muted-foreground">
+      <footer className="fixed bottom-4 left-0 right-0 text-center text-xs text-muted-foreground">
         <div className="flex items-center justify-center gap-2 mb-1">
           <Dialog>
             <DialogTrigger asChild>
@@ -223,7 +226,7 @@ export default function LoginPage() {
           </Dialog>
         </div>
         <p>Developed & Maintained by Onella Soft</p>
-      </div>
+      </footer>
     </>
   )
 }

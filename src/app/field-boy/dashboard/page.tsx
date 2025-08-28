@@ -3,7 +3,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Plus, Search } from "lucide-react"
+import { Plus, Search, CalendarClock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Draft";
+type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Draft" | "Assigned";
 
 type Survey = {
   id: string
@@ -27,6 +27,7 @@ type Survey = {
   taluka: string
   village: string
   status: SurveyStatus
+  daysLeft?: number;
 }
 
 const mockSurveys: Survey[] = [
@@ -36,13 +37,15 @@ const mockSurveys: Survey[] = [
   { id: "SUR004", day: "२७", month: "जून", farmerName: "सुनीता मोरे", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "लातूर", village: "कासारवाडी", status: "Pending" },
   { id: "SUR005", day: "२६", month: "जून", farmerName: "कविता देशमुख", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "औसा", village: "लामजना", status: "Approved" },
   { id: "SUR006", day: "२५", month: "जून", farmerName: "राहुल जाधव", surveyCode: "को ०२३८", date: "१२ ऑगस्ट २०२४", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
+  { id: "SUR007", day: "२४", month: "जून", farmerName: "रमेश शिंदे", surveyCode: "को ८६०३२", date: "१४ ऑगस्ट २०२४", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 5 },
 ]
 
 const statusTranslations: Record<SurveyStatus, string> = {
     "Pending": "प्रलंबित",
     "Approved": "रांगेत",
     "Rejected": "नाकारलेले",
-    "Draft": "ड्राफ्ट"
+    "Draft": "ड्राफ्ट",
+    "Assigned": "नियुक्त"
 }
 
 const statusStyles: Record<SurveyStatus, string> = {
@@ -50,6 +53,7 @@ const statusStyles: Record<SurveyStatus, string> = {
     "Approved": "bg-green-100 text-green-800 border-green-200",
     "Rejected": "bg-red-100 text-red-800 border-red-200",
     "Draft": "bg-gray-100 text-gray-800 border-gray-200",
+    "Assigned": "bg-blue-100 text-blue-800 border-blue-200"
 }
 
 const statusTextStyles: Record<SurveyStatus, string> = {
@@ -57,6 +61,7 @@ const statusTextStyles: Record<SurveyStatus, string> = {
     "Approved": "text-green-600",
     "Rejected": "text-red-600",
     "Draft": "text-gray-600",
+    "Assigned": "text-blue-600"
 }
 
 const SurveyCard = ({ survey }: { survey: Survey }) => {
@@ -68,7 +73,7 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                         <span className="text-2xl font-bold">{survey.day}</span>
                         <span className="text-xs uppercase">{survey.month}</span>
                     </div>
-                    <div className="flex-grow">
+                    <div className="flex-grow space-y-1">
                         <h3 className="font-bold text-lg">{survey.farmerName}</h3>
                         <p className="text-sm text-muted-foreground">
                             <span>{survey.surveyCode}</span>
@@ -80,6 +85,12 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                             <span className="mx-1">•</span>
                             <span>{survey.village}</span>
                         </p>
+                         {survey.status === 'Assigned' && survey.daysLeft !== undefined && (
+                            <div className="flex items-center text-xs text-blue-600 font-medium">
+                                <CalendarClock className="h-3 w-3 mr-1"/>
+                                <span>{survey.daysLeft} दिवस बाकी</span>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className={cn(
@@ -127,6 +138,7 @@ export default function FieldBoyDashboard() {
             </SelectTrigger>
             <SelectContent>
                 <SelectItem value="all">सर्व</SelectItem>
+                <SelectItem value="assigned">नियुक्त</SelectItem>
                 <SelectItem value="pending">प्रलंबित</SelectItem>
                 <SelectItem value="approved">रांगेत</SelectItem>
                 <SelectItem value="rejected">नाकारलेले</SelectItem>
@@ -161,5 +173,3 @@ export default function FieldBoyDashboard() {
     </div>
   )
 }
-
-    

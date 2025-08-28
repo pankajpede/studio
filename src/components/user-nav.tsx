@@ -24,11 +24,30 @@ import { usePathname } from "next/navigation"
 export function UserNav() {
   const pathname = usePathname();
   const isFieldBoy = pathname.startsWith('/field-boy');
+  const isOverseer = pathname.startsWith('/overseer');
+  const isAdmin = pathname.startsWith('/dashboard');
 
-  const userName = isFieldBoy ? "सुनील पवार" : "महेश देशमुख";
-  const userEmail = isFieldBoy ? "sunil.pawar@example.com" : "mahesh.deshmukh@canevision.com";
-  const userFallback = isFieldBoy ? "सुप" : "मदे";
-  const profileLink = isFieldBoy ? "/field-boy/profile" : "/dashboard/settings";
+  let userName: string;
+  let userEmail: string;
+  let userFallback: string;
+  let profileLink: string;
+
+  if (isFieldBoy) {
+    userName = "सुनील पवार";
+    userEmail = "sunil.pawar@example.com";
+    userFallback = "सुप";
+    profileLink = "/field-boy/profile";
+  } else if (isOverseer) {
+    userName = "संजय गायकवाड";
+    userEmail = "sanjay.gaikwad@example.com";
+    userFallback = "संग";
+    profileLink = "/overseer/profile";
+  } else {
+    userName = "महेश देशमुख";
+    userEmail = "mahesh.deshmukh@canevision.com";
+    userFallback = "मदे";
+    profileLink = "/dashboard/settings";
+  }
 
 
   return (

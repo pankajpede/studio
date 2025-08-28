@@ -12,15 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { ChevronsUpDown, Check } from "lucide-react"
@@ -39,14 +31,18 @@ const mockDistricts = [
 
 const mockTalukas = [
     { value: "ahmedpur", label: "अहमदपूर" },
+    { value: "ausa", label: "औसा" },
+    { value: "latur", label: "लातूर" },
 ];
 
 const mockCircles = [
     { value: "circle-1", label: "सर्कल १" },
+    { value: "circle-2", label: "सर्कल २" },
 ];
 
 const mockGuts = [
     { value: "gut-101", label: "गट १०१" },
+    { value: "gut-102", label: "गट १०२" },
 ];
 
 const mockVillages = [
@@ -73,8 +69,6 @@ const mockFieldBoys = [
     { value: "fb-1", label: "सुनील पवार" },
     { value: "fb-2", label: "अनिल शिंदे" },
     { value: "fb-3", label: "राजेश पाटील" },
-    { value: "fb-4", label: "कविता जाधव" },
-    { value: "fb-5", label: "विक्रम राठोड" },
 ];
 
 const Combobox = ({

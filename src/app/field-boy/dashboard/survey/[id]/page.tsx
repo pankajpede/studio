@@ -124,7 +124,7 @@ const StatusInfo = ({ status, reason, daysLeft }: { status: string, reason?: str
                      {status === 'Pending' && daysLeft !== undefined && (
                         <div className="flex items-center text-sm font-medium">
                             <CalendarClock className="h-4 w-4 mr-1.5"/>
-                            <span>{daysLeft} दिवस बाकी</span>
+                            <span>{daysLeft} दिवस বাকি</span>
                         </div>
                     )}
                 </div>

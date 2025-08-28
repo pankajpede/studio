@@ -2,7 +2,7 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -265,8 +265,10 @@ const Combobox = ({
 };
 
 
-export default function NewFieldSurveyPage() {
+const NewSurveyContent = () => {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const editSurveyId = searchParams.get('edit');
     const { toast } = useToast();
     const [activeTab, setActiveTab] = React.useState("farmer-selection");
     const mapRef = React.useRef<{ refreshLocation: () => void }>(null);
@@ -434,6 +436,9 @@ export default function NewFieldSurveyPage() {
         newPhotos[index] = file;
         setFarmPhotos(newPhotos);
     };
+    
+    const cardTitle = editSurveyId ? `सर्वेक्षण संपादित करा (Edit Survey - ${editSurveyId})` : "नवीन शेत सर्वेक्षण (New Farm Survey)";
+    const cardDescription = editSurveyId ? "आवश्यक बदल करा आणि पुन्हा सबमिट करा. (Make necessary changes and resubmit.)" : "नवीन सर्वेक्षणासाठी टॅबमध्ये तपशील भरा. (Fill details in the tabs for a new survey.)";
 
 
   return (
@@ -446,8 +451,8 @@ export default function NewFieldSurveyPage() {
           </>
         ) : (
           <>
-            <CardTitle className="font-headline text-xl">नवीन शेत सर्वेक्षण (New Farm Survey)</CardTitle>
-            <CardDescription>नवीन सर्वेक्षणासाठी टॅबमध्ये तपशील भरा. (Fill details in the tabs for a new survey.)</CardDescription>
+            <CardTitle className="font-headline text-xl">{cardTitle}</CardTitle>
+            <CardDescription>{cardDescription}</CardDescription>
           </>
         )}
       </CardHeader>
@@ -915,5 +920,15 @@ export default function NewFieldSurveyPage() {
     </Card>
   )
 }
+
+
+export default function NewFieldSurveyPage() {
+    return (
+        <React.Suspense fallback={<div>Loading...</div>}>
+            <NewSurveyContent />
+        </React.Suspense>
+    )
+}
+
 
     

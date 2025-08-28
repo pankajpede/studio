@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, CalendarClock, CheckCircle, XCircle, AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
+import { FileText, CalendarClock, CheckCircle, XCircle, AlertCircle, ArrowLeft, ArrowRight, MessageSquare, Edit, Trash2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -13,17 +13,20 @@ import { format, addMonths } from 'date-fns';
 import Image from 'next/image';
 import FieldBoyMap from '@/components/field-boy-map';
 import Link from 'next/link';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 // Mock data - in a real app, this would be fetched from a database
 const getSurveyById = (id: string | null) => {
     if (!id) return null;
-    const statuses = ["Pending", "Approved", "Rejected"];
-    const status = statuses[id.length % 3] as "Pending" | "Approved" | "Rejected";
+    const statuses = ["Pending", "Approved", "Rejected", "Draft"];
+    const status = statuses[id.length % 4] as "Pending" | "Approved" | "Rejected" | "Draft";
   return {
     id,
     status,
     daysLeft: status === "Pending" ? (id.length % 7) + 1 : undefined,
     rejectionReason: status === "Rejected" ? "अपूर्ण कागदपत्रे सादर केली." : "-",
+    rejectionRemark: status === 'Rejected' ? 'कृपया शेतकरी आणि ७/१२ कागदपत्रांचे फोटो पुन्हा अपलोड करा.' : null,
+    rejectionAudioUrl: status === 'Rejected' ? "data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=" : null,
     submittedOn: "2024-06-30",
     location: {
         state: "महाराष्ट्र",
@@ -84,13 +87,15 @@ const getSurveyById = (id: string | null) => {
 
 type SurveyData = ReturnType<typeof getSurveyById>;
 
-const StatusInfo = ({ status, reason, daysLeft }: { status: string, reason?: string, daysLeft?: number }) => {
+const StatusInfo = ({ survey }: { survey: SurveyData }) => {
+    if (!survey) return null;
+
     let icon;
     let textClass;
     let bgClass;
     let label;
 
-    switch (status) {
+    switch (survey.status) {
         case "Approved":
             icon = <CheckCircle className="h-5 w-5" />;
             textClass = "text-green-800";
@@ -103,7 +108,13 @@ const StatusInfo = ({ status, reason, daysLeft }: { status: string, reason?: str
             bgClass = "bg-red-100";
             label = "नाकारलेले";
             break;
-        default:
+        case "Draft":
+            icon = <FileText className="h-5 w-5" />;
+            textClass = "text-gray-800";
+            bgClass = "bg-gray-100";
+            label = "ड्राफ्ट";
+            break;
+        default: // Pending
             icon = <AlertCircle className="h-5 w-5" />;
             textClass = "text-yellow-800";
             bgClass = "bg-yellow-100";
@@ -118,17 +129,26 @@ const StatusInfo = ({ status, reason, daysLeft }: { status: string, reason?: str
                         {icon}
                         <div className="flex flex-col">
                             <CardTitle className={`text-lg ${textClass}`}>{label}</CardTitle>
-                            {status === 'Rejected' && <CardDescription className={`${textClass} opacity-80`}>{reason}</CardDescription>}
+                            {survey.status === 'Rejected' && <CardDescription className={`${textClass} opacity-80`}>{survey.rejectionReason}</CardDescription>}
                         </div>
                     </div>
-                     {status === 'Pending' && daysLeft !== undefined && (
+                     {survey.status === 'Pending' && survey.daysLeft !== undefined && (
                         <div className="flex items-center text-sm font-medium">
                             <CalendarClock className="h-4 w-4 mr-1.5"/>
-                            <span>{daysLeft} दिवस बाकी</span>
+                            <span>{survey.daysLeft} दिवस बाकी</span>
                         </div>
                     )}
                 </div>
             </CardHeader>
+            {survey.status === 'Rejected' && (
+                 <CardContent>
+                    <div className="space-y-4 rounded-lg bg-red-50/50 p-4 border border-red-200/50">
+                        <h4 className="font-semibold flex items-center gap-2"><MessageSquare className="h-5 w-5"/> ओव्हरसीअरचा शेरा (Overseer's Remark)</h4>
+                        {survey.rejectionRemark && <p className="text-sm">{survey.rejectionRemark}</p>}
+                        {survey.rejectionAudioUrl && <audio src={survey.rejectionAudioUrl} controls className="w-full h-10" />}
+                    </div>
+                </CardContent>
+            )}
         </Card>
     );
 };
@@ -211,7 +231,7 @@ export default function SurveyDetailPage() {
   return (
     <div className="flex flex-col gap-6">
       
-      <StatusInfo status={survey.status} reason={survey.rejectionReason} daysLeft={survey.daysLeft} />
+      <StatusInfo survey={survey} />
 
         <Card className="w-full max-w-4xl mx-auto">
             <CardHeader>
@@ -338,16 +358,47 @@ export default function SurveyDetailPage() {
                 </Tabs>
             </CardContent>
              <CardFooter className="border-t pt-6 mt-6 flex justify-between">
-                <Button variant="outline" onClick={handleBack}>
-                    <ArrowLeft className="mr-2" /> मागे (Back)
-                </Button>
+                {survey.status === 'Rejected' ? (
+                     <div className='flex items-center gap-2'>
+                        <Button variant="outline" asChild>
+                           <Link href={`/field-boy/dashboard/new?edit=${survey.id}`}>
+                                <Edit className="mr-2"/> सर्वेक्षण संपादित करा
+                           </Link>
+                        </Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="destructive">
+                                    <Trash2 className="mr-2"/> सर्वेक्षण हटवा
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    ही क्रिया पूर्ववत करता येणार नाही. हे सर्वेक्षण कायमचे हटवेल.
+                                </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                <AlertDialogCancel>रद्द करा</AlertDialogCancel>
+                                <AlertDialogAction>हटवा</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                     </div>
+                ) : (
+                    <Button variant="outline" onClick={handleBack}>
+                        <ArrowLeft className="mr-2" /> मागे
+                    </Button>
+                )}
+                
+
                 {activeTab === 'map' ? (
                      <Button variant="outline" asChild>
                         <Link href="/field-boy/dashboard">डॅशबोर्डवर परत जा</Link>
                     </Button>
                 ) : (
-                    <Button onClick={handleNext}>
-                        पुढे (Next) <ArrowRight className="ml-2" />
+                    survey.status !== 'Rejected' && <Button onClick={handleNext}>
+                        पुढे <ArrowRight className="ml-2" />
                     </Button>
                 )}
             </CardFooter>

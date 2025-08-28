@@ -126,8 +126,8 @@ export default function FieldBoyDashboard() {
         const statusOrder: Record<SurveyStatus, number> = {
             'Draft': 1,
             'Approved': 2,
-            'Pending': 3,
-            'Assigned': 4,
+            'Assigned': 3,
+            'Pending': 4,
             'Rejected': 5,
         };
 

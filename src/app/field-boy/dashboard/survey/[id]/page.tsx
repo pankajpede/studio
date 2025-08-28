@@ -5,17 +5,12 @@ import * as React from 'react';
 import { useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, User, Tractor, MapPin, CheckCircle, XCircle, AlertCircle, Pin, Footprints, AudioLines, FileImage, LocateFixed, RefreshCw } from 'lucide-react';
+import { FileText, CalendarClock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
 import { format, addMonths } from 'date-fns';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Image from 'next/image';
 import FieldBoyMap from '@/components/field-boy-map';
 import Link from 'next/link';
@@ -28,6 +23,7 @@ const getSurveyById = (id: string | null) => {
   return {
     id,
     status,
+    daysLeft: status === "Pending" ? (id.length % 7) + 1 : undefined,
     rejectionReason: status === "Rejected" ? "अपूर्ण कागदपत्रे सादर केली." : "-",
     submittedOn: "2024-06-30",
     location: {
@@ -56,12 +52,12 @@ const getSurveyById = (id: string | null) => {
     farm: {
         area: "1.0",
         plantationDate: new Date('2023-08-12'),
-        caneVariety: 'variety-1',
-        caneType: 'type-1',
-        irrigationType: 'drip',
-        irrigationSource: 'well',
-        irrigationMethod: 'method-1',
-        plantationMethod: 'method-a',
+        caneVariety: 'जात १',
+        caneType: 'प्रकार १ (12 महिने)',
+        irrigationType: 'ठिबक',
+        irrigationSource: 'विहीर',
+        irrigationMethod: 'पद्धत १',
+        plantationMethod: 'पद्धत अ',
         caneMaturityDate: addMonths(new Date('2023-08-12'), 12),
         east: "शेजारील शेत (Neighboring Farm)",
         west: "रस्ता (Road)",
@@ -89,7 +85,7 @@ const getSurveyById = (id: string | null) => {
 
 type SurveyData = ReturnType<typeof getSurveyById>;
 
-const StatusInfo = ({ status, reason }: { status: string, reason?: string }) => {
+const StatusInfo = ({ status, reason, daysLeft }: { status: string, reason?: string, daysLeft?: number }) => {
     let icon;
     let textClass;
     let bgClass;
@@ -118,22 +114,30 @@ const StatusInfo = ({ status, reason }: { status: string, reason?: string }) => 
     return (
         <Card className={`${bgClass} ${textClass}`}>
             <CardHeader>
-                <div className="flex items-center gap-3">
-                    {icon}
-                    <div className="flex flex-col">
-                        <CardTitle className={`text-lg ${textClass}`}>{label}</CardTitle>
-                        {status === 'Rejected' && <CardDescription className={`${textClass} opacity-80`}>{reason}</CardDescription>}
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        {icon}
+                        <div className="flex flex-col">
+                            <CardTitle className={`text-lg ${textClass}`}>{label}</CardTitle>
+                            {status === 'Rejected' && <CardDescription className={`${textClass} opacity-80`}>{reason}</CardDescription>}
+                        </div>
                     </div>
+                     {status === 'Pending' && daysLeft !== undefined && (
+                        <div className="flex items-center text-sm font-medium">
+                            <CalendarClock className="h-4 w-4 mr-1.5"/>
+                            <span>{daysLeft} दिवस बाकी</span>
+                        </div>
+                    )}
                 </div>
             </CardHeader>
         </Card>
     );
 };
 
-const ReadOnlyInput = ({ label, value }: { label: string, value?: string | number }) => (
+const ReadOnlyInput = ({ label, value }: { label: string, value?: string | number | null }) => (
     <div className="grid gap-1.5">
-        <Label className="text-muted-foreground">{label}</Label>
-        <Input value={value || '-'} disabled className="bg-muted/50"/>
+        <Label className="text-muted-foreground text-sm">{label}</Label>
+        <p className="font-medium text-base h-10 flex items-center px-3 rounded-md border bg-muted/50">{value || '-'}</p>
     </div>
 );
 
@@ -188,7 +192,7 @@ export default function SurveyDetailPage() {
   return (
     <div className="flex flex-col gap-6">
       
-      <StatusInfo status={survey.status} reason={survey.rejectionReason} />
+      <StatusInfo status={survey.status} reason={survey.rejectionReason} daysLeft={survey.daysLeft} />
 
         <Card className="w-full max-w-4xl mx-auto">
             <CardHeader>
@@ -237,20 +241,14 @@ export default function SurveyDetailPage() {
                     <TabsContent value="farm-info" className="pt-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                              <ReadOnlyInput label="क्षेत्र (हेक्टर)" value={survey.farm.area} />
-                            <div className="grid gap-1.5">
-                                <Label className="text-muted-foreground">लागवड तारीख</Label>
-                                <Input value={format(survey.farm.plantationDate, "PPP")} disabled className="bg-muted/50" />
-                            </div>
+                            <ReadOnlyInput label="लागवड तारीख" value={format(survey.farm.plantationDate, "PPP")} />
                             <ReadOnlyInput label="उसाची जात" value={survey.farm.caneVariety} />
                             <ReadOnlyInput label="उसाचा प्रकार" value={survey.farm.caneType} />
                             <ReadOnlyInput label="सिंचनाचा प्रकार" value={survey.farm.irrigationType} />
                             <ReadOnlyInput label="सिंचनाचा स्रोत" value={survey.farm.irrigationSource} />
                             <ReadOnlyInput label="सिंचन पद्धत" value={survey.farm.irrigationMethod} />
                             <ReadOnlyInput label="लागवड पद्धत" value={survey.farm.plantationMethod} />
-                             <div className="grid gap-1.5">
-                                <Label className="text-muted-foreground">उसाची पक्वता</Label>
-                                <Input value={survey.farm.caneMaturityDate ? format(survey.farm.caneMaturityDate, "PPP") : '-'} disabled className="bg-muted/50" />
-                            </div>
+                             <ReadOnlyInput label="उसाची पक्वता" value={survey.farm.caneMaturityDate ? format(survey.farm.caneMaturityDate, "PPP") : '-'} />
                             <ReadOnlyInput label="पूर्व" value={survey.farm.east} />
                             <ReadOnlyInput label="पश्चिम" value={survey.farm.west} />
                             <ReadOnlyInput label="उत्तर" value={survey.farm.north} />
@@ -287,11 +285,11 @@ export default function SurveyDetailPage() {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                                 <div className="grid gap-2">
-                                    <Label className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट</Label>
+                                    <Label>ऑडिओ नोट</Label>
                                     <audio src={survey.media.audioNote} controls className="w-full" />
                                 </div>
                                  <div className="grid gap-4">
-                                    <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया</Label>
+                                    <Label>इतर मीडिया</Label>
                                     {survey.media.otherMedia.map((item, index) => (
                                         <div key={index} className="flex items-center gap-2 p-2 border rounded-md">
                                             <FileText className="h-5 w-5 text-muted-foreground"/>

@@ -2,7 +2,7 @@
 "use client"
 
 import * as React from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, CalendarClock, CheckCircle, XCircle, AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
@@ -124,7 +124,7 @@ const StatusInfo = ({ status, reason, daysLeft }: { status: string, reason?: str
                      {status === 'Pending' && daysLeft !== undefined && (
                         <div className="flex items-center text-sm font-medium">
                             <CalendarClock className="h-4 w-4 mr-1.5"/>
-                            <span>{daysLeft} दिवस বাকি</span>
+                            <span>{daysLeft} दिवस बाकी</span>
                         </div>
                     )}
                 </div>
@@ -143,6 +143,7 @@ const ReadOnlyInput = ({ label, value }: { label: string, value?: string | numbe
 
 export default function SurveyDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
   const [survey, setSurvey] = React.useState<SurveyData>(null);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -170,6 +171,8 @@ export default function SurveyDetailPage() {
       const currentIndex = tabs.indexOf(activeTab);
       if (currentIndex > 0) {
           setActiveTab(tabs[currentIndex - 1]);
+      } else {
+          router.push('/field-boy/dashboard');
       }
   };
 
@@ -335,7 +338,7 @@ export default function SurveyDetailPage() {
                 </Tabs>
             </CardContent>
              <CardFooter className="border-t pt-6 mt-6 flex justify-between">
-                <Button variant="outline" onClick={handleBack} disabled={activeTab === 'farmer-selection'}>
+                <Button variant="outline" onClick={handleBack}>
                     <ArrowLeft className="mr-2" /> मागे (Back)
                 </Button>
                 {activeTab === 'map' ? (
@@ -352,3 +355,5 @@ export default function SurveyDetailPage() {
     </div>
   );
 }
+
+    

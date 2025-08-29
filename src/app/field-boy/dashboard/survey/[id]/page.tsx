@@ -14,6 +14,7 @@ import Image from 'next/image';
 import FieldBoyMap from '@/components/field-boy-map';
 import Link from 'next/link';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Draft" | "Assigned";
 
@@ -188,6 +189,7 @@ const ReadOnlyInput = ({ label, value }: { label: string, value?: string | numbe
 export default function SurveyDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { toast } = useToast();
   const id = params.id as string;
   const [survey, setSurvey] = React.useState<SurveyData>(null);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -219,6 +221,14 @@ export default function SurveyDetailPage() {
           router.push('/field-boy/dashboard');
       }
   };
+
+  const handleRestartSurvey = () => {
+    toast({
+        title: "सर्वेक्षण पुन्हा सुरू झाले",
+        description: "सर्व डेटा साफ झाला आहे. कृपया सर्वेक्षण पुन्हा करा.",
+    });
+    router.push(`/field-boy/dashboard/new?edit=${id}&restart=true`);
+  }
 
   if (isLoading) {
     return (
@@ -406,12 +416,12 @@ export default function SurveyDetailPage() {
                                     <AlertDialogHeader>
                                     <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        ही क्रिया पूर्ववत करता येणार नाही. हे सर्वेक्षण हटवेल आणि तुम्हाला नवीन सर्वेक्षण सुरू करण्याची परवानगी देईल.
+                                        एकदा तुम्ही पुन्हा सुरू केल्यावर, सर्व भरलेला डेटा (शेतकरी निवडीव्यतिरिक्त) कायमचा हटवला जाईल आणि पुनर्संचयित केला जाऊ शकत नाही. तुम्हाला खात्री आहे का?
                                     </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                     <AlertDialogCancel>रद्द करा</AlertDialogCancel>
-                                    <AlertDialogAction>पुन्हा सुरू करा</AlertDialogAction>
+                                    <AlertDialogAction onClick={handleRestartSurvey}>पुष्टी करा</AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
                             </AlertDialog>

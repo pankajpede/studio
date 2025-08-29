@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/tabs"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck, CalendarIcon, Loader2, ArrowLeft } from "lucide-react"
+import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck, CalendarIcon, Loader2, ArrowLeft, MessageSquare, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
@@ -100,21 +100,11 @@ const mockFarmers = [
     { value: "farmer-8", label: "संजय देशमुख", mobile: "9876543217", docs: [{type: 'voter-id', number: 'VWX8901234'}], bankName: "युनियन बँक ऑफ इंडिया", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-8901", ifsc: "UBIN0008901", sabNumber: "SAB-H008", khataNumber: "KH-222324" },
     { value: "farmer-9", label: "विशाल पवार", mobile: "9876543218", docs: [{type: 'pan', number: 'IJKLM9012N'}], bankName: "बँक ऑफ इंडिया", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-9012", ifsc: "BKID0009012", sabNumber: "SAB-I009", khataNumber: "KH-252627" },
     { value: "farmer-10", label: "अमित भोसले", mobile: "9876543219", docs: [{type: 'voter-id', number: 'BCD0123456'}], bankName: "सेंट्रल बँक ऑफ इंडिया", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-0123", ifsc: "CBIN0000123", sabNumber: "SAB-J010", khataNumber: "KH-282930" },
-    { value: "farmer-11", label: "राहुल सावंत", mobile: "9876543220", docs: [{type: 'voter-id', number: 'EFG1234567'}], bankName: "इंडियन बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-1234", ifsc: "IDIB0001234", sabNumber: "SAB-K011", khataNumber: "KH-313233" },
-    { value: "farmer-12", label: "अजय कदम", mobile: "9876543221", docs: [{type: 'pan', number: 'LMNOP2345Q'}], bankName: "IDBI बँक", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-2345", ifsc: "IBKL0002345", sabNumber: "SAB-L012", khataNumber: "KH-343536" },
-    { value: "farmer-13", label: "नितीन राऊत", mobile: "9876543222", docs: [{type: 'voter-id', number: 'KLM3456789'}], bankName: "कोटक महिंद्रा बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-3456", ifsc: "KKBK0003456", sabNumber: "SAB-M013", khataNumber: "KH-373839" },
-    { value: "farmer-14", label: "प्रशांत कांबळे", mobile: "9876543223", docs: [{type: 'voter-id', number: 'NOP4567890'}], bankName: "येस बँक", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-4567", ifsc: "YESB0004567", sabNumber: "SAB-N014", khataNumber: "KH-404142" },
-    { value: "farmer-15", label: "मनोज जगताप", mobile: "9876543224", docs: [{type: 'pan', number: 'OPQRS5678T'}], bankName: "इंडसइंड बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-5678", ifsc: "INDB0005678", sabNumber: "SAB-O015", khataNumber: "KH-434445" },
-    { value: "farmer-16", label: "योगेश यादव", mobile: "9876543225", docs: [{type: 'voter-id', number: 'STU6789012'}], bankName: "RBL बँक", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-6789", ifsc: "RATN0006789", sabNumber: "SAB-P016", khataNumber: "KH-464748" },
-    { value: "farmer-17", label: "महेश माने", mobile: "9876543226", docs: [{type: 'voter-id', number: 'VWX7890123'}], bankName: "फेडरल बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-7890", ifsc: "FDRL0007890", sabNumber: "SAB-Q017", khataNumber: "KH-495051" },
-    { value: "farmer-18", label: "अमोल थोरात", mobile: "9876543227", docs: [{type: 'pan', number: 'RSTUV8901W'}], bankName: "साउथ इंडियन बँक", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-8901", ifsc: "SIBL0008901", sabNumber: "SAB-R018", khataNumber: "KH-525354" },
-    { value: "farmer-19", label: "किरण साळुंखे", mobile: "9876543228", docs: [{type: 'voter-id', number: 'BCD9012345'}], bankName: "कर्नाटक बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-9012", ifsc: "KARB0009012", sabNumber: "SAB-S019", khataNumber: "KH-555657" },
-    { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", docs: [{type: 'voter-id', number: 'EFG0123456'}], bankName: "सिटी युनियन बँक", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-0123", ifsc: "CIUB0000123", sabNumber: "SAB-T020", khataNumber: "KH-585960" },
     { value: "farmer-111", label: "राहुल जाधव", mobile: "9876543219", docs: [{type: 'voter-id', number: 'BCD0123456'}], bankName: "सेंट्रल बँक ऑफ इंडिया", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-0123", ifsc: "CBIN0000123", sabNumber: "SAB-J010", khataNumber: "KH-282930" },
 ];
 
 const mockDraftData: Record<string, any> = {
-    'SUR006': {
+    'SUR006': { // Draft
         state: 'maharashtra',
         district: 'latur',
         taluka: 'latur',
@@ -125,7 +115,19 @@ const mockDraftData: Record<string, any> = {
         surveyNumber: 'sn-123',
         partyName: 'farmer-111',
     },
-     'SUR008': {
+    'SUR003': { // Rejected
+        state: 'maharashtra',
+        district: 'latur',
+        taluka: 'ahmedpur',
+        circle: 'circle-2',
+        gut: 'gut-102',
+        village: 'mohgaon',
+        shivar: 'shivar-b',
+        surveyNumber: 'sn-456',
+        partyName: 'farmer-3',
+        rejectionRemark: "कागदपत्रे अस्पष्ट आहेत. कृपया स्पष्ट फोटो अपलोड करा.",
+    },
+    'SUR008': { // Another Draft
         state: 'maharashtra',
         district: 'latur',
         taluka: 'ahmedpur',
@@ -135,7 +137,7 @@ const mockDraftData: Record<string, any> = {
         shivar: 'shivar-b',
         surveyNumber: 'sn-456',
         partyName: 'farmer-8',
-    }
+    },
 };
 
 type OtherMedia = {
@@ -290,17 +292,18 @@ const Combobox = ({
     );
 };
 
-
 const NewSurveyContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const editSurveyId = searchParams.get('edit');
     const { toast } = useToast();
-    const [activeTab, setActiveTab] = React.useState("farmer-selection");
     const mapRef = React.useRef<{ refreshLocation: () => void }>(null);
 
+    const editSurveyId = searchParams.get('edit');
+    const isRestart = searchParams.get('restart') === 'true';
 
-    // State for each form field
+    const [activeTab, setActiveTab] = React.useState("farmer-selection");
+
+    // Form states
     const [selectedState, setSelectedState] = React.useState("");
     const [district, setDistrict] = React.useState("");
     const [taluka, setTaluka] = React.useState("");
@@ -315,7 +318,6 @@ const NewSurveyContent = () => {
     const [caneType, setCaneType] = React.useState('');
     const [caneMaturityDate, setCaneMaturityDate] = React.useState<Date | null>(null);
 
-    // State for farmer info tab
     const [mobile, setMobile] = React.useState("");
     const [linkNumber, setLinkNumber] = React.useState("");
     const [napNumber, setNapNumber] = React.useState("");
@@ -328,8 +330,6 @@ const NewSurveyContent = () => {
     const [mobileUsageCount, setMobileUsageCount] = React.useState(0);
     const [isVerifyingMobile, setIsVerifyingMobile] = React.useState(false);
 
-
-    // State for media tab
     const [farmPhotos, setFarmPhotos] = React.useState<(File | null)[]>(Array(4).fill(null));
     const farmPhotoLabels = ["शेताचे फोटो (Farm Photo)", "उसाची जात (Cane Variety)", "मातीचा प्रकार (Soil Type)", "सिंचनाचा प्रकार (Irrigation Type)"];
     const [farmerPhoto, setFarmerPhoto] = React.useState<File | null>(null);
@@ -337,13 +337,52 @@ const NewSurveyContent = () => {
     const [saatBaaraPhoto, setSaatBaaraPhoto] = React.useState<File | null>(null);
     const [audioNote, setAudioNote] = React.useState<File | null>(null);
     const [otherMedia, setOtherMedia] = React.useState<OtherMedia[]>([{ id: 1, name: '', file: null }]);
+    
+    const [rejectionRemark, setRejectionRemark] = React.useState<string | null>(null);
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
+    
+    const clearForm = React.useCallback((keepFirstTab = false) => {
+        if (!keepFirstTab) {
+            setSelectedState("");
+            setDistrict("");
+            setTaluka("");
+            setCircle("");
+            setGut("");
+            setVillage("");
+            setShivar("");
+            setSurveyNumber("");
+            setPartyName("");
+        }
+        setGrowerType("");
+        setPlantationDate(undefined);
+        setCaneType("");
+        setMobile("");
+        setLinkNumber("");
+        setNapNumber("");
+        setBankName("");
+        setBranchName("");
+        setAccountNumber("");
+        setIfscCode("");
+        setSabNumber("");
+        setKhataNumber("");
+        setMobileUsageCount(0);
+        setFarmPhotos(Array(4).fill(null));
+        setFarmerPhoto(null);
+        setFieldBoyPhoto(null);
+        setSaatBaaraPhoto(null);
+        setAudioNote(null);
+        setOtherMedia([{ id: 1, name: '', file: null }]);
+    }, []);
 
-    // Effect to pre-fill data for editing drafts
     React.useEffect(() => {
         if (editSurveyId && mockDraftData[editSurveyId]) {
             const draft = mockDraftData[editSurveyId];
+            if(isRestart) {
+                clearForm(true); // Keep first tab data
+            } else {
+                 clearForm(false); // Clear everything before populating
+            }
             setSelectedState(draft.state || "");
             setDistrict(draft.district || "");
             setTaluka(draft.taluka || "");
@@ -353,8 +392,13 @@ const NewSurveyContent = () => {
             setShivar(draft.shivar || "");
             setSurveyNumber(draft.surveyNumber || "");
             setPartyName(draft.partyName || "");
+            setRejectionRemark(draft.rejectionRemark || null);
+
+            // In a real app, you would load all other fields from the draft as well
+        } else {
+            clearForm(false);
         }
-    }, [editSurveyId]);
+    }, [editSurveyId, isRestart, clearForm]);
 
 
     const handleNext = () => {
@@ -399,11 +443,10 @@ const NewSurveyContent = () => {
             setIfscCode(selectedFarmer.ifsc)
             setSabNumber(selectedFarmer.sabNumber);
             setKhataNumber(selectedFarmer.khataNumber);
-            setLinkNumber(""); // Clear these for new farmer selection
+            setLinkNumber(""); 
             setNapNumber("");
-            setMobileUsageCount(0); // Reset count on farmer change
+            setMobileUsageCount(0);
         } else {
-            // Clear fields if no farmer is selected
             setMobile("");
             setBankName("");
             setBranchName("");
@@ -415,7 +458,7 @@ const NewSurveyContent = () => {
             setNapNumber("");
             setMobileUsageCount(0);
         }
-    }, [partyName]);
+    }, [partyName, selectedFarmer]);
     
     const handleVerifyMobile = () => {
         if (!mobile || mobile.length < 10) {
@@ -427,7 +470,6 @@ const NewSurveyContent = () => {
             return;
         }
         setIsVerifyingMobile(true);
-        // Simulate an API call
         setTimeout(() => {
             const usedCount = Math.floor(Math.random() * 5) + 1;
             setMobileUsageCount(usedCount);
@@ -443,9 +485,9 @@ const NewSurveyContent = () => {
     React.useEffect(() => {
         if (caneType && plantationDate) {
             let monthsToAdd = 0;
-            if (caneType === 'type-1') { // Adsali
+            if (caneType === 'type-1') { 
                 monthsToAdd = 12; 
-            } else if (caneType === 'type-2') { // Pre-seasonal
+            } else if (caneType === 'type-2') { 
                 monthsToAdd = 14; 
             }
             if (monthsToAdd > 0) {
@@ -493,6 +535,20 @@ const NewSurveyContent = () => {
 
 
   return (
+    <>
+    {rejectionRemark && (
+        <Card className="w-full max-w-4xl mx-auto mb-6 bg-red-50 border-red-200">
+            <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2 text-red-800">
+                    <AlertCircle />
+                    नाकारण्याचा शेरा (Rejection Remark)
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p className="text-red-700">{rejectionRemark}</p>
+            </CardContent>
+        </Card>
+    )}
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         {selectedFarmer ? (
@@ -976,6 +1032,7 @@ const NewSurveyContent = () => {
         )}
       </CardFooter>
     </Card>
+    </>
   )
 }
 
@@ -987,3 +1044,5 @@ export default function NewFieldSurveyPage() {
         </React.Suspense>
     )
 }
+
+    

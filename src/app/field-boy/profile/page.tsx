@@ -28,7 +28,6 @@ import {
 // Mock data for the logged-in field boy
 const fieldBoyData = {
   name: "सुनील पवार",
-  email: "fieldboy@gmail.com",
   mobile: "9876543210",
   taluka: "अहमदपूर",
   village: "मोहगाव",
@@ -213,10 +212,6 @@ export default function FieldBoyProfilePage() {
             <div className="grid gap-2">
               <Label htmlFor="name">पूर्ण नाव</Label>
               <Input id="name" defaultValue={fieldBoyData.name} />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">ईमेल</Label>
-              <Input id="email" type="email" placeholder="ईमेल पत्ता टाका" defaultValue={fieldBoyData.email} />
             </div>
             <div className="grid gap-2">
               <div className="flex justify-between items-center">

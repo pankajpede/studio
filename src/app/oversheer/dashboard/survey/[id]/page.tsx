@@ -334,6 +334,7 @@ export default function SurveyReviewPage() {
     }
 
     const allVerificationFields = {...verificationStatus, ...mediaVerification};
+    const totalFields = Object.keys(allVerificationFields).length;
     const acceptedCount = Object.values(allVerificationFields).filter(s => s === 'accepted').length;
     const rejectedCount = Object.values(allVerificationFields).filter(s => s === 'rejected').length;
 
@@ -409,6 +410,15 @@ export default function SurveyReviewPage() {
                         <XCircle className="h-5 w-5 text-red-600" />
                         <span className="font-bold text-base">{rejectedCount}</span>
                     </div>
+                    {rejectedCount > 0 ? (
+                        <Button size="sm" onClick={() => handleOpenFinalModal('reject')}>
+                            <X className="mr-2 h-4 w-4"/> नाकारा
+                        </Button>
+                    ) : acceptedCount === totalFields ? (
+                        <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleOpenFinalModal('approve')}>
+                            <Check className="mr-2 h-4 w-4"/> मंजूर करा
+                        </Button>
+                    ) : null}
                 </div>
             </div>
           </>
@@ -762,7 +772,7 @@ export default function SurveyReviewPage() {
                      </div>
                  )}
             </div>
-            {currentMedia?.type === 'image' && (
+            {(currentMedia?.type === 'image') && (
                 <DialogFooter>
                     <Button variant="outline" onClick={() => handleMediaVerification('rejected')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
                         <XCircle className="mr-2" /> नाकारा

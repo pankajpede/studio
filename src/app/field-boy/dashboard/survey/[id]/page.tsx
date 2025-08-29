@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, CalendarClock, CheckCircle, XCircle, AlertCircle, ArrowLeft, ArrowRight, MessageSquare, Edit, Trash2, UserPlus } from 'lucide-react';
+import { FileText, CalendarClock, CheckCircle, XCircle, AlertCircle, ArrowLeft, ArrowRight, MessageSquare, Edit, Trash2, UserPlus, RefreshCcw } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -399,19 +399,19 @@ export default function SurveyDetailPage() {
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <Button variant="destructive">
-                                        <Trash2 className="mr-2"/> हटवा
+                                        <RefreshCcw className="mr-2"/> पुन्हा सुरू करा
                                     </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
                                     <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        ही क्रिया पूर्ववत करता येणार नाही. हे सर्वेक्षण कायमचे हटवेल.
+                                        ही क्रिया पूर्ववत करता येणार नाही. हे सर्वेक्षण हटवेल आणि तुम्हाला नवीन सर्वेक्षण सुरू करण्याची परवानगी देईल.
                                     </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                     <AlertDialogCancel>रद्द करा</AlertDialogCancel>
-                                    <AlertDialogAction>हटवा</AlertDialogAction>
+                                    <AlertDialogAction>पुन्हा सुरू करा</AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
                             </AlertDialog>

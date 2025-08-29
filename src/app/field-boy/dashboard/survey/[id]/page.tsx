@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, CalendarClock, CheckCircle, XCircle, AlertCircle, ArrowLeft, ArrowRight, MessageSquare, Edit, Trash2, UserPlus, RefreshCcw } from 'lucide-react';
+import { FileText, CalendarClock, CheckCircle, XCircle, AlertCircle, ArrowLeft, ArrowRight, MessageSquare, Edit, Trash2, UserPlus, RefreshCcw, LocateFixed } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -56,6 +56,7 @@ const getSurveyById = (id: string | null) => {
         village: "मोहगाव",
         shivar: "शिवार अ",
         surveyNumber: "SN-123",
+        gpsCoordinates: "18.4088,76.5702"
     },
     farmer: {
         name: surveyFromList.farmerName,
@@ -194,6 +195,8 @@ export default function SurveyDetailPage() {
   const [survey, setSurvey] = React.useState<SurveyData>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState("farmer-selection");
+  const mapRef = React.useRef<{ refreshLocation: () => void }>(null);
+
 
   const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
@@ -263,6 +266,9 @@ export default function SurveyDetailPage() {
   }
 
   const isLastTab = activeTab === tabs[tabs.length - 1];
+  
+  const [lat, lng] = survey.location.gpsCoordinates.split(',').map(Number);
+  const farmLocation = !isNaN(lat) && !isNaN(lng) ? { lat, lng } : undefined;
 
   return (
     <div className="flex flex-col gap-6">
@@ -381,12 +387,32 @@ export default function SurveyDetailPage() {
 
                     <TabsContent value="map" className="pt-6">
                         <div className="flex flex-col gap-6">
+                             <Card>
+                                <CardHeader className="flex flex-row items-center justify-between">
+                                    <div className="space-y-1.5">
+                                    <CardTitle className="font-headline text-lg flex items-center gap-2">
+                                        <LocateFixed className="w-5 h-5 text-primary"/>
+                                        तुमचे स्थान (Your Location)
+                                    </CardTitle>
+                                    <CardDescription>
+                                        शेतापासून अंदाजित अंतर: <strong>०.२ किमी</strong> (Est. distance from farm: 0.2 km)
+                                    </CardDescription>
+                                    </div>
+                                    <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()}>
+                                        <RefreshCcw className="h-4 w-4" />
+                                        <span className="sr-only">Refresh Location</span>
+                                    </Button>
+                                </CardHeader>
+                                <CardContent className="h-64 bg-muted rounded-b-lg">
+                                    <FieldBoyMap ref={mapRef} showDistance farmLocation={farmLocation} />
+                                </CardContent>
+                            </Card>
                             <Card>
                                 <CardHeader>
-                                    <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
+                                    <CardTitle className="font-headline text-lg">शेताची सीमा (Farm Boundary)</CardTitle>
                                 </CardHeader>
                                 <CardContent className="h-96">
-                                    <FieldBoyMap farmLocation={{lat: 18.4088, lng: 76.5702}} />
+                                    <FieldBoyMap farmLocation={farmLocation} />
                                 </CardContent>
                             </Card>
                         </div>
@@ -445,5 +471,3 @@ export default function SurveyDetailPage() {
     </div>
   );
 }
-
-    

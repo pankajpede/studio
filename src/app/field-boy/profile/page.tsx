@@ -13,9 +13,8 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
-import { KeyRound, User } from "lucide-react"
+import { KeyRound, User, Eye, EyeOff } from "lucide-react"
 
 // Mock data for the logged-in field boy
 const fieldBoyData = {
@@ -28,8 +27,40 @@ const fieldBoyData = {
   avatarUrl: "https://placehold.co/100x100.png",
 }
 
+type PasswordStrength = 'none' | 'poor' | 'weak' | 'strong';
+
 export default function FieldBoyProfilePage() {
   const { toast } = useToast()
+  const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
+  const [showNewPassword, setShowNewPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [newPassword, setNewPassword] = React.useState("");
+  const [passwordStrength, setPasswordStrength] = React.useState<PasswordStrength>('none');
+  const [strengthText, setStrengthText] = React.useState("");
+
+
+  const checkPasswordStrength = (password: string): { strength: PasswordStrength, text: string } => {
+      if (!password) return { strength: 'none', text: '' };
+      
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasLowerCase = /[a-z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+      const isLongEnough = password.length >= 7;
+
+      const score = [hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, isLongEnough].filter(Boolean).length;
+
+      if (score < 3) return { strength: 'poor', text: 'खराब' };
+      if (score < 5) return { strength: 'weak', text: 'कमकुवत' };
+      return { strength: 'strong', text: 'मजबूत' };
+  };
+
+  React.useEffect(() => {
+      const { strength, text } = checkPasswordStrength(newPassword);
+      setPasswordStrength(strength);
+      setStrengthText(text);
+  }, [newPassword]);
+
 
   const handleUpdateProfile = () => {
     toast({
@@ -44,6 +75,13 @@ export default function FieldBoyProfilePage() {
       title: "पासवर्ड बदलला",
       description: "तुमचा पासवर्ड यशस्वीरित्या अद्यतनित केला आहे.",
     })
+  }
+  
+  const strengthColorClasses = {
+      none: 'text-muted-foreground',
+      poor: 'text-red-500',
+      weak: 'text-yellow-500',
+      strong: 'text-green-500',
   }
 
   return (
@@ -93,21 +131,67 @@ export default function FieldBoyProfilePage() {
             <KeyRound className="h-6 w-6 text-primary" />
             <CardTitle className="font-headline">पासवर्ड बदला</CardTitle>
           </div>
-          <CardDescription>उत्तम सुरक्षेसाठी तुमचा पासवर्ड अद्यतनित करा.</CardDescription>
+          <CardDescription className="text-xs">
+            किमान ७ अक्षरे, एक अप्परकेस, एक लोअरकेस आणि एक विशेष वर्ण आवश्यक आहे.
+          </CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="grid gap-2">
             <Label htmlFor="current-password">सध्याचा पासवर्ड</Label>
-            <Input id="current-password" type="password" />
+             <div className="relative">
+                <Input id="current-password" type={showCurrentPassword ? "text" : "password"} />
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                    onClick={() => setShowCurrentPassword(prev => !prev)}
+                >
+                    {showCurrentPassword ? <EyeOff /> : <Eye />}
+                </Button>
+            </div>
           </div>
           <div /> 
           <div className="grid gap-2">
             <Label htmlFor="new-password">नवीन पासवर्ड</Label>
-            <Input id="new-password" type="password" />
+            <div className="relative">
+                <Input 
+                    id="new-password" 
+                    type={showNewPassword ? "text" : "password"} 
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                />
+                 <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                    onClick={() => setShowNewPassword(prev => !prev)}
+                >
+                    {showNewPassword ? <EyeOff /> : <Eye />}
+                </Button>
+            </div>
+             {passwordStrength !== 'none' && (
+                <div className="flex items-center gap-2 text-xs">
+                    <span>पासवर्डची ताकद:</span>
+                    <span className={strengthColorClasses[passwordStrength]}>{strengthText}</span>
+                </div>
+            )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="confirm-password">नवीन पासवर्डची पुष्टी करा</Label>
-            <Input id="confirm-password" type="password" />
+            <div className="relative">
+                <Input id="confirm-password" type={showConfirmPassword ? "text" : "password"} />
+                 <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                    onClick={() => setShowConfirmPassword(prev => !prev)}
+                >
+                    {showConfirmPassword ? <EyeOff /> : <Eye />}
+                </Button>
+            </div>
           </div>
         </CardContent>
          <CardFooter className="flex justify-end">
@@ -117,3 +201,5 @@ export default function FieldBoyProfilePage() {
     </div>
   )
 }
+
+    

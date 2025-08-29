@@ -87,7 +87,7 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
         month = marathiMonths[format(dueDate, 'MMMM')];
     } else {
         day = format(originalDate, 'dd');
-        month = marathiMonths[format(dueDate, 'MMMM')];
+        month = marathiMonths[format(originalDate, 'MMMM')];
     }
     
     if (survey.status === 'Draft') {

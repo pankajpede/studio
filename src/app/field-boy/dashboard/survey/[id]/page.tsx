@@ -15,6 +15,7 @@ import FieldBoyMap from '@/components/field-boy-map';
 import Link from 'next/link';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Draft" | "Assigned";
 
@@ -39,13 +40,23 @@ const getSurveyById = (id: string | null) => {
     const surveyFromList = mockSurveys.find(s => s.id === id);
     if (!surveyFromList) return null;
 
+    let verificationDetails = null;
+    if (surveyFromList.status === 'Rejected') {
+        verificationDetails = {
+            accepted: 15,
+            rejected: 7,
+            rejectedFields: ['sabNumber', 'linkNumber', 'plantationDate', 'farm-photo-1', 'saatBaaraPhoto', 'farmBoundary', 'fieldBoyLocation'],
+        };
+    }
+
   return {
     id: surveyFromList.id,
     status: surveyFromList.status as SurveyStatus,
     daysLeft: surveyFromList.daysLeft,
     rejectionReason: surveyFromList.status === "Rejected" ? "अपूर्ण कागदपत्रे सादर केली." : "-",
-    rejectionRemark: surveyFromList.status === 'Rejected' ? 'कृपया शेतकरी आणि ७/१२ कागदपत्रांचे फोटो पुन्हा अपलोड करा.' : null,
+    rejectionRemark: surveyFromList.status === 'Rejected' ? 'कृपया शेतकरी आणि ७/१२ कागदपत्रांचे फोटो पुन्हा अपलोड करा. लागवडीची तारीख चुकीची आहे.' : null,
     rejectionAudioUrl: surveyFromList.status === 'Rejected' ? "data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=" : null,
+    verificationDetails,
     submittedOn: "2024-06-30",
     location: {
         state: "महाराष्ट्र",
@@ -150,7 +161,7 @@ const StatusInfo = ({ survey }: { survey: SurveyData }) => {
     return (
         <Card className={`${bgClass} ${textClass}`}>
             <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                         {icon}
                         <div className="flex flex-col">
@@ -158,12 +169,26 @@ const StatusInfo = ({ survey }: { survey: SurveyData }) => {
                             {survey.status === 'Rejected' && <CardDescription className={`${textClass} opacity-80`}>{survey.rejectionReason}</CardDescription>}
                         </div>
                     </div>
-                     {(survey.status === 'Pending' || survey.status === 'Assigned' || survey.status === 'Rejected') && survey.daysLeft !== undefined && (
-                        <div className="flex items-center text-sm font-medium">
-                            <CalendarClock className="h-4 w-4 mr-1.5"/>
-                            <span>{survey.daysLeft} दिवस बाकी</span>
-                        </div>
-                    )}
+                     <div className="flex items-center gap-4">
+                        {(survey.status === 'Pending' || survey.status === 'Assigned' || survey.status === 'Rejected') && survey.daysLeft !== undefined && (
+                            <div className="flex items-center text-sm font-medium">
+                                <CalendarClock className="h-4 w-4 mr-1.5"/>
+                                <span>{survey.daysLeft} दिवस बाकी</span>
+                            </div>
+                        )}
+                        {survey.status === 'Rejected' && survey.verificationDetails && (
+                            <div className="flex items-center gap-4 text-sm font-medium">
+                                <div className="flex items-center gap-1.5 text-green-600">
+                                    <CheckCircle className="h-4 w-4" />
+                                    <span>{survey.verificationDetails.accepted} मंजूर</span>
+                                </div>
+                                <div className="flex items-center gap-1.5 text-red-600">
+                                    <XCircle className="h-4 w-4" />
+                                    <span>{survey.verificationDetails.rejected} नाकारले</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </CardHeader>
             {survey.status === 'Rejected' && (
@@ -179,10 +204,20 @@ const StatusInfo = ({ survey }: { survey: SurveyData }) => {
     );
 };
 
-const ReadOnlyInput = ({ label, value }: { label: string, value?: string | number | null }) => (
+const ReadOnlyInput = ({ label, value, isRejected }: { label: string; value?: string | number | null; isRejected?: boolean }) => (
     <div className="grid gap-1.5">
         <Label className="text-muted-foreground text-sm">{label}</Label>
-        <p className="font-medium text-base h-10 flex items-center px-3 rounded-md border bg-muted/50">{value || '-'}</p>
+        <p className={cn(
+            "font-medium text-base h-10 flex items-center px-3 rounded-md border bg-muted/50",
+            isRejected && "border-red-500 ring-2 ring-red-500/50"
+        )}>{value || '-'}</p>
+    </div>
+);
+
+const MediaDisplayItem = ({ label, src, isRejected, id }: { label: string; src: string; isRejected?: boolean, id:string }) => (
+    <div className="grid gap-2">
+        <Label>{label}</Label>
+        <Image src={src} alt={label} width={400} height={300} data-ai-hint={id} className={cn("rounded-lg border aspect-video object-cover", isRejected && "border-red-500 ring-2 ring-red-500/50")} />
     </div>
 );
 
@@ -270,6 +305,7 @@ export default function SurveyDetailPage() {
   
   const [lat, lng] = survey.location.gpsCoordinates.split(',').map(Number);
   const farmLocation = !isNaN(lat) && !isNaN(lng) ? { lat, lng } : undefined;
+  const rejectedFields = survey.verificationDetails?.rejectedFields || [];
 
   return (
     <div className="flex flex-col gap-6">
@@ -303,7 +339,7 @@ export default function SurveyDetailPage() {
                             <ReadOnlyInput label="सर्वेक्षण क्र." value={survey.location.surveyNumber} />
                             <ReadOnlyInput label="शेतकरी" value={survey.farmer.name} />
                             <ReadOnlyInput label="उत्पादक प्रकार" value={survey.farmer.growerType} />
-                            <ReadOnlyInput label="सब नंबर" value={survey.farmer.sabNumber} />
+                            <ReadOnlyInput label="सब नंबर" value={survey.farmer.sabNumber} isRejected={rejectedFields.includes('sabNumber')} />
                             <ReadOnlyInput label="खाता नंबर" value={survey.farmer.khataNumber} />
                         </div>
                     </TabsContent>
@@ -311,7 +347,7 @@ export default function SurveyDetailPage() {
                     <TabsContent value="farmer-info" className="pt-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <ReadOnlyInput label="मोबाइल नंबर" value={survey.farmer.mobile} />
-                            <ReadOnlyInput label="लिंक नंबर" value={survey.farmer.linkNumber} />
+                            <ReadOnlyInput label="लिंक नंबर" value={survey.farmer.linkNumber} isRejected={rejectedFields.includes('linkNumber')} />
                             <ReadOnlyInput label="NAP नंबर" value={survey.farmer.napNumber} />
                             <ReadOnlyInput label="बँकेचे नाव" value={survey.farmer.bankName} />
                             <ReadOnlyInput label="शाखा" value={survey.farmer.branchName} />
@@ -323,7 +359,7 @@ export default function SurveyDetailPage() {
                     <TabsContent value="farm-info" className="pt-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                              <ReadOnlyInput label="क्षेत्र (हेक्टर)" value={survey.farm.area} />
-                            <ReadOnlyInput label="लागवड तारीख" value={format(survey.farm.plantationDate, "PPP")} />
+                            <ReadOnlyInput label="लागवड तारीख" value={format(survey.farm.plantationDate, "PPP")} isRejected={rejectedFields.includes('plantationDate')} />
                             <ReadOnlyInput label="उसाची जात" value={survey.farm.caneVariety} />
                             <ReadOnlyInput label="उसाचा प्रकार" value={survey.farm.caneType} />
                             <ReadOnlyInput label="सिंचनाचा प्रकार" value={survey.farm.irrigationType} />
@@ -344,26 +380,20 @@ export default function SurveyDetailPage() {
                                 <Label className="text-base font-medium">शेताचे फोटो</Label>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
                                     {survey.media.farmPhotos.map((photo, index) => (
-                                        <div key={index} className="grid gap-2">
-                                            <Label className="text-sm">{survey.media.farmPhotoLabels[index]}</Label>
-                                            <Image src={photo} alt={survey.media.farmPhotoLabels[index]} width={400} height={300} className="rounded-lg border aspect-video object-cover" data-ai-hint="farm photo" />
-                                        </div>
+                                        <MediaDisplayItem 
+                                            key={index}
+                                            id={`farm-photo-${index}`}
+                                            label={survey.media.farmPhotoLabels[index]} 
+                                            src={photo} 
+                                            isRejected={rejectedFields.includes(`farm-photo-${index}`)} 
+                                        />
                                     ))}
                                 </div>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
-                                <div className="grid gap-2">
-                                    <Label>शेतकरी फोटो</Label>
-                                    <Image src={survey.media.farmerPhoto} alt="Farmer Photo" width={400} height={300} className="rounded-lg border aspect-video object-cover" data-ai-hint="person photo" />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label>फील्ड बॉय फोटो</Label>
-                                    <Image src={survey.media.fieldBoyPhoto} alt="Field Boy Photo" width={400} height={300} className="rounded-lg border aspect-video object-cover" data-ai-hint="person photo" />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label>७/१२ कागदपत्र</Label>
-                                    <Image src={survey.media.saatBaaraPhoto} alt="7/12 Document" width={400} height={300} className="rounded-lg border aspect-video object-cover" data-ai-hint="document photo" />
-                                </div>
+                                <MediaDisplayItem id="farmer-photo" label="शेतकरी फोटो" src={survey.media.farmerPhoto} isRejected={rejectedFields.includes('farmerPhoto')} />
+                                <MediaDisplayItem id="field-boy-photo" label="फील्ड बॉय फोटो" src={survey.media.fieldBoyPhoto} isRejected={rejectedFields.includes('fieldBoyPhoto')} />
+                                <MediaDisplayItem id="saat-baara-photo" label="७/१२ कागदपत्र" src={survey.media.saatBaaraPhoto} isRejected={rejectedFields.includes('saatBaaraPhoto')} />
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                                 <div className="grid gap-2">
@@ -388,7 +418,7 @@ export default function SurveyDetailPage() {
 
                     <TabsContent value="map" className="pt-6">
                         <div className="flex flex-col gap-6">
-                             <Card>
+                             <Card className={cn(rejectedFields.includes('fieldBoyLocation') && "border-red-500 ring-2 ring-red-500/50")}>
                                 <CardHeader className="flex flex-row items-center justify-between">
                                     <div className="space-y-1.5">
                                     <CardTitle className="font-headline text-lg flex items-center gap-2">
@@ -415,7 +445,7 @@ export default function SurveyDetailPage() {
                                     />
                                 </CardContent>
                             </Card>
-                            <Card>
+                            <Card className={cn(rejectedFields.includes('farmBoundary') && "border-red-500 ring-2 ring-red-500/50")}>
                                 <CardHeader>
                                     <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
                                 </CardHeader>

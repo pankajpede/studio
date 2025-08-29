@@ -313,6 +313,7 @@ export default function SurveyReviewPage() {
         irrigationMethod: 'pending' as VerificationStatus,
         plantationMethod: 'pending' as VerificationStatus,
         fieldBoyLocation: 'pending' as VerificationStatus,
+        farmBoundary: 'pending' as VerificationStatus,
     });
     
     const initialMediaStatus = {
@@ -659,9 +660,32 @@ export default function SurveyReviewPage() {
                     </CardContent>
                 </Card>
                  <Card>
-                    <CardHeader>
-                        <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
-                        <CardDescription>नोंदलेले क्षेत्र: 0.95 हेक्टर (फरक: -0.05 हेक्टर)</CardDescription>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
+                            <CardDescription>नोंदलेले क्षेत्र: 0.95 हेक्टर (फरक: -0.05 हेक्टर)</CardDescription>
+                        </div>
+                         <div className="flex items-center gap-2">
+                            <Button 
+                                variant={verificationStatus.farmBoundary === 'accepted' ? 'default' : 'outline'} 
+                                size="icon" 
+                                className={cn(
+                                    "h-8 w-8",
+                                    verificationStatus.farmBoundary === 'accepted' && "bg-green-600 hover:bg-green-700 border-green-600 text-white"
+                                )}
+                                onClick={() => toggleVerification('farmBoundary', 'accept')}
+                            >
+                                <Check className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                                variant={verificationStatus.farmBoundary === 'rejected' ? 'destructive' : 'outline'} 
+                                size="icon" 
+                                className="h-8 w-8"
+                                onClick={() => toggleVerification('farmBoundary', 'reject')}
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
+                        </div>
                     </CardHeader>
                     <CardContent className="h-96">
                        <FieldBoyMap />

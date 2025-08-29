@@ -100,46 +100,67 @@ const FileUploadItem = ({ file, onRemove, name }: { file: File, onRemove: () => 
     </div>
 );
 
+const ReadOnlyInput = ({ label, value }: { label: string, value?: string | number | null }) => (
+    <div className="grid gap-1.5">
+        <Label className="text-muted-foreground text-sm">{label}</Label>
+        <p className="font-medium text-base h-10 flex items-center px-3 rounded-md border bg-muted/50">{value || '-'}</p>
+    </div>
+);
+
 
 const ImageUploader = ({
     id,
     label,
     onFileChange,
     file,
-    capture
+    capture,
+    isReadOnly = false,
+    imageUrl
 }: {
     id: string;
     label: string;
     onFileChange: (file: File | null) => void;
     file: File | null;
     capture?: 'user' | 'environment';
+    isReadOnly?: boolean;
+    imageUrl?: string;
 }) => {
-    // Create a preview URL for the file
     const previewUrl = React.useMemo(() => {
-        if (file) {
-            return URL.createObjectURL(file);
-        }
+        if (file) return URL.createObjectURL(file);
+        if (imageUrl) return imageUrl;
         return null;
-    }, [file]);
+    }, [file, imageUrl]);
 
-    // Clean up the object URL when the component unmounts
     React.useEffect(() => {
         return () => {
-            if (previewUrl) {
+            if (file && previewUrl && !imageUrl) {
                 URL.revokeObjectURL(previewUrl);
             }
         };
-    }, [previewUrl]);
+    }, [previewUrl, file, imageUrl]);
 
-    if (file && previewUrl) {
+    if (previewUrl) {
         return (
             <div className="grid gap-2">
                  <Label>{label}</Label>
                  <div className="relative w-full aspect-video rounded-lg overflow-hidden border">
                      <Image src={previewUrl} alt={label} layout="fill" objectFit="cover" data-ai-hint="photo image" />
-                     <Button size="icon" variant="destructive" className="absolute top-1 right-1 h-7 w-7 z-10" onClick={() => onFileChange(null)}>
-                         <X className="h-4 w-4" />
-                     </Button>
+                     {!isReadOnly && (
+                        <Button size="icon" variant="destructive" className="absolute top-1 right-1 h-7 w-7 z-10" onClick={() => onFileChange(null)}>
+                           <X className="h-4 w-4" />
+                        </Button>
+                     )}
+                 </div>
+            </div>
+        );
+    }
+
+    if (isReadOnly) {
+         return (
+            <div className="grid gap-2">
+                 <Label>{label}</Label>
+                 <div className="relative w-full aspect-video rounded-lg overflow-hidden border bg-muted/50 flex items-center justify-center">
+                    <p className="text-xs text-muted-foreground">फोटो उपलब्ध नाही</p>
                  </div>
             </div>
         );
@@ -252,32 +273,6 @@ export default function SurveyReviewPage() {
     const [shivar, setShivar] = React.useState("shivar-a");
     const [surveyNumber, setSurveyNumber] = React.useState("sn-123");
     const [partyName, setPartyName] = React.useState("farmer-1");
-    const [growerType, setGrowerType] = React.useState('member');
-    const [sabNumber, setSabNumber] = React.useState("SAB-A001");
-    const [khataNumber, setKhataNumber] = React.useState("KH-112233");
-
-    // State for farmer info tab
-    const [mobile, setMobile] = React.useState("9876543210");
-    const [linkNumber, setLinkNumber] = React.useState("LNK-54321");
-    const [napNumber, setNapNumber] = React.useState("NAP-98765");
-    const [bankName, setBankName] = React.useState("स्टेट बँक ऑफ इंडिया");
-    const [branchName, setBranchName] = React.useState("लातूर शाखा");
-    const [accountNumber, setAccountNumber] = React.useState("XXXX-XXXX-1234");
-    const [ifscCode, setIfscCode] = React.useState("SBIN0001234");
-    
-    // State for farm info
-    const [plantationDate, setPlantationDate] = React.useState<Date | undefined>(new Date('2023-08-12'));
-    const [caneType, setCaneType] = React.useState('type-1');
-    const [caneMaturityDate, setCaneMaturityDate] = React.useState<Date | null>(null);
-
-    // State for media tab
-    const [farmPhotos, setFarmPhotos] = React.useState<(File | null)[]>(Array(4).fill(null));
-    const farmPhotoLabels = ["शेताचे फोटो", "उसाची जात", "मातीचा प्रकार", "सिंचनाचा प्रकार"];
-    const [farmerPhoto, setFarmerPhoto] = React.useState<File | null>(null);
-    const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File | null>(null);
-    const [saatBaaraPhoto, setSaatBaaraPhoto] = React.useState<File | null>(null);
-    const [audioNote, setAudioNote] = React.useState<File | null>(null);
-    const [otherMedia, setOtherMedia] = React.useState<OtherMedia[]>([{ id: 1, name: '', file: null }]);
     
     // State for review modal
     const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -306,54 +301,8 @@ export default function SurveyReviewPage() {
     }
     
     const selectedFarmer = mockFarmers.find(f => f.value === partyName);
-
-    React.useEffect(() => {
-        if (caneType && plantationDate) {
-            let monthsToAdd = 0;
-            if (caneType === 'type-1') { 
-                monthsToAdd = 12; 
-            } else if (caneType === 'type-2') {
-                monthsToAdd = 14; 
-            }
-            if (monthsToAdd > 0) {
-                setCaneMaturityDate(addMonths(plantationDate, monthsToAdd));
-            } else {
-                setCaneMaturityDate(null);
-            }
-        } else {
-            setCaneMaturityDate(null);
-        }
-    }, [caneType, plantationDate]);
-
-    const getBreadcrumb = () => {
-        const stateLabel = selectedState ? `${mockStates.find(s => s.value === selectedState)?.label}` : '';
-        const districtLabel = district ? ` > ${mockDistricts.find(d => d.value === district)?.label}` : '';
-        const talukaLabel = taluka ? ` > ${mockTalukas.find(t => t.value === taluka)?.label}` : '';
-        const villageLabel = village ? ` > ${mockVillages.find(v => v.value === village)?.label}` : '';
-        const partyNameLabel = partyName ? ` > ${mockFarmers.find(f => f.value === partyName)?.label}` : '';
-
-        return `${stateLabel}${districtLabel}${talukaLabel}${villageLabel}${partyNameLabel}`;
-    };
-            
-    const handleOtherMediaChange = (id: number, field: keyof OtherMedia, value: string | File | null) => {
-        setOtherMedia(otherMedia.map(item => item.id === id ? { ...item, [field]: value } : item));
-    };
-
-    const handleAddOtherMedia = () => {
-        if (otherMedia.length < 3) {
-            setOtherMedia([...otherMedia, { id: Date.now(), name: '', file: null }]);
-        }
-    };
-
-    const handleRemoveOtherMedia = (id: number) => {
-        setOtherMedia(otherMedia.filter(item => item.id !== id));
-    };
-
-    const handleFarmPhotoChange = (index: number, file: File | null) => {
-        const newPhotos = [...farmPhotos];
-        newPhotos[index] = file;
-        setFarmPhotos(newPhotos);
-    };
+    
+    const farmPhotoLabels = ["शेताचे फोटो", "उसाची जात", "मातीचा प्रकार", "सिंचनाचा प्रकार"];
 
 
   return (
@@ -363,7 +312,7 @@ export default function SurveyReviewPage() {
         {selectedFarmer ? (
           <>
             <CardTitle className="font-headline text-xl">{selectedFarmer.label} - {id}</CardTitle>
-            <CardDescription>{getBreadcrumb()}</CardDescription>
+            <CardDescription>फील्ड बॉय: सुनील पवार</CardDescription>
           </>
         ) : (
           <>
@@ -384,270 +333,48 @@ export default function SurveyReviewPage() {
           
           <TabsContent value="farmer-selection" className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="grid gap-2">
-                    <Label htmlFor="state">राज्य</Label>
-                    <Combobox
-                        options={mockStates}
-                        value={selectedState}
-                        onValueChange={setSelectedState}
-                        placeholder="राज्य निवडा..."
-                        searchPlaceholder="राज्य शोधा..."
-                    />
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="district">जिल्हा</Label>
-                    <Combobox
-                        options={mockDistricts}
-                        value={district}
-                        onValueChange={setDistrict}
-                        placeholder="जिल्हा निवडा..."
-                        searchPlaceholder="जिल्हा शोधा..."
-                        disabled={!selectedState}
-                    />
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="taluka">तालुका</Label>
-                    <Combobox
-                        options={mockTalukas}
-                        value={taluka}
-                        onValueChange={setTaluka}
-                        placeholder="तालुका निवडा..."
-                        searchPlaceholder="तालुका शोधा..."
-                        disabled={!district}
-                    />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="circle">सर्कल</Label>
-                    <Combobox
-                        options={mockCircles}
-                        value={circle}
-                        onValueChange={setCircle}
-                        placeholder="सर्कल निवडा..."
-                        searchPlaceholder="सर्कल शोधा..."
-                        disabled={!taluka}
-                    />
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="gut">गट</Label>
-                    <Combobox
-                        options={mockGuts}
-                        value={gut}
-                        onValueChange={setGut}
-                        placeholder="गट निवडा..."
-                        searchPlaceholder="गट शोधा..."
-                        disabled={!circle}
-                    />
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="village">गाव</Label>
-                     <Combobox
-                        options={mockVillages}
-                        value={village}
-                        onValueChange={setVillage}
-                        placeholder="गाव निवडा..."
-                        searchPlaceholder="गाव शोधा..."
-                        disabled={!gut}
-                    />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="shivar">शिवार</Label>
-                    <Combobox
-                        options={mockShivars}
-                        value={shivar}
-                        onValueChange={setShivar}
-                        placeholder="शिवार निवडा..."
-                        searchPlaceholder="शिवार शोधा..."
-                        disabled={!village}
-                    />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="survey-number">सर्वेक्षण क्र.</Label>
-                    <Combobox
-                        options={mockSurveyNumbers}
-                        value={surveyNumber}
-                        onValueChange={setSurveyNumber}
-                        placeholder="सर्वेक्षण क्र. निवडा..."
-                        searchPlaceholder="सर्वेक्षण क्र. शोधा..."
-                        disabled={!shivar}
-                    />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="party-name">शेतकरी</Label>
-                    <Combobox
-                        options={mockFarmers}
-                        value={partyName}
-                        onValueChange={setPartyName}
-                        placeholder="शेतकरी निवडा..."
-                        searchPlaceholder="शेतकरी शोधा..."
-                        disabled={!surveyNumber}
-                    />
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="grower-type">उत्पादक प्रकार</Label>
-                    <Select value={growerType} onValueChange={setGrowerType} disabled={!partyName}>
-                        <SelectTrigger id="grower-type"><SelectValue placeholder="उत्पादक प्रकार निवडा" /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="member">सभासद</SelectItem>
-                            <SelectItem value="non-member">बिगर सभासद</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="sab-number">सब नंबर</Label>
-                    <Input id="sab-number" placeholder="सब नंबर टाका" value={sabNumber} onChange={(e) => setSabNumber(e.target.value)} />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="khata-number">खाता नंबर</Label>
-                    <Input id="khata-number" placeholder="खाता नंबर टाका" value={khataNumber} onChange={(e) => setKhataNumber(e.target.value)} />
-                </div>
+                <ReadOnlyInput label="राज्य" value="महाराष्ट्र" />
+                <ReadOnlyInput label="जिल्हा" value="लातूर" />
+                <ReadOnlyInput label="तालुका" value="अहमदपूर" />
+                <ReadOnlyInput label="सर्कल" value="सर्कल १" />
+                <ReadOnlyInput label="गट" value="गट १०१" />
+                <ReadOnlyInput label="गाव" value="मोहगाव" />
+                <ReadOnlyInput label="शिवार" value="शिवार अ" />
+                <ReadOnlyInput label="सर्वेक्षण क्र." value="SN-123" />
+                <ReadOnlyInput label="शेतकरी" value="सचिन कुलकर्णी" />
+                <ReadOnlyInput label="उत्पादक प्रकार" value="सभासद" />
+                <ReadOnlyInput label="सब नंबर" value="SAB-A001" />
+                <ReadOnlyInput label="खाता नंबर" value="KH-112233" />
             </div>
           </TabsContent>
 
           <TabsContent value="farmer-info" className="pt-6">
-             <div className="flex flex-col gap-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="grid gap-2">
-                       <Label htmlFor="mobile">मोबाइल नंबर</Label>
-                        <Input id="mobile" type="tel" value={mobile} onChange={(e) => setMobile(e.target.value)}/>
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="link-number">लिंक नंबर</Label>
-                        <Input id="link-number" value={linkNumber} onChange={(e) => setLinkNumber(e.target.value)} />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="nap-number">NAP नंबर</Label>
-                        <Input id="nap-number" value={napNumber} onChange={(e) => setNapNumber(e.target.value)} />
-                    </div>
-                </div>
-                  <div className="space-y-4">
-                    <div className="relative">
-                        <Separator />
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-card px-2">
-                            <span className="text-sm font-medium text-muted-foreground">बँक तपशील</span>
-                        </div>
-                    </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                         <div className="grid gap-2">
-                            <Label htmlFor="bank-name">बँकेचे नाव</Label>
-                            <Input id="bank-name" value={bankName} onChange={(e) => setBankName(e.target.value)} />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="branch-name">शाखा</Label>
-                            <Input id="branch-name" value={branchName} onChange={(e) => setBranchName(e.target.value)} />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="account-number">खाते क्रमांक</Label>
-                            <Input id="account-number" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="ifsc-code">IFSC कोड</Label>
-                            <Input id="ifsc-code" value={ifscCode} onChange={(e) => setIfscCode(e.target.value)} />
-                        </div>
-                      </div>
-                 </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <ReadOnlyInput label="मोबाइल नंबर" value="9876543210" />
+                <ReadOnlyInput label="लिंक नंबर" value="LNK-54321" />
+                <ReadOnlyInput label="NAP नंबर" value="NAP-98765" />
+                <ReadOnlyInput label="बँकेचे नाव" value="स्टेट बँक ऑफ इंडिया" />
+                <ReadOnlyInput label="शाखा" value="लातूर शाखा" />
+                <ReadOnlyInput label="खाते क्रमांक" value="XXXX-XXXX-1234" />
+                <ReadOnlyInput label="IFSC कोड" value="SBIN0001234" />
             </div>
           </TabsContent>
 
           <TabsContent value="farm-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="grid gap-2">
-                    <Label htmlFor="area">क्षेत्र (हेक्टर)</Label>
-                    <Input id="area" type="number" defaultValue="1.0" />
-                </div>
-                 <div className="grid gap-2">
-                    <Label>लागवड तारीख</Label>
-                    <Popover>
-                        <PopoverTrigger asChild>
-                        <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal",!plantationDate && "text-muted-foreground")}>
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {plantationDate ? format(plantationDate, "PPP") : <span>एक तारीख निवडा</span>}
-                        </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                        <Calendar mode="single" selected={plantationDate} onSelect={setPlantationDate} initialFocus/>
-                        </PopoverContent>
-                    </Popover>
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="cane-variety">उसाची जात</Label>
-                    <Select defaultValue="variety-1">
-                        <SelectTrigger id="cane-variety"><SelectValue placeholder="उसाची जात निवडा" /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="variety-1">जात १</SelectItem>
-                            <SelectItem value="variety-2">जात २</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="cane-type">उसाचा प्रकार</Label>
-                    <Select value={caneType} onValueChange={setCaneType}>
-                        <SelectTrigger id="cane-type"><SelectValue placeholder="उसाचा प्रकार निवडा" /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="type-1">प्रकार १ (12 महिने)</SelectItem>
-                            <SelectItem value="type-2">प्रकार २ (14 महिने)</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="grid gap-2">
-                    <Label>उसाची पक्वता</Label>
-                    <Input value={caneMaturityDate ? format(caneMaturityDate, "PPP") : 'पक्वता तारीख'} disabled />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="irrigation-type">सिंचनाचा प्रकार</Label>
-                    <Select defaultValue="drip">
-                        <SelectTrigger id="irrigation-type"><SelectValue placeholder="सिंचनाचा प्रकार निवडा" /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="drip">ठिबक</SelectItem>
-                            <SelectItem value="flood">प्रवाही</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="irrigation-source">सिंचनाचा स्रोत</Label>
-                    <Select defaultValue="well">
-                        <SelectTrigger id="irrigation-source"><SelectValue placeholder="सिंचनाचा स्रोत निवडा" /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="well">विहीर</SelectItem>
-                            <SelectItem value="canal">कालवा</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                 <div className="grid gap-2">
-                    <Label htmlFor="irrigation-method">सिंचन पद्धत</Label>
-                    <Select defaultValue="method-1">
-                        <SelectTrigger id="irrigation-method"><SelectValue placeholder="सिंचन पद्धत निवडा" /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="method-1">पद्धत १</SelectItem>
-                            <SelectItem value="method-2">पद्धत २</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="plantation-method">लागवड पद्धत</Label>
-                    <Select defaultValue="method-a">
-                        <SelectTrigger id="plantation-method"><SelectValue placeholder="लागवड पद्धत निवडा" /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="method-a">पद्धत अ</SelectItem>
-                            <SelectItem value="method-b">पद्धत ब</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="east">पूर्व</Label>
-                    <Input id="east" placeholder="पूर्व सीमा तपशील" />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="west">पश्चिम</Label>
-                    <Input id="west" placeholder="पश्चिम सीमा तपशील" />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="north">उत्तर</Label>
-                    <Input id="north" placeholder="उत्तर सीमा तपशील" />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="south">दक्षिण</Label>
-                    <Input id="south" placeholder="दक्षिण सीमा तपशील" />
-                </div>
+                <ReadOnlyInput label="क्षेत्र (हेक्टर)" value="1.0" />
+                <ReadOnlyInput label="लागवड तारीख" value={format(new Date('2023-08-12'), "PPP")} />
+                <ReadOnlyInput label="उसाची जात" value="जात १" />
+                <ReadOnlyInput label="उसाचा प्रकार" value="प्रकार १ (12 महिने)" />
+                <ReadOnlyInput label="उसाची पक्वता" value={format(addMonths(new Date('2023-08-12'), 12), "PPP")} />
+                <ReadOnlyInput label="सिंचनाचा प्रकार" value="ठिबक" />
+                <ReadOnlyInput label="सिंचनाचा स्रोत" value="विहीर" />
+                <ReadOnlyInput label="सिंचन पद्धत" value="पद्धत १" />
+                <ReadOnlyInput label="लागवड पद्धत" value="पद्धत अ" />
+                <ReadOnlyInput label="पूर्व" value="शेजारील शेत" />
+                <ReadOnlyInput label="पश्चिम" value="रस्ता" />
+                <ReadOnlyInput label="उत्तर" value="ओढा" />
+                <ReadOnlyInput label="दक्षिण" value="पडीक जमीन" />
             </div>
           </TabsContent>
 
@@ -656,45 +383,30 @@ export default function SurveyReviewPage() {
                     <div>
                         <Label className="text-base font-medium">शेताचे फोटो</Label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
-                            {farmPhotos.map((photo, index) => (
-                                <ImageUploader key={index} id={`farm-photo-${index}`} label={farmPhotoLabels[index]} file={photo} onFileChange={(file) => handleFarmPhotoChange(index, file)} capture="environment"/>
+                            {farmPhotoLabels.map((label, index) => (
+                                <ImageUploader key={index} id={`farm-photo-${index}`} label={label} file={null} onFileChange={()=>{}} isReadOnly imageUrl={`https://placehold.co/400x300.png?text=${index+1}`}/>
                             ))}
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
-                        <ImageUploader id="farmer-photo" label="शेतकरी फोटो" file={farmerPhoto} onFileChange={setFarmerPhoto} capture="environment"/>
-                        <ImageUploader id="field-boy-photo" label="फील्ड बॉय फोटो" file={fieldBoyPhoto} onFileChange={setFieldBoyPhoto} capture="user"/>
-                        <ImageUploader id="saat-baara-photo" label="७/१२ कागदपत्र" file={saatBaaraPhoto} onFileChange={setSaatBaaraPhoto} capture="environment"/>
+                        <ImageUploader id="farmer-photo" label="शेतकरी फोटो" file={null} onFileChange={()=>{}} isReadOnly imageUrl="https://placehold.co/400x300.png"/>
+                        <ImageUploader id="field-boy-photo" label="फील्ड बॉय फोटो" file={null} onFileChange={()=>{}} isReadOnly imageUrl="https://placehold.co/400x300.png"/>
+                        <ImageUploader id="saat-baara-photo" label="७/१२ कागदपत्र" file={null} onFileChange={()=>{}} isReadOnly imageUrl="https://placehold.co/400x300.png"/>
                     </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                         <div className="grid gap-2">
                             <Label htmlFor="audio-note" className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट</Label>
-                            <AudioRecorder onRecordingComplete={(file) => setAudioNote(file)}/>
+                            <audio src="data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=" controls className="w-full" />
                         </div>
                          <div className="grid gap-4">
                             <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया</Label>
-                            {otherMedia.map((item) => (
-                                <div key={item.id} className="grid gap-2">
-                                     <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-center">
-                                        <Input placeholder="फाइलचे नाव" value={item.name} onChange={(e) => handleOtherMediaChange(item.id, 'name', e.target.value)}/>
-                                        <div className="relative">
-                                            <Button asChild variant="outline" size="icon">
-                                                 <Label htmlFor={`other-media-file-${item.id}`} className="cursor-pointer">
-                                                    <UploadCloud className="h-4 w-4"/>
-                                                </Label>
-                                            </Button>
-                                            <Input id={`other-media-file-${item.id}`} type="file" className="sr-only" accept="image/*,application/pdf" onChange={(e) => handleOtherMediaChange(item.id, 'file', e.target.files ? e.target.files[0] : null)}/>
-                                        </div>
-                                         {otherMedia.length > 1 && (
-                                             <Button variant="ghost" size="icon" onClick={() => handleRemoveOtherMedia(item.id)}>
-                                                <MinusCircle className="text-destructive" />
-                                             </Button>
-                                        )}
-                                    </div>
-                                    {item.file && (<FileUploadItem file={item.file} name={item.name || item.file.name} onRemove={() => handleOtherMediaChange(item.id, 'file', null)}/>)}
-                                </div>
-                            ))}
-                             {otherMedia.length < 3 && (<Button variant="outline" onClick={handleAddOtherMedia} className="w-full sm:w-auto justify-self-start"><PlusCircle className="mr-2"/> आणखी जोडा</Button>)}
+                            <div className="flex items-center gap-2 p-2 border rounded-md">
+                                <FileIcon className="h-5 w-5 text-muted-foreground"/>
+                                <span className="font-medium text-sm">नोंदणी कागदपत्र</span>
+                                <Button asChild variant="link" size="sm" className="ml-auto">
+                                    <a href="https://placehold.co/200x100.png" target="_blank" rel="noopener noreferrer">पहा</a>
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </div>

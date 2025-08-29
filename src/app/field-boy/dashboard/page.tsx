@@ -76,6 +76,7 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
     let day = "";
     let month = "";
     let submissionDate = "";
+    let linkHref = `/field-boy/dashboard/survey/${survey.id}`;
 
     const originalDate = new Date(survey.date);
     submissionDate = format(originalDate, 'dd/MM/yyyy');
@@ -89,8 +90,12 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
         month = marathiMonths[format(originalDate, 'MMMM')];
     }
     
+    if (survey.status === 'Draft' || survey.status === 'Rejected') {
+      linkHref = `/field-boy/dashboard/new?edit=${survey.id}`;
+    }
+
     return (
-        <Link href={`/field-boy/dashboard/survey/${survey.id}`} className="block">
+        <Link href={linkHref} className="block">
             <div className="bg-card text-card-foreground rounded-lg shadow-sm border overflow-hidden relative transition-all hover:shadow-md hover:border-primary/50">
                 <div className="p-4 flex items-center gap-4">
                     <div className="flex-shrink-0 flex flex-col items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary">
@@ -100,7 +105,7 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                     <div className="flex-grow space-y-1">
                         <h3 className="font-bold text-lg">{survey.farmerName}</h3>
                         <p className="text-sm text-muted-foreground">
-                             {survey.status === 'Rejected' && (
+                             {(survey.status === 'Rejected') && (
                                 <>
                                   <span>{submissionDate}</span>
                                   <span className="mx-1">•</span>

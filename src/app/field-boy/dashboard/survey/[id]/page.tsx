@@ -19,17 +19,17 @@ type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Draft" | "Assigned";
 
 // This mock data should ideally come from a shared service/API layer
 const mockSurveys = [
-  { id: "SUR001", day: "३०", month: "जून", farmerName: "सचिन कुलकर्णी", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Pending", daysLeft: 2 },
-  { id: "SUR002", day: "२९", month: "जून", farmerName: "विशाल मोरे", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Approved" },
-  { id: "SUR003", day: "२८", month: "जून", farmerName: "अजय पाटील", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected", daysLeft: 6 },
-  { id: "SUR004", day: "२७", month: "जून", farmerName: "सुनीता मोरे", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 4 },
-  { id: "SUR005", day: "२६", month: "जून", farmerName: "कविता देशमुख", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "औसा", village: "लामजना", status: "Approved" },
-  { id: "SUR006", day: "२५", month: "जून", farmerName: "राहुल जाधव", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
-  { id: "SUR007", day: "२४", month: "जून", farmerName: "रमेश शिंदे", surveyCode: "को ८६०३२", date: "2024-08-14", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 5 },
-  { id: "SUR008", day: "२३", month: "जून", farmerName: "नवीन ड्राफ्ट", surveyCode: "को ८६०३२", date: "2024-08-15", taluka: "अहमदपूर", village: "मोहगाव", status: "Draft" },
-  { id: "SUR009", day: "२२", month: "जून", farmerName: "दुसरे प्रलंबित", surveyCode: "को ८६०३२", date: "2024-08-13", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 1 },
-  { id: "SUR010", day: "२१", month: "जून", farmerName: "नवीन नाकारलेले", surveyCode: "को ८६०३२", date: "2024-08-16", taluka: "औसा", village: "लामजना", status: "Rejected", daysLeft: 3 },
-  { id: "SUR011", day: "२०", month: "जून", farmerName: "दुसरे नियुक्त", surveyCode: "को ८६०३२", date: "2024-08-14", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 3 },
+  { id: "SUR001", farmerName: "सचिन कुलकर्णी", status: "Pending", daysLeft: 2 },
+  { id: "SUR002", farmerName: "विशाल मोरे", status: "Approved" },
+  { id: "SUR003", farmerName: "अजय पाटील", status: "Rejected", daysLeft: 6 },
+  { id: "SUR004", farmerName: "सुनीता मोरे", status: "Pending", daysLeft: 4 },
+  { id: "SUR005", farmerName: "कविता देशमुख", status: "Approved" },
+  { id: "SUR006", farmerName: "राहुल जाधव", status: "Draft" },
+  { id: "SUR007", farmerName: "रमेश शिंदे", status: "Assigned", daysLeft: 5 },
+  { id: "SUR008", farmerName: "प्रिया शर्मा", status: "Draft" },
+  { id: "SUR009", farmerName: "अमित कुमार", status: "Pending", daysLeft: 1 },
+  { id: "SUR010", farmerName: "पूजा गायकवाड", status: "Rejected", daysLeft: 3 },
+  { id: "SUR011", farmerName: "संजय मेहरा", status: "Assigned", daysLeft: 3 },
 ]
 
 // Mock data - in a real app, this would be fetched from a database
@@ -40,7 +40,7 @@ const getSurveyById = (id: string | null) => {
 
   return {
     id: surveyFromList.id,
-    status: surveyFromList.status,
+    status: surveyFromList.status as SurveyStatus,
     daysLeft: surveyFromList.daysLeft,
     rejectionReason: surveyFromList.status === "Rejected" ? "अपूर्ण कागदपत्रे सादर केली." : "-",
     rejectionRemark: surveyFromList.status === 'Rejected' ? 'कृपया शेतकरी आणि ७/१२ कागदपत्रांचे फोटो पुन्हा अपलोड करा.' : null,
@@ -49,10 +49,10 @@ const getSurveyById = (id: string | null) => {
     location: {
         state: "महाराष्ट्र",
         district: "लातूर",
-        taluka: surveyFromList.taluka,
+        taluka: "अहमदपूर",
         circle: "सर्कल १",
         gut: "गट १०१",
-        village: surveyFromList.village,
+        village: "मोहगाव",
         shivar: "शिवार अ",
         surveyNumber: "SN-123",
     },
@@ -388,40 +388,42 @@ export default function SurveyDetailPage() {
                     <ArrowLeft className="mr-2" /> मागे
                  </Button>
 
-                {survey.status === 'Rejected' && (
-                     <div className='flex items-center gap-2'>
-                        <Button variant="outline" asChild>
-                           <Link href={`/field-boy/dashboard/new?edit=${survey.id}`}>
-                                <Edit className="mr-2"/> संपादित करा
-                           </Link>
+                <div className="flex items-center gap-2">
+                    {survey.status === 'Rejected' && (
+                        <>
+                            <Button variant="outline" asChild>
+                               <Link href={`/field-boy/dashboard/new?edit=${survey.id}`}>
+                                    <Edit className="mr-2"/> संपादित करा
+                               </Link>
+                            </Button>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="destructive">
+                                        <Trash2 className="mr-2"/> हटवा
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                    <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        ही क्रिया पूर्ववत करता येणार नाही. हे सर्वेक्षण कायमचे हटवेल.
+                                    </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                    <AlertDialogCancel>रद्द करा</AlertDialogCancel>
+                                    <AlertDialogAction>हटवा</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </>
+                    )}
+                    
+                    {!isLastTab && (
+                        <Button onClick={handleNext}>
+                            पुढे <ArrowRight className="ml-2" />
                         </Button>
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="destructive">
-                                    <Trash2 className="mr-2"/> हटवा
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    ही क्रिया पूर्ववत करता येणार नाही. हे सर्वेक्षण कायमचे हटवेल.
-                                </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                <AlertDialogCancel>रद्द करा</AlertDialogCancel>
-                                <AlertDialogAction>हटवा</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                     </div>
-                )}
-                
-                {!isLastTab && (
-                    <Button onClick={handleNext}>
-                        पुढे <ArrowRight className="ml-2" />
-                    </Button>
-                )}
+                    )}
+                </div>
 
                  {(isLastTab && survey.status !== 'Rejected') && (
                      <Button variant="outline" asChild>

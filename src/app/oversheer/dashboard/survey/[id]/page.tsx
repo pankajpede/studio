@@ -297,6 +297,7 @@ export default function SurveyReviewPage() {
     // State for media modal
     const [isMediaModalOpen, setIsMediaModalOpen] = React.useState(false);
     const [currentMedia, setCurrentMedia] = React.useState<{id: string; label: string; src: string; type: 'image' | 'audio' | 'other'} | null>(null);
+    const [currentMediaStatus, setCurrentMediaStatus] = React.useState<VerificationStatus>('pending');
     
     const [verificationStatus, setVerificationStatus] = React.useState({
         sabNumber: 'pending' as VerificationStatus,
@@ -321,10 +322,7 @@ export default function SurveyReviewPage() {
         'farmer-photo': 'pending', 'field-boy-photo': 'pending', 'saat-baara-photo': 'pending'
     }
     const [mediaVerification, setMediaVerification] = React.useState<Record<string, VerificationStatus>>(initialMediaStatus);
-    const [otherMediaVerification, setOtherMediaVerification] = React.useState<Record<string, VerificationStatus>>({
-        'audio-note': 'pending',
-        'other-media-0': 'pending'
-    });
+    const [otherMediaVerification, setOtherMediaVerification] = React.useState<Record<string, VerificationStatus>>({});
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
@@ -362,6 +360,13 @@ export default function SurveyReviewPage() {
     }
     
     const handleOpenMediaModal = (media: {id: string; label: string; src: string; type: 'image' | 'audio' | 'other'}) => {
+        let status: VerificationStatus = 'pending';
+        if(media.id in mediaVerification) {
+            status = mediaVerification[media.id];
+        } else if (media.id in otherMediaVerification) {
+            status = otherMediaVerification[media.id];
+        }
+        setCurrentMediaStatus(status);
         setCurrentMedia(media);
         setIsMediaModalOpen(true);
     }
@@ -369,10 +374,12 @@ export default function SurveyReviewPage() {
     const handleMediaVerification = (status: VerificationStatus) => {
         if(currentMedia) {
             const currentId = currentMedia.id;
+            const newStatus = currentMediaStatus === status ? 'pending' : status;
+
             if(currentId in mediaVerification){
-                 setMediaVerification(prev => ({...prev, [currentId]: status}));
+                 setMediaVerification(prev => ({...prev, [currentId]: newStatus}));
             } else {
-                 setOtherMediaVerification(prev => ({...prev, [currentId]: status}));
+                 setOtherMediaVerification(prev => ({...prev, [currentId]: newStatus}));
             }
             setIsMediaModalOpen(false);
             setCurrentMedia(null);
@@ -420,7 +427,7 @@ export default function SurveyReviewPage() {
                         <span className="font-bold text-base">{rejectedCount}</span>
                     </div>
                     {rejectedCount > 0 ? (
-                        <Button size="sm" onClick={() => handleOpenFinalModal('reject')}>
+                        <Button variant="destructive" size="sm" onClick={() => handleOpenFinalModal('reject')}>
                             <X className="mr-2 h-4 w-4"/> नाकारा
                         </Button>
                     ) : acceptedCount === totalFields ? (
@@ -621,14 +628,14 @@ export default function SurveyReviewPage() {
                             label="ऑडिओ नोट"
                             src="data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA="
                             type="audio"
-                            status={otherMediaVerification['audio-note']}
+                            status={otherMediaVerification['audio-note'] || 'pending'}
                             onClick={() => handleOpenMediaModal({id: 'audio-note', label: 'ऑडिओ नोट', src: 'data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=', type: 'audio'})}
                         />
                         <VerifiableMediaItem 
                             label="इतर मीडिया (नोंदणी)"
                             src="https://placehold.co/200x100.png"
                             type="other"
-                            status={otherMediaVerification['other-media-0']}
+                            status={otherMediaVerification['other-media-0'] || 'pending'}
                             onClick={() => handleOpenMediaModal({id: 'other-media-0', label: 'इतर मीडिया (नोंदणी)', src: 'https://placehold.co/800x400.png', type: 'image'})}
                         />
                     </div>
@@ -773,10 +780,13 @@ export default function SurveyReviewPage() {
                  )}
             </div>
             <DialogFooter>
-                <Button variant="outline" onClick={() => handleMediaVerification('rejected')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                <Button variant={currentMediaStatus === 'rejected' ? 'destructive' : 'outline'} onClick={() => handleMediaVerification('rejected')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
                     <XCircle className="mr-2" /> नाकारा
                 </Button>
-                <Button onClick={() => handleMediaVerification('accepted')} className="bg-green-600 hover:bg-green-700 text-white">
+                <Button onClick={() => handleMediaVerification('accepted')} className={cn(
+                    currentMediaStatus === 'accepted' ? 'bg-green-700 hover:bg-green-800' : 'bg-green-600 hover:bg-green-700',
+                    'text-white'
+                )}>
                     <CheckCircle className="mr-2" /> स्वीकारा
                 </Button>
             </DialogFooter>

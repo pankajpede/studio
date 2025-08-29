@@ -102,7 +102,7 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                 <div className="flex justify-between items-start">
                     <div>
                         <h3 className="font-bold text-lg">{survey.farmerName}</h3>
-                        <p className="text-sm text-muted-foreground">{survey.submissionDate || survey.assignedDate} • {survey.taluka}, {survey.village}</p>
+                        <p className="text-sm text-muted-foreground">{survey.submissionDate || survey.assignedDate} • {survey.taluka} > {survey.village}</p>
                     </div>
                     <div className={cn("flex items-center gap-2 p-2 rounded-md", statusTextStyles[survey.status])}>
                         {statusIcon[survey.status]}

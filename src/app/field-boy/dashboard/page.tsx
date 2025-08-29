@@ -82,7 +82,7 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                         <p className="text-sm text-muted-foreground">
                             <span>{survey.date}</span>
                             <span className="mx-1">•</span>
-                            <span>{survey.taluka}, {survey.village}</span>
+                            <span>{survey.taluka} &gt; {survey.village}</span>
                         </p>
                          {(survey.status === 'Assigned' || survey.status === 'Pending' || survey.status === 'Rejected') && survey.daysLeft !== undefined && (
                             <div className={cn("flex items-center text-xs font-medium", statusTextStyles[survey.status])}>

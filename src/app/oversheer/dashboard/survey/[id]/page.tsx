@@ -107,6 +107,21 @@ const ReadOnlyInput = ({ label, value }: { label: string, value?: string | numbe
     </div>
 );
 
+const VerifiableInput = ({ label, value }: { label: string, value?: string | number | null }) => (
+    <div className="grid gap-1.5">
+        <Label className="text-muted-foreground text-sm">{label}</Label>
+        <div className="flex items-center gap-2">
+            <p className="flex-grow font-medium text-base h-10 flex items-center px-3 rounded-md border bg-muted/50">{value || '-'}</p>
+            <Button variant="outline" size="icon" className="h-10 w-10 border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700">
+                <Check className="h-5 w-5" />
+            </Button>
+            <Button variant="outline" size="icon" className="h-10 w-10 border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                <X className="h-5 w-5" />
+            </Button>
+        </div>
+    </div>
+);
+
 
 const ImageUploader = ({
     id,
@@ -343,8 +358,8 @@ export default function SurveyReviewPage() {
                 <ReadOnlyInput label="सर्वेक्षण क्र." value="SN-123" />
                 <ReadOnlyInput label="शेतकरी" value="सचिन कुलकर्णी" />
                 <ReadOnlyInput label="उत्पादक प्रकार" value="सभासद" />
-                <ReadOnlyInput label="सब नंबर" value="SAB-A001" />
-                <ReadOnlyInput label="खाता नंबर" value="KH-112233" />
+                <VerifiableInput label="सब नंबर" value="SAB-A001" />
+                <VerifiableInput label="खाता नंबर" value="KH-112233" />
             </div>
           </TabsContent>
 
@@ -474,3 +489,5 @@ export default function SurveyReviewPage() {
     </>
   )
 }
+
+    

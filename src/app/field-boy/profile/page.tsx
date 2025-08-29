@@ -40,9 +40,9 @@ const checkPasswordStrength = (password: string): { strength: PasswordStrength, 
 
     const score = [hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar, isLongEnough].filter(Boolean).length;
 
-    if (score < 3) return { strength: 'poor', text: 'खराब', score };
-    if (score < 5) return { strength: 'weak', text: 'कमकुवत', score };
-    return { strength: 'strong', text: 'मजबूत', score };
+    if (score === 5) return { strength: 'strong', text: 'मजबूत', score };
+    if (score >= 3) return { strength: 'weak', text: 'कमकुवत', score };
+    return { strength: 'poor', text: 'खराब', score };
 };
 
 
@@ -138,7 +138,7 @@ export default function FieldBoyProfilePage() {
             <Input id="name" defaultValue={fieldBoyData.name} />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="email">ईमेल पत्ता</Label>
+            <Label htmlFor="email">ईमेल</Label>
             <Input id="email" type="email" placeholder="ईमेल पत्ता टाका" defaultValue={fieldBoyData.email} />
           </div>
           <div className="grid gap-2">
@@ -146,11 +146,11 @@ export default function FieldBoyProfilePage() {
             <Input id="mobile" type="tel" defaultValue={fieldBoyData.mobile} />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="taluka">नियुक्त तालुका</Label>
+            <Label htmlFor="taluka">तालुका</Label>
             <Input id="taluka" defaultValue={fieldBoyData.taluka} disabled />
           </div>
            <div className="grid gap-2">
-            <Label htmlFor="village">नियुक्त गाव</Label>
+            <Label htmlFor="village">गाव</Label>
             <Input id="village" defaultValue={fieldBoyData.village} disabled />
           </div>
            <div className="grid gap-2">

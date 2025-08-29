@@ -182,6 +182,7 @@ export default function FieldBoyProfilePage() {
                     type={showCurrentPassword ? "text" : "password"} 
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="सध्याचा पासवर्ड टाका"
                 />
                 <Button
                     type="button"
@@ -203,6 +204,7 @@ export default function FieldBoyProfilePage() {
                     type={showNewPassword ? "text" : "password"} 
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="नवीन पासवर्ड टाका"
                 />
                  <Button
                     type="button"
@@ -229,6 +231,7 @@ export default function FieldBoyProfilePage() {
                     type={showConfirmPassword ? "text" : "password"} 
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="नवीन पासवर्डची पुष्टी करा"
                 />
                  <Button
                     type="button"

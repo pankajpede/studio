@@ -695,14 +695,16 @@ export default function SurveyReviewPage() {
                      </div>
                  )}
             </div>
-            <DialogFooter>
-                <Button variant="outline" onClick={() => handleMediaVerification('rejected')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
-                    <XCircle className="mr-2" /> नाकारा
-                </Button>
-                <Button onClick={() => handleMediaVerification('accepted')} className="bg-green-600 hover:bg-green-700 text-white">
-                    <CheckCircle className="mr-2" /> स्वीकारा
-                </Button>
-            </DialogFooter>
+            {currentMedia?.type === 'image' && (
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => handleMediaVerification('rejected')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                        <XCircle className="mr-2" /> नाकारा
+                    </Button>
+                    <Button onClick={() => handleMediaVerification('accepted')} className="bg-green-600 hover:bg-green-700 text-white">
+                        <CheckCircle className="mr-2" /> स्वीकारा
+                    </Button>
+                </DialogFooter>
+            )}
         </DialogContent>
     </Dialog>
 

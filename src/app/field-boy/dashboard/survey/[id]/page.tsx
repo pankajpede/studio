@@ -265,13 +265,13 @@ export default function SurveyDetailPage() {
                 <CardDescription>{survey.location.village}, {survey.location.taluka}</CardDescription>
             </CardHeader>
             <CardContent>
-                <Tabs value={activeTab} className="w-full">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-5">
-                        <TabsTrigger value="farmer-selection" disabled>शेतकरी</TabsTrigger>
-                        <TabsTrigger value="farmer-info" disabled>माहिती</TabsTrigger>
-                        <TabsTrigger value="farm-info" disabled>शेत</TabsTrigger>
-                        <TabsTrigger value="media" disabled>मीडिया</TabsTrigger>
-                        <TabsTrigger value="map" disabled>नकाशा</TabsTrigger>
+                        <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
+                        <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
+                        <TabsTrigger value="farm-info">शेत</TabsTrigger>
+                        <TabsTrigger value="media">मीडिया</TabsTrigger>
+                        <TabsTrigger value="map">नकाशा</TabsTrigger>
                     </TabsList>
                 
                     <TabsContent value="farmer-selection" className="pt-6">
@@ -435,3 +435,5 @@ export default function SurveyDetailPage() {
     </div>
   );
 }
+
+    

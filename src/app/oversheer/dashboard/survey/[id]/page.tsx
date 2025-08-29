@@ -108,11 +108,29 @@ const ReadOnlyInput = ({ label, value }: { label: string, value?: string | numbe
     </div>
 );
 
-const VerifiableInput = ({ label, value }: { label: string, value?: string | number | null }) => {
-    const [status, setStatus] = React.useState<'pending' | 'accepted' | 'rejected'>('pending');
+type VerificationStatus = 'pending' | 'accepted' | 'rejected';
 
-    const handleAccept = () => setStatus(prev => prev === 'accepted' ? 'pending' : 'accepted');
-    const handleReject = () => setStatus(prev => prev === 'rejected' ? 'pending' : 'rejected');
+const VerifiableInput = ({ 
+    label, 
+    value,
+    onVerificationChange
+}: { 
+    label: string;
+    value?: string | number | null;
+    onVerificationChange: (status: VerificationStatus) => void;
+}) => {
+    const [status, setStatus] = React.useState<VerificationStatus>('pending');
+
+    const handleAccept = () => {
+        const newStatus = status === 'accepted' ? 'pending' : 'accepted';
+        setStatus(newStatus);
+        onVerificationChange(newStatus);
+    };
+    const handleReject = () => {
+        const newStatus = status === 'rejected' ? 'pending' : 'rejected';
+        setStatus(newStatus);
+        onVerificationChange(newStatus);
+    };
 
     return (
         <div className="grid gap-1.5">
@@ -316,7 +334,18 @@ export default function SurveyReviewPage() {
     const [remark, setRemark] = React.useState("");
     const [reviewAudio, setReviewAudio] = React.useState<File | null>(null);
     
+    const [verificationStatus, setVerificationStatus] = React.useState({
+        sabNumber: 'pending' as VerificationStatus,
+        khataNumber: 'pending' as VerificationStatus,
+    });
+
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
+
+    const handleVerificationChange = (field: 'sabNumber' | 'khataNumber', status: VerificationStatus) => {
+        setVerificationStatus(prev => ({ ...prev, [field]: status }));
+    };
+
+    const isFirstTabVerified = verificationStatus.sabNumber !== 'pending' && verificationStatus.khataNumber !== 'pending';
 
     const handleOpenModal = (action: 'approve' | 'reject') => {
         setModalAction(action);
@@ -397,8 +426,16 @@ export default function SurveyReviewPage() {
                 <ReadOnlyInput label="सर्वेक्षण क्र." value="SN-123" />
                 <ReadOnlyInput label="शेतकरी" value="सचिन कुलकर्णी" />
                 <ReadOnlyInput label="उत्पादक प्रकार" value="सभासद" />
-                <VerifiableInput label="सब नंबर" value="SAB-A001" />
-                <VerifiableInput label="खाता नंबर" value="KH-112233" />
+                <VerifiableInput 
+                    label="सब नंबर" 
+                    value="SAB-A001" 
+                    onVerificationChange={(status) => handleVerificationChange('sabNumber', status)}
+                />
+                <VerifiableInput 
+                    label="खाता नंबर" 
+                    value="KH-112233" 
+                    onVerificationChange={(status) => handleVerificationChange('khataNumber', status)}
+                />
             </div>
           </TabsContent>
 
@@ -480,7 +517,7 @@ export default function SurveyReviewPage() {
           </TabsContent>
         </Tabs>
       </CardContent>
-      <CardFooter className="border-t pt-6 mt-4 flex justify-between items-center">
+      <CardFooter className="border-t pt-6 mt-6 flex justify-between items-center">
             {isFirstTab ? (
                  <AlertDialog>
                     <AlertDialogTrigger asChild>
@@ -515,7 +552,7 @@ export default function SurveyReviewPage() {
                     </Button>
                 </div>
             ) : (
-                 <Button onClick={handleNext}>
+                 <Button onClick={handleNext} disabled={isFirstTab && !isFirstTabVerified}>
                     पुढे <ArrowRight className="ml-2" />
                 </Button>
             )}

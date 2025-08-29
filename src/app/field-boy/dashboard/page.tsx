@@ -186,11 +186,14 @@ export default function FieldBoyDashboard() {
   }
 
   React.useEffect(() => {
-    // Open the modal once after the component mounts
-    const timer = setTimeout(() => {
-      setIsOverseerModalOpen(true);
-    }, 1000);
-    return () => clearTimeout(timer);
+    const modalShown = sessionStorage.getItem('overseerModalShown');
+    if (!modalShown) {
+      const timer = setTimeout(() => {
+        setIsOverseerModalOpen(true);
+        sessionStorage.setItem('overseerModalShown', 'true');
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const filteredSurveys = surveys

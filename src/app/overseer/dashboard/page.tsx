@@ -22,6 +22,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog"
+import { Phone } from "lucide-react"
 
 type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Assigned";
 
@@ -137,12 +139,24 @@ export default function OverseerDashboard() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [search, setSearch] = React.useState("")
   const [statusFilter, setStatusFilter] = React.useState("all")
+  const [isOfficerModalOpen, setIsOfficerModalOpen] = React.useState(false);
+
+  const agriOfficer = {
+      name: "श्री. राजेश कुमार",
+      mobile: "9123456789"
+  }
 
   React.useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setData(generateSurveyData(50));
       setIsLoading(false);
+      
+      const modalShown = sessionStorage.getItem('officerModalShown');
+      if (!modalShown) {
+        setIsOfficerModalOpen(true);
+        sessionStorage.setItem('officerModalShown', 'true');
+      }
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
@@ -154,52 +168,78 @@ export default function OverseerDashboard() {
   })
 
   return (
-    <div className="flex flex-col gap-4 h-full">
-         <div className="flex items-center gap-2 p-2 bg-card rounded-lg border">
-            <div className="relative flex-grow">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                    type="search"
-                    placeholder="शेतकरी, फील्ड बॉय, गाव शोधा..."
-                    className="w-full rounded-lg bg-background pl-8 h-9"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-            </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-auto h-9">
-                    <SelectValue placeholder="स्थिती" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="all">सर्व स्थिती</SelectItem>
-                    <SelectItem value="Pending">प्रलंबित</SelectItem>
-                    <SelectItem value="Approved">मंजूर</SelectItem>
-                    <SelectItem value="Rejected">नाकारलेले</SelectItem>
-                    <SelectItem value="Assigned">नियुक्त</SelectItem>
-                </SelectContent>
-            </Select>
-        </div>
-
-        <div className="flex-grow flex flex-col gap-3 pb-24">
-            {filteredSurveys.length > 0 ? (
-                filteredSurveys.map((survey) => (
-                    <SurveyCard key={survey.surveyId} survey={survey} />
-                ))
-            ) : (
-                <div className="flex-grow flex items-center justify-center">
-                    <p className="text-muted-foreground">सर्वेक्षण आढळले नाहीत.</p>
+    <>
+        <div className="flex flex-col gap-4 h-full">
+            <div className="flex items-center gap-2 p-2 bg-card rounded-lg border">
+                <div className="relative flex-grow">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        type="search"
+                        placeholder="शेतकरी, फील्ड बॉय, गाव शोधा..."
+                        className="w-full rounded-lg bg-background pl-8 h-9"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
                 </div>
-            )}
-        </div>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-auto h-9">
+                        <SelectValue placeholder="स्थिती" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">सर्व स्थिती</SelectItem>
+                        <SelectItem value="Pending">प्रलंबित</SelectItem>
+                        <SelectItem value="Approved">मंजूर</SelectItem>
+                        <SelectItem value="Rejected">नाकारलेले</SelectItem>
+                        <SelectItem value="Assigned">नियुक्त</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
 
-        <div className="fixed bottom-6 right-6 z-50">
-            <Button asChild className="h-16 w-auto px-6 rounded-full shadow-lg text-lg bg-primary hover:bg-primary/90">
-                <Link href="/overseer/dashboard/new">
-                    <UserPlus className="mr-2 h-6 w-6" />
-                    सर्वेक्षण नियुक्त करा
-                </Link>
-            </Button>
+            <div className="flex-grow flex flex-col gap-3 pb-24">
+                {filteredSurveys.length > 0 ? (
+                    filteredSurveys.map((survey) => (
+                        <SurveyCard key={survey.surveyId} survey={survey} />
+                    ))
+                ) : (
+                    <div className="flex-grow flex items-center justify-center">
+                        <p className="text-muted-foreground">सर्वेक्षण आढळले नाहीत.</p>
+                    </div>
+                )}
+            </div>
+
+            <div className="fixed bottom-6 right-6 z-50">
+                <Button asChild className="h-16 w-auto px-6 rounded-full shadow-lg text-lg bg-primary hover:bg-primary/90">
+                    <Link href="/overseer/dashboard/new">
+                        <UserPlus className="mr-2 h-6 w-6" />
+                        सर्वेक्षण नियुक्त करा
+                    </Link>
+                </Button>
+            </div>
         </div>
-    </div>
+        <Dialog open={isOfficerModalOpen} onOpenChange={setIsOfficerModalOpen}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle className="text-center font-headline text-2xl">नवीन कृषी अधिकारी नियुक्त</DialogTitle>
+                    <DialogDescription className="text-center">
+                        तुमच्या माहितीसाठी, तुमचे रिपोर्टिंग कृषी अधिकारी बदलले आहेत.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="flex flex-col items-center gap-4 py-4">
+                    <div className="text-center">
+                        <p className="font-bold text-lg">{agriOfficer.name}</p>
+                        <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                            <Phone className="h-4 w-4" />
+                            <span>{agriOfficer.mobile}</span>
+                        </div>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button type="button" className="w-full">ठीक आहे</Button>
+                    </DialogClose>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    </>
   )
 }

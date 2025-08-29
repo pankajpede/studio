@@ -20,15 +20,16 @@ const PerformanceBadge = () => {
     accuracy: 40,
     location: 18,
     consistency: 3,
-    total: 85
+    total: 85,
+    surveyCount: 12,
   })
 
   React.useEffect(() => {
     const interval = setInterval(() => {
       setScores(prevScores => {
-        if (prevScores.total > 70) return { speed: 20, accuracy: 32, location: 15, consistency: 5, total: 72 }
-        if (prevScores.total > 50) return { speed: 15, accuracy: 25, location: 10, consistency: 5, total: 55 }
-        return { speed: 24, accuracy: 40, location: 18, consistency: 3, total: 85 }
+        if (prevScores.total > 70) return { speed: 20, accuracy: 32, location: 15, consistency: 5, total: 72, surveyCount: 15 }
+        if (prevScores.total > 50) return { speed: 15, accuracy: 25, location: 10, consistency: 5, total: 55, surveyCount: 8 }
+        return { speed: 24, accuracy: 40, location: 18, consistency: 3, total: 85, surveyCount: 12 }
       })
     }, 5000) // Change score every 5 seconds to simulate updates
     return () => clearInterval(interval)
@@ -67,7 +68,7 @@ const PerformanceBadge = () => {
             <div className="space-y-4">
                 <div className="space-y-1">
                      <h4 className="font-medium leading-none font-headline">कामगिरीचे विश्लेषण</h4>
-                     <p className="text-xs text-muted-foreground">तुमच्या गुणांचे ब्रेकडाउन.</p>
+                     <p className="text-xs text-muted-foreground">मागील {scores.surveyCount} सर्वेक्षणांवर आधारित.</p>
                 </div>
                 <div className="space-y-2">
                     <ScoreItem label="वेग" score={scores.speed} maxScore={30} />

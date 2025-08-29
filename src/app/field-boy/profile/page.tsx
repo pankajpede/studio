@@ -63,7 +63,7 @@ export default function FieldBoyProfilePage() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">ईमेल पत्ता</Label>
-            <Input id="email" type="email" defaultValue={fieldBoyData.email} disabled />
+            <Input id="email" type="email" placeholder="ईमेल पत्ता टाका" defaultValue={fieldBoyData.email} />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="mobile">मोबाइल नंबर</Label>

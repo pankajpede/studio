@@ -3,7 +3,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Plus, Search, CalendarClock } from "lucide-react"
+import { Plus, Search, CalendarClock, Info, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -15,6 +15,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { format, addDays } from "date-fns"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Badge } from "@/components/ui/badge"
 
 type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Draft" | "Assigned";
 
@@ -26,19 +28,22 @@ type Survey = {
   village: string
   status: SurveyStatus
   daysLeft?: number;
+  rejectionReason?: string;
+  rejectionDetails?: string;
+  pendingDays?: number;
 }
 
 const mockSurveys: Survey[] = [
-  { id: "SUR001", farmerName: "सचिन कुलकर्णी", date: "2024-06-30", taluka: "अहमदपूर", village: "मोहगाव", status: "Pending", daysLeft: 2 },
+  { id: "SUR001", farmerName: "सचिन कुलकर्णी", date: "2024-06-30", taluka: "अहमदपूर", village: "मोहगाव", status: "Pending", daysLeft: 2, pendingDays: 2 },
   { id: "SUR002", farmerName: "विशाल मोरे", date: "2024-06-29", taluka: "अहमदपूर", village: "मोहगाव", status: "Approved" },
-  { id: "SUR003", farmerName: "अजय पाटील", date: "2024-06-28", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected", daysLeft: 6 },
-  { id: "SUR004", farmerName: "सुनीता मोरे", date: "2024-06-27", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 4 },
+  { id: "SUR003", farmerName: "अजय पाटील", date: "2024-06-28", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected", daysLeft: 6, rejectionReason: "फोटो अपूर्ण आहेत", rejectionDetails: "शेताचे आणि 7/12 चे फोटो स्पष्ट नाहीत. कृपया पुन्हा अपलोड करा." },
+  { id: "SUR004", farmerName: "सुनीता मोरे", date: "2024-06-15", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 4, pendingDays: 16 },
   { id: "SUR005", farmerName: "कविता देशमुख", date: "2024-06-26", taluka: "औसा", village: "लामजना", status: "Approved" },
   { id: "SUR006", farmerName: "राहुल जाधव", date: "2024-06-25", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
   { id: "SUR007", farmerName: "रमेश शिंदे", date: "2024-06-24", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 5 },
   { id: "SUR008", farmerName: "संजय देशमुख", date: "2024-06-23", taluka: "अहमदपूर", village: "मोहगाव", status: "Draft" },
-  { id: "SUR009", farmerName: "अमित कुमार", date: "2024-06-22", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 1 },
-  { id: "SUR010", farmerName: "पूजा गायकवाड", date: "2024-06-21", taluka: "औसा", village: "लामजना", status: "Rejected", daysLeft: 3 },
+  { id: "SUR009", farmerName: "अमित कुमार", date: "2024-06-22", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 1, pendingDays: 8 },
+  { id: "SUR010", farmerName: "पूजा गायकवाड", date: "2024-06-21", taluka: "औसा", village: "लामजना", status: "Rejected", daysLeft: 3, rejectionReason: "माहिती चुकीची आहे", rejectionDetails: "सर्वेक्षण क्रमांक आणि गट क्रमांक जुळत नाहीत." },
   { id: "SUR011", farmerName: "संजय मेहरा", date: "2024-06-20", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 3 },
 ]
 
@@ -100,7 +105,7 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
     return (
         <Link href={linkHref} className="block">
             <div className="bg-card text-card-foreground rounded-lg shadow-sm border overflow-hidden relative transition-all hover:shadow-md hover:border-primary/50">
-                <div className="p-4 flex items-center gap-4">
+                <div className="p-4 flex items-start gap-4">
                     <div className="flex-shrink-0 flex flex-col items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary">
                         <span className="text-2xl font-bold">{day}</span>
                         <span className="text-xs uppercase">{month}</span>
@@ -120,6 +125,27 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                             <div className={cn("flex items-center text-xs font-medium", statusTextStyles[survey.status])}>
                                 <CalendarClock className="h-3 w-3 mr-1"/>
                                 <span>{survey.daysLeft} दिवस बाकी</span>
+                            </div>
+                        )}
+                        {survey.pendingDays && survey.pendingDays > 7 && (
+                            <Badge variant="destructive" className="bg-yellow-500 text-yellow-900 hover:bg-yellow-500/80">
+                                <Clock className="mr-1 h-3 w-3" />
+                                ७ दिवसांपेक्षा जास्त प्रतीक्षेत
+                            </Badge>
+                        )}
+                         {survey.status === 'Rejected' && survey.rejectionReason && (
+                            <div className="flex items-center text-xs font-medium text-red-600 gap-1 mt-1">
+                                <span>{survey.rejectionReason}</span>
+                                <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger>
+                                        <Info className="h-3.5 w-3.5" />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{survey.rejectionDetails || 'अधिक माहितीसाठी तपशील पहा.'}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                                </TooltipProvider>
                             </div>
                         )}
                     </div>
@@ -145,7 +171,7 @@ export default function FieldBoyDashboard() {
 
   const filteredSurveys = surveys
     .filter(survey => {
-        const matchesSearch = survey.farmerName.toLowerCase().includes(search.toLowerCase()) || survey.village.toLowerCase().includes(search.toLowerCase())
+        const matchesSearch = survey.farmerName.toLowerCase().includes(search.toLowerCase()) || survey.village.toLowerCase().includes(search.toLowerCase()) || survey.id.toLowerCase().includes(search.toLowerCase());
         const matchesStatus = statusFilter === "all" || survey.status.toLowerCase() === statusFilter
         return matchesSearch && matchesStatus
     })
@@ -175,7 +201,7 @@ export default function FieldBoyDashboard() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
                 type="search"
-                placeholder="शोधा..."
+                placeholder="शेतकरी किंवा सर्वेक्षण आयडी शोधा..."
                 className="w-full rounded-lg bg-background pl-8 h-9"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

@@ -29,6 +29,7 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation, onDistance
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLngLiteral | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState(false);
+  const [map, setMap] = React.useState<google.maps.Map | null>(null);
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
@@ -93,6 +94,19 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation, onDistance
   useImperativeHandle(ref, () => ({
     refreshLocation: () => {
       getLocation();
+    },
+    zoomIn: () => {
+        if(map) map.setZoom((map.getZoom() || 15) + 1);
+    },
+    zoomOut: () => {
+        if(map) map.setZoom((map.getZoom() || 15) - 1);
+    },
+    resetMap: () => {
+        if(map) {
+             const centerOn = currentPosition || farmLocation || defaultCenter;
+             map.panTo(centerOn);
+             map.setZoom(currentPosition || farmLocation ? 15 : 10);
+        }
     }
   }));
 
@@ -146,6 +160,7 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation, onDistance
         mapContainerStyle={containerStyle}
         center={centerMapOn}
         zoom={currentPosition || farmLocation ? 15 : 10}
+        onLoad={setMap}
         options={{
             streetViewControl: false,
             mapTypeControl: false,

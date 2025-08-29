@@ -87,12 +87,15 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
         month = marathiMonths[format(dueDate, 'MMMM')];
     } else {
         day = format(originalDate, 'dd');
-        month = marathiMonths[format(originalDate, 'MMMM')];
+        month = marathiMonths[format(dueDate, 'MMMM')];
     }
     
     if (survey.status === 'Draft') {
       linkHref = `/field-boy/dashboard/new?edit=${survey.id}`;
+    } else if (survey.status === 'Rejected') {
+      linkHref = `/field-boy/dashboard/survey/${survey.id}`;
     }
+
 
     return (
         <Link href={linkHref} className="block">
@@ -147,30 +150,20 @@ export default function FieldBoyDashboard() {
         return matchesSearch && matchesStatus
     })
     .sort((a, b) => {
-        const statusOrder: Record<SurveyStatus, number> = {
-            'Draft': 1,
-            'Rejected': 2,
-            'Approved': 3,
-            'Assigned': 4,
-            'Pending': 5,
-        };
+        const aDaysLeft = a.daysLeft ?? Infinity;
+        const bDaysLeft = b.daysLeft ?? Infinity;
 
-        if (statusOrder[a.status] !== statusOrder[b.status]) {
-            return statusOrder[a.status] - statusOrder[b.status];
+        if (aDaysLeft !== Infinity && bDaysLeft !== Infinity) {
+            return aDaysLeft - bDaysLeft;
         }
-
-        // Secondary sorting logic
-        switch (a.status) {
-            case 'Pending':
-            case 'Assigned':
-            case 'Rejected':
-                return (a.daysLeft ?? Infinity) - (b.daysLeft ?? Infinity);
-            case 'Draft':
-            case 'Approved':
-                return new Date(b.date).getTime() - new Date(a.date).getTime();
-            default:
-                return 0;
+        if (aDaysLeft !== Infinity) {
+            return -1;
         }
+        if (bDaysLeft !== Infinity) {
+            return 1;
+        }
+        // If both have no daysLeft, sort by date (newest first)
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
 
 

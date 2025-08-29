@@ -297,6 +297,7 @@ const NewSurveyContent = () => {
     const searchParams = useSearchParams();
     const { toast } = useToast();
     const mapRef = React.useRef<{ refreshLocation: () => void }>(null);
+    const [distance, setDistance] = React.useState<string | null>("0.2 km");
 
     const editSurveyId = searchParams.get('edit');
     const isRestart = searchParams.get('restart') === 'true';
@@ -983,7 +984,7 @@ const NewSurveyContent = () => {
                                 फील्ड बॉयचे स्थान (Field Boy's Location)
                             </CardTitle>
                             <CardDescription>
-                                शेतापासून अंदाजित अंतर: <strong>०.२ किमी</strong> (Est. distance from farm: 0.2 km)
+                                शेतापासून अंदाजित अंतर: <strong>{distance}</strong> (Est. distance from farm)
                             </CardDescription>
                         </div>
                          <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()}>
@@ -992,7 +993,12 @@ const NewSurveyContent = () => {
                         </Button>
                     </CardHeader>
                     <CardContent className="h-64 bg-muted rounded-b-lg">
-                        <FieldBoyMap ref={mapRef} showDistance farmLocation={{lat: 18.4088, lng: 76.5702}} />
+                        <FieldBoyMap 
+                            ref={mapRef} 
+                            showDistance 
+                            farmLocation={{lat: 18.4088, lng: 76.5702}} 
+                            onDistanceChange={setDistance}
+                        />
                     </CardContent>
                 </Card>
                  <Card>
@@ -1044,5 +1050,3 @@ export default function NewFieldSurveyPage() {
         </React.Suspense>
     )
 }
-
-    

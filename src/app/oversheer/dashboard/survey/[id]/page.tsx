@@ -619,7 +619,24 @@ export default function SurveyReviewPage() {
             </TabsContent>
 
           <TabsContent value="map" className="pt-6">
-            <div className="flex flex-col gap-6">
+             <div className="flex flex-col gap-6">
+                 <Card>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div className="space-y-1.5">
+                           <CardTitle className="font-headline text-lg flex items-center gap-2">
+                                <LocateFixed className="w-5 h-5 text-primary"/>
+                                फील्ड बॉयचे स्थान
+                            </CardTitle>
+                        </div>
+                         <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()}>
+                            <RefreshCw className="h-4 w-4" />
+                            <span className="sr-only">Refresh Location</span>
+                        </Button>
+                    </CardHeader>
+                    <CardContent className="h-64 bg-muted rounded-b-lg">
+                        <FieldBoyMap ref={mapRef} showDistance />
+                    </CardContent>
+                </Card>
                  <Card>
                     <CardHeader>
                         <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>

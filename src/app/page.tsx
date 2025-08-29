@@ -112,31 +112,31 @@ const PrivacyPolicy = () => (
 export default function LoginPage() {
   const router = useRouter()
   const { toast } = useToast()
-  const [email, setEmail] = React.useState("")
+  const [username, setUsername] = React.useState("")
   const [password, setPassword] = React.useState("")
   const [showPassword, setShowPassword] = React.useState(false)
   
   const handleLogin = () => {
-    if (email && password) {
-      if (email === 'fieldboy@gmail.com') {
+    if (username && password) {
+      if (username === 'fieldboy') {
         router.push('/field-boy/dashboard');
-      } else if (email === 'admin@gmail.com') {
+      } else if (username === 'admin@gmail.com') {
         router.push('/dashboard');
-      } else if (email === 'oversheer@gmail.com' && password === 'over123') {
+      } else if (username === 'oversheer' && password === 'over123') {
         router.push('/oversheer/dashboard');
       }
       else {
         toast({
           variant: "destructive",
           title: "लॉगिन अयशस्वी",
-          description: "कृपया आपले ईमेल आणि पासवर्ड तपासा.",
+          description: "कृपया आपले वापरकर्ता नाव आणि पासवर्ड तपासा.",
         });
       }
     } else {
        toast({
           variant: "destructive",
           title: "लॉगिन अयशस्वी",
-          description: "कृपया आपले ईमेल आणि पासवर्ड प्रविष्ट करा.",
+          description: "कृपया आपले वापरकर्ता नाव आणि पासवर्ड प्रविष्ट करा.",
         });
     }
   };
@@ -157,14 +157,14 @@ export default function LoginPage() {
           <CardContent>
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="email">ईमेल</Label>
+                <Label htmlFor="username">वापरकर्ता नाव</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
+                  id="username"
+                  type="text"
+                  placeholder="वापरकर्ता नाव प्रविष्ट करा"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">

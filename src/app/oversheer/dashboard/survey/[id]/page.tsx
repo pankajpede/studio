@@ -401,6 +401,16 @@ export default function SurveyReviewPage() {
             <CardTitle className="font-headline text-xl">{selectedFarmer.label} - {id}</CardTitle>
             <div className="flex items-center justify-between">
                 <CardDescription>फील्ड बॉय: सुनील पवार</CardDescription>
+                 <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1.5">
+                        <CheckCircle className="h-5 w-5 text-green-600" />
+                        <span className="font-bold text-base">{acceptedCount}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <XCircle className="h-5 w-5 text-red-600" />
+                        <span className="font-bold text-base">{rejectedCount}</span>
+                    </div>
+                </div>
             </div>
           </>
         ) : (
@@ -666,17 +676,6 @@ export default function SurveyReviewPage() {
                 </Button>
             )}
             
-            <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                    <span className="font-bold text-base">{acceptedCount}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                    <XCircle className="h-5 w-5 text-red-600" />
-                    <span className="font-bold text-base">{rejectedCount}</span>
-                </div>
-            </div>
-
             {isLastTab ? (
                  <div className="flex justify-end gap-2">
                     <Button variant="outline" onClick={() => handleOpenFinalModal('reject')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">

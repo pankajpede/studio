@@ -337,11 +337,14 @@ export default function SurveyReviewPage() {
     const [verificationStatus, setVerificationStatus] = React.useState({
         sabNumber: 'pending' as VerificationStatus,
         khataNumber: 'pending' as VerificationStatus,
+        mobileNumber: 'pending' as VerificationStatus,
+        linkNumber: 'pending' as VerificationStatus,
+        napNumber: 'pending' as VerificationStatus,
     });
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
-    const handleVerificationChange = (field: 'sabNumber' | 'khataNumber', status: VerificationStatus) => {
+    const handleVerificationChange = (field: keyof typeof verificationStatus, status: VerificationStatus) => {
         setVerificationStatus(prev => ({ ...prev, [field]: status }));
     };
 
@@ -444,9 +447,21 @@ export default function SurveyReviewPage() {
 
           <TabsContent value="farmer-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ReadOnlyInput label="मोबाइल नंबर" value="9876543210" />
-                <ReadOnlyInput label="लिंक नंबर" value="LNK-54321" />
-                <ReadOnlyInput label="NAP नंबर" value="NAP-98765" />
+                 <VerifiableInput 
+                    label="मोबाइल नंबर" 
+                    value="9876543210" 
+                    onVerificationChange={(status) => handleVerificationChange('mobileNumber', status)}
+                />
+                 <VerifiableInput 
+                    label="लिंक नंबर" 
+                    value="LNK-54321" 
+                    onVerificationChange={(status) => handleVerificationChange('linkNumber', status)}
+                />
+                 <VerifiableInput 
+                    label="NAP नंबर" 
+                    value="NAP-98765" 
+                    onVerificationChange={(status) => handleVerificationChange('napNumber', status)}
+                />
                 <ReadOnlyInput label="बँकेचे नाव" value="स्टेट बँक ऑफ इंडिया" />
                 <ReadOnlyInput label="शाखा" value="लातूर शाखा" />
                 <ReadOnlyInput label="खाते क्रमांक" value="XXXX-XXXX-1234" />

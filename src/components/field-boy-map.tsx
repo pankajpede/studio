@@ -80,7 +80,7 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation, onDistance
             title: "स्थान त्रुटी",
             description: "तुमचे स्थान मिळवता आले नाही. कृपया ब्राउझर सेटिंग्जमध्ये परवानगी सक्षम करा.",
           });
-          console.error("Geolocation error:", error);
+          console.error("Geolocation error:", error.message);
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );

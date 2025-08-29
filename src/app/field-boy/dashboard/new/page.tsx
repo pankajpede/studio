@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/tabs"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck, CalendarIcon, Loader2 } from "lucide-react"
+import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck, CalendarIcon, Loader2, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
@@ -366,6 +366,14 @@ const NewSurveyContent = () => {
         });
         if (currentIndex < tabs.length - 1) {
             setActiveTab(tabs[currentIndex + 1]);
+        }
+    };
+    
+    const handleBack = () => {
+        window.scrollTo(0, 0);
+        const currentIndex = tabs.indexOf(activeTab);
+        if (currentIndex > 0) {
+            setActiveTab(tabs[currentIndex - 1]);
         }
     };
     
@@ -749,6 +757,10 @@ const NewSurveyContent = () => {
                     </Select>
                 </div>
                 <div className="grid gap-2">
+                    <Label htmlFor="cane-maturity">उसाची पक्वता (Cane Maturity)</Label>
+                    <Input id="cane-maturity" value={caneMaturityDate ? format(caneMaturityDate, "PPP") : 'पक्वता तारीख'} disabled />
+                </div>
+                <div className="grid gap-2">
                     <Label htmlFor="irrigation-type">सिंचनाचा प्रकार (Irrigation Type)</Label>
                     <Select>
                         <SelectTrigger id="irrigation-type"><SelectValue placeholder="सिंचनाचा प्रकार निवडा" /></SelectTrigger>
@@ -787,10 +799,6 @@ const NewSurveyContent = () => {
                             <SelectItem value="method-b">पद्धत ब</SelectItem>
                         </SelectContent>
                     </Select>
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="cane-maturity">उसाची पक्वता (Cane Maturity)</Label>
-                    <Input id="cane-maturity" value={caneMaturityDate ? format(caneMaturityDate, "PPP") : 'पक्वता तारीख'} disabled />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="east">पूर्व (East)</Label>
@@ -950,14 +958,21 @@ const NewSurveyContent = () => {
           </TabsContent>
         </Tabs>
       </CardContent>
-      <CardFooter className="flex justify-end gap-2 mt-4">
-        <Button variant="outline" asChild>
+      <CardFooter className="flex justify-between items-center gap-2 mt-4 border-t pt-6">
+        {activeTab === 'farmer-selection' ? (
+          <Button variant="outline" asChild>
             <Link href="/field-boy/dashboard">रद्द करा (Cancel)</Link>
-        </Button>
-        {activeTab !== 'map' ? (
-             <Button onClick={handleNext}>जतन करा आणि पुढे जा (Save & Next)</Button>
+          </Button>
         ) : (
-             <Button onClick={handleFinalSubmit}>सर्वेक्षण सबमिट करा (Submit Survey)</Button>
+          <Button variant="outline" onClick={handleBack}>
+            <ArrowLeft className="mr-2" /> मागे (Back)
+          </Button>
+        )}
+
+        {activeTab !== 'map' ? (
+          <Button onClick={handleNext}>जतन करा आणि पुढे जा (Save & Next)</Button>
+        ) : (
+          <Button onClick={handleFinalSubmit}>सर्वेक्षण सबमिट करा (Submit Survey)</Button>
         )}
       </CardFooter>
     </Card>

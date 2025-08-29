@@ -90,7 +90,7 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
         month = marathiMonths[format(originalDate, 'MMMM')];
     }
     
-    if (survey.status === 'Draft' || survey.status === 'Rejected') {
+    if (survey.status === 'Draft') {
       linkHref = `/field-boy/dashboard/new?edit=${survey.id}`;
     }
 

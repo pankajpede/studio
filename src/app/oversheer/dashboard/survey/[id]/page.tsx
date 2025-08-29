@@ -151,7 +151,7 @@ const ImageUploader = ({
             <div className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 relative aspect-video">
                 <UploadCloud className="w-8 h-8 text-muted-foreground" />
                 <p className="mt-2 text-sm text-center text-muted-foreground">
-                    <span className="font-semibold">{capture ? 'फोटो काढा (Capture)' : 'अपलोड करा (Upload)'}</span>
+                    <span className="font-semibold">{capture ? 'फोटो काढा' : 'अपलोड करा'}</span>
                 </p>
                 <Input
                     id={id}
@@ -272,7 +272,7 @@ export default function SurveyReviewPage() {
 
     // State for media tab
     const [farmPhotos, setFarmPhotos] = React.useState<(File | null)[]>(Array(4).fill(null));
-    const farmPhotoLabels = ["शेताचे फोटो (Farm Photo)", "उसाची जात (Cane Variety)", "मातीचा प्रकार (Soil Type)", "सिंचनाचा प्रकार (Irrigation Type)"];
+    const farmPhotoLabels = ["शेताचे फोटो", "उसाची जात", "मातीचा प्रकार", "सिंचनाचा प्रकार"];
     const [farmerPhoto, setFarmerPhoto] = React.useState<File | null>(null);
     const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File | null>(null);
     const [saatBaaraPhoto, setSaatBaaraPhoto] = React.useState<File | null>(null);
@@ -385,7 +385,7 @@ export default function SurveyReviewPage() {
           <TabsContent value="farmer-selection" className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="state">राज्य (State)</Label>
+                    <Label htmlFor="state">राज्य</Label>
                     <Combobox
                         options={mockStates}
                         value={selectedState}
@@ -395,7 +395,7 @@ export default function SurveyReviewPage() {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="district">जिल्हा (District)</Label>
+                    <Label htmlFor="district">जिल्हा</Label>
                     <Combobox
                         options={mockDistricts}
                         value={district}
@@ -406,7 +406,7 @@ export default function SurveyReviewPage() {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="taluka">तालुका (Taluka)</Label>
+                    <Label htmlFor="taluka">तालुका</Label>
                     <Combobox
                         options={mockTalukas}
                         value={taluka}
@@ -417,7 +417,7 @@ export default function SurveyReviewPage() {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="circle">सर्कल (Circle)</Label>
+                    <Label htmlFor="circle">सर्कल</Label>
                     <Combobox
                         options={mockCircles}
                         value={circle}
@@ -428,7 +428,7 @@ export default function SurveyReviewPage() {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="gut">गट (Gut)</Label>
+                    <Label htmlFor="gut">गट</Label>
                     <Combobox
                         options={mockGuts}
                         value={gut}
@@ -439,7 +439,7 @@ export default function SurveyReviewPage() {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="village">गाव (Village)</Label>
+                    <Label htmlFor="village">गाव</Label>
                      <Combobox
                         options={mockVillages}
                         value={village}
@@ -450,7 +450,7 @@ export default function SurveyReviewPage() {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="shivar">शिवार (Shivar)</Label>
+                    <Label htmlFor="shivar">शिवार</Label>
                     <Combobox
                         options={mockShivars}
                         value={shivar}
@@ -461,7 +461,7 @@ export default function SurveyReviewPage() {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="survey-number">सर्वेक्षण क्र. (Survey No.)</Label>
+                    <Label htmlFor="survey-number">सर्वेक्षण क्र.</Label>
                     <Combobox
                         options={mockSurveyNumbers}
                         value={surveyNumber}
@@ -472,7 +472,7 @@ export default function SurveyReviewPage() {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="party-name">शेतकरी (Party Name)</Label>
+                    <Label htmlFor="party-name">शेतकरी</Label>
                     <Combobox
                         options={mockFarmers}
                         value={partyName}
@@ -483,7 +483,7 @@ export default function SurveyReviewPage() {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="grower-type">उत्पादक प्रकार (Grower Type)</Label>
+                    <Label htmlFor="grower-type">उत्पादक प्रकार</Label>
                     <Select value={growerType} onValueChange={setGrowerType} disabled={!partyName}>
                         <SelectTrigger id="grower-type"><SelectValue placeholder="उत्पादक प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -493,11 +493,11 @@ export default function SurveyReviewPage() {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="sab-number">सब नंबर (Sab Number)</Label>
+                    <Label htmlFor="sab-number">सब नंबर</Label>
                     <Input id="sab-number" placeholder="सब नंबर टाका" value={sabNumber} onChange={(e) => setSabNumber(e.target.value)} />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="khata-number">खाता नंबर (Khata Number)</Label>
+                    <Label htmlFor="khata-number">खाता नंबर</Label>
                     <Input id="khata-number" placeholder="खाता नंबर टाका" value={khataNumber} onChange={(e) => setKhataNumber(e.target.value)} />
                 </div>
             </div>
@@ -633,19 +633,19 @@ export default function SurveyReviewPage() {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="east">पूर्व (East)</Label>
+                    <Label htmlFor="east">पूर्व</Label>
                     <Input id="east" placeholder="पूर्व सीमा तपशील" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="west">पश्चिम (West)</Label>
+                    <Label htmlFor="west">पश्चिम</Label>
                     <Input id="west" placeholder="पश्चिम सीमा तपशील" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="north">उत्तर (North)</Label>
+                    <Label htmlFor="north">उत्तर</Label>
                     <Input id="north" placeholder="उत्तर सीमा तपशील" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="south">दक्षिण (South)</Label>
+                    <Label htmlFor="south">दक्षिण</Label>
                     <Input id="south" placeholder="दक्षिण सीमा तपशील" />
                 </div>
             </div>
@@ -736,7 +736,7 @@ export default function SurveyReviewPage() {
             </DialogHeader>
             <div className="space-y-6 py-4">
                 <div className="grid gap-2">
-                    <Label htmlFor="remark">शेरा (Remark)</Label>
+                    <Label htmlFor="remark">शेरा</Label>
                     <Textarea 
                         id="remark" 
                         placeholder="तुमचा शेरा येथे लिहा..." 
@@ -745,7 +745,7 @@ export default function SurveyReviewPage() {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="audio-review" className="flex items-center gap-2"><AudioLines /> ऑडिओ शेरा (Audio Remark)</Label>
+                    <Label htmlFor="audio-review" className="flex items-center gap-2"><AudioLines /> ऑडिओ शेरा</Label>
                     <AudioRecorder onRecordingComplete={(file) => setReviewAudio(file)} />
                 </div>
             </div>

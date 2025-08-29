@@ -212,7 +212,7 @@ const ImageUploader = ({
             <div className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 relative aspect-video">
                 <UploadCloud className="w-8 h-8 text-muted-foreground" />
                 <p className="mt-2 text-sm text-center text-muted-foreground">
-                    <span className="font-semibold">{capture ? 'फोटो काढा (Capture)' : 'अपलोड करा (Upload)'}</span>
+                    <span className="font-semibold">{capture ? 'फोटो काढा' : 'अपलोड करा'}</span>
                 </p>
                 <Input
                     id={id}
@@ -332,7 +332,7 @@ const NewSurveyContent = () => {
     const [isVerifyingMobile, setIsVerifyingMobile] = React.useState(false);
 
     const [farmPhotos, setFarmPhotos] = React.useState<(File | null)[]>(Array(4).fill(null));
-    const farmPhotoLabels = ["शेताचे फोटो (Farm Photo)", "उसाची जात (Cane Variety)", "मातीचा प्रकार (Soil Type)", "सिंचनाचा प्रकार (Irrigation Type)"];
+    const farmPhotoLabels = ["शेताचे फोटो", "उसाची जात", "मातीचा प्रकार", "सिंचनाचा प्रकार"];
     const [farmerPhoto, setFarmerPhoto] = React.useState<File | null>(null);
     const [fieldBoyPhoto, setFieldBoyPhoto] = React.useState<File | null>(null);
     const [saatBaaraPhoto, setSaatBaaraPhoto] = React.useState<File | null>(null);
@@ -406,8 +406,8 @@ const NewSurveyContent = () => {
         window.scrollTo(0, 0);
         const currentIndex = tabs.indexOf(activeTab);
         toast({
-            title: "यशस्वी! (Success!)",
-            description: "तुमचा डेटा यशस्वीरित्या जतन झाला आहे. (Your data has been saved successfully.)",
+            title: "यशस्वी!",
+            description: "तुमचा डेटा यशस्वीरित्या जतन झाला आहे.",
         });
         if (currentIndex < tabs.length - 1) {
             setActiveTab(tabs[currentIndex + 1]);
@@ -426,8 +426,8 @@ const NewSurveyContent = () => {
         // Logic for final submission
         console.log("Survey submitted!");
         toast({
-            title: "सर्वेक्षण सबमिट केले! (Survey Submitted!)",
-            description: "तुमचे सर्वेक्षण यशस्वीरित्या सबमिट झाले आहे. (Your survey has been submitted successfully.)",
+            title: "सर्वेक्षण सबमिट केले!",
+            description: "तुमचे सर्वेक्षण यशस्वीरित्या सबमिट झाले आहे.",
         });
         window.scrollTo(0, 0);
         router.push('/field-boy/dashboard');
@@ -531,8 +531,8 @@ const NewSurveyContent = () => {
         setFarmPhotos(newPhotos);
     };
     
-    const cardTitle = editSurveyId ? `सर्वेक्षण संपादित करा (Edit Survey - ${editSurveyId})` : "नवीन शेत सर्वेक्षण (New Farm Survey)";
-    const cardDescription = editSurveyId ? "आवश्यक बदल करा आणि पुन्हा सबमिट करा. (Make necessary changes and resubmit.)" : "नवीन सर्वेक्षणासाठी टॅबमध्ये तपशील भरा. (Fill details in the tabs for a new survey.)";
+    const cardTitle = editSurveyId ? `सर्वेक्षण संपादित करा - ${editSurveyId}` : "नवीन शेत सर्वेक्षण";
+    const cardDescription = editSurveyId ? "आवश्यक बदल करा आणि पुन्हा सबमिट करा." : "नवीन सर्वेक्षणासाठी टॅबमध्ये तपशील भरा.";
 
 
   return (
@@ -542,7 +542,7 @@ const NewSurveyContent = () => {
             <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2 text-red-800">
                     <AlertCircle />
-                    नाकारण्याचा शेरा (Rejection Remark)
+                    नाकारण्याचा शेरा
                 </CardTitle>
             </CardHeader>
             <CardContent>
@@ -567,17 +567,17 @@ const NewSurveyContent = () => {
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="farmer-selection">शेतकरी (Farmer)</TabsTrigger>
-            <TabsTrigger value="farmer-info">माहिती (Info)</TabsTrigger>
-            <TabsTrigger value="farm-info">शेत (Farm)</TabsTrigger>
-            <TabsTrigger value="media">मीडिया (Media)</TabsTrigger>
-            <TabsTrigger value="map">नकाशा (Map)</TabsTrigger>
+            <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
+            <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
+            <TabsTrigger value="farm-info">शेत</TabsTrigger>
+            <TabsTrigger value="media">मीडिया</TabsTrigger>
+            <TabsTrigger value="map">नकाशा</TabsTrigger>
           </TabsList>
           
           <TabsContent value="farmer-selection" className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="state">राज्य (State)</Label>
+                    <Label htmlFor="state">राज्य</Label>
                     <Combobox
                         options={mockStates}
                         value={selectedState}
@@ -587,7 +587,7 @@ const NewSurveyContent = () => {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="district">जिल्हा (District)</Label>
+                    <Label htmlFor="district">जिल्हा</Label>
                     <Combobox
                         options={mockDistricts}
                         value={district}
@@ -598,7 +598,7 @@ const NewSurveyContent = () => {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="taluka">तालुका (Taluka)</Label>
+                    <Label htmlFor="taluka">तालुका</Label>
                     <Combobox
                         options={mockTalukas}
                         value={taluka}
@@ -609,7 +609,7 @@ const NewSurveyContent = () => {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="circle">सर्कल (Circle)</Label>
+                    <Label htmlFor="circle">सर्कल</Label>
                     <Combobox
                         options={mockCircles}
                         value={circle}
@@ -620,7 +620,7 @@ const NewSurveyContent = () => {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="gut">गट (Gut)</Label>
+                    <Label htmlFor="gut">गट</Label>
                     <Combobox
                         options={mockGuts}
                         value={gut}
@@ -631,7 +631,7 @@ const NewSurveyContent = () => {
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="village">गाव (Village)</Label>
+                    <Label htmlFor="village">गाव</Label>
                      <Combobox
                         options={mockVillages}
                         value={village}
@@ -642,7 +642,7 @@ const NewSurveyContent = () => {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="shivar">शिवार (Shivar)</Label>
+                    <Label htmlFor="shivar">शिवार</Label>
                     <Combobox
                         options={mockShivars}
                         value={shivar}
@@ -653,7 +653,7 @@ const NewSurveyContent = () => {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="survey-number">सर्वेक्षण क्र. (Survey No.)</Label>
+                    <Label htmlFor="survey-number">सर्वेक्षण क्र.</Label>
                     <Combobox
                         options={mockSurveyNumbers}
                         value={surveyNumber}
@@ -664,7 +664,7 @@ const NewSurveyContent = () => {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="party-name">शेतकरी (Party Name)</Label>
+                    <Label htmlFor="party-name">शेतकरी</Label>
                     <Combobox
                         options={mockFarmers}
                         value={partyName}
@@ -675,7 +675,7 @@ const NewSurveyContent = () => {
                     />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="grower-type">उत्पादक प्रकार (Grower Type)</Label>
+                    <Label htmlFor="grower-type">उत्पादक प्रकार</Label>
                     <Select value={growerType} onValueChange={setGrowerType} disabled={!partyName}>
                         <SelectTrigger id="grower-type"><SelectValue placeholder="उत्पादक प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -685,11 +685,11 @@ const NewSurveyContent = () => {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="sab-number">सब नंबर (Sab Number)</Label>
+                    <Label htmlFor="sab-number">सब नंबर</Label>
                     <Input id="sab-number" placeholder="सब नंबर टाका" value={sabNumber} onChange={(e) => setSabNumber(e.target.value)} />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="khata-number">खाता नंबर (Khata Number)</Label>
+                    <Label htmlFor="khata-number">खाता नंबर</Label>
                     <Input id="khata-number" placeholder="खाता नंबर टाका" value={khataNumber} onChange={(e) => setKhataNumber(e.target.value)} />
                 </div>
             </div>
@@ -700,7 +700,7 @@ const NewSurveyContent = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="grid gap-2">
                        <div className="flex justify-between items-center">
-                            <Label htmlFor="mobile">मोबाइल नंबर (Mobile Number)</Label>
+                            <Label htmlFor="mobile">मोबाइल नंबर</Label>
                             {mobileUsageCount > 0 && (
                                 <span className="text-sm font-medium text-muted-foreground">{mobileUsageCount}/5</span>
                             )}
@@ -725,11 +725,11 @@ const NewSurveyContent = () => {
                         </div>
                     </div>
                      <div className="grid gap-2">
-                        <Label htmlFor="link-number">लिंक नंबर (Link Number)</Label>
+                        <Label htmlFor="link-number">लिंक नंबर</Label>
                         <Input id="link-number" placeholder="लिंक नंबर टाका" value={linkNumber} onChange={(e) => setLinkNumber(e.target.value)} />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="nap-number">NAP नंबर (NAP Number)</Label>
+                        <Label htmlFor="nap-number">NAP नंबर</Label>
                         <Input id="nap-number" placeholder="NAP नंबर टाका" value={napNumber} onChange={(e) => setNapNumber(e.target.value)} />
                     </div>
                 </div>
@@ -737,24 +737,24 @@ const NewSurveyContent = () => {
                     <div className="relative">
                         <Separator />
                         <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-card px-2">
-                            <span className="text-sm font-medium text-muted-foreground">बँक तपशील (Bank Details)</span>
+                            <span className="text-sm font-medium text-muted-foreground">बँक तपशील</span>
                         </div>
                     </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div className="grid gap-2">
-                            <Label htmlFor="bank-name">बँकेचे नाव (Bank Name)</Label>
+                            <Label htmlFor="bank-name">बँकेचे नाव</Label>
                             <Input id="bank-name" placeholder="बँकेचे नाव टाका" value={bankName} onChange={(e) => setBankName(e.target.value)} />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="branch-name">शाखा (Branch)</Label>
+                            <Label htmlFor="branch-name">शाखा</Label>
                             <Input id="branch-name" placeholder="शाखेचे नाव टाका" value={branchName} onChange={(e) => setBranchName(e.target.value)} />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="account-number">खाते क्रमांक (Account Number)</Label>
+                            <Label htmlFor="account-number">खाते क्रमांक</Label>
                             <Input id="account-number" placeholder="बँक खाते क्रमांक टाका" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="ifsc-code">IFSC कोड (IFSC Code)</Label>
+                            <Label htmlFor="ifsc-code">IFSC कोड</Label>
                             <Input id="ifsc-code" placeholder="IFSC कोड टाका" value={ifscCode} onChange={(e) => setIfscCode(e.target.value)} />
                         </div>
                       </div>
@@ -765,11 +765,11 @@ const NewSurveyContent = () => {
           <TabsContent value="farm-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="area">क्षेत्र (हेक्टर) (Area in Hectare)</Label>
+                    <Label htmlFor="area">क्षेत्र (हेक्टर)</Label>
                     <Input id="area" type="number" placeholder="उदा. १.०" />
                 </div>
                  <div className="grid gap-2">
-                    <Label>लागवड तारीख (Plantation Date)</Label>
+                    <Label>लागवड तारीख</Label>
                     <Popover>
                         <PopoverTrigger asChild>
                         <Button
@@ -794,7 +794,7 @@ const NewSurveyContent = () => {
                     </Popover>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="cane-variety">उसाची जात (Cane Variety)</Label>
+                    <Label htmlFor="cane-variety">उसाची जात</Label>
                     <Select>
                         <SelectTrigger id="cane-variety"><SelectValue placeholder="उसाची जात निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -804,7 +804,7 @@ const NewSurveyContent = () => {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="cane-type">उसाचा प्रकार (Cane Type)</Label>
+                    <Label htmlFor="cane-type">उसाचा प्रकार</Label>
                     <Select value={caneType} onValueChange={setCaneType}>
                         <SelectTrigger id="cane-type"><SelectValue placeholder="उसाचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -814,11 +814,11 @@ const NewSurveyContent = () => {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="cane-maturity">उसाची पक्वता (Cane Maturity)</Label>
+                    <Label htmlFor="cane-maturity">उसाची पक्वता</Label>
                     <Input id="cane-maturity" value={caneMaturityDate ? format(caneMaturityDate, "PPP") : 'पक्वता तारीख'} disabled />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="irrigation-type">सिंचनाचा प्रकार (Irrigation Type)</Label>
+                    <Label htmlFor="irrigation-type">सिंचनाचा प्रकार</Label>
                     <Select>
                         <SelectTrigger id="irrigation-type"><SelectValue placeholder="सिंचनाचा प्रकार निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -828,7 +828,7 @@ const NewSurveyContent = () => {
                     </Select>
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="irrigation-source">सिंचनाचा स्रोत (Irrigation Source)</Label>
+                    <Label htmlFor="irrigation-source">सिंचनाचा स्रोत</Label>
                     <Select>
                         <SelectTrigger id="irrigation-source"><SelectValue placeholder="सिंचनाचा स्रोत निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -838,7 +838,7 @@ const NewSurveyContent = () => {
                     </Select>
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="irrigation-method">सिंचन पद्धत (Irrigation Method)</Label>
+                    <Label htmlFor="irrigation-method">सिंचन पद्धत</Label>
                     <Select>
                         <SelectTrigger id="irrigation-method"><SelectValue placeholder="सिंचन पद्धत निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -848,7 +848,7 @@ const NewSurveyContent = () => {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="plantation-method">लागवड पद्धत (Plantation Method)</Label>
+                    <Label htmlFor="plantation-method">लागवड पद्धत</Label>
                     <Select>
                         <SelectTrigger id="plantation-method"><SelectValue placeholder="लागवड पद्धत निवडा" /></SelectTrigger>
                         <SelectContent>
@@ -858,19 +858,19 @@ const NewSurveyContent = () => {
                     </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="east">पूर्व (East)</Label>
+                    <Label htmlFor="east">पूर्व</Label>
                     <Input id="east" placeholder="पूर्व सीमा तपशील" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="west">पश्चिम (West)</Label>
+                    <Label htmlFor="west">पश्चिम</Label>
                     <Input id="west" placeholder="पश्चिम सीमा तपशील" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="north">उत्तर (North)</Label>
+                    <Label htmlFor="north">उत्तर</Label>
                     <Input id="north" placeholder="उत्तर सीमा तपशील" />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="south">दक्षिण (South)</Label>
+                    <Label htmlFor="south">दक्षिण</Label>
                     <Input id="south" placeholder="दक्षिण सीमा तपशील" />
                 </div>
             </div>
@@ -879,7 +879,7 @@ const NewSurveyContent = () => {
            <TabsContent value="media" className="pt-6">
                 <div className="flex flex-col gap-6">
                     <div>
-                        <Label className="text-base font-medium">शेताचे फोटो (४ आवश्यक) (Farm Photos - 4 required)</Label>
+                        <Label className="text-base font-medium">शेताचे फोटो (४ आवश्यक)</Label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
                             {farmPhotos.map((photo, index) => (
                                 <ImageUploader
@@ -897,21 +897,21 @@ const NewSurveyContent = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
                         <ImageUploader
                             id="farmer-photo"
-                            label="शेतकरी फोटो (Farmer Photo)"
+                            label="शेतकरी फोटो"
                             file={farmerPhoto}
                             onFileChange={setFarmerPhoto}
                             capture="environment"
                         />
                         <ImageUploader
                             id="field-boy-photo"
-                            label="फील्ड बॉय फोटो (Field Boy Photo)"
+                            label="फील्ड बॉय फोटो"
                             file={fieldBoyPhoto}
                             onFileChange={setFieldBoyPhoto}
                             capture="user"
                         />
                          <ImageUploader
                             id="saat-baara-photo"
-                            label="७/१२ कागदपत्र (7/12 Document)"
+                            label="७/१२ कागदपत्र"
                             file={saatBaaraPhoto}
                             onFileChange={setSaatBaaraPhoto}
                             capture="environment"
@@ -919,14 +919,14 @@ const NewSurveyContent = () => {
                     </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="audio-note" className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट (पर्यायी) (Audio Note - Optional)</Label>
+                            <Label htmlFor="audio-note" className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट (पर्यायी)</Label>
                             <AudioRecorder
                                 onRecordingComplete={(file) => setAudioNote(file)}
                             />
                         </div>
 
                          <div className="grid gap-4">
-                            <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया (पर्यायी) (Other Media - Optional)</Label>
+                            <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया (पर्यायी)</Label>
                             {otherMedia.map((item, index) => (
                                 <div key={item.id} className="grid gap-2">
                                      <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-center">
@@ -966,7 +966,7 @@ const NewSurveyContent = () => {
                             ))}
                              {otherMedia.length < 3 && (
                                 <Button variant="outline" onClick={handleAddOtherMedia} className="w-full sm:w-auto justify-self-start">
-                                   <PlusCircle className="mr-2"/> आणखी जोडा (Add More)
+                                   <PlusCircle className="mr-2"/> आणखी जोडा
                                 </Button>
                              )}
                         </div>
@@ -981,10 +981,10 @@ const NewSurveyContent = () => {
                         <div className="space-y-1.5">
                            <CardTitle className="font-headline text-lg flex items-center gap-2">
                                 <LocateFixed className="w-5 h-5 text-primary"/>
-                                फील्ड बॉयचे स्थान (Field Boy's Location)
+                                फील्ड बॉयचे स्थान
                             </CardTitle>
                             <CardDescription>
-                                शेतापासून अंदाजित अंतर: <strong>{distance}</strong> (Est. distance from farm)
+                                शेतापासून अंदाजित अंतर: <strong>0.2 km</strong>
                             </CardDescription>
                         </div>
                          <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()}>
@@ -997,22 +997,21 @@ const NewSurveyContent = () => {
                             ref={mapRef} 
                             showDistance 
                             farmLocation={{lat: 18.4088, lng: 76.5702}} 
-                            onDistanceChange={setDistance}
                         />
                     </CardContent>
                 </Card>
                  <Card>
                     <CardHeader>
-                        <CardTitle className="font-headline text-lg">शेताची सीमा (Farm Boundary)</CardTitle>
-                        <CardDescription>शेताची सीमा निश्चित करण्यासाठी खालील बटणे वापरा. (Use the buttons below to mark the farm boundary.)</CardDescription>
+                        <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
+                        <CardDescription>शेताची सीमा निश्चित करण्यासाठी खालील बटणे वापरा.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="w-full h-64 bg-muted rounded-lg">
                            <FieldBoyMap />
                         </div>
                         <div className="flex flex-col sm:flex-row gap-4 w-full mt-4">
-                            <Button variant="outline" className="w-full"><Pin className="mr-2" /> ड्रॉ बटण (Draw Button)</Button>
-                            <Button variant="outline" className="w-full"><Footprints className="mr-2" /> वॉक बटण (Walk Button)</Button>
+                            <Button variant="outline" className="w-full"><Pin className="mr-2" /> ड्रॉ बटण</Button>
+                            <Button variant="outline" className="w-full"><Footprints className="mr-2" /> वॉक बटण</Button>
                         </div>
                     </CardContent>
                 </Card>
@@ -1023,18 +1022,18 @@ const NewSurveyContent = () => {
       <CardFooter className="flex justify-between items-center gap-2 mt-4 border-t pt-6">
         {activeTab === 'farmer-selection' ? (
           <Button variant="outline" asChild>
-            <Link href="/field-boy/dashboard">रद्द करा (Cancel)</Link>
+            <Link href="/field-boy/dashboard">रद्द करा</Link>
           </Button>
         ) : (
           <Button variant="outline" onClick={handleBack}>
-            <ArrowLeft className="mr-2" /> मागे (Back)
+            <ArrowLeft className="mr-2" /> मागे
           </Button>
         )}
 
         {activeTab !== 'map' ? (
-          <Button onClick={handleNext}>जतन करा आणि पुढे जा (Save & Next)</Button>
+          <Button onClick={handleNext}>जतन करा आणि पुढे जा</Button>
         ) : (
-          <Button onClick={handleFinalSubmit}>सर्वेक्षण सबमिट करा (Submit Survey)</Button>
+          <Button onClick={handleFinalSubmit}>सर्वेक्षण सबमिट करा</Button>
         )}
       </CardFooter>
     </Card>

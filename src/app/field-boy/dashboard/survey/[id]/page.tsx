@@ -81,10 +81,10 @@ const getSurveyById = (id: string | null) => {
         irrigationMethod: 'पद्धत १',
         plantationMethod: 'पद्धत अ',
         caneMaturityDate: addMonths(new Date('2023-08-12'), 12),
-        east: "शेजारील शेत (Neighboring Farm)",
-        west: "रस्ता (Road)",
-        north: "ओढा (Stream)",
-        south: "पडीक जमीन (Fallow Land)",
+        east: "शेजारील शेत",
+        west: "रस्ता",
+        north: "ओढा",
+        south: "पडीक जमीन",
     },
     media: {
         farmPhotos: [
@@ -169,7 +169,7 @@ const StatusInfo = ({ survey }: { survey: SurveyData }) => {
             {survey.status === 'Rejected' && (
                  <CardContent>
                     <div className="space-y-4 rounded-lg bg-red-50/50 p-4 border border-red-200/50">
-                        <h4 className="font-semibold flex items-center gap-2"><MessageSquare className="h-5 w-5"/> ओव्हरसीअरचा शेरा (Overseer's Remark)</h4>
+                        <h4 className="font-semibold flex items-center gap-2"><MessageSquare className="h-5 w-5"/> ओव्हरसीअरचा शेरा</h4>
                         {survey.rejectionRemark && <p className="text-sm">{survey.rejectionRemark}</p>}
                         {survey.rejectionAudioUrl && <audio src={survey.rejectionAudioUrl} controls className="w-full h-10" />}
                     </div>
@@ -393,11 +393,11 @@ export default function SurveyDetailPage() {
                                     <div className="space-y-1.5">
                                     <CardTitle className="font-headline text-lg flex items-center gap-2">
                                         <LocateFixed className="w-5 h-5 text-primary"/>
-                                        तुमचे स्थान (Your Location)
+                                        तुमचे स्थान
                                     </CardTitle>
                                     {distance && (
                                         <CardDescription>
-                                            शेतापासून अंदाजित अंतर: <strong>{distance}</strong> (Est. distance from farm)
+                                            शेतापासून अंदाजित अंतर: <strong>{distance}</strong>
                                         </CardDescription>
                                     )}
                                     </div>
@@ -417,7 +417,7 @@ export default function SurveyDetailPage() {
                             </Card>
                             <Card>
                                 <CardHeader>
-                                    <CardTitle className="font-headline text-lg">शेताची सीमा (Farm Boundary)</CardTitle>
+                                    <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
                                 </CardHeader>
                                 <CardContent className="h-96">
                                     <FieldBoyMap farmLocation={farmLocation} />

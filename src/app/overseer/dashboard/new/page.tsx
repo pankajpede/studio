@@ -135,7 +135,7 @@ export default function AssignNewSurveyPage() {
       <CardContent>
         <div className="grid grid-cols-1 gap-6">
             <div className="grid gap-2">
-                <Label htmlFor="village">गाव (Village)</Label>
+                <Label htmlFor="village">गाव</Label>
                 <Combobox
                     options={mockVillages}
                     value={village}
@@ -145,7 +145,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
              <div className="grid gap-2">
-                <Label htmlFor="farmer">शेतकरी (Farmer)</Label>
+                <Label htmlFor="farmer">शेतकरी</Label>
                 <Combobox
                     options={mockFarmers}
                     value={farmer}
@@ -155,7 +155,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
              <div className="grid gap-2">
-                <Label htmlFor="field-boy">फील्ड बॉय (Field Boy)</Label>
+                <Label htmlFor="field-boy">फील्ड बॉय</Label>
                 <Combobox
                     options={mockFieldBoys}
                     value={fieldBoy}
@@ -165,20 +165,20 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
              <div className="grid gap-2">
-                <Label htmlFor="area">क्षेत्र (हेक्टर) (Area in Hectare)</Label>
+                <Label htmlFor="area">क्षेत्र (हेक्टर)</Label>
                 <Input id="area" type="number" placeholder="उदा. १.०" />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="survey-number">सर्वेक्षण क्र. (Survey No.)</Label>
+                <Label htmlFor="survey-number">सर्वेक्षण क्र.</Label>
                 <Input id="survey-number" placeholder="सर्वेक्षण क्र. टाका" />
             </div>
         </div>
       </CardContent>
       <CardFooter className="flex justify-end gap-2 mt-4">
         <Button variant="outline" asChild>
-            <Link href="/overseer/dashboard">रद्द करा (Cancel)</Link>
+            <Link href="/overseer/dashboard">रद्द करा</Link>
         </Button>
-        <Button onClick={handleAssignSurvey}>सर्वेक्षण नियुक्त करा (Assign Survey)</Button>
+        <Button onClick={handleAssignSurvey}>सर्वेक्षण नियुक्त करा</Button>
       </CardFooter>
     </Card>
   )

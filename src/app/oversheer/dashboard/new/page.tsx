@@ -169,7 +169,7 @@ export default function AssignNewSurveyPage() {
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="grid gap-2">
-                <Label htmlFor="state">राज्य (State)</Label>
+                <Label htmlFor="state">राज्य</Label>
                 <Combobox
                     options={mockStates}
                     value={selectedState}
@@ -179,7 +179,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="district">जिल्हा (District)</Label>
+                <Label htmlFor="district">जिल्हा</Label>
                 <Combobox
                     options={mockDistricts}
                     value={district}
@@ -190,7 +190,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="taluka">तालुका (Taluka)</Label>
+                <Label htmlFor="taluka">तालुका</Label>
                 <Combobox
                     options={mockTalukas}
                     value={taluka}
@@ -201,7 +201,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="circle">सर्कल (Circle)</Label>
+                <Label htmlFor="circle">सर्कल</Label>
                 <Combobox
                     options={mockCircles}
                     value={circle}
@@ -212,7 +212,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="gut">गट (Gut)</Label>
+                <Label htmlFor="gut">गट</Label>
                 <Combobox
                     options={mockGuts}
                     value={gut}
@@ -223,7 +223,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="village">गाव (Village)</Label>
+                <Label htmlFor="village">गाव</Label>
                 <Combobox
                     options={mockVillages}
                     value={village}
@@ -234,7 +234,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="shivar">शिवार (Shivar)</Label>
+                <Label htmlFor="shivar">शिवार</Label>
                 <Combobox
                     options={mockShivars}
                     value={shivar}
@@ -245,7 +245,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="survey-number">सर्वेक्षण क्र. (Survey No.)</Label>
+                <Label htmlFor="survey-number">सर्वेक्षण क्र.</Label>
                 <Combobox
                     options={mockSurveyNumbers}
                     value={surveyNumber}
@@ -256,7 +256,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="farmer">शेतकरी (Farmer)</Label>
+                <Label htmlFor="farmer">शेतकरी</Label>
                 <Combobox
                     options={mockFarmers}
                     value={farmer}
@@ -267,7 +267,7 @@ export default function AssignNewSurveyPage() {
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="field-boy">फील्ड बॉय (Field Boy)</Label>
+                <Label htmlFor="field-boy">फील्ड बॉय</Label>
                 <Combobox
                     options={mockFieldBoys}
                     value={fieldBoy}
@@ -281,9 +281,9 @@ export default function AssignNewSurveyPage() {
       </CardContent>
       <CardFooter className="flex justify-end gap-2 mt-4">
         <Button variant="outline" asChild>
-            <Link href="/oversheer/dashboard">रद्द करा (Cancel)</Link>
+            <Link href="/oversheer/dashboard">रद्द करा</Link>
         </Button>
-        <Button onClick={handleAssignSurvey}>सर्वेक्षण नियुक्त करा (Assign Survey)</Button>
+        <Button onClick={handleAssignSurvey}>सर्वेक्षण नियुक्त करा</Button>
       </CardFooter>
     </Card>
   )

@@ -14,13 +14,12 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
+import { format, addDays } from "date-fns"
 
 type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Draft" | "Assigned";
 
 type Survey = {
   id: string
-  day: string
-  month: string
   farmerName: string
   date: string
   taluka: string
@@ -30,17 +29,17 @@ type Survey = {
 }
 
 const mockSurveys: Survey[] = [
-  { id: "SUR001", day: "३०", month: "जून", farmerName: "सचिन कुलकर्णी", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Pending", daysLeft: 2 },
-  { id: "SUR002", day: "२९", month: "जून", farmerName: "विशाल मोरे", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Approved" },
-  { id: "SUR003", day: "२८", month: "जून", farmerName: "अजय पाटील", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected", daysLeft: 6 },
-  { id: "SUR004", day: "२७", month: "जून", farmerName: "सुनीता मोरे", date: "2024-08-12", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 4 },
-  { id: "SUR005", day: "२६", month: "जून", farmerName: "कविता देशमुख", date: "2024-08-12", taluka: "औसा", village: "लामजना", status: "Approved" },
-  { id: "SUR006", day: "२५", month: "जून", farmerName: "राहुल जाधव", date: "2024-08-12", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
-  { id: "SUR007", day: "२४", month: "जून", farmerName: "रमेश शिंदे", date: "2024-08-14", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 5 },
-  { id: "SUR008", day: "२३", month: "जून", farmerName: "प्रिया शर्मा", date: "2024-08-15", taluka: "अहमदपूर", village: "मोहगाव", status: "Draft" },
-  { id: "SUR009", day: "२२", month: "जून", farmerName: "अमित कुमार", date: "2024-08-13", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 1 },
-  { id: "SUR010", day: "२१", month: "जून", farmerName: "पूजा गायकवाड", date: "2024-08-16", taluka: "औसा", village: "लामजना", status: "Rejected", daysLeft: 3 },
-  { id: "SUR011", day: "२०", month: "जून", farmerName: "संजय मेहरा", date: "2024-08-14", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 3 },
+  { id: "SUR001", farmerName: "सचिन कुलकर्णी", date: "2024-06-30", taluka: "अहमदपूर", village: "मोहगाव", status: "Pending", daysLeft: 2 },
+  { id: "SUR002", farmerName: "विशाल मोरे", date: "2024-06-29", taluka: "अहमदपूर", village: "मोहगाव", status: "Approved" },
+  { id: "SUR003", farmerName: "अजय पाटील", date: "2024-06-28", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected", daysLeft: 6 },
+  { id: "SUR004", farmerName: "सुनीता मोरे", date: "2024-06-27", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 4 },
+  { id: "SUR005", farmerName: "कविता देशमुख", date: "2024-06-26", taluka: "औसा", village: "लामजना", status: "Approved" },
+  { id: "SUR006", farmerName: "राहुल जाधव", date: "2024-06-25", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
+  { id: "SUR007", farmerName: "रमेश शिंदे", date: "2024-06-24", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 5 },
+  { id: "SUR008", farmerName: "प्रिया शर्मा", date: "2024-06-23", taluka: "अहमदपूर", village: "मोहगाव", status: "Draft" },
+  { id: "SUR009", farmerName: "अमित कुमार", date: "2024-06-22", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 1 },
+  { id: "SUR010", farmerName: "पूजा गायकवाड", date: "2024-06-21", taluka: "औसा", village: "लामजना", status: "Rejected", daysLeft: 3 },
+  { id: "SUR011", farmerName: "संजय मेहरा", date: "2024-06-20", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 3 },
 ]
 
 const statusTranslations: Record<SurveyStatus, string> = {
@@ -67,20 +66,46 @@ const statusTextStyles: Record<SurveyStatus, string> = {
     "Assigned": "text-blue-600"
 }
 
+const marathiMonths: { [key: string]: string } = {
+    'January': 'जानेवारी', 'February': 'फेब्रुवारी', 'March': 'मार्च', 'April': 'एप्रिल',
+    'May': 'मे', 'June': 'जून', 'July': 'जुलै', 'August': 'ऑगस्ट',
+    'September': 'सप्टेंबर', 'October': 'ऑक्टोबर', 'November': 'नोव्हेंबर', 'December': 'डिसेंबर'
+};
+
 const SurveyCard = ({ survey }: { survey: Survey }) => {
+    let day = "";
+    let month = "";
+    let submissionDate = "";
+
+    const originalDate = new Date(survey.date);
+    submissionDate = format(originalDate, 'dd/MM/yyyy');
+    
+    if (survey.status === 'Rejected') {
+        const dueDate = addDays(originalDate, 7);
+        day = format(dueDate, 'dd');
+        month = marathiMonths[format(dueDate, 'MMMM')];
+    } else {
+        day = format(originalDate, 'dd');
+        month = marathiMonths[format(originalDate, 'MMMM')];
+    }
+    
     return (
         <Link href={`/field-boy/dashboard/survey/${survey.id}`} className="block">
             <div className="bg-card text-card-foreground rounded-lg shadow-sm border overflow-hidden relative transition-all hover:shadow-md hover:border-primary/50">
                 <div className="p-4 flex items-center gap-4">
                     <div className="flex-shrink-0 flex flex-col items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary">
-                        <span className="text-2xl font-bold">{survey.day}</span>
-                        <span className="text-xs uppercase">{survey.month}</span>
+                        <span className="text-2xl font-bold">{day}</span>
+                        <span className="text-xs uppercase">{month}</span>
                     </div>
                     <div className="flex-grow space-y-1">
                         <h3 className="font-bold text-lg">{survey.farmerName}</h3>
                         <p className="text-sm text-muted-foreground">
-                            <span>{survey.date}</span>
-                            <span className="mx-1">•</span>
+                             {survey.status === 'Rejected' && (
+                                <>
+                                  <span>{submissionDate}</span>
+                                  <span className="mx-1">•</span>
+                                </>
+                            )}
                             <span>{survey.taluka} &gt; {survey.village}</span>
                         </p>
                          {(survey.status === 'Assigned' || survey.status === 'Pending' || survey.status === 'Rejected') && survey.daysLeft !== undefined && (

@@ -312,6 +312,7 @@ export default function SurveyReviewPage() {
         irrigationSource: 'pending' as VerificationStatus,
         irrigationMethod: 'pending' as VerificationStatus,
         plantationMethod: 'pending' as VerificationStatus,
+        fieldBoyLocation: 'pending' as VerificationStatus,
     });
     
     const initialMediaStatus = {
@@ -322,9 +323,6 @@ export default function SurveyReviewPage() {
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
-    const handleVerificationChange = (field: keyof typeof verificationStatus, status: VerificationStatus) => {
-        setVerificationStatus(prev => ({ ...prev, [field]: status }));
-    };
     const toggleVerification = (field: keyof typeof verificationStatus, type: 'accept' | 'reject') => {
          const currentStatus = verificationStatus[field];
          const targetStatus = type === 'accept' ? 'accepted' : 'rejected';
@@ -630,10 +628,31 @@ export default function SurveyReviewPage() {
                                 शेतापासून अंदाजित अंतर: <strong>0.2 km</strong>
                             </CardDescription>
                         </div>
-                         <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()}>
-                            <RefreshCw className="h-4 w-4" />
-                            <span className="sr-only">Refresh Location</span>
-                        </Button>
+                        <div className="flex items-center gap-2">
+                            <Button 
+                                variant={verificationStatus.fieldBoyLocation === 'accepted' ? 'default' : 'outline'} 
+                                size="icon" 
+                                className={cn(
+                                    "h-8 w-8",
+                                    verificationStatus.fieldBoyLocation === 'accepted' && "bg-green-600 hover:bg-green-700 border-green-600 text-white"
+                                )}
+                                onClick={() => toggleVerification('fieldBoyLocation', 'accept')}
+                            >
+                                <Check className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                                variant={verificationStatus.fieldBoyLocation === 'rejected' ? 'destructive' : 'outline'} 
+                                size="icon" 
+                                className="h-8 w-8"
+                                onClick={() => toggleVerification('fieldBoyLocation', 'reject')}
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()} className="h-8 w-8">
+                                <RefreshCw className="h-4 w-4" />
+                                <span className="sr-only">Refresh Location</span>
+                            </Button>
+                        </div>
                     </CardHeader>
                     <CardContent className="h-64 bg-muted rounded-b-lg">
                         <FieldBoyMap ref={mapRef} showDistance />
@@ -693,17 +712,16 @@ export default function SurveyReviewPage() {
         </CardFooter>
     </Card>
     
-    {/* Media Verification Modal */}
     <Dialog open={isMediaModalOpen} onOpenChange={setIsMediaModalOpen}>
         <DialogContent className="max-w-3xl">
             <DialogHeader>
                 <DialogTitle>{currentMedia?.label}</DialogTitle>
             </DialogHeader>
             <div className="py-4 flex items-center justify-center bg-muted/50 rounded-md">
-                 {currentMedia?.type === 'image' && (
+                 {currentMedia?.type === 'image' && currentMedia.src && (
                     <Image src={currentMedia.src} alt={currentMedia.label} width={800} height={600} className="max-h-[60vh] w-auto object-contain" />
                  )}
-                 {currentMedia?.type === 'audio' && (
+                 {currentMedia?.type === 'audio' && currentMedia.src && (
                     <audio src={currentMedia.src} controls autoPlay className="w-full" />
                  )}
                  {currentMedia?.type === 'other' && (
@@ -728,7 +746,6 @@ export default function SurveyReviewPage() {
         </DialogContent>
     </Dialog>
 
-    {/* Final Review Modal */}
     <Dialog open={isFinalReviewModalOpen} onOpenChange={setIsFinalReviewModalOpen}>
         <DialogContent>
             <DialogHeader>

@@ -32,6 +32,7 @@ type Survey = {
   farmerName: string;
   fieldBoy: string;
   village: string;
+  taluka: string;
   area: number;
   status: SurveyStatus;
   assignedDate: string;
@@ -45,6 +46,7 @@ const generateSurveyData = (count: number): Survey[] => {
   const farmerFirstNames = ["रमेश", "सुरेश", "गणेश", "प्रिया", "प्रकाश", "अनिता"];
   const farmerLastNames = ["कुलकर्णी", "पाटील", "जाधव", "शिंदे", "मोरे", "गायकवाड"];
   const villages = ["चाकूर", "अहमदपूर", "उदगीर", "निलंगा"];
+  const talukas = ["लातूर", "औसा", "उदगीर", "निलंगा"];
   const statuses: SurveyStatus[] = ["Pending", "Approved", "Rejected", "Assigned"];
 
   for (let i = 1; i <= count; i++) {
@@ -54,6 +56,7 @@ const generateSurveyData = (count: number): Survey[] => {
       farmerName: `${farmerFirstNames[i % farmerFirstNames.length]} ${farmerLastNames[i % farmerLastNames.length]}`,
       fieldBoy: fieldBoys[i % fieldBoys.length],
       village: villages[i % villages.length],
+      taluka: talukas[i % talukas.length],
       area: Number((Math.random() * 2 + 0.5).toFixed(2)),
       status,
       assignedDate: `2024-07-${String((i % 28) + 1).padStart(2, '0')}`,
@@ -99,7 +102,7 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                 <div className="flex justify-between items-start">
                     <div>
                         <h3 className="font-bold text-lg">{survey.farmerName}</h3>
-                        <p className="text-sm text-muted-foreground">{survey.village}</p>
+                        <p className="text-sm text-muted-foreground">{survey.submissionDate || survey.assignedDate} • {survey.taluka}, {survey.village}</p>
                     </div>
                     <div className={cn("flex items-center gap-2 p-2 rounded-md", statusTextStyles[survey.status])}>
                         {statusIcon[survey.status]}

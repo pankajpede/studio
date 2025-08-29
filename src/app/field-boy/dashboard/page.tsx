@@ -80,14 +80,9 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                     <div className="flex-grow space-y-1">
                         <h3 className="font-bold text-lg">{survey.farmerName}</h3>
                         <p className="text-sm text-muted-foreground">
-                            <span>{survey.surveyCode}</span>
-                            <span className="mx-1">•</span>
                             <span>{survey.date}</span>
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            <span>{survey.taluka}</span>
                             <span className="mx-1">•</span>
-                            <span>{survey.village}</span>
+                            <span>{survey.taluka}, {survey.village}</span>
                         </p>
                          {(survey.status === 'Assigned' || survey.status === 'Pending' || survey.status === 'Rejected') && survey.daysLeft !== undefined && (
                             <div className={cn("flex items-center text-xs font-medium", statusTextStyles[survey.status])}>

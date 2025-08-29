@@ -36,7 +36,7 @@ const mockSurveys: Survey[] = [
   { id: "SUR005", farmerName: "कविता देशमुख", date: "2024-06-26", taluka: "औसा", village: "लामजना", status: "Approved" },
   { id: "SUR006", farmerName: "राहुल जाधव", date: "2024-06-25", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
   { id: "SUR007", farmerName: "रमेश शिंदे", date: "2024-06-24", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 5 },
-  { id: "SUR008", farmerName: "प्रिया शर्मा", date: "2024-06-23", taluka: "अहमदपूर", village: "मोहगाव", status: "Draft" },
+  { id: "SUR008", farmerName: "संजय देशमुख", date: "2024-06-23", taluka: "अहमदपूर", village: "मोहगाव", status: "Draft" },
   { id: "SUR009", farmerName: "अमित कुमार", date: "2024-06-22", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 1 },
   { id: "SUR010", farmerName: "पूजा गायकवाड", date: "2024-06-21", taluka: "औसा", village: "लामजना", status: "Rejected", daysLeft: 3 },
   { id: "SUR011", farmerName: "संजय मेहरा", date: "2024-06-20", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 3 },

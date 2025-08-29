@@ -110,7 +110,33 @@ const mockFarmers = [
     { value: "farmer-18", label: "अमोल थोरात", mobile: "9876543227", docs: [{type: 'pan', number: 'RSTUV8901W'}], bankName: "साउथ इंडियन बँक", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-8901", ifsc: "SIBL0008901", sabNumber: "SAB-R018", khataNumber: "KH-525354" },
     { value: "farmer-19", label: "किरण साळुंखे", mobile: "9876543228", docs: [{type: 'voter-id', number: 'BCD9012345'}], bankName: "कर्नाटक बँक", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-9012", ifsc: "KARB0009012", sabNumber: "SAB-S019", khataNumber: "KH-555657" },
     { value: "farmer-20", label: "संदीप सूर्यवंशी", mobile: "9876543229", docs: [{type: 'voter-id', number: 'EFG0123456'}], bankName: "सिटी युनियन बँक", branchName: "मुंबई शाखा", accountNumber: "XXXX-XXXX-0123", ifsc: "CIUB0000123", sabNumber: "SAB-T020", khataNumber: "KH-585960" },
+    { value: "farmer-111", label: "राहुल जाधव", mobile: "9876543219", docs: [{type: 'voter-id', number: 'BCD0123456'}], bankName: "सेंट्रल बँक ऑफ इंडिया", branchName: "पुणे शाखा", accountNumber: "XXXX-XXXX-0123", ifsc: "CBIN0000123", sabNumber: "SAB-J010", khataNumber: "KH-282930" },
 ];
+
+const mockDraftData: Record<string, any> = {
+    'SUR006': {
+        state: 'maharashtra',
+        district: 'latur',
+        taluka: 'latur',
+        circle: 'circle-1',
+        gut: 'gut-101',
+        village: 'kasarwadi',
+        shivar: 'shivar-a',
+        surveyNumber: 'sn-123',
+        partyName: 'farmer-111',
+    },
+     'SUR008': {
+        state: 'maharashtra',
+        district: 'latur',
+        taluka: 'ahmedpur',
+        circle: 'circle-2',
+        gut: 'gut-102',
+        village: 'mohgaon',
+        shivar: 'shivar-b',
+        surveyNumber: 'sn-456',
+        partyName: 'farmer-8',
+    }
+};
 
 type OtherMedia = {
     id: number;
@@ -313,6 +339,23 @@ const NewSurveyContent = () => {
     const [otherMedia, setOtherMedia] = React.useState<OtherMedia[]>([{ id: 1, name: '', file: null }]);
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
+
+    // Effect to pre-fill data for editing drafts
+    React.useEffect(() => {
+        if (editSurveyId && mockDraftData[editSurveyId]) {
+            const draft = mockDraftData[editSurveyId];
+            setSelectedState(draft.state || "");
+            setDistrict(draft.district || "");
+            setTaluka(draft.taluka || "");
+            setCircle(draft.circle || "");
+            setGut(draft.gut || "");
+            setVillage(draft.village || "");
+            setShivar(draft.shivar || "");
+            setSurveyNumber(draft.surveyNumber || "");
+            setPartyName(draft.partyName || "");
+        }
+    }, [editSurveyId]);
+
 
     const handleNext = () => {
         window.scrollTo(0, 0);
@@ -929,6 +972,3 @@ export default function NewFieldSurveyPage() {
         </React.Suspense>
     )
 }
-
-
-    

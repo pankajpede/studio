@@ -3,7 +3,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Plus, Search, CalendarClock, Info, Clock } from "lucide-react"
+import { Plus, Search, CalendarClock, Info, Clock, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -17,6 +17,16 @@ import { cn } from "@/lib/utils"
 import { format, addDays } from "date-fns"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Badge } from "@/components/ui/badge"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Draft" | "Assigned";
 
@@ -168,6 +178,20 @@ export default function FieldBoyDashboard() {
   const [surveys, setSurveys] = React.useState<Survey[]>(mockSurveys)
   const [search, setSearch] = React.useState("")
   const [statusFilter, setStatusFilter] = React.useState("all")
+  const [isOverseerModalOpen, setIsOverseerModalOpen] = React.useState(false);
+
+  const newOverseer = {
+      name: "श्री. संजय गायकवाड",
+      mobile: "9876543210"
+  }
+
+  React.useEffect(() => {
+    // Open the modal once after the component mounts
+    const timer = setTimeout(() => {
+      setIsOverseerModalOpen(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredSurveys = surveys
     .filter(survey => {
@@ -194,6 +218,7 @@ export default function FieldBoyDashboard() {
 
 
   return (
+    <>
     <div className="flex flex-col gap-4 h-full">
         {/* Toolbar */}
         <div className="flex items-center gap-2 p-2 bg-card rounded-lg border">
@@ -246,5 +271,33 @@ export default function FieldBoyDashboard() {
         </div>
 
     </div>
+    <Dialog open={isOverseerModalOpen} onOpenChange={setIsOverseerModalOpen}>
+        <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+                <DialogTitle className="text-center font-headline text-2xl">नवीन ओव्हरसीअर नियुक्त</DialogTitle>
+                <DialogDescription className="text-center">
+                    तुमच्या माहितीसाठी, तुमचे रिपोर्टिंग ओव्हरसीअर बदलले आहेत.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col items-center gap-4 py-4">
+                 <Avatar className="h-20 w-20">
+                    <AvatarFallback className="text-2xl">ओ</AvatarFallback>
+                </Avatar>
+                <div className="text-center">
+                    <p className="font-bold text-lg">{newOverseer.name}</p>
+                    <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                        <Phone className="h-4 w-4" />
+                        <span>{newOverseer.mobile}</span>
+                    </div>
+                </div>
+            </div>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button type="button" className="w-full">ठीक आहे</Button>
+                </DialogClose>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+    </>
   )
 }

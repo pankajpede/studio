@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/tabs"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck, CalendarIcon, Loader2, MessageSquare, CheckCircle, XCircle } from "lucide-react"
+import { Pin, Footprints, ChevronsUpDown, Check, UploadCloud, X, File as FileIcon, PlusCircle, MinusCircle, LocateFixed, RefreshCw, AudioLines, FileImage, User, Image as ImageIcon, Send, ShieldCheck, CalendarIcon, Loader2, MessageSquare, CheckCircle, XCircle, ArrowLeft, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import FieldBoyMap from "@/components/field-boy-map"
@@ -40,7 +40,7 @@ import { Separator } from "@/components/ui/separator"
 import { Calendar } from "@/components/ui/calendar"
 import { format, addMonths } from "date-fns"
 import { Textarea } from "@/components/ui/textarea"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/dialog"
 
 
 const mockStates = [
@@ -314,7 +314,8 @@ export default function SurveyReviewPage() {
     const [modalAction, setModalAction] = React.useState<'approve' | 'reject' | null>(null);
     const [remark, setRemark] = React.useState("");
     const [reviewAudio, setReviewAudio] = React.useState<File | null>(null);
-
+    
+    const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
     const handleOpenModal = (action: 'approve' | 'reject') => {
         setModalAction(action);
@@ -334,10 +335,27 @@ export default function SurveyReviewPage() {
         setModalAction(null);
         router.push('/oversheer/dashboard');
     }
+
+    const handleNext = () => {
+        const currentIndex = tabs.indexOf(activeTab);
+        if (currentIndex < tabs.length - 1) {
+            setActiveTab(tabs[currentIndex + 1]);
+        }
+    };
+
+    const handleBack = () => {
+        const currentIndex = tabs.indexOf(activeTab);
+        if (currentIndex > 0) {
+            setActiveTab(tabs[currentIndex - 1]);
+        }
+    };
     
     const selectedFarmer = mockFarmers.find(f => f.value === partyName);
     
     const farmPhotoLabels = ["शेताचे फोटो", "उसाची जात", "मातीचा प्रकार", "सिंचनाचा प्रकार"];
+    
+    const isFirstTab = activeTab === tabs[0];
+    const isLastTab = activeTab === tabs[tabs.length - 1];
 
 
   return (
@@ -461,14 +479,46 @@ export default function SurveyReviewPage() {
           </TabsContent>
         </Tabs>
       </CardContent>
-      <CardFooter className="flex justify-end gap-2 border-t pt-6">
-            <Button variant="outline" onClick={() => handleOpenModal('reject')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
-                <XCircle className="mr-2" /> नाकारा
-            </Button>
-            <Button onClick={() => handleOpenModal('approve')} className="bg-green-600 hover:bg-green-700 text-white">
-                <CheckCircle className="mr-2" /> मंजूर करा
-            </Button>
-      </CardFooter>
+      <CardFooter className="border-t pt-6 mt-4 flex justify-between items-center">
+            {isFirstTab ? (
+                 <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                         <Button variant="outline"><ArrowLeft className="mr-2" /> मागे</Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                तुम्ही पुनरावलोकनातून बाहेर पडल्यास, तुम्ही केलेले कोणतेही बदल जतन होणार नाहीत. तुम्हाला खात्री आहे का?
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>रद्द करा</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => router.push('/oversheer/dashboard')}>पुष्टी करा</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            ) : (
+                <Button variant="outline" onClick={handleBack}>
+                    <ArrowLeft className="mr-2" /> मागे
+                </Button>
+            )}
+            
+            {isLastTab ? (
+                 <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => handleOpenModal('reject')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                        <XCircle className="mr-2" /> नाकारा
+                    </Button>
+                    <Button onClick={() => handleOpenModal('approve')} className="bg-green-600 hover:bg-green-700 text-white">
+                        <CheckCircle className="mr-2" /> मंजूर करा
+                    </Button>
+                </div>
+            ) : (
+                 <Button onClick={handleNext}>
+                    पुढे <ArrowRight className="ml-2" />
+                </Button>
+            )}
+        </CardFooter>
     </Card>
 
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

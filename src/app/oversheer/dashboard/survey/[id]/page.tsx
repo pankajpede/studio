@@ -40,8 +40,7 @@ import { Separator } from "@/components/ui/separator"
 import { Calendar } from "@/components/ui/calendar"
 import { format, addMonths } from "date-fns"
 import { Textarea } from "@/components/ui/textarea"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/dialog"
 
 
 const mockStates = [
@@ -107,8 +106,6 @@ const ReadOnlyInput = ({ label, value }: { label: string, value?: string | numbe
         <p className="font-medium text-base h-10 flex items-center px-3 rounded-md border bg-muted/50">{value || '-'}</p>
     </div>
 );
-
-type VerificationStatus = 'pending' | 'accepted' | 'rejected';
 
 const VerifiableInput = ({ 
     label, 
@@ -268,6 +265,7 @@ const Combobox = ({
     );
 };
 
+type VerificationStatus = 'pending' | 'accepted' | 'rejected';
 
 export default function SurveyReviewPage() {
     const router = useRouter();
@@ -402,16 +400,6 @@ export default function SurveyReviewPage() {
             <CardTitle className="font-headline text-xl">{selectedFarmer.label} - {id}</CardTitle>
             <div className="flex items-center justify-between">
                 <CardDescription>फील्ड बॉय: सुनील पवार</CardDescription>
-                 <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1.5">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        <span className="font-bold text-base">{acceptedCount}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                        <XCircle className="h-5 w-5 text-red-600" />
-                        <span className="font-bold text-base">{rejectedCount}</span>
-                    </div>
-                </div>
             </div>
           </>
         ) : (
@@ -627,6 +615,9 @@ export default function SurveyReviewPage() {
                                 <LocateFixed className="w-5 h-5 text-primary"/>
                                 फील्ड बॉयचे स्थान
                             </CardTitle>
+                             <CardDescription>
+                                शेतापासून अंदाजित अंतर: <strong>0.2 km</strong>
+                            </CardDescription>
                         </div>
                          <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()}>
                             <RefreshCw className="h-4 w-4" />
@@ -674,6 +665,16 @@ export default function SurveyReviewPage() {
                 </Button>
             )}
             
+            <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span className="font-bold text-base">{acceptedCount}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <XCircle className="h-5 w-5 text-red-600" />
+                    <span className="font-bold text-base">{rejectedCount}</span>
+                </div>
+            </div>
 
             {isLastTab ? (
                  <div className="flex justify-end gap-2">
@@ -766,3 +767,4 @@ export default function SurveyReviewPage() {
     </>
   )
 }
+

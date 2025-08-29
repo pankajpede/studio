@@ -32,7 +32,8 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation, onDistance
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    libraries: ['geometry']
   });
   
   const calculateDistance = React.useCallback((pos1: google.maps.LatLngLiteral, pos2: google.maps.LatLngLiteral) => {

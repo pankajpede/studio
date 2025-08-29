@@ -3,7 +3,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Plus, Search, Check, X, MoreHorizontal, UserPlus, Clock, ChevronDown } from "lucide-react"
+import { Plus, Search, Check, X, MoreHorizontal, UserPlus, Clock, ChevronDown, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -24,6 +24,16 @@ import {
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 type SurveyStatus = "Pending" | "Approved" | "Rejected" | "Assigned";
 
@@ -150,6 +160,13 @@ export default function OversheerDashboard() {
   const [search, setSearch] = React.useState("")
   const [statusFilter, setStatusFilter] = React.useState<string[]>([])
   const [fieldBoyFilter, setFieldBoyFilter] = React.useState<string[]>([])
+  const [isOfficerModalOpen, setIsOfficerModalOpen] = React.useState(false);
+  
+  // Mock Agri Officer Data
+  const agriOfficer = {
+      name: "श्री. राजेश कुमार",
+      mobile: "9123456789"
+  }
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -158,6 +175,9 @@ export default function OversheerDashboard() {
       const initialData = generateSurveyData(50).filter(s => s.status === 'Pending' || s.status === 'Assigned');
       setData(initialData);
       setIsLoading(false);
+      
+      // Open the modal once after the data loads
+      setIsOfficerModalOpen(true);
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
@@ -177,6 +197,7 @@ export default function OversheerDashboard() {
   })
 
   return (
+    <>
     <div className="flex flex-col gap-4 h-full">
          <div className="flex items-center gap-2 p-2 bg-card rounded-lg border">
             <div className="relative flex-grow">
@@ -270,6 +291,34 @@ export default function OversheerDashboard() {
             </Button>
         </div>
     </div>
+    <Dialog open={isOfficerModalOpen} onOpenChange={setIsOfficerModalOpen}>
+        <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+                <DialogTitle className="text-center font-headline text-2xl">नवीन कृषी अधिकारी नियुक्त</DialogTitle>
+                <DialogDescription className="text-center">
+                    तुमच्या माहितीसाठी, तुमचे रिपोर्टिंग कृषी अधिकारी बदलले आहेत.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col items-center gap-4 py-4">
+                 <Avatar className="h-20 w-20">
+                    <AvatarFallback className="text-2xl">कृअ</AvatarFallback>
+                </Avatar>
+                <div className="text-center">
+                    <p className="font-bold text-lg">{agriOfficer.name}</p>
+                    <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                        <Phone className="h-4 w-4" />
+                        <span>{agriOfficer.mobile}</span>
+                    </div>
+                </div>
+            </div>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button type="button" className="w-full">ठीक आहे</Button>
+                </DialogClose>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+    </>
   )
 }
 

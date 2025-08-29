@@ -21,13 +21,35 @@ const defaultCenter = {
 interface FieldBoyMapProps {
     showDistance?: boolean;
     farmLocation?: google.maps.LatLngLiteral;
+    onDistanceChange?: (distance: string) => void;
 }
 
-const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation }: FieldBoyMapProps, ref) => {
+const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation, onDistanceChange }: FieldBoyMapProps, ref) => {
   const { toast } = useToast();
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLngLiteral | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState(false);
+
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
+  });
+  
+  const calculateDistance = React.useCallback((pos1: google.maps.LatLngLiteral, pos2: google.maps.LatLngLiteral) => {
+    if (window.google && window.google.maps && window.google.maps.geometry) {
+        const distanceInMeters = window.google.maps.geometry.spherical.computeDistanceBetween(
+            new google.maps.LatLng(pos1),
+            new google.maps.LatLng(pos2)
+        );
+        
+        if (distanceInMeters >= 1000) {
+            return `${(distanceInMeters / 1000).toFixed(2)} km`;
+        } else {
+            return `${Math.round(distanceInMeters)} m`;
+        }
+    }
+    return null;
+  }, []);
 
   const getLocation = React.useCallback(() => {
     if (navigator.geolocation) {
@@ -36,13 +58,18 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation }: FieldBoy
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setCurrentPosition({ lat: latitude, lng: longitude });
+          const newPos = { lat: latitude, lng: longitude };
+          setCurrentPosition(newPos);
           setErrorMsg(null);
           setIsFetching(false);
           toast({
             title: "स्थान अद्यतनित केले",
             description: "तुमचे वर्तमान स्थान यशस्वीरित्या लोड झाले आहे.",
           });
+          if (farmLocation && onDistanceChange) {
+              const distance = calculateDistance(newPos, farmLocation);
+              if(distance) onDistanceChange(distance);
+          }
         },
         (error) => {
           setErrorMsg("तुमचे स्थान मिळवण्यास अक्षम. कृपया स्थान परवानग्या तपासा.");
@@ -60,9 +87,8 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation }: FieldBoy
       setErrorMsg("या ब्राउझरमध्ये जिओलोकेशन समर्थित नाही.");
       setIsFetching(false);
     }
-  }, [toast]);
+  }, [toast, farmLocation, onDistanceChange, calculateDistance]);
   
-  // Expose the refresh function to the parent component
   useImperativeHandle(ref, () => ({
     refreshLocation: () => {
       getLocation();
@@ -70,13 +96,17 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation }: FieldBoy
   }));
 
   useEffect(() => {
-    getLocation(); // Get initial location
+    getLocation();
   }, [getLocation]);
 
-  const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
-  });
+  useEffect(() => {
+    if (isLoaded && currentPosition && farmLocation && onDistanceChange) {
+        const distance = calculateDistance(currentPosition, farmLocation);
+        if(distance) onDistanceChange(distance);
+    }
+  }, [isLoaded, currentPosition, farmLocation, onDistanceChange, calculateDistance]);
+
+
 
   if (loadError) {
     return (
@@ -119,6 +149,7 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation }: FieldBoy
             streetViewControl: false,
             mapTypeControl: false,
             fullscreenControl: false,
+            gestureHandling: 'cooperative'
         }}
       >
         {currentPosition && (

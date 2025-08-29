@@ -196,6 +196,7 @@ export default function SurveyDetailPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState("farmer-selection");
   const mapRef = React.useRef<{ refreshLocation: () => void }>(null);
+  const [distance, setDistance] = React.useState<string | null>(null);
 
 
   const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
@@ -394,9 +395,11 @@ export default function SurveyDetailPage() {
                                         <LocateFixed className="w-5 h-5 text-primary"/>
                                         तुमचे स्थान (Your Location)
                                     </CardTitle>
-                                    <CardDescription>
-                                        शेतापासून अंदाजित अंतर: <strong>०.२ किमी</strong> (Est. distance from farm: 0.2 km)
-                                    </CardDescription>
+                                    {distance && (
+                                        <CardDescription>
+                                            शेतापासून अंदाजित अंतर: <strong>{distance}</strong> (Est. distance from farm)
+                                        </CardDescription>
+                                    )}
                                     </div>
                                     <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()}>
                                         <RefreshCcw className="h-4 w-4" />
@@ -404,7 +407,12 @@ export default function SurveyDetailPage() {
                                     </Button>
                                 </CardHeader>
                                 <CardContent className="h-64 bg-muted rounded-b-lg">
-                                    <FieldBoyMap ref={mapRef} showDistance farmLocation={farmLocation} />
+                                    <FieldBoyMap 
+                                        ref={mapRef} 
+                                        showDistance 
+                                        farmLocation={farmLocation}
+                                        onDistanceChange={setDistance}
+                                    />
                                 </CardContent>
                             </Card>
                             <Card>

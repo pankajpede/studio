@@ -661,6 +661,7 @@ export default function SurveyReviewPage() {
                  <Card>
                     <CardHeader>
                         <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
+                        <CardDescription>नोंदलेले क्षेत्र: 0.95 हेक्टर (फरक: -0.05 हेक्टर)</CardDescription>
                     </CardHeader>
                     <CardContent className="h-96">
                        <FieldBoyMap />

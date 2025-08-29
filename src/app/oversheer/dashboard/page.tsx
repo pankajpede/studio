@@ -60,8 +60,8 @@ const generateSurveyData = (count: number): Survey[] => {
       area: Number((Math.random() * 2 + 0.5).toFixed(2)),
       status,
       assignedDate: `2024-07-${String((i % 28) + 1).padStart(2, '0')}`,
-      submissionDate: status !== 'Assigned' ? `2024-07-${String((i % 28) + 2).padStart(2, '0')}` : undefined,
-      daysLeft: status === 'Pending' ? Math.floor(Math.random() * 7) + 1 : undefined
+      submissionDate: status === 'Pending' || status === 'Approved' || status === 'Rejected' ? `2024-07-${String((i % 28) + 2).padStart(2, '0')}` : undefined,
+      daysLeft: (status === 'Pending' || status === 'Assigned') ? Math.floor(Math.random() * 7) + 1 : undefined
     });
   }
   return data;
@@ -89,9 +89,9 @@ const statusIcon: Record<SurveyStatus, React.ReactNode> = {
 
 const statusOptions: { value: SurveyStatus, label: string }[] = [
     { value: "Pending", label: "प्रलंबित" },
+    { value: "Assigned", label: "नियुक्त" },
     { value: "Approved", label: "मंजूर" },
     { value: "Rejected", label: "नाकारलेले" },
-    { value: "Assigned", label: "नियुक्त" },
 ];
 
 
@@ -116,20 +116,27 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                 </div>
             </Link>
 
-            {survey.status === 'Pending' && (
-                <div className="bg-muted/50 px-4 py-2 flex items-center justify-between border-t">
+            {(survey.status === 'Pending' || survey.status === 'Assigned') && (
+                 <div className="bg-muted/50 px-4 py-2 flex items-center justify-between border-t">
                      <div className="flex items-center text-xs text-yellow-600 font-medium">
                         <Clock className="h-3 w-3 mr-1"/>
-                        <span>{survey.daysLeft} दिवस बाकी</span>
+                        <span>
+                            {survey.status === 'Assigned' 
+                                ? `${survey.daysLeft} दिवस बाकी` 
+                                : `${survey.daysLeft} दिवसांपासून प्रलंबित`
+                            }
+                        </span>
                     </div>
-                    <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="h-8 border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700">
-                            <Check className="h-4 w-4 mr-1"/> मंजूर करा
-                        </Button>
-                        <Button variant="outline" size="sm" className="h-8 border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
-                            <X className="h-4 w-4 mr-1"/> नाकारा
-                        </Button>
-                    </div>
+                    {survey.status === 'Pending' && (
+                        <div className="flex gap-2">
+                            <Button variant="outline" size="sm" className="h-8 border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700">
+                                <Check className="h-4 w-4 mr-1"/> मंजूर करा
+                            </Button>
+                            <Button variant="outline" size="sm" className="h-8 border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                                <X className="h-4 w-4 mr-1"/> नाकारा
+                            </Button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
@@ -147,13 +154,20 @@ export default function OversheerDashboard() {
   React.useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => {
-      setData(generateSurveyData(50));
+      // Filter out 'Approved' and 'Rejected' statuses from the initial data load
+      const initialData = generateSurveyData(50).filter(s => s.status === 'Pending' || s.status === 'Assigned');
+      setData(initialData);
       setIsLoading(false);
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
   
-  const uniqueFieldBoys = React.useMemo(() => Array.from(new Set(data.map(s => s.fieldBoy))), [data]);
+  const uniqueFieldBoys = React.useMemo(() => {
+      // Get field boys only from the currently relevant surveys
+      const fieldBoysWithPendingOrAssigned = generateSurveyData(50).filter(s => s.status === 'Pending' || s.status === 'Assigned');
+      return Array.from(new Set(fieldBoysWithPendingOrAssigned.map(s => s.fieldBoy)));
+  }, []);
+
 
   const filteredSurveys = data.filter(survey => {
     const matchesSearch = survey.farmerName.toLowerCase().includes(search.toLowerCase()) || survey.village.toLowerCase().includes(search.toLowerCase()) || survey.fieldBoy.toLowerCase().includes(search.toLowerCase())
@@ -215,7 +229,7 @@ export default function OversheerDashboard() {
                 <DropdownMenuContent className="w-56">
                     <DropdownMenuLabel>स्थितीनुसार फिल्टर करा</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {statusOptions.map(option => (
+                    {statusOptions.filter(o => o.value === 'Pending' || o.value === 'Assigned').map(option => (
                          <DropdownMenuCheckboxItem
                             key={option.value}
                             checked={statusFilter.includes(option.value)}
@@ -258,3 +272,5 @@ export default function OversheerDashboard() {
     </div>
   )
 }
+
+    

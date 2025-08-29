@@ -318,9 +318,13 @@ export default function SurveyReviewPage() {
     
     const initialMediaStatus = {
         'farm-photo-0': 'pending', 'farm-photo-1': 'pending', 'farm-photo-2': 'pending', 'farm-photo-3': 'pending',
-        'farmer-photo': 'pending', 'field-boy-photo': 'pending', 'saat-baara-photo': 'pending', 'audio-note': 'pending', 'other-media-0': 'pending'
+        'farmer-photo': 'pending', 'field-boy-photo': 'pending', 'saat-baara-photo': 'pending'
     }
     const [mediaVerification, setMediaVerification] = React.useState<Record<string, VerificationStatus>>(initialMediaStatus);
+    const [otherMediaVerification, setOtherMediaVerification] = React.useState<Record<string, VerificationStatus>>({
+        'audio-note': 'pending',
+        'other-media-0': 'pending'
+    });
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
@@ -364,7 +368,12 @@ export default function SurveyReviewPage() {
     
     const handleMediaVerification = (status: VerificationStatus) => {
         if(currentMedia) {
-            setMediaVerification(prev => ({...prev, [currentMedia.id]: status}));
+            const currentId = currentMedia.id;
+            if(currentId in mediaVerification){
+                 setMediaVerification(prev => ({...prev, [currentId]: status}));
+            } else {
+                 setOtherMediaVerification(prev => ({...prev, [currentId]: status}));
+            }
             setIsMediaModalOpen(false);
             setCurrentMedia(null);
         }
@@ -612,14 +621,14 @@ export default function SurveyReviewPage() {
                             label="ऑडिओ नोट"
                             src="data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA="
                             type="audio"
-                            status={mediaVerification['audio-note']}
+                            status={otherMediaVerification['audio-note']}
                             onClick={() => handleOpenMediaModal({id: 'audio-note', label: 'ऑडिओ नोट', src: 'data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=', type: 'audio'})}
                         />
                         <VerifiableMediaItem 
                             label="इतर मीडिया (नोंदणी)"
                             src="https://placehold.co/200x100.png"
                             type="other"
-                            status={mediaVerification['other-media-0']}
+                            status={otherMediaVerification['other-media-0']}
                             onClick={() => handleOpenMediaModal({id: 'other-media-0', label: 'इतर मीडिया (नोंदणी)', src: 'https://placehold.co/800x400.png', type: 'image'})}
                         />
                     </div>
@@ -734,16 +743,7 @@ export default function SurveyReviewPage() {
                 </Button>
             )}
             
-            {isLastTab ? (
-                 <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => handleOpenFinalModal('reject')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
-                        <XCircle className="mr-2" /> नाकारा
-                    </Button>
-                    <Button onClick={() => handleOpenFinalModal('approve')} className="bg-green-600 hover:bg-green-700 text-white">
-                        <CheckCircle className="mr-2" /> मंजूर करा
-                    </Button>
-                </div>
-            ) : (
+            {!isLastTab && (
                  <Button onClick={handleNext}>
                     पुढे <ArrowRight className="ml-2" />
                 </Button>
@@ -772,16 +772,14 @@ export default function SurveyReviewPage() {
                      </div>
                  )}
             </div>
-            {(currentMedia?.type === 'image') && (
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => handleMediaVerification('rejected')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
-                        <XCircle className="mr-2" /> नाकारा
-                    </Button>
-                    <Button onClick={() => handleMediaVerification('accepted')} className="bg-green-600 hover:bg-green-700 text-white">
-                        <CheckCircle className="mr-2" /> स्वीकारा
-                    </Button>
-                </DialogFooter>
-            )}
+            <DialogFooter>
+                <Button variant="outline" onClick={() => handleMediaVerification('rejected')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                    <XCircle className="mr-2" /> नाकारा
+                </Button>
+                <Button onClick={() => handleMediaVerification('accepted')} className="bg-green-600 hover:bg-green-700 text-white">
+                    <CheckCircle className="mr-2" /> स्वीकारा
+                </Button>
+            </DialogFooter>
         </DialogContent>
     </Dialog>
 

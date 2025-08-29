@@ -113,25 +113,16 @@ type VerificationStatus = 'pending' | 'accepted' | 'rejected';
 const VerifiableInput = ({ 
     label, 
     value,
-    onVerificationChange
+    status,
+    onAccept,
+    onReject
 }: { 
     label: string;
     value?: string | number | null;
-    onVerificationChange: (status: VerificationStatus) => void;
+    status: VerificationStatus;
+    onAccept: () => void;
+    onReject: () => void;
 }) => {
-    const [status, setStatus] = React.useState<VerificationStatus>('pending');
-
-    const handleAccept = () => {
-        const newStatus = status === 'accepted' ? 'pending' : 'accepted';
-        setStatus(newStatus);
-        onVerificationChange(newStatus);
-    };
-    const handleReject = () => {
-        const newStatus = status === 'rejected' ? 'pending' : 'rejected';
-        setStatus(newStatus);
-        onVerificationChange(newStatus);
-    };
-
     return (
         <div className="grid gap-1.5">
             <Label className="text-muted-foreground text-sm">{label}</Label>
@@ -144,7 +135,7 @@ const VerifiableInput = ({
                         "h-10 w-10",
                         status === 'accepted' && "bg-green-600 hover:bg-green-700 border-green-600 text-white"
                     )}
-                    onClick={handleAccept}
+                    onClick={onAccept}
                 >
                     <Check className="h-5 w-5" />
                 </Button>
@@ -152,7 +143,7 @@ const VerifiableInput = ({
                     variant={status === 'rejected' ? 'destructive' : 'outline'} 
                     size="icon" 
                     className="h-10 w-10"
-                    onClick={handleReject}
+                    onClick={onReject}
                 >
                     <X className="h-5 w-5" />
                 </Button>
@@ -161,86 +152,56 @@ const VerifiableInput = ({
     )
 };
 
+const mediaStatusClasses: Record<VerificationStatus, string> = {
+    pending: "border-muted-foreground/20",
+    accepted: "border-green-500",
+    rejected: "border-red-500",
+}
+const mediaStatusIcon: Record<VerificationStatus, React.ReactNode> = {
+    pending: null,
+    accepted: <CheckCircle className="h-5 w-5 text-white bg-green-500 rounded-full p-0.5" />,
+    rejected: <XCircle className="h-5 w-5 text-white bg-red-500 rounded-full p-0.5" />,
+}
 
-const ImageUploader = ({
-    id,
+const VerifiableMediaItem = ({
     label,
-    onFileChange,
-    file,
-    capture,
-    isReadOnly = false,
-    imageUrl
+    src,
+    type,
+    status,
+    onClick,
 }: {
-    id: string;
     label: string;
-    onFileChange: (file: File | null) => void;
-    file: File | null;
-    capture?: 'user' | 'environment';
-    isReadOnly?: boolean;
-    imageUrl?: string;
+    src: string;
+    type: 'image' | 'audio' | 'other';
+    status: VerificationStatus;
+    onClick: () => void;
 }) => {
-    const previewUrl = React.useMemo(() => {
-        if (file) return URL.createObjectURL(file);
-        if (imageUrl) return imageUrl;
-        return null;
-    }, [file, imageUrl]);
-
-    React.useEffect(() => {
-        return () => {
-            if (file && previewUrl && !imageUrl) {
-                URL.revokeObjectURL(previewUrl);
-            }
-        };
-    }, [previewUrl, file, imageUrl]);
-
-    if (previewUrl) {
-        return (
-            <div className="grid gap-2">
-                 <Label>{label}</Label>
-                 <div className="relative w-full aspect-video rounded-lg overflow-hidden border">
-                     <Image src={previewUrl} alt={label} layout="fill" objectFit="cover" data-ai-hint="photo image" />
-                     {!isReadOnly && (
-                        <Button size="icon" variant="destructive" className="absolute top-1 right-1 h-7 w-7 z-10" onClick={() => onFileChange(null)}>
-                           <X className="h-4 w-4" />
-                        </Button>
-                     )}
-                 </div>
-            </div>
-        );
-    }
-
-    if (isReadOnly) {
-         return (
-            <div className="grid gap-2">
-                 <Label>{label}</Label>
-                 <div className="relative w-full aspect-video rounded-lg overflow-hidden border bg-muted/50 flex items-center justify-center">
-                    <p className="text-xs text-muted-foreground">फोटो उपलब्ध नाही</p>
-                 </div>
-            </div>
-        );
-    }
-
     return (
         <div className="grid gap-2">
-            <Label htmlFor={id} className="flex items-center gap-2">{label}</Label>
-            <div className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 relative aspect-video">
-                <UploadCloud className="w-8 h-8 text-muted-foreground" />
-                <p className="mt-2 text-sm text-center text-muted-foreground">
-                    <span className="font-semibold">{capture ? 'फोटो काढा' : 'अपलोड करा'}</span>
-                </p>
-                <Input
-                    id={id}
-                    type="file"
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    accept="image/*"
-                    onChange={(e) => onFileChange(e.target.files ? e.target.files[0] : null)}
-                    capture={capture}
-                />
+            <Label>{label}</Label>
+            <div 
+                className={cn(
+                    "relative w-full aspect-video rounded-lg overflow-hidden border-2 cursor-pointer group",
+                    mediaStatusClasses[status]
+                )}
+                onClick={onClick}
+            >
+                {type === 'image' ? (
+                     <Image src={src} alt={label} layout="fill" objectFit="cover" data-ai-hint="photo image" />
+                ) : (
+                    <div className="h-full w-full bg-muted/50 flex flex-col items-center justify-center p-4 text-center">
+                        {type === 'audio' ? <AudioLines className="h-10 w-10 text-muted-foreground" /> : <FileImage className="h-10 w-10 text-muted-foreground" />}
+                        <p className="text-xs mt-2 text-muted-foreground">पाहण्यासाठी क्लिक करा</p>
+                    </div>
+                )}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute top-1.5 right-1.5">
+                    {mediaStatusIcon[status]}
+                </div>
             </div>
         </div>
-    );
-};
-
+    )
+}
 
 const Combobox = ({
     options,
@@ -329,10 +290,14 @@ export default function SurveyReviewPage() {
     const [partyName, setPartyName] = React.useState("farmer-1");
     
     // State for review modal
-    const [isModalOpen, setIsModalOpen] = React.useState(false);
-    const [modalAction, setModalAction] = React.useState<'approve' | 'reject' | null>(null);
+    const [isFinalReviewModalOpen, setIsFinalReviewModalOpen] = React.useState(false);
+    const [finalModalAction, setFinalModalAction] = React.useState<'approve' | 'reject' | null>(null);
     const [remark, setRemark] = React.useState("");
     const [reviewAudio, setReviewAudio] = React.useState<File | null>(null);
+    
+    // State for media modal
+    const [isMediaModalOpen, setIsMediaModalOpen] = React.useState(false);
+    const [currentMedia, setCurrentMedia] = React.useState<{id: string; label: string; src: string; type: 'image' | 'audio' | 'other'} | null>(null);
     
     const [verificationStatus, setVerificationStatus] = React.useState({
         sabNumber: 'pending' as VerificationStatus,
@@ -349,33 +314,61 @@ export default function SurveyReviewPage() {
         irrigationMethod: 'pending' as VerificationStatus,
         plantationMethod: 'pending' as VerificationStatus,
     });
+    
+    const initialMediaStatus = {
+        'farm-photo-0': 'pending', 'farm-photo-1': 'pending', 'farm-photo-2': 'pending', 'farm-photo-3': 'pending',
+        'farmer-photo': 'pending', 'field-boy-photo': 'pending', 'saat-baara-photo': 'pending', 'audio-note': 'pending', 'other-media-0': 'pending'
+    }
+    const [mediaVerification, setMediaVerification] = React.useState<Record<string, VerificationStatus>>(initialMediaStatus);
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
 
     const handleVerificationChange = (field: keyof typeof verificationStatus, status: VerificationStatus) => {
         setVerificationStatus(prev => ({ ...prev, [field]: status }));
     };
+    const toggleVerification = (field: keyof typeof verificationStatus, type: 'accept' | 'reject') => {
+         const currentStatus = verificationStatus[field];
+         const targetStatus = type === 'accept' ? 'accepted' : 'rejected';
+         setVerificationStatus(prev => ({
+             ...prev,
+             [field]: currentStatus === targetStatus ? 'pending' : targetStatus
+         }))
+    }
 
-    const acceptedCount = Object.values(verificationStatus).filter(s => s === 'accepted').length;
-    const rejectedCount = Object.values(verificationStatus).filter(s => s === 'rejected').length;
+    const allVerificationFields = {...verificationStatus, ...mediaVerification};
+    const acceptedCount = Object.values(allVerificationFields).filter(s => s === 'accepted').length;
+    const rejectedCount = Object.values(allVerificationFields).filter(s => s === 'rejected').length;
 
-    const handleOpenModal = (action: 'approve' | 'reject') => {
-        setModalAction(action);
-        setIsModalOpen(true);
+    const handleOpenFinalModal = (action: 'approve' | 'reject') => {
+        setFinalModalAction(action);
+        setIsFinalReviewModalOpen(true);
     };
 
     const handleFinalSubmit = () => {
-        if (!modalAction) return;
+        if (!finalModalAction) return;
 
         toast({
-            title: `सर्वेक्षण ${modalAction === 'approve' ? 'मंजूर' : 'नाकारले'}!`,
-            description: `शेती सर्वेक्षण यशस्वीरित्या ${modalAction === 'approve' ? 'मंजूर' : 'नाकारले'} आहे.`,
+            title: `सर्वेक्षण ${finalModalAction === 'approve' ? 'मंजूर' : 'नाकारले'}!`,
+            description: `शेती सर्वेक्षण यशस्वीरित्या ${finalModalAction === 'approve' ? 'मंजूर' : 'नाकारले'} आहे.`,
         });
-        setIsModalOpen(false);
+        setIsFinalReviewModalOpen(false);
         setRemark("");
         setReviewAudio(null);
-        setModalAction(null);
+        setFinalModalAction(null);
         router.push('/oversheer/dashboard');
+    }
+    
+    const handleOpenMediaModal = (media: {id: string; label: string; src: string; type: 'image' | 'audio' | 'other'}) => {
+        setCurrentMedia(media);
+        setIsMediaModalOpen(true);
+    }
+    
+    const handleMediaVerification = (status: VerificationStatus) => {
+        if(currentMedia) {
+            setMediaVerification(prev => ({...prev, [currentMedia.id]: status}));
+            setIsMediaModalOpen(false);
+            setCurrentMedia(null);
+        }
     }
 
     const handleNext = () => {
@@ -441,12 +434,16 @@ export default function SurveyReviewPage() {
                 <VerifiableInput 
                     label="सब नंबर" 
                     value="SAB-A001" 
-                    onVerificationChange={(status) => handleVerificationChange('sabNumber', status)}
+                    status={verificationStatus.sabNumber}
+                    onAccept={() => toggleVerification('sabNumber', 'accept')}
+                    onReject={() => toggleVerification('sabNumber', 'reject')}
                 />
                 <VerifiableInput 
                     label="खाता नंबर" 
                     value="KH-112233" 
-                    onVerificationChange={(status) => handleVerificationChange('khataNumber', status)}
+                    status={verificationStatus.khataNumber}
+                    onAccept={() => toggleVerification('khataNumber', 'accept')}
+                    onReject={() => toggleVerification('khataNumber', 'reject')}
                 />
             </div>
           </TabsContent>
@@ -456,17 +453,23 @@ export default function SurveyReviewPage() {
                  <VerifiableInput 
                     label="मोबाइल नंबर" 
                     value="9876543210" 
-                    onVerificationChange={(status) => handleVerificationChange('mobileNumber', status)}
+                    status={verificationStatus.mobileNumber}
+                    onAccept={() => toggleVerification('mobileNumber', 'accept')}
+                    onReject={() => toggleVerification('mobileNumber', 'reject')}
                 />
                  <VerifiableInput 
                     label="लिंक नंबर" 
                     value="LNK-54321" 
-                    onVerificationChange={(status) => handleVerificationChange('linkNumber', status)}
+                    status={verificationStatus.linkNumber}
+                    onAccept={() => toggleVerification('linkNumber', 'accept')}
+                    onReject={() => toggleVerification('linkNumber', 'reject')}
                 />
                  <VerifiableInput 
                     label="NAP नंबर" 
                     value="NAP-98765" 
-                    onVerificationChange={(status) => handleVerificationChange('napNumber', status)}
+                    status={verificationStatus.napNumber}
+                    onAccept={() => toggleVerification('napNumber', 'accept')}
+                    onReject={() => toggleVerification('napNumber', 'reject')}
                 />
                 <ReadOnlyInput label="बँकेचे नाव" value="स्टेट बँक ऑफ इंडिया" />
                 <ReadOnlyInput label="शाखा" value="लातूर शाखा" />
@@ -477,15 +480,63 @@ export default function SurveyReviewPage() {
 
           <TabsContent value="farm-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <VerifiableInput label="क्षेत्र (हेक्टर)" value="1.0" onVerificationChange={(status) => handleVerificationChange('area', status)} />
-                <VerifiableInput label="लागवड तारीख" value={format(new Date('2023-08-12'), "PPP")} onVerificationChange={(status) => handleVerificationChange('plantationDate', status)} />
-                <VerifiableInput label="उसाची जात" value="जात १" onVerificationChange={(status) => handleVerificationChange('caneVariety', status)} />
-                <VerifiableInput label="उसाचा प्रकार" value="प्रकार १ (12 महिने)" onVerificationChange={(status) => handleVerificationChange('caneType', status)} />
+                <VerifiableInput 
+                    label="क्षेत्र (हेक्टर)" 
+                    value="1.0" 
+                    status={verificationStatus.area}
+                    onAccept={() => toggleVerification('area', 'accept')}
+                    onReject={() => toggleVerification('area', 'reject')}
+                />
+                <VerifiableInput 
+                    label="लागवड तारीख" 
+                    value={format(new Date('2023-08-12'), "PPP")} 
+                    status={verificationStatus.plantationDate}
+                    onAccept={() => toggleVerification('plantationDate', 'accept')}
+                    onReject={() => toggleVerification('plantationDate', 'reject')}
+                />
+                <VerifiableInput 
+                    label="उसाची जात" 
+                    value="जात १" 
+                    status={verificationStatus.caneVariety}
+                    onAccept={() => toggleVerification('caneVariety', 'accept')}
+                    onReject={() => toggleVerification('caneVariety', 'reject')}
+                />
+                <VerifiableInput 
+                    label="उसाचा प्रकार" 
+                    value="प्रकार १ (12 महिने)" 
+                    status={verificationStatus.caneType}
+                    onAccept={() => toggleVerification('caneType', 'accept')}
+                    onReject={() => toggleVerification('caneType', 'reject')}
+                />
                 <ReadOnlyInput label="उसाची पक्वता" value={format(addMonths(new Date('2023-08-12'), 12), "PPP")} />
-                <VerifiableInput label="सिंचनाचा प्रकार" value="ठिबक" onVerificationChange={(status) => handleVerificationChange('irrigationType', status)} />
-                <VerifiableInput label="सिंचनाचा स्रोत" value="विहीर" onVerificationChange={(status) => handleVerificationChange('irrigationSource', status)} />
-                <VerifiableInput label="सिंचन पद्धत" value="पद्धत १" onVerificationChange={(status) => handleVerificationChange('irrigationMethod', status)} />
-                <VerifiableInput label="लागवड पद्धत" value="पद्धत अ" onVerificationChange={(status) => handleVerificationChange('plantationMethod', status)} />
+                <VerifiableInput 
+                    label="सिंचनाचा प्रकार" 
+                    value="ठिबक" 
+                    status={verificationStatus.irrigationType}
+                    onAccept={() => toggleVerification('irrigationType', 'accept')}
+                    onReject={() => toggleVerification('irrigationType', 'reject')}
+                />
+                <VerifiableInput 
+                    label="सिंचनाचा स्रोत" 
+                    value="विहीर" 
+                    status={verificationStatus.irrigationSource}
+                    onAccept={() => toggleVerification('irrigationSource', 'accept')}
+                    onReject={() => toggleVerification('irrigationSource', 'reject')}
+                />
+                <VerifiableInput 
+                    label="सिंचन पद्धत" 
+                    value="पद्धत १" 
+                    status={verificationStatus.irrigationMethod}
+                    onAccept={() => toggleVerification('irrigationMethod', 'accept')}
+                    onReject={() => toggleVerification('irrigationMethod', 'reject')}
+                />
+                <VerifiableInput 
+                    label="लागवड पद्धत" 
+                    value="पद्धत अ" 
+                    status={verificationStatus.plantationMethod}
+                    onAccept={() => toggleVerification('plantationMethod', 'accept')}
+                    onReject={() => toggleVerification('plantationMethod', 'reject')}
+                />
                 <ReadOnlyInput label="पूर्व" value="शेजारील शेत" />
                 <ReadOnlyInput label="पश्चिम" value="रस्ता" />
                 <ReadOnlyInput label="उत्तर" value="ओढा" />
@@ -498,31 +549,59 @@ export default function SurveyReviewPage() {
                     <div>
                         <Label className="text-base font-medium">शेताचे फोटो</Label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
-                            {farmPhotoLabels.map((label, index) => (
-                                <ImageUploader key={index} id={`farm-photo-${index}`} label={label} file={null} onFileChange={()=>{}} isReadOnly imageUrl={`https://placehold.co/400x300.png?text=${index+1}`}/>
-                            ))}
+                            {farmPhotoLabels.map((label, index) => {
+                                const mediaId = `farm-photo-${index}`;
+                                return (
+                                    <VerifiableMediaItem 
+                                        key={mediaId} 
+                                        label={label} 
+                                        src={`https://placehold.co/400x300.png?text=${index+1}`} 
+                                        type="image" 
+                                        status={mediaVerification[mediaId]}
+                                        onClick={() => handleOpenMediaModal({id: mediaId, label, src: `https://placehold.co/800x600.png?text=${index+1}`, type: 'image'})}
+                                    />
+                                );
+                            })}
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
-                        <ImageUploader id="farmer-photo" label="शेतकरी फोटो" file={null} onFileChange={()=>{}} isReadOnly imageUrl="https://placehold.co/400x300.png"/>
-                        <ImageUploader id="field-boy-photo" label="फील्ड बॉय फोटो" file={null} onFileChange={()=>{}} isReadOnly imageUrl="https://placehold.co/400x300.png"/>
-                        <ImageUploader id="saat-baara-photo" label="७/१२ कागदपत्र" file={null} onFileChange={()=>{}} isReadOnly imageUrl="https://placehold.co/400x300.png"/>
+                        <VerifiableMediaItem 
+                            label="शेतकरी फोटो"
+                            src="https://placehold.co/400x300.png"
+                            type="image"
+                            status={mediaVerification['farmer-photo']}
+                            onClick={() => handleOpenMediaModal({id: 'farmer-photo', label: 'शेतकरी फोटो', src: 'https://placehold.co/800x600.png', type: 'image'})}
+                        />
+                         <VerifiableMediaItem 
+                            label="फील्ड बॉय फोटो"
+                            src="https://placehold.co/400x300.png"
+                            type="image"
+                            status={mediaVerification['field-boy-photo']}
+                            onClick={() => handleOpenMediaModal({id: 'field-boy-photo', label: 'फील्ड बॉय फोटो', src: 'https://placehold.co/800x600.png', type: 'image'})}
+                        />
+                         <VerifiableMediaItem 
+                            label="७/१२ कागदपत्र"
+                            src="https://placehold.co/400x300.png"
+                            type="image"
+                            status={mediaVerification['saat-baara-photo']}
+                            onClick={() => handleOpenMediaModal({id: 'saat-baara-photo', label: '७/१२ कागदपत्र', src: 'https://placehold.co/600x800.png', type: 'image'})}
+                        />
                     </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="audio-note" className="flex items-center gap-2"><AudioLines /> ऑडिओ नोट</Label>
-                            <audio src="data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=" controls className="w-full" />
-                        </div>
-                         <div className="grid gap-4">
-                            <Label className="flex items-center gap-2"><FileImage /> इतर मीडिया</Label>
-                            <div className="flex items-center gap-2 p-2 border rounded-md">
-                                <FileIcon className="h-5 w-5 text-muted-foreground"/>
-                                <span className="font-medium text-sm">नोंदणी कागदपत्र</span>
-                                <Button asChild variant="link" size="sm" className="ml-auto">
-                                    <a href="https://placehold.co/200x100.png" target="_blank" rel="noopener noreferrer">पहा</a>
-                                </Button>
-                            </div>
-                        </div>
+                        <VerifiableMediaItem 
+                            label="ऑडिओ नोट"
+                            src="data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA="
+                            type="audio"
+                            status={mediaVerification['audio-note']}
+                            onClick={() => handleOpenMediaModal({id: 'audio-note', label: 'ऑडिओ नोट', src: 'data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=', type: 'audio'})}
+                        />
+                        <VerifiableMediaItem 
+                            label="इतर मीडिया (नोंदणी)"
+                            src="https://placehold.co/200x100.png"
+                            type="other"
+                            status={mediaVerification['other-media-0']}
+                            onClick={() => handleOpenMediaModal({id: 'other-media-0', label: 'इतर मीडिया (नोंदणी)', src: 'https://placehold.co/800x400.png', type: 'image'})}
+                        />
                     </div>
                 </div>
             </TabsContent>
@@ -579,10 +658,10 @@ export default function SurveyReviewPage() {
 
             {isLastTab ? (
                  <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => handleOpenModal('reject')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                    <Button variant="outline" onClick={() => handleOpenFinalModal('reject')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
                         <XCircle className="mr-2" /> नाकारा
                     </Button>
-                    <Button onClick={() => handleOpenModal('approve')} className="bg-green-600 hover:bg-green-700 text-white">
+                    <Button onClick={() => handleOpenFinalModal('approve')} className="bg-green-600 hover:bg-green-700 text-white">
                         <CheckCircle className="mr-2" /> मंजूर करा
                     </Button>
                 </div>
@@ -593,15 +672,49 @@ export default function SurveyReviewPage() {
             )}
         </CardFooter>
     </Card>
+    
+    {/* Media Verification Modal */}
+    <Dialog open={isMediaModalOpen} onOpenChange={setIsMediaModalOpen}>
+        <DialogContent className="max-w-3xl">
+            <DialogHeader>
+                <DialogTitle>{currentMedia?.label}</DialogTitle>
+            </DialogHeader>
+            <div className="py-4 flex items-center justify-center bg-muted/50 rounded-md">
+                 {currentMedia?.type === 'image' && (
+                    <Image src={currentMedia.src} alt={currentMedia.label} width={800} height={600} className="max-h-[60vh] w-auto object-contain" />
+                 )}
+                 {currentMedia?.type === 'audio' && (
+                    <audio src={currentMedia.src} controls autoPlay className="w-full" />
+                 )}
+                 {currentMedia?.type === 'other' && (
+                     <div className="text-center p-8">
+                         <p className="text-muted-foreground">या प्रकारच्या मीडियासाठी पूर्वावलोकन उपलब्ध नाही.</p>
+                         <Button asChild variant="link" className="mt-2">
+                             <a href={currentMedia.src} target="_blank" rel="noopener noreferrer">नवीन टॅबमध्ये उघडा</a>
+                         </Button>
+                     </div>
+                 )}
+            </div>
+            <DialogFooter>
+                <Button variant="outline" onClick={() => handleMediaVerification('rejected')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
+                    <XCircle className="mr-2" /> नाकारा
+                </Button>
+                <Button onClick={() => handleMediaVerification('accepted')} className="bg-green-600 hover:bg-green-700 text-white">
+                    <CheckCircle className="mr-2" /> स्वीकारा
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
 
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    {/* Final Review Modal */}
+    <Dialog open={isFinalReviewModalOpen} onOpenChange={setIsFinalReviewModalOpen}>
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>
-                    {modalAction === 'approve' ? 'सर्वेक्षण मंजूर करा' : 'सर्वेक्षण नाकारा'}
+                    {finalModalAction === 'approve' ? 'सर्वेक्षण मंजूर करा' : 'सर्वेक्षण नाकारा'}
                 </DialogTitle>
                 <DialogDescription>
-                  {modalAction === 'approve' ? 'हे सर्वेक्षण मंजूर करण्यापूर्वी तुम्ही कोणताही अतिरिक्त शेरा जोडू शकता.' : 'कृपया हे सर्वेक्षण नाकारण्याचे कारण द्या.'}
+                  {finalModalAction === 'approve' ? 'हे सर्वेक्षण मंजूर करण्यापूर्वी तुम्ही कोणताही अतिरिक्त शेरा जोडू शकता.' : 'कृपया हे सर्वेक्षण नाकारण्याचे कारण द्या.'}
                 </DialogDescription>
             </DialogHeader>
             <div className="space-y-6 py-4">
@@ -624,7 +737,7 @@ export default function SurveyReviewPage() {
                     <Button variant="ghost">रद्द करा</Button>
                 </DialogClose>
                 <Button onClick={handleFinalSubmit}>
-                    {modalAction === 'approve' ? 'मंजुरीची पुष्टी करा' : 'नकारची पुष्टी करा'}
+                    {finalModalAction === 'approve' ? 'मंजुरीची पुष्टी करा' : 'नकारची पुष्टी करा'}
                 </Button>
             </DialogFooter>
         </DialogContent>

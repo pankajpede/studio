@@ -685,6 +685,10 @@ export default function SurveyReviewPage() {
                             >
                                 <X className="h-4 w-4" />
                             </Button>
+                             <Button variant="outline" size="icon" onClick={() => mapRef.current?.refreshLocation()} className="h-8 w-8">
+                                <RefreshCw className="h-4 w-4" />
+                                <span className="sr-only">Refresh Boundary</span>
+                            </Button>
                         </div>
                     </CardHeader>
                     <CardContent className="h-96">

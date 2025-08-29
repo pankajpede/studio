@@ -351,8 +351,6 @@ export default function SurveyReviewPage() {
     const acceptedCount = Object.values(verificationStatus).filter(s => s === 'accepted').length;
     const rejectedCount = Object.values(verificationStatus).filter(s => s === 'rejected').length;
 
-    const isFirstTabVerified = verificationStatus.sabNumber !== 'pending' && verificationStatus.khataNumber !== 'pending';
-
     const handleOpenModal = (action: 'approve' | 'reject') => {
         setModalAction(action);
         setIsModalOpen(true);
@@ -581,7 +579,7 @@ export default function SurveyReviewPage() {
                     </Button>
                 </div>
             ) : (
-                 <Button onClick={handleNext} disabled={isFirstTab && !isFirstTabVerified}>
+                 <Button onClick={handleNext}>
                     पुढे <ArrowRight className="ml-2" />
                 </Button>
             )}

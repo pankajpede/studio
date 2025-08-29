@@ -24,12 +24,12 @@ const PerformanceBadge = () => {
 
   const getBadgeStyle = () => {
     if (score >= 80) {
-      return "bg-[#FFD700] text-black" // Gold
+      return "bg-[#FFD700] text-amber-900 border-amber-500" // Gold
     }
     if (score >= 60) {
-      return "bg-[#C0C0C0] text-black" // Silver
+      return "bg-[#C0C0C0] text-slate-800 border-slate-400" // Silver
     }
-    return "bg-[#DC3545] text-white" // Red
+    return "bg-[#DC3545] text-white border-red-700" // Red
   }
 
   return (
@@ -37,10 +37,10 @@ const PerformanceBadge = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <div className={cn(
-            "flex items-center justify-center h-8 w-8 rounded-full font-bold shadow-md",
+            "flex items-center justify-center h-8 w-8 rounded-full font-bold shadow-md border-2",
             getBadgeStyle()
           )}>
-            <span className="text-sm">{score}</span>
+            <span className="text-sm font-extrabold">{score}</span>
           </div>
         </TooltipTrigger>
         <TooltipContent>

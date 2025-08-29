@@ -158,7 +158,7 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation, onDistance
             position={currentPosition} 
             title="तुमचे सध्याचे स्थान"
             icon={{
-                path: google.maps.SymbolPath.CIRCLE,
+                path: window.google.maps.SymbolPath.CIRCLE,
                 scale: 8,
                 fillColor: "#4285F4",
                 fillOpacity: 1,
@@ -167,10 +167,10 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation, onDistance
             }}
           />
         )}
-        {showDistance && farmLocation && (
+        {farmLocation && (
              <Marker position={farmLocation} title="शेताचे स्थान" />
         )}
-         {showDistance && farmLocation && currentPosition && (
+         {farmLocation && currentPosition && (
             <Polyline
                 path={[currentPosition, farmLocation]}
                 options={{
@@ -178,7 +178,7 @@ const FieldBoyMap = forwardRef(({ showDistance = false, farmLocation, onDistance
                     strokeOpacity: 0.8,
                     strokeWeight: 2,
                     icons: [{
-                        icon: { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW },
+                        icon: { path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW },
                         offset: '100%'
                     }]
                 }}

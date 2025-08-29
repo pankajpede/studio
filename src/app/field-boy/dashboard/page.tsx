@@ -22,7 +22,6 @@ type Survey = {
   day: string
   month: string
   farmerName: string
-  surveyCode: string
   date: string
   taluka: string
   village: string
@@ -31,17 +30,17 @@ type Survey = {
 }
 
 const mockSurveys: Survey[] = [
-  { id: "SUR001", day: "३०", month: "जून", farmerName: "सचिन कुलकर्णी", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Pending", daysLeft: 2 },
-  { id: "SUR002", day: "२९", month: "जून", farmerName: "विशाल मोरे", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Approved" },
-  { id: "SUR003", day: "२८", month: "जून", farmerName: "अजय पाटील", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected", daysLeft: 6 },
-  { id: "SUR004", day: "२७", month: "जून", farmerName: "सुनीता मोरे", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 4 },
-  { id: "SUR005", day: "२६", month: "जून", farmerName: "कविता देशमुख", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "औसा", village: "लामजना", status: "Approved" },
-  { id: "SUR006", day: "२५", month: "जून", farmerName: "राहुल जाधव", surveyCode: "को ०२३८", date: "2024-08-12", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
-  { id: "SUR007", day: "२४", month: "जून", farmerName: "रमेश शिंदे", surveyCode: "को ८६०३२", date: "2024-08-14", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 5 },
-  { id: "SUR008", day: "२३", month: "जून", farmerName: "नवीन ड्राफ्ट", surveyCode: "को ८६०३२", date: "2024-08-15", taluka: "अहमदपूर", village: "मोहगाव", status: "Draft" },
-  { id: "SUR009", day: "२२", month: "जून", farmerName: "दुसरे प्रलंबित", surveyCode: "को ८६०३२", date: "2024-08-13", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 1 },
-  { id: "SUR010", day: "२१", month: "जून", farmerName: "नवीन नाकारलेले", surveyCode: "को ८६०३२", date: "2024-08-16", taluka: "औसा", village: "लामजना", status: "Rejected", daysLeft: 3 },
-  { id: "SUR011", day: "२०", month: "जून", farmerName: "दुसरे नियुक्त", surveyCode: "को ८६०३२", date: "2024-08-14", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 3 },
+  { id: "SUR001", day: "३०", month: "जून", farmerName: "सचिन कुलकर्णी", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Pending", daysLeft: 2 },
+  { id: "SUR002", day: "२९", month: "जून", farmerName: "विशाल मोरे", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Approved" },
+  { id: "SUR003", day: "२८", month: "जून", farmerName: "अजय पाटील", date: "2024-08-12", taluka: "अहमदपूर", village: "मोहगाव", status: "Rejected", daysLeft: 6 },
+  { id: "SUR004", day: "२७", month: "जून", farmerName: "सुनीता मोरे", date: "2024-08-12", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 4 },
+  { id: "SUR005", day: "२६", month: "जून", farmerName: "कविता देशमुख", date: "2024-08-12", taluka: "औसा", village: "लामजना", status: "Approved" },
+  { id: "SUR006", day: "२५", month: "जून", farmerName: "राहुल जाधव", date: "2024-08-12", taluka: "लातूर", village: "कासारवाडी", status: "Draft" },
+  { id: "SUR007", day: "२४", month: "जून", farmerName: "रमेश शिंदे", date: "2024-08-14", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 5 },
+  { id: "SUR008", day: "२३", month: "जून", farmerName: "प्रिया शर्मा", date: "2024-08-15", taluka: "अहमदपूर", village: "मोहगाव", status: "Draft" },
+  { id: "SUR009", day: "२२", month: "जून", farmerName: "अमित कुमार", date: "2024-08-13", taluka: "लातूर", village: "कासारवाडी", status: "Pending", daysLeft: 1 },
+  { id: "SUR010", day: "२१", month: "जून", farmerName: "पूजा गायकवाड", date: "2024-08-16", taluka: "औसा", village: "लामजना", status: "Rejected", daysLeft: 3 },
+  { id: "SUR011", day: "२०", month: "जून", farmerName: "संजय मेहरा", date: "2024-08-14", taluka: "अहमदपूर", village: "मोहगाव", status: "Assigned", daysLeft: 3 },
 ]
 
 const statusTranslations: Record<SurveyStatus, string> = {

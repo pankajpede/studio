@@ -340,6 +340,14 @@ export default function SurveyReviewPage() {
         mobileNumber: 'pending' as VerificationStatus,
         linkNumber: 'pending' as VerificationStatus,
         napNumber: 'pending' as VerificationStatus,
+        area: 'pending' as VerificationStatus,
+        plantationDate: 'pending' as VerificationStatus,
+        caneVariety: 'pending' as VerificationStatus,
+        caneType: 'pending' as VerificationStatus,
+        irrigationType: 'pending' as VerificationStatus,
+        irrigationSource: 'pending' as VerificationStatus,
+        irrigationMethod: 'pending' as VerificationStatus,
+        plantationMethod: 'pending' as VerificationStatus,
     });
 
     const tabs = ["farmer-selection", "farmer-info", "farm-info", "media", "map"];
@@ -469,15 +477,15 @@ export default function SurveyReviewPage() {
 
           <TabsContent value="farm-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ReadOnlyInput label="क्षेत्र (हेक्टर)" value="1.0" />
-                <ReadOnlyInput label="लागवड तारीख" value={format(new Date('2023-08-12'), "PPP")} />
-                <ReadOnlyInput label="उसाची जात" value="जात १" />
-                <ReadOnlyInput label="उसाचा प्रकार" value="प्रकार १ (12 महिने)" />
+                <VerifiableInput label="क्षेत्र (हेक्टर)" value="1.0" onVerificationChange={(status) => handleVerificationChange('area', status)} />
+                <VerifiableInput label="लागवड तारीख" value={format(new Date('2023-08-12'), "PPP")} onVerificationChange={(status) => handleVerificationChange('plantationDate', status)} />
+                <VerifiableInput label="उसाची जात" value="जात १" onVerificationChange={(status) => handleVerificationChange('caneVariety', status)} />
+                <VerifiableInput label="उसाचा प्रकार" value="प्रकार १ (12 महिने)" onVerificationChange={(status) => handleVerificationChange('caneType', status)} />
                 <ReadOnlyInput label="उसाची पक्वता" value={format(addMonths(new Date('2023-08-12'), 12), "PPP")} />
-                <ReadOnlyInput label="सिंचनाचा प्रकार" value="ठिबक" />
-                <ReadOnlyInput label="सिंचनाचा स्रोत" value="विहीर" />
-                <ReadOnlyInput label="सिंचन पद्धत" value="पद्धत १" />
-                <ReadOnlyInput label="लागवड पद्धत" value="पद्धत अ" />
+                <VerifiableInput label="सिंचनाचा प्रकार" value="ठिबक" onVerificationChange={(status) => handleVerificationChange('irrigationType', status)} />
+                <VerifiableInput label="सिंचनाचा स्रोत" value="विहीर" onVerificationChange={(status) => handleVerificationChange('irrigationSource', status)} />
+                <VerifiableInput label="सिंचन पद्धत" value="पद्धत १" onVerificationChange={(status) => handleVerificationChange('irrigationMethod', status)} />
+                <VerifiableInput label="लागवड पद्धत" value="पद्धत अ" onVerificationChange={(status) => handleVerificationChange('plantationMethod', status)} />
                 <ReadOnlyInput label="पूर्व" value="शेजारील शेत" />
                 <ReadOnlyInput label="पश्चिम" value="रस्ता" />
                 <ReadOnlyInput label="उत्तर" value="ओढा" />

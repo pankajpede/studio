@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation"
 import * as React from "react"
 import { Toaster } from "@/components/ui/toaster"
 import PerformanceBadge from "@/components/performance-badge"
+import OnlineStatusBadge from "@/components/online-status-badge"
 
 const capitalize = (s: string) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 
@@ -60,7 +61,8 @@ export default function FieldBoyLayout({
             </h1>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <OnlineStatusBadge />
             <PerformanceBadge />
             <UserNav />
           </div>

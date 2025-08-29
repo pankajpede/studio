@@ -280,9 +280,6 @@ export default function FieldBoyDashboard() {
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col items-center gap-4 py-4">
-                 <Avatar className="h-20 w-20">
-                    <AvatarFallback className="text-2xl">ओ</AvatarFallback>
-                </Avatar>
                 <div className="text-center">
                     <p className="font-bold text-lg">{newOverseer.name}</p>
                     <div className="flex items-center justify-center gap-2 text-muted-foreground">

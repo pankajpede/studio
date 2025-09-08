@@ -145,7 +145,8 @@ type MasterDataKey = keyof typeof masterDataMap
 const getColumns = (
   entityName: string,
   linkedEntity: string | null,
-  category: string | null
+  category: string | null,
+  onEdit: (item: MasterDataItem) => void
 ): ColumnDef<MasterDataItem>[] => {
   const columns: ColumnDef<MasterDataItem>[] = [
     {
@@ -175,12 +176,12 @@ const getColumns = (
   columns.push({
     id: "actions",
     header: () => <div className="text-right">क्रिया</div>,
-    cell: () => (
+    cell: ({ row }) => (
       <TooltipProvider>
         <div className="flex items-center justify-end gap-2">
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(row.original)}>
                         <Edit className="h-4 w-4" />
                     </Button>
                 </TooltipTrigger>
@@ -210,12 +211,17 @@ const getColumns = (
 function MasterDataTable({
   dataKey,
   onAddNew,
+  onEdit
 }: {
   dataKey: MasterDataKey
   onAddNew: (entityName: string) => void
+  onEdit: (entityName: string, item: MasterDataItem) => void
 }) {
   const { data, linkedEntity, category, entityName } = masterDataMap[dataKey]
-  const columns = React.useMemo(() => getColumns(entityName, linkedEntity, category), [entityName, linkedEntity, category])
+  const columns = React.useMemo(
+    () => getColumns(entityName, linkedEntity, category, (item) => onEdit(entityName, item)),
+    [entityName, linkedEntity, category, onEdit]
+  )
 
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -317,13 +323,33 @@ function MasterDataModal({
   onClose,
   entityType,
   onSave,
+  mode,
+  initialData
 }: {
   isOpen: boolean
   onClose: () => void
   entityType: string | null
   onSave: () => void;
+  mode: 'add' | 'edit';
+  initialData: MasterDataItem | null;
 }) {
   if (!isOpen || !entityType) return null;
+
+  const [name, setName] = React.useState(initialData?.name || "");
+  const [nameEn, setNameEn] = React.useState(initialData?.nameEn || "");
+
+  React.useEffect(() => {
+    if (initialData) {
+      setName(initialData.name);
+      setNameEn(initialData.nameEn);
+    } else {
+      setName("");
+      setNameEn("");
+    }
+  }, [initialData]);
+
+  const title = mode === 'add' ? `नवीन ${entityType} जोडा` : `${entityType} अपडेट करा`;
+  const buttonText = mode === 'add' ? 'नवीन जोडा' : 'अपडेट करा';
 
   const renderFormFields = () => {
     let linkedEntityElement = null;
@@ -370,7 +396,7 @@ function MasterDataModal({
         linkedEntityElement = (
             <div className="grid gap-2">
                 <Label htmlFor="parent-entity">{linkedEntityLabel}</Label>
-                <Select>
+                <Select defaultValue={initialData?.linkedTo}>
                     <SelectTrigger id="parent-entity"><SelectValue placeholder={`${entityType} निवडा`} /></SelectTrigger>
                     <SelectContent>
                         {linkedEntityOptions.map(o => <SelectItem key={o.id} value={o.name}>{o.name}</SelectItem>)}
@@ -384,11 +410,11 @@ function MasterDataModal({
       <div className="grid gap-4">
         <div className="grid gap-2">
           <Label htmlFor="name-mr">{entityType} नाव (मराठी)</Label>
-          <Input id="name-mr" placeholder="मराठी नाव प्रविष्ट करा" />
+          <Input id="name-mr" placeholder="मराठी नाव प्रविष्ट करा" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="name-en">{entityType} नाव (इंग्रजी)</Label>
-          <Input id="name-en" placeholder="इंग्रजी नाव प्रविष्ट करा" />
+          <Input id="name-en" placeholder="इंग्रजी नाव प्रविष्ट करा" value={nameEn} onChange={(e) => setNameEn(e.target.value)} />
         </div>
         {linkedEntityElement}
       </div>
@@ -399,7 +425,7 @@ function MasterDataModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-            <DialogTitle>नवीन {entityType} जोडा</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             </DialogHeader>
             <div className="py-4">
               {renderFormFields()}
@@ -408,7 +434,7 @@ function MasterDataModal({
             <DialogClose asChild>
                 <Button type="button" variant="secondary">रद्द करा</Button>
             </DialogClose>
-            <Button type="submit" onClick={onSave}>बदल जतन करा</Button>
+            <Button type="submit" onClick={onSave}>{buttonText}</Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>
@@ -425,23 +451,35 @@ export default function SettingsPage() {
   }));
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [modalMode, setModalMode] = React.useState<'add' | 'edit'>('add');
   const [currentEntityType, setCurrentEntityType] = React.useState<string | null>(null);
+  const [editingItem, setEditingItem] = React.useState<MasterDataItem | null>(null);
 
   const handleAddNew = (entityName: string) => {
     setCurrentEntityType(entityName);
+    setModalMode('add');
+    setEditingItem(null);
+    setIsModalOpen(true);
+  };
+  
+  const handleEdit = (entityName: string, item: MasterDataItem) => {
+    setCurrentEntityType(entityName);
+    setModalMode('edit');
+    setEditingItem(item);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setCurrentEntityType(null);
+    setEditingItem(null);
   };
 
   const handleSave = () => {
     if (currentEntityType) {
       toast({
         title: "यशस्वी!",
-        description: `${currentEntityType} यशस्वीरित्या जतन केले आहे.`,
+        description: `${currentEntityType} यशस्वीरित्या ${modalMode === 'add' ? 'तयार' : 'अद्यतनित'} केले आहे.`,
       });
     }
     handleCloseModal();
@@ -466,12 +504,14 @@ export default function SettingsPage() {
          <CardDescription className="mb-4">
               अनुप्रयोगासाठी मास्टर डेटा व्यवस्थापित करा.
           </CardDescription>
-        <MasterDataTable dataKey={selectedConfig} onAddNew={handleAddNew} />
+        <MasterDataTable dataKey={selectedConfig} onAddNew={handleAddNew} onEdit={handleEdit}/>
         <MasterDataModal 
             isOpen={isModalOpen}
             onClose={handleCloseModal}
             entityType={currentEntityType}
             onSave={handleSave}
+            mode={modalMode}
+            initialData={editingItem}
         />
       </CardContent>
     </Card>

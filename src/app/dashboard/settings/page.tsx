@@ -318,6 +318,12 @@ function MasterDataTable({
   )
 }
 
+const RequiredLabel = ({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) => (
+    <Label htmlFor={htmlFor}>
+        {children} <span className="text-red-500">*</span>
+    </Label>
+);
+
 function MasterDataModal({
   isOpen,
   onClose,
@@ -329,74 +335,115 @@ function MasterDataModal({
   isOpen: boolean
   onClose: () => void
   entityType: string | null
-  onSave: () => void;
+  onSave: (data: Omit<MasterDataItem, 'id'>) => void;
   mode: 'add' | 'edit';
   initialData: MasterDataItem | null;
 }) {
+  const { toast } = useToast();
   if (!isOpen || !entityType) return null;
-
+  
   const [name, setName] = React.useState(initialData?.name || "");
   const [nameEn, setNameEn] = React.useState(initialData?.nameEn || "");
+  const [linkedTo, setLinkedTo] = React.useState(initialData?.linkedTo || "");
+  
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
 
   React.useEffect(() => {
     if (initialData) {
       setName(initialData.name);
       setNameEn(initialData.nameEn);
+      setLinkedTo(initialData.linkedTo || "");
     } else {
       setName("");
       setNameEn("");
+      setLinkedTo("");
     }
   }, [initialData]);
-
+  
   const title = mode === 'add' ? `नवीन ${entityType} जोडा` : `${entityType} अपडेट करा`;
   const buttonText = mode === 'add' ? 'नवीन जोडा' : 'अपडेट करा';
 
-  const renderFormFields = () => {
-    let linkedEntityElement = null;
+  const getLinkedEntityInfo = () => {
     let linkedEntityOptions: MasterDataItem[] = [];
     let linkedEntityLabel = '';
+    let isLinkedEntityRequired = false;
 
     switch (entityType) {
         case "जिल्हा":
             linkedEntityOptions = states;
             linkedEntityLabel = 'जोडलेले राज्य';
+            isLinkedEntityRequired = true;
             break;
         case "तालुका":
             linkedEntityOptions = districts;
             linkedEntityLabel = 'जोडलेला जिल्हा';
+            isLinkedEntityRequired = true;
             break;
         case "सर्कल":
             linkedEntityOptions = talukas;
             linkedEntityLabel = 'जोडलेला तालुका';
+            isLinkedEntityRequired = true;
             break;
         case "गट":
             linkedEntityOptions = circles;
             linkedEntityLabel = 'जोडलेले सर्कल';
+            isLinkedEntityRequired = true;
             break;
         case "गाव":
             linkedEntityOptions = talukas;
             linkedEntityLabel = 'जोडलेला तालुका';
+            isLinkedEntityRequired = true;
             break;
         case "शिवार":
             linkedEntityOptions = villages;
             linkedEntityLabel = 'जोडलेले गाव';
+            isLinkedEntityRequired = true;
             break;
         case "सर्वेक्षण नंबर":
             linkedEntityOptions = shivars;
             linkedEntityLabel = 'जोडलेले शिवार';
+            isLinkedEntityRequired = true;
             break;
         case "उसाची पक्वता":
         case "उसाचा प्रकार":
             linkedEntityOptions = caneVarieties;
             linkedEntityLabel = 'जोडलेली उसाची जात';
+            isLinkedEntityRequired = true;
             break;
     }
+    return { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired };
+  }
+
+  const { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired } = getLinkedEntityInfo();
+  
+  const isFormValid = name.trim() !== "" && nameEn.trim() !== "" && (!isLinkedEntityRequired || linkedTo);
+  
+  const handleSaveClick = () => {
+      if (!isFormValid) {
+          toast({
+              variant: "destructive",
+              title: "त्रुटी",
+              description: "कृपया सर्व आवश्यक फील्ड भरा."
+          });
+          return;
+      }
+      setIsSubmitting(true);
+      // Simulate API call
+      setTimeout(() => {
+          onSave({ name, nameEn, linkedTo });
+          setIsSubmitting(false);
+      }, 500);
+  }
+
+  const renderFormFields = () => {
+    let linkedEntityElement = null;
 
     if (linkedEntityLabel && linkedEntityOptions.length > 0) {
         linkedEntityElement = (
             <div className="grid gap-2">
-                <Label htmlFor="parent-entity">{linkedEntityLabel}</Label>
-                <Select defaultValue={initialData?.linkedTo}>
+                <RequiredLabel htmlFor="parent-entity">{linkedEntityLabel}</RequiredLabel>
+                <Select value={linkedTo} onValueChange={setLinkedTo}>
                     <SelectTrigger id="parent-entity"><SelectValue placeholder={`${entityType} निवडा`} /></SelectTrigger>
                     <SelectContent>
                         {linkedEntityOptions.map(o => <SelectItem key={o.id} value={o.name}>{o.name}</SelectItem>)}
@@ -409,12 +456,12 @@ function MasterDataModal({
     return (
       <div className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="name-mr">{entityType} नाव (मराठी)</Label>
-          <Input id="name-mr" placeholder="मराठी नाव प्रविष्ट करा" value={name} onChange={(e) => setName(e.target.value)} />
+          <RequiredLabel htmlFor="name-mr">{entityType} नाव (मराठी)</RequiredLabel>
+          <Input id="name-mr" placeholder="मराठी नाव प्रविष्ट करा" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="name-en">{entityType} नाव (इंग्रजी)</Label>
-          <Input id="name-en" placeholder="इंग्रजी नाव प्रविष्ट करा" value={nameEn} onChange={(e) => setNameEn(e.target.value)} />
+          <RequiredLabel htmlFor="name-en">{entityType} नाव (इंग्रजी)</RequiredLabel>
+          <Input id="name-en" placeholder="इंग्रजी नाव प्रविष्ट करा" value={nameEn} onChange={(e) => setNameEn(e.target.value)} required />
         </div>
         {linkedEntityElement}
       </div>
@@ -434,7 +481,9 @@ function MasterDataModal({
             <DialogClose asChild>
                 <Button type="button" variant="secondary">रद्द करा</Button>
             </DialogClose>
-            <Button type="submit" onClick={onSave}>{buttonText}</Button>
+            <Button type="submit" onClick={handleSaveClick} disabled={!isFormValid || isSubmitting}>
+              {isSubmitting ? "जतन करत आहे..." : buttonText}
+            </Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>
@@ -475,13 +524,15 @@ export default function SettingsPage() {
     setEditingItem(null);
   };
 
-  const handleSave = () => {
+  const handleSave = (data: Omit<MasterDataItem, 'id'>) => {
     if (currentEntityType) {
       toast({
         title: "यशस्वी!",
         description: `${currentEntityType} यशस्वीरित्या ${modalMode === 'add' ? 'तयार' : 'अद्यतनित'} केले आहे.`,
       });
     }
+    // Here you would typically call an API to save the data
+    console.log("Saving data:", data);
     handleCloseModal();
   };
 

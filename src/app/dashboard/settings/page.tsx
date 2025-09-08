@@ -340,26 +340,26 @@ function MasterDataModal({
   initialData: MasterDataItem | null;
 }) {
   const { toast } = useToast();
-  if (!isOpen || !entityType) return null;
-  
   const [name, setName] = React.useState(initialData?.name || "");
   const [nameEn, setNameEn] = React.useState(initialData?.nameEn || "");
   const [linkedTo, setLinkedTo] = React.useState(initialData?.linkedTo || "");
-  
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-
   React.useEffect(() => {
-    if (initialData) {
+    if (isOpen && initialData) {
       setName(initialData.name);
       setNameEn(initialData.nameEn);
       setLinkedTo(initialData.linkedTo || "");
-    } else {
+    } else if (isOpen && !initialData) {
       setName("");
       setNameEn("");
       setLinkedTo("");
     }
-  }, [initialData]);
+  }, [isOpen, initialData]);
+
+  if (!isOpen || !entityType) {
+    return null;
+  }
   
   const title = mode === 'add' ? `नवीन ${entityType} जोडा` : `${entityType} अपडेट करा`;
   const buttonText = mode === 'add' ? 'नवीन जोडा' : 'अपडेट करा';

@@ -60,8 +60,8 @@ const talukas: MasterDataItem[] = [
 ]
 
 const circles: MasterDataItem[] = [
-  { id: "1", name: "सर्कल १", nameEn: "Circle 1", linkedTo: "लातूर" },
-  { id: "2", name: "सर्कल २", nameEn: "Circle 2", linkedTo: "अहमदपूर" },
+  { id: "1", name: "सर्कल १", nameEn: "Circle 1" },
+  { id: "2", name: "सर्कल २", nameEn: "Circle 2" },
 ]
 
 const guts: MasterDataItem[] = [
@@ -126,10 +126,10 @@ const masterDataMap = {
   states: { data: states, linkedEntity: null, category: null, entityName: "राज्य", label: "राज्य" },
   districts: { data: districts, linkedEntity: "राज्य", category: null, entityName: "जिल्हा", label: "जिल्हा" },
   talukas: { data: talukas, linkedEntity: "जिल्हा", category: null, entityName: "तालुका", label: "तालुका" },
-  circles: { data: circles, linkedEntity: "तालुका", category: null, entityName: "सर्कल", label: "सर्कल" },
-  guts: { data: guts, linkedEntity: "सर्कल", category: null, entityName: "गट", label: "गट" },
   villages: { data: villages, linkedEntity: "तालुका", category: null, entityName: "गाव", label: "गाव" },
   shivars: { data: shivars, linkedEntity: "गाव", category: null, entityName: "शिवार", label: "शिवार" },
+  circles: { data: circles, linkedEntity: null, category: null, entityName: "सर्कल", label: "सर्कल" },
+  guts: { data: guts, linkedEntity: "सर्कल", category: null, entityName: "गट", label: "गट" },
   surveyNumbers: { data: surveyNumbers, linkedEntity: "शिवार", category: null, entityName: "सर्वेक्षण नंबर", label: "सर्वेक्षण नंबर" },
   caneVarieties: { data: caneVarieties, linkedEntity: null, category: null, entityName: "उसाची जात", label: "उसाची जात" },
   caneMaturities: { data: caneMaturities, linkedEntity: "उसाची जात", category: null, entityName: "उसाची पक्वता", label: "उसाची पक्वता" },
@@ -340,9 +340,9 @@ function MasterDataModal({
   initialData: MasterDataItem | null;
 }) {
   const { toast } = useToast();
-  const [name, setName] = React.useState(initialData?.name || "");
-  const [nameEn, setNameEn] = React.useState(initialData?.nameEn || "");
-  const [linkedTo, setLinkedTo] = React.useState(initialData?.linkedTo || "");
+  const [name, setName] = React.useState("");
+  const [nameEn, setNameEn] = React.useState("");
+  const [linkedTo, setLinkedTo] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   React.useEffect(() => {
@@ -380,16 +380,6 @@ function MasterDataModal({
             linkedEntityLabel = 'जोडलेला जिल्हा';
             isLinkedEntityRequired = true;
             break;
-        case "सर्कल":
-            linkedEntityOptions = talukas;
-            linkedEntityLabel = 'जोडलेला तालुका';
-            isLinkedEntityRequired = true;
-            break;
-        case "गट":
-            linkedEntityOptions = circles;
-            linkedEntityLabel = 'जोडलेले सर्कल';
-            isLinkedEntityRequired = true;
-            break;
         case "गाव":
             linkedEntityOptions = talukas;
             linkedEntityLabel = 'जोडलेला तालुका';
@@ -398,6 +388,11 @@ function MasterDataModal({
         case "शिवार":
             linkedEntityOptions = villages;
             linkedEntityLabel = 'जोडलेले गाव';
+            isLinkedEntityRequired = true;
+            break;
+        case "गट":
+            linkedEntityOptions = circles;
+            linkedEntityLabel = 'जोडलेले सर्कल';
             isLinkedEntityRequired = true;
             break;
         case "सर्वेक्षण नंबर":

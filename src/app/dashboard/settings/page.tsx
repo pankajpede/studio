@@ -63,8 +63,8 @@ const talukas: MasterDataItem[] = [
 ]
 
 const circles: MasterDataItem[] = [
-  { id: "1", name: "सर्कल १", nameEn: "Circle 1" },
-  { id: "2", name: "सर्कल २", nameEn: "Circle 2" },
+  { id: "1", name: "सर्कल १", nameEn: "Circle 1", totalGuts: 1, totalGavs: 2, totalFarmers: 150 },
+  { id: "2", name: "सर्कल २", nameEn: "Circle 2", totalGuts: 1, totalGavs: 1, totalFarmers: 80 },
 ]
 
 const guts: MasterDataItem[] = [
@@ -170,6 +170,21 @@ const getColumns = (
     })
   }
 
+  if (entityKey === 'circles') {
+      columns.push({
+          accessorKey: "totalGuts",
+          header: "एकूण गट",
+      });
+      columns.push({
+          accessorKey: "totalGavs",
+          header: "एकूण गाव",
+      });
+      columns.push({
+          accessorKey: "totalFarmers",
+          header: "एकूण शेतकरी",
+      });
+  }
+
   if (category) {
     columns.push({
       accessorKey: "category",
@@ -265,8 +280,7 @@ function MasterDataTable({
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) => {
               const value = event.target.value
-              table.getColumn("name")?.setFilterValue(value)
-              table.getColumn("nameEn")?.setFilterValue(value)
+              table.setGlobalFilter(value)
             }
           }
           className="max-w-sm"
@@ -604,3 +618,5 @@ export default function SettingsPage() {
         </React.Suspense>
     )
 }
+
+    

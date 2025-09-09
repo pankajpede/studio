@@ -63,8 +63,8 @@ const talukas: MasterDataItem[] = [
 ]
 
 const circles: MasterDataItem[] = [
-  { id: "1", name: "सर्कल १", nameEn: "Circle 1", totalGuts: 1, totalGavs: 2, totalFarmers: 150 },
-  { id: "2", name: "सर्कल २", nameEn: "Circle 2", totalGuts: 1, totalGavs: 1, totalFarmers: 80 },
+  { id: "1", name: "सर्कल १", nameEn: "Circle 1", totalGuts: 1, totalGavs: 2, totalFarmers: 150, totalFieldboys: 7, totalOversheers: 1 },
+  { id: "2", name: "सर्कल २", nameEn: "Circle 2", totalGuts: 1, totalGavs: 1, totalFarmers: 80, totalFieldboys: 4, totalOversheers: 1 },
 ]
 
 const guts: MasterDataItem[] = [
@@ -183,6 +183,14 @@ const getColumns = (
           accessorKey: "totalFarmers",
           header: "एकूण शेतकरी",
       });
+      columns.push({
+          accessorKey: "totalFieldboys",
+          header: "एकूण फील्डबॉय",
+      });
+      columns.push({
+          accessorKey: "totalOversheers",
+          header: "एकूण ओव्हरसीर",
+      });
   }
 
   if (category) {
@@ -266,6 +274,14 @@ function MasterDataTable({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    filterFns: {
+        fuzzy: (row, columnId, value) => {
+            const name = row.getValue<string>('name');
+            const nameEn = row.getValue<string>('nameEn');
+            return name?.includes(value) || nameEn?.toLowerCase().includes(value.toLowerCase());
+        },
+    },
+    globalFilterFn: 'fuzzy',
     state: {
       sorting,
       columnFilters,
@@ -277,7 +293,7 @@ function MasterDataTable({
       <div className="flex items-center gap-4 py-4">
         <Input
           placeholder={`${entityName.toLowerCase()} नावाने फिल्टर करा...`}
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          value={(table.getGlobalFilter() as string) ?? ""}
           onChange={(event) => {
               const value = event.target.value
               table.setGlobalFilter(value)
@@ -618,5 +634,3 @@ export default function SettingsPage() {
         </React.Suspense>
     )
 }
-
-    

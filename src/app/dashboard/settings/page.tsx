@@ -190,6 +190,18 @@ const getColumns = (
           accessorKey: "totalOversheers",
           header: "एकूण ओव्हरसीर",
       });
+       columns.push({
+          id: "ratio",
+          header: "गुणोत्तर",
+          cell: ({ row }) => {
+              const farmers = row.original.totalFarmers;
+              const fieldboys = row.original.totalFieldboys;
+              if (fieldboys > 0) {
+                  return `${Math.round(farmers / fieldboys)}:1`;
+              }
+              return "N/A";
+          },
+      });
   }
 
   if (category) {

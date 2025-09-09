@@ -293,11 +293,17 @@ const getColumns = (
 function MasterDataTable({
   dataKey,
   onAddNew,
-  onEdit
+  onEdit,
+  selectedConfig,
+  setSelectedConfig,
+  configOptions,
 }: {
   dataKey: MasterDataKey
   onAddNew: (entityName: string) => void
   onEdit: (entityName: string, item: MasterDataItem) => void
+  selectedConfig: MasterDataKey
+  setSelectedConfig: (value: MasterDataKey) => void
+  configOptions: { value: MasterDataKey; label: string }[]
 }) {
   const { data, entityName } = masterDataMap[dataKey]
   const columns = React.useMemo(
@@ -333,28 +339,38 @@ function MasterDataTable({
 
   return (
     <div>
-      <div className="flex items-center gap-4 py-4">
-        <Input
-          placeholder={`${entityName.toLowerCase()} नावाने फिल्टर करा...`}
-          value={globalFilter}
-          onChange={(event) =>
-            setGlobalFilter(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <div className="ml-auto flex gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button onClick={() => onAddNew(entityName)} size="icon">
-                  <PlusCircle />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>नवीन जोडा</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+      <div className="flex items-center justify-between gap-4 py-4">
+        <Select value={selectedConfig} onValueChange={(value) => setSelectedConfig(value as MasterDataKey)}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="कॉन्फिगरेशन प्रकार निवडा" />
+          </SelectTrigger>
+          <SelectContent>
+            {configOptions.map(option => (
+              <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <div className="flex items-center gap-2">
+            <Input
+              placeholder={`${entityName.toLowerCase()} नावाने फिल्टर करा...`}
+              value={globalFilter}
+              onChange={(event) =>
+                setGlobalFilter(event.target.value)
+              }
+              className="max-w-sm"
+            />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button onClick={() => onAddNew(entityName)} size="icon">
+                    <PlusCircle />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>नवीन जोडा</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
         </div>
       </div>
       <div className="rounded-md border">
@@ -694,20 +710,15 @@ function SettingsPageComponent() {
 
   return (
     <Card>
-      <CardHeader className="flex-row items-center gap-4 space-y-0">
-        <Select value={selectedConfig} onValueChange={(value) => setSelectedConfig(value as MasterDataKey)}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="कॉन्फिगरेशन प्रकार निवडा" />
-          </SelectTrigger>
-          <SelectContent>
-            {configOptions.map(option => (
-              <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </CardHeader>
-      <CardContent>
-        <MasterDataTable dataKey={selectedConfig} onAddNew={handleAddNew} onEdit={handleEdit}/>
+      <CardContent className="p-0">
+        <MasterDataTable 
+            dataKey={selectedConfig} 
+            onAddNew={handleAddNew} 
+            onEdit={handleEdit}
+            selectedConfig={selectedConfig}
+            setSelectedConfig={setSelectedConfig}
+            configOptions={configOptions}
+        />
         <MasterDataModal 
             isOpen={isModalOpen}
             onClose={handleCloseModal}

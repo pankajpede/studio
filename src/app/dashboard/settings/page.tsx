@@ -343,8 +343,18 @@ function MasterDataTable({
           className="max-w-sm"
         />
         <div className="ml-auto flex gap-2">
-          <Button variant="outline"><Upload className="mr-2" /> बल्क अपलोड</Button>
-          <Button onClick={() => onAddNew(entityName)}><PlusCircle className="mr-2" /> नवीन जोडा</Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button onClick={() => onAddNew(entityName)} size="icon">
+                  <PlusCircle />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>नवीन जोडा</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       <div className="rounded-md border">
@@ -655,7 +665,6 @@ function SettingsPageComponent() {
   return (
     <Card>
       <CardHeader className="flex-row items-center gap-4 space-y-0">
-        <CardTitle>कॉन्फिगरेशन</CardTitle>
         <Select value={selectedConfig} onValueChange={(value) => setSelectedConfig(value as MasterDataKey)}>
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="कॉन्फिगरेशन प्रकार निवडा" />
@@ -690,5 +699,3 @@ export default function SettingsPage() {
         </React.Suspense>
     )
 }
-
-    

@@ -710,7 +710,7 @@ function SettingsPageComponent() {
 
   return (
     <Card>
-      <CardContent className="p-0">
+      <CardContent>
         <MasterDataTable 
             dataKey={selectedConfig} 
             onAddNew={handleAddNew} 

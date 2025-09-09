@@ -8,7 +8,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowLeft, PlusCircle, Trash2 } from "lucide-react"
+import { ArrowLeft, Check, ChevronsUpDown, PlusCircle, Trash2, XIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Table,
@@ -24,9 +24,11 @@ import { useParams } from "next/navigation"
 import Link from "next/link"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 
 type Village = {
   id: string
@@ -87,43 +89,122 @@ const columns: ColumnDef<Village>[] = [
   },
 ]
 
+const MultiSelect = ({
+  options,
+  selected,
+  onChange,
+  className,
+}: {
+  options: { label: string; value: string }[];
+  selected: string[];
+  onChange: React.Dispatch<React.SetStateAction<string[]>>;
+  className?: string;
+}) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleUnselect = (item: string) => {
+    onChange(selected.filter((i) => i !== item));
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <div
+          className={cn(
+            "flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background",
+            className
+          )}
+        >
+          <div className="flex flex-wrap gap-1">
+            {selected.map((item) => (
+              <Badge
+                variant="secondary"
+                key={item}
+                className="mr-1"
+                onClick={() => handleUnselect(item)}
+              >
+                {options.find(opt => opt.value === item)?.label}
+                <button
+                  className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleUnselect(item);
+                    }
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onClick={() => handleUnselect(item)}
+                >
+                  <XIcon className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                </button>
+              </Badge>
+            ))}
+             {selected.length === 0 && (
+              <span className="text-muted-foreground">गावे निवडा...</span>
+            )}
+          </div>
+          <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+        <Command>
+          <CommandInput placeholder="गाव शोधा..." />
+          <CommandEmpty>कोणतेही गाव आढळले नाही.</CommandEmpty>
+          <CommandGroup>
+            <CommandList>
+                {options.map((option) => (
+                <CommandItem
+                    key={option.value}
+                    onSelect={() => {
+                    onChange(
+                        selected.includes(option.value)
+                        ? selected.filter((item) => item !== option.value)
+                        : [...selected, option.value]
+                    );
+                    setOpen(true);
+                    }}
+                >
+                    <Check
+                    className={cn(
+                        "mr-2 h-4 w-4",
+                        selected.includes(option.value) ? "opacity-100" : "opacity-0"
+                    )}
+                    />
+                    {option.label}
+                </CommandItem>
+                ))}
+            </CommandList>
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 function AddVillageModal({ onAdd }: { onAdd: (selectedVillages: string[]) => void }) {
     const [selected, setSelected] = React.useState<string[]>([]);
-
-    const handleCheckboxChange = (villageId: string, checked: boolean) => {
-        if (checked) {
-            setSelected(prev => [...prev, villageId]);
-        } else {
-            setSelected(prev => prev.filter(id => id !== villageId));
-        }
-    };
 
     const handleSave = () => {
         onAdd(selected);
         setSelected([]);
     };
+    
+    const villageOptions = allVillages.map(v => ({ value: v.id, label: `${v.name} (${v.nameEn})` }));
 
     return (
         <DialogContent className="sm:max-w-md">
             <DialogHeader>
                 <DialogTitle>गावे जोडा</DialogTitle>
             </DialogHeader>
-            <ScrollArea className="h-72">
-                <div className="p-1">
-                    {allVillages.map(village => (
-                        <div key={village.id} className="flex items-center space-x-2 p-2 rounded-md hover:bg-muted/50">
-                            <Checkbox 
-                                id={`village-${village.id}`} 
-                                onCheckedChange={(checked) => handleCheckboxChange(village.id, !!checked)}
-                                checked={selected.includes(village.id)}
-                            />
-                            <Label htmlFor={`village-${village.id}`} className="flex-1 cursor-pointer">
-                                {village.name} ({village.nameEn})
-                            </Label>
-                        </div>
-                    ))}
-                </div>
-            </ScrollArea>
+            <div className="py-4">
+                <MultiSelect
+                    options={villageOptions}
+                    selected={selected}
+                    onChange={setSelected}
+                />
+            </div>
             <DialogFooter>
                 <Button type="button" onClick={handleSave}>जतन करा</Button>
             </DialogFooter>

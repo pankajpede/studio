@@ -169,17 +169,17 @@ export default function GutDetailsPage() {
         <div className="flex items-center justify-between">
              <CardTitle>गट तपशील: {gutName}</CardTitle>
              <div className="flex items-center gap-2">
+                <Button variant="outline" asChild>
+                    <Link href="/dashboard/settings?config=guts">
+                        <ArrowLeft className="mr-2" /> परत जा
+                    </Link>
+                </Button>
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                     <DialogTrigger asChild>
                         <Button><PlusCircle className="mr-2"/>गाव जोडा</Button>
                     </DialogTrigger>
                     <AddVillageModal onAdd={handleAddVillages}/>
                 </Dialog>
-                <Button variant="outline" asChild>
-                    <Link href="/dashboard/settings?config=guts">
-                        <ArrowLeft className="mr-2" /> परत जा
-                    </Link>
-                </Button>
              </div>
         </div>
         <CardDescription>

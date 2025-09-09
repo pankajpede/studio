@@ -1,5 +1,4 @@
 
-
 "use client"
 
 import * as React from "react"
@@ -13,7 +12,6 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  getGlobalFilteredRowModel,
 } from "@tanstack/react-table"
 import { Edit, Eye, PlusCircle, Trash2, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -277,7 +275,6 @@ function MasterDataTable({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onGlobalFilterChange: setGlobalFilter,
-    getGlobalFilteredRowModel: getGlobalFilteredRowModel(),
     globalFilterFn: (row, columnId, filterValue) => {
         const name = row.getValue<string>('name');
         const nameEn = row.getValue<string>('nameEn');

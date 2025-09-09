@@ -13,6 +13,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  getGlobalFilteredRowModel,
 } from "@tanstack/react-table"
 import { Edit, Eye, PlusCircle, Trash2, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -264,6 +265,7 @@ function MasterDataTable({
 
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [globalFilter, setGlobalFilter] = React.useState('')
 
   const table = useReactTable({
     data,
@@ -274,17 +276,17 @@ function MasterDataTable({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    filterFns: {
-        fuzzy: (row, columnId, value) => {
-            const name = row.getValue<string>('name');
-            const nameEn = row.getValue<string>('nameEn');
-            return name?.includes(value) || nameEn?.toLowerCase().includes(value.toLowerCase());
-        },
+    onGlobalFilterChange: setGlobalFilter,
+    getGlobalFilteredRowModel: getGlobalFilteredRowModel(),
+    globalFilterFn: (row, columnId, filterValue) => {
+        const name = row.getValue<string>('name');
+        const nameEn = row.getValue<string>('nameEn');
+        return name?.includes(filterValue) || nameEn?.toLowerCase().includes(filterValue.toLowerCase());
     },
-    globalFilterFn: 'fuzzy',
     state: {
       sorting,
       columnFilters,
+      globalFilter,
     },
   })
 
@@ -293,11 +295,9 @@ function MasterDataTable({
       <div className="flex items-center gap-4 py-4">
         <Input
           placeholder={`${entityName.toLowerCase()} नावाने फिल्टर करा...`}
-          value={(table.getGlobalFilter() as string) ?? ""}
-          onChange={(event) => {
-              const value = event.target.value
-              table.setGlobalFilter(value)
-            }
+          value={globalFilter}
+          onChange={(event) =>
+            setGlobalFilter(event.target.value)
           }
           className="max-w-sm"
         />

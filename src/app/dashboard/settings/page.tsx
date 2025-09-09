@@ -396,24 +396,54 @@ function MasterDataTable({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          मागील
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          पुढील
-        </Button>
-      </div>
+       <div className="flex items-center justify-end space-x-2 py-4">
+            <div className="flex-1 text-sm text-muted-foreground">
+                {table.getFilteredSelectedRowModel().rows.length} पैकी{" "}
+                {table.getFilteredRowModel().rows.length} पंक्ती निवडल्या.
+            </div>
+            <div className="space-x-2 flex items-center">
+                <span className="text-sm text-muted-foreground">प्रति पृष्ठ पंक्ती</span>
+                    <Select
+                    onValueChange={(value) => {
+                        table.setPageSize(Number(value))
+                    }}
+                    defaultValue={table.getState().pagination.pageSize.toString()}
+                    >
+                    <SelectTrigger className="h-8 w-[70px]">
+                        <SelectValue placeholder={table.getState().pagination.pageSize} />
+                    </SelectTrigger>
+                    <SelectContent side="top">
+                        {[10, 25, 50, 100].map((pageSize) => (
+                        <SelectItem key={pageSize} value={`${pageSize}`}>
+                            {pageSize}
+                        </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
+            <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+                पृष्ठ {table.getState().pagination.pageIndex + 1} पैकी{" "}
+                {table.getPageCount()}
+            </div>
+            <div className="space-x-2">
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+            >
+                मागील
+            </Button>
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+            >
+                पुढील
+            </Button>
+            </div>
+        </div>
     </div>
   )
 }

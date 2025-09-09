@@ -94,11 +94,6 @@ const caneVarieties: MasterDataItem[] = [
   { id: "3", name: "एमएस-१०००१", nameEn: "MS-10001", maturityMonths: 11 },
 ]
 
-const caneMaturities: MasterDataItem[] = [
-  { id: "1", name: "प्रकार १ (12 महिने)", nameEn: "Type 1 (12 months)", linkedTo: "को-८६०३२" },
-  { id: "2", name: "प्रकार २ (14 महिने)", nameEn: "Type 2 (14 months)", linkedTo: "कोएम-०२६५" },
-]
-
 const caneTypes: MasterDataItem[] = [
   { id: "1", name: "रोप", nameEn: "Seedling", linkedTo: "को-८६०३२" },
   { id: "2", name: "लागवड", nameEn: "Planting", linkedTo: "कोएम-०२६५" },
@@ -134,7 +129,6 @@ const masterDataMap = {
   shivars: { data: shivars, linkedEntity: "गाव", category: null, entityName: "शिवार", label: "शिवार" },
   surveyNumbers: { data: surveyNumbers, linkedEntity: "शिवार", category: null, entityName: "सर्वेक्षण नंबर", label: "सर्वेक्षण नंबर" },
   caneVarieties: { data: caneVarieties, linkedEntity: null, category: null, entityName: "उसाची जात", label: "उसाची जात" },
-  caneMaturities: { data: caneMaturities, linkedEntity: "उसाची जात", category: null, entityName: "उसाची पक्वता", label: "उसाची पक्वता" },
   caneTypes: { data: caneTypes, linkedEntity: "उसाची जात", category: null, entityName: "उसाचा प्रकार", label: "उसाचा प्रकार" },
   irrigationTypes: { data: irrigationTypes, linkedEntity: null, category: null, entityName: "सिंचनाचा प्रकार", label: "सिंचनाचा प्रकार" },
   irrigationSources: { data: irrigationSources, linkedEntity: null, category: null, entityName: "सिंचनाचा स्रोत", label: "सिंचनाचा स्रोत" },
@@ -508,7 +502,6 @@ function MasterDataModal({
             isLinkedEntityRequired = true;
             placeholder = "शिवार निवडा";
             break;
-        case "उसाची पक्वता":
         case "उसाचा प्रकार":
             linkedEntityOptions = caneVarieties;
             linkedEntityLabel = 'जोडलेली उसाची जात';

@@ -67,8 +67,8 @@ const circles: MasterDataItem[] = [
 ]
 
 const guts: MasterDataItem[] = [
-  { id: "1", name: "गट १०१", nameEn: "Gut 101", linkedTo: "सर्कल १" },
-  { id: "2", name: "गट १०२", nameEn: "Gut 102", linkedTo: "सर्कल २" },
+  { id: "1", name: "गट १०१", nameEn: "Gut 101", linkedTo: "सर्कल १", totalGavs: 15, totalFarmers: 525, totalFieldboys: 15, totalOversheers: 2 },
+  { id: "2", name: "गट १०२", nameEn: "Gut 102", linkedTo: "सर्कल २", totalGavs: 12, totalFarmers: 420, totalFieldboys: 12, totalOversheers: 1 },
 ]
 
 const villages: MasterDataItem[] = [
@@ -174,6 +174,37 @@ const getColumns = (
           accessorKey: "totalGuts",
           header: "एकूण गट",
       });
+      columns.push({
+          accessorKey: "totalGavs",
+          header: "एकूण गाव",
+      });
+      columns.push({
+          accessorKey: "totalFarmers",
+          header: "एकूण शेतकरी",
+      });
+      columns.push({
+          accessorKey: "totalFieldboys",
+          header: "एकूण फील्डबॉय",
+      });
+      columns.push({
+          accessorKey: "totalOversheers",
+          header: "एकूण ओव्हरसीर",
+      });
+       columns.push({
+          id: "ratio",
+          header: "गुणोत्तर",
+          cell: ({ row }) => {
+              const farmers = row.original.totalFarmers;
+              const fieldboys = row.original.totalFieldboys;
+              if (fieldboys > 0) {
+                  return `${Math.round(farmers / fieldboys)}:1`;
+              }
+              return "N/A";
+          },
+      });
+  }
+
+  if (entityKey === 'guts') {
       columns.push({
           accessorKey: "totalGavs",
           header: "एकूण गाव",

@@ -89,9 +89,9 @@ const surveyNumbers: MasterDataItem[] = [
 ]
 
 const caneVarieties: MasterDataItem[] = [
-  { id: "1", name: "को-८६०३२", nameEn: "Co-86032" },
-  { id: "2", name: "कोएम-०२६५", nameEn: "CoM-0265" },
-  { id: "3", name: "एमएस-१०००१", nameEn: "MS-10001" },
+  { id: "1", name: "को-८६०३२", nameEn: "Co-86032", maturityMonths: 12 },
+  { id: "2", name: "कोएम-०२६५", nameEn: "CoM-0265", maturityMonths: 14 },
+  { id: "3", name: "एमएस-१०००१", nameEn: "MS-10001", maturityMonths: 11 },
 ]
 
 const caneMaturities: MasterDataItem[] = [
@@ -167,6 +167,13 @@ const getColumns = (
       accessorKey: "linkedTo",
       header: `जोडलेले ${linkedEntity}`,
     })
+  }
+
+  if (entityKey === 'caneVarieties') {
+    columns.push({
+        accessorKey: "maturityMonths",
+        header: "उसाची पक्वता (months)",
+    });
   }
 
   if (entityKey === 'circles') {
@@ -432,6 +439,7 @@ function MasterDataModal({
     const [name, setName] = React.useState("");
     const [nameEn, setNameEn] = React.useState("");
     const [linkedTo, setLinkedTo] = React.useState("");
+    const [maturityMonths, setMaturityMonths] = React.useState("");
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     React.useEffect(() => {
@@ -440,10 +448,12 @@ function MasterDataModal({
                 setName(initialData.name || "");
                 setNameEn(initialData.nameEn || "");
                 setLinkedTo(initialData.linkedTo || "");
+                setMaturityMonths(initialData.maturityMonths || "");
             } else { // For add mode, reset fields
                 setName("");
                 setNameEn("");
                 setLinkedTo("");
+                setMaturityMonths("");
             }
         }
     }, [isOpen, mode, initialData]);
@@ -511,7 +521,10 @@ function MasterDataModal({
 
   const { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired, placeholder } = getLinkedEntityInfo();
   
-  const isFormValid = name.trim() !== "" && nameEn.trim() !== "" && (!isLinkedEntityRequired || linkedTo);
+  let isFormValid = name.trim() !== "" && nameEn.trim() !== "" && (!isLinkedEntityRequired || linkedTo);
+  if (entityType === "उसाची जात") {
+    isFormValid = isFormValid && maturityMonths.trim() !== "" && !isNaN(Number(maturityMonths));
+  }
   
   const handleSaveClick = () => {
       if (!isFormValid) {
@@ -525,7 +538,7 @@ function MasterDataModal({
       setIsSubmitting(true);
       // Simulate API call
       setTimeout(() => {
-          onSave({ name, nameEn, linkedTo });
+          onSave({ name, nameEn, linkedTo, maturityMonths: Number(maturityMonths) });
           setIsSubmitting(false);
       }, 500);
   }
@@ -558,6 +571,19 @@ function MasterDataModal({
           <Input id="name-en" placeholder="इंग्रजी नाव प्रविष्ट करा" value={nameEn} onChange={(e) => setNameEn(e.target.value)} required />
         </div>
         {linkedEntityElement}
+        {entityType === 'उसाची जात' && (
+            <div className="grid gap-2">
+                <RequiredLabel htmlFor="maturity-months">उसाची पक्वता (months)</RequiredLabel>
+                <Input
+                    id="maturity-months"
+                    type="number"
+                    placeholder="उदा. 12"
+                    value={maturityMonths}
+                    onChange={(e) => setMaturityMonths(e.target.value)}
+                    required
+                />
+            </div>
+        )}
       </div>
     );
   };

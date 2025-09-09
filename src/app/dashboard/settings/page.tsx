@@ -668,9 +668,6 @@ function SettingsPageComponent() {
         </Select>
       </CardHeader>
       <CardContent>
-         <CardDescription className="mb-4">
-              अनुप्रयोगासाठी मास्टर डेटा व्यवस्थापित करा.
-          </CardDescription>
         <MasterDataTable dataKey={selectedConfig} onAddNew={handleAddNew} onEdit={handleEdit}/>
         <MasterDataModal 
             isOpen={isModalOpen}
@@ -693,3 +690,5 @@ export default function SettingsPage() {
         </React.Suspense>
     )
 }
+
+    

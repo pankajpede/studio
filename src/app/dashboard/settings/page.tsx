@@ -62,8 +62,8 @@ const talukas: MasterDataItem[] = [
 ]
 
 const circles: MasterDataItem[] = [
-  { id: "1", name: "सर्कल १", nameEn: "Circle 1", totalGuts: 1, totalGavs: 2, totalFarmers: 150, totalFieldboys: 7, totalOversheers: 1 },
-  { id: "2", name: "सर्कल २", nameEn: "Circle 2", totalGuts: 1, totalGavs: 1, totalFarmers: 80, totalFieldboys: 4, totalOversheers: 1 },
+  { id: "1", name: "सर्कल १", nameEn: "Circle 1", totalGuts: 15, totalGavs: 225, totalFarmers: 7875, totalFieldboys: 225, totalOversheers: 23 },
+  { id: "2", name: "सर्कल २", nameEn: "Circle 2", totalGuts: 18, totalGavs: 270, totalFarmers: 9450, totalFieldboys: 270, totalOversheers: 27 },
 ]
 
 const guts: MasterDataItem[] = [

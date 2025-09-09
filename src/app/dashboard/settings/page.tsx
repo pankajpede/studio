@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import * as React from "react"
@@ -262,8 +263,11 @@ function MasterDataTable({
         <Input
           placeholder={`${entityName.toLowerCase()} नावाने फिल्टर करा...`}
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+          onChange={(event) => {
+              const value = event.target.value
+              table.getColumn("name")?.setFilterValue(value)
+              table.getColumn("nameEn")?.setFilterValue(value)
+            }
           }
           className="max-w-sm"
         />
@@ -361,16 +365,18 @@ function MasterDataModal({
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     React.useEffect(() => {
-        if (isOpen && initialData) {
-            setName(initialData.name || "");
-            setNameEn(initialData.nameEn || "");
-            setLinkedTo(initialData.linkedTo || "");
-        } else if (isOpen) { // For add mode, reset fields
-            setName("");
-            setNameEn("");
-            setLinkedTo("");
+        if (isOpen) {
+             if (mode === 'edit' && initialData) {
+                setName(initialData.name || "");
+                setNameEn(initialData.nameEn || "");
+                setLinkedTo(initialData.linkedTo || "");
+            } else { // For add mode, reset fields
+                setName("");
+                setNameEn("");
+                setLinkedTo("");
+            }
         }
-    }, [isOpen, initialData]);
+    }, [isOpen, mode, initialData]);
     
     if (!isOpen || !entityType) {
         return null;

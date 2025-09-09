@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { Edit, PlusCircle, Trash2, Upload } from "lucide-react"
+import { Edit, Eye, PlusCircle, Trash2, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -30,6 +30,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import Link from "next/link"
 
 type MasterDataItem = {
   id: string
@@ -126,10 +127,10 @@ const masterDataMap = {
   states: { data: states, linkedEntity: null, category: null, entityName: "राज्य", label: "राज्य" },
   districts: { data: districts, linkedEntity: "राज्य", category: null, entityName: "जिल्हा", label: "जिल्हा" },
   talukas: { data: talukas, linkedEntity: "जिल्हा", category: null, entityName: "तालुका", label: "तालुका" },
-  villages: { data: villages, linkedEntity: "तालुका", category: null, entityName: "गाव", label: "गाव" },
-  shivars: { data: shivars, linkedEntity: "गाव", category: null, entityName: "शिवार", label: "शिवार" },
   circles: { data: circles, linkedEntity: null, category: null, entityName: "सर्कल", label: "सर्कल" },
   guts: { data: guts, linkedEntity: "सर्कल", category: null, entityName: "गट", label: "गट" },
+  villages: { data: villages, linkedEntity: "तालुका", category: null, entityName: "गाव", label: "गाव" },
+  shivars: { data: shivars, linkedEntity: "गाव", category: null, entityName: "शिवार", label: "शिवार" },
   surveyNumbers: { data: surveyNumbers, linkedEntity: "शिवार", category: null, entityName: "सर्वेक्षण नंबर", label: "सर्वेक्षण नंबर" },
   caneVarieties: { data: caneVarieties, linkedEntity: null, category: null, entityName: "उसाची जात", label: "उसाची जात" },
   caneMaturities: { data: caneMaturities, linkedEntity: "उसाची जात", category: null, entityName: "उसाची पक्वता", label: "उसाची पक्वता" },
@@ -143,11 +144,12 @@ const masterDataMap = {
 type MasterDataKey = keyof typeof masterDataMap
 
 const getColumns = (
-  entityName: string,
-  linkedEntity: string | null,
-  category: string | null,
+  entityKey: MasterDataKey,
   onEdit: (item: MasterDataItem) => void
 ): ColumnDef<MasterDataItem>[] => {
+  
+  const { entityName, linkedEntity, category } = masterDataMap[entityKey];
+  
   const columns: ColumnDef<MasterDataItem>[] = [
     {
       accessorKey: "name",
@@ -179,6 +181,18 @@ const getColumns = (
     cell: ({ row }) => (
       <TooltipProvider>
         <div className="flex items-center justify-end gap-2">
+            {entityKey === 'guts' && (
+               <Tooltip>
+                    <TooltipTrigger asChild>
+                         <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                            <Link href={`/dashboard/settings/gut/${row.original.id}`}><Eye className="h-4 w-4" /></Link>
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>गट पहा</p>
+                    </TooltipContent>
+                </Tooltip>
+            )}
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(row.original)}>
@@ -217,10 +231,10 @@ function MasterDataTable({
   onAddNew: (entityName: string) => void
   onEdit: (entityName: string, item: MasterDataItem) => void
 }) {
-  const { data, linkedEntity, category, entityName } = masterDataMap[dataKey]
+  const { data, entityName } = masterDataMap[dataKey]
   const columns = React.useMemo(
-    () => getColumns(entityName, linkedEntity, category, (item) => onEdit(entityName, item)),
-    [entityName, linkedEntity, category, onEdit]
+    () => getColumns(dataKey, (item) => onEdit(entityName, item)),
+    [dataKey, entityName, onEdit]
   )
 
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -339,27 +353,27 @@ function MasterDataModal({
   mode: 'add' | 'edit';
   initialData: MasterDataItem | null;
 }) {
-  const { toast } = useToast();
-  const [name, setName] = React.useState("");
-  const [nameEn, setNameEn] = React.useState("");
-  const [linkedTo, setLinkedTo] = React.useState("");
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const { toast } = useToast();
+    const [name, setName] = React.useState("");
+    const [nameEn, setNameEn] = React.useState("");
+    const [linkedTo, setLinkedTo] = React.useState("");
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  React.useEffect(() => {
-    if (isOpen && initialData) {
-      setName(initialData.name);
-      setNameEn(initialData.nameEn);
-      setLinkedTo(initialData.linkedTo || "");
-    } else if (isOpen && !initialData) {
-      setName("");
-      setNameEn("");
-      setLinkedTo("");
+    React.useEffect(() => {
+        if (isOpen && initialData) {
+            setName(initialData.name || "");
+            setNameEn(initialData.nameEn || "");
+            setLinkedTo(initialData.linkedTo || "");
+        } else if (isOpen) { // For add mode, reset fields
+            setName("");
+            setNameEn("");
+            setLinkedTo("");
+        }
+    }, [isOpen, initialData]);
+
+    if (!isOpen || !entityType) {
+        return null;
     }
-  }, [isOpen, initialData]);
-  
-  if (!isOpen || !entityType) {
-    return null;
-  }
 
   const title = mode === 'add' ? `नवीन ${entityType} जोडा` : `${entityType} अपडेट करा`;
   const buttonText = mode === 'add' ? 'नवीन जोडा' : 'अपडेट करा';
@@ -384,7 +398,7 @@ function MasterDataModal({
             placeholder = "जिल्हा निवडा";
             break;
         case "गाव":
-            linkedEntityOptions = talukas;
+            linkedEntityOptions = talukas; // Can also be linked to 'गट' but we need to handle that logic. For now, taluka.
             linkedEntityLabel = 'जोडलेला तालुका';
             isLinkedEntityRequired = true;
             placeholder = "तालुका निवडा";

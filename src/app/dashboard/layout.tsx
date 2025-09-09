@@ -43,6 +43,9 @@ export default function DashboardLayout({
         if(segments[1] === 'users' && segments[2] === 'new'){
             return 'नवीन वापरकर्ता तयार करा'
         }
+         if (segments[1] === 'settings' && segments[2] === 'gut' && segments[3]) {
+            return 'गट तपशील';
+        }
         
         const segmentTranslations: { [key: string]: string } = {
             'users': 'वापरकर्ता व्यवस्थापन',

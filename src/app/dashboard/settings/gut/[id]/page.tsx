@@ -176,7 +176,7 @@ export default function GutDetailsPage() {
                     <AddVillageModal onAdd={handleAddVillages}/>
                 </Dialog>
                 <Button variant="outline" asChild>
-                    <Link href="/dashboard/settings">
+                    <Link href="/dashboard/settings?config=guts">
                         <ArrowLeft className="mr-2" /> परत जा
                     </Link>
                 </Button>

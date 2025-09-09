@@ -31,6 +31,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 
 type MasterDataItem = {
   id: string
@@ -370,7 +371,7 @@ function MasterDataModal({
             setLinkedTo("");
         }
     }, [isOpen, initialData]);
-
+    
     if (!isOpen || !entityType) {
         return null;
     }
@@ -507,9 +508,12 @@ function MasterDataModal({
   );
 }
 
-export default function SettingsPage() {
+function SettingsPageComponent() {
   const { toast } = useToast();
-  const [selectedConfig, setSelectedConfig] = React.useState<MasterDataKey>("states");
+  const searchParams = useSearchParams();
+  const initialConfig = searchParams.get('config') as MasterDataKey | null;
+
+  const [selectedConfig, setSelectedConfig] = React.useState<MasterDataKey>(initialConfig || "states");
 
   const configOptions = Object.keys(masterDataMap).map(key => ({
     value: key as MasterDataKey,
@@ -584,4 +588,13 @@ export default function SettingsPage() {
       </CardContent>
     </Card>
   )
+}
+
+
+export default function SettingsPage() {
+    return (
+        <React.Suspense fallback={<div>Loading...</div>}>
+            <SettingsPageComponent />
+        </React.Suspense>
+    )
 }

@@ -47,7 +47,7 @@ const states: MasterDataItem[] = [
 
 const districts: MasterDataItem[] = [
   { id: "1", name: "लातूर", nameEn: "Latur", linkedTo: "महाराष्ट्र" },
-  { id: "2", name: "पुणे", nameEn: "Pune", linkedTo: "महाराष्ट्र" },
+  { id: "2", name: "पुणे", nameEn: "Pune", linkedTo: " महाराष्ट्र" },
   { id: "3", name: "सातारा", nameEn: "Satara", linkedTo: "महाराष्ट्र" },
 ]
 
@@ -356,11 +356,11 @@ function MasterDataModal({
       setLinkedTo("");
     }
   }, [isOpen, initialData]);
-
+  
   if (!isOpen || !entityType) {
     return null;
   }
-  
+
   const title = mode === 'add' ? `नवीन ${entityType} जोडा` : `${entityType} अपडेट करा`;
   const buttonText = mode === 'add' ? 'नवीन जोडा' : 'अपडेट करा';
 
@@ -368,49 +368,57 @@ function MasterDataModal({
     let linkedEntityOptions: MasterDataItem[] = [];
     let linkedEntityLabel = '';
     let isLinkedEntityRequired = false;
+    let placeholder = `${entityType} निवडा`;
 
     switch (entityType) {
         case "जिल्हा":
             linkedEntityOptions = states;
             linkedEntityLabel = 'जोडलेले राज्य';
             isLinkedEntityRequired = true;
+            placeholder = "राज्य निवडा";
             break;
         case "तालुका":
             linkedEntityOptions = districts;
             linkedEntityLabel = 'जोडलेला जिल्हा';
             isLinkedEntityRequired = true;
+            placeholder = "जिल्हा निवडा";
             break;
         case "गाव":
             linkedEntityOptions = talukas;
             linkedEntityLabel = 'जोडलेला तालुका';
             isLinkedEntityRequired = true;
+            placeholder = "तालुका निवडा";
             break;
         case "शिवार":
             linkedEntityOptions = villages;
             linkedEntityLabel = 'जोडलेले गाव';
             isLinkedEntityRequired = true;
+            placeholder = "गाव निवडा";
             break;
         case "गट":
             linkedEntityOptions = circles;
             linkedEntityLabel = 'जोडलेले सर्कल';
             isLinkedEntityRequired = true;
+            placeholder = "सर्कल निवडा";
             break;
         case "सर्वेक्षण नंबर":
             linkedEntityOptions = shivars;
             linkedEntityLabel = 'जोडलेले शिवार';
             isLinkedEntityRequired = true;
+            placeholder = "शिवार निवडा";
             break;
         case "उसाची पक्वता":
         case "उसाचा प्रकार":
             linkedEntityOptions = caneVarieties;
             linkedEntityLabel = 'जोडलेली उसाची जात';
             isLinkedEntityRequired = true;
+            placeholder = "उसाची जात निवडा";
             break;
     }
-    return { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired };
+    return { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired, placeholder };
   }
 
-  const { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired } = getLinkedEntityInfo();
+  const { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired, placeholder } = getLinkedEntityInfo();
   
   const isFormValid = name.trim() !== "" && nameEn.trim() !== "" && (!isLinkedEntityRequired || linkedTo);
   
@@ -439,7 +447,7 @@ function MasterDataModal({
             <div className="grid gap-2">
                 <RequiredLabel htmlFor="parent-entity">{linkedEntityLabel}</RequiredLabel>
                 <Select value={linkedTo} onValueChange={setLinkedTo}>
-                    <SelectTrigger id="parent-entity"><SelectValue placeholder={`${entityType} निवडा`} /></SelectTrigger>
+                    <SelectTrigger id="parent-entity"><SelectValue placeholder={placeholder} /></SelectTrigger>
                     <SelectContent>
                         {linkedEntityOptions.map(o => <SelectItem key={o.id} value={o.name}>{o.name}</SelectItem>)}
                     </SelectContent>

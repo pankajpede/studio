@@ -72,10 +72,10 @@ const guts: MasterDataItem[] = [
 ]
 
 const villages: MasterDataItem[] = [
-  { id: "1", name: "चाकूर", nameEn: "Chakur", linkedTo: "अहमदपूर" },
-  { id: "2", name: "मोहगाव", nameEn: "Mohgaon", linkedTo: "अहमदपूर" },
-  { id: "3", name: "लामजना", nameEn: "Lamjana", linkedTo: "औसा" },
-  { id: "4", name: "कासारवाडी", nameEn: "Kasarwadi", linkedTo: "लातूर" },
+  { id: "1", name: "चाकूर", nameEn: "Chakur", linkedTo: "अहमदपूर", gut: "गट १०१", circle: "सर्कल १", totalFarmers: 35, totalFieldboys: 1, totalOversheers: 1 },
+  { id: "2", name: "मोहगाव", nameEn: "Mohgaon", linkedTo: "अहमदपूर", gut: "गट १०१", circle: "सर्कल १", totalFarmers: 40, totalFieldboys: 1, totalOversheers: 1 },
+  { id: "3", name: "लामजना", nameEn: "Lamjana", linkedTo: "औसा", gut: "गट १०२", circle: "सर्कल २", totalFarmers: 38, totalFieldboys: 1, totalOversheers: 1 },
+  { id: "4", name: "कासारवाडी", nameEn: "Kasarwadi", linkedTo: "लातूर", gut: "गट १०२", circle: "सर्कल २", totalFarmers: 32, totalFieldboys: 1, totalOversheers: 1 },
 ]
 
 const shivars: MasterDataItem[] = [
@@ -234,6 +234,29 @@ const getColumns = (
               return "N/A";
           },
       });
+  }
+
+  if (entityKey === 'villages') {
+    columns.push({
+        accessorKey: "gut",
+        header: "गट",
+    });
+    columns.push({
+        accessorKey: "circle",
+        header: "सर्कल",
+    });
+    columns.push({
+        accessorKey: "totalFarmers",
+        header: "एकूण शेतकरी",
+    });
+    columns.push({
+        accessorKey: "totalFieldboys",
+        header: "एकूण फील्डबॉय",
+    });
+    columns.push({
+        accessorKey: "totalOversheers",
+        header: "एकूण ओव्हरसीर",
+    });
   }
 
   if (category) {

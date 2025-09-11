@@ -52,7 +52,7 @@ const Combobox = ({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-full justify-between"
+                    className="w-[200px] justify-between"
                     disabled={disabled}
                 >
                     <span className="truncate">
@@ -67,6 +67,14 @@ const Combobox = ({
                     <CommandEmpty>कोणतेही परिणाम आढळले नाहीत.</CommandEmpty>
                     <CommandList>
                         <CommandGroup>
+                            <CommandItem
+                                onSelect={() => {
+                                    onValueChange("");
+                                    setOpen(false);
+                                }}
+                            >
+                                सर्व निवडा
+                            </CommandItem>
                             {options.map((option) => (
                                 <CommandItem
                                     key={option.value}
@@ -177,31 +185,25 @@ function MasterDataCard({
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex justify-between items-center">
-            <CardTitle>{label} व्यवस्थापन</CardTitle>
-             <Button onClick={handleAddNew} disabled={!!existingSelection || disabled} size="icon">
-                <PlusCircle className="h-6 w-6"/>
-            </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-end gap-2">
-          <div className="flex-grow grid gap-2">
-            <Label htmlFor={`existing-${label}`}>विद्यमान {label}</Label>
+      <CardHeader className="flex-row items-center justify-between">
+        <CardTitle>{label} व्यवस्थापन</CardTitle>
+        <div className="flex items-center gap-2">
             <Combobox
                 options={comboboxOptions}
                 value={existingSelection}
                 onValueChange={handleExistingSelectionChange}
-                placeholder={`${label} निवडा...`}
+                placeholder={`विद्यमान ${label} पहा`}
                 searchPlaceholder={`${label} शोधा...`}
                 disabled={disabled}
             />
-          </div>
+            <Button onClick={handleAddNew} disabled={!!existingSelection || disabled} size="icon">
+                <PlusCircle className="h-6 w-6"/>
+            </Button>
         </div>
-
-        {newEntries.length > 0 && (
-            <div className="space-y-4 pt-4 border-t">
+      </CardHeader>
+       {newEntries.length > 0 && (
+        <>
+            <CardContent className="space-y-4 pt-4 border-t">
                 {newEntries.map((entry, index) => (
                     <div key={entry.id} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-center">
                         <Input
@@ -219,14 +221,11 @@ function MasterDataCard({
                         </Button>
                     </div>
                 ))}
-            </div>
-        )}
-
-      </CardContent>
-       {newEntries.length > 0 && (
-         <CardFooter className="flex justify-end border-t pt-6">
-            <Button onClick={handleSave}>नवीन नोंदी जतन करा</Button>
-         </CardFooter>
+            </CardContent>
+            <CardFooter className="flex justify-end border-t py-4">
+                <Button onClick={handleSave}>नवीन नोंदी जतन करा</Button>
+            </CardFooter>
+        </>
        )}
     </Card>
   )

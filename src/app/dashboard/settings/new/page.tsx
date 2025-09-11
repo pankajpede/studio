@@ -98,18 +98,15 @@ function MasterDataCard({
   const handleExistingSelectionChange = (value: string) => {
       setExistingSelection(value);
       if (onParentSelect) {
-        const isParentCard = Object.values(masterDataMap).some(config => config.linkedEntity === masterDataMap[configKey].label);
-        if (isParentCard) {
-            const selectedOption = options.find(opt => opt.id === value);
-            if (selectedOption && selectedOption.id !== selectedParent?.id) {
-                onParentSelect({ id: selectedOption.id, name: selectedOption.name });
-            } else if (!selectedOption) {
-                onParentSelect(null);
-            }
-        }
+          const selectedOption = options.find(opt => opt.id === value);
+          // Check if it's a parent card by seeing if its configKey is a linkedEntity for another card
+          const isParentCard = Object.values(masterDataMap).some(config => config.linkedEntity === masterDataMap[configKey].entityName);
+          if (isParentCard) {
+            onParentSelect(selectedOption ? { id: selectedOption.id, name: selectedOption.name } : null);
+          }
       }
   };
-
+  
   React.useEffect(() => {
     // Clear selection when the card becomes disabled (e.g., parent is unselected)
     if (disabled) {
@@ -215,8 +212,16 @@ function NewMasterDataContent() {
   }
 
   const handleStateSelect = (state: {id: string, name: string} | null) => {
-    setSelectedState(state);
-    setSelectedDistrict(null); // Reset district when state changes
+    if (state?.id !== selectedState?.id) {
+        setSelectedState(state);
+        setSelectedDistrict(null); // Reset district when state changes
+    }
+  }
+
+  const handleDistrictSelect = (district: {id: string, name: string} | null) => {
+      if(district?.id !== selectedDistrict?.id) {
+          setSelectedDistrict(district);
+      }
   }
 
 
@@ -240,17 +245,17 @@ function NewMasterDataContent() {
             />
              <MasterDataCard
                 label="जिल्हा"
-                options={districts.filter(d => d.linkedTo === selectedState?.name)}
+                options={districts.filter(d => !selectedState || d.linkedTo === selectedState.name)}
                 onSave={handleAddDistrict}
                 parentLabel="राज्य"
                 selectedParent={selectedState}
-                onParentSelect={setSelectedDistrict}
+                onParentSelect={handleDistrictSelect}
                 configKey="districts"
                 disabled={!selectedState}
             />
             <MasterDataCard
                 label="तालुका"
-                options={talukas.filter(t => t.linkedTo === selectedDistrict?.name)}
+                options={talukas.filter(t => !selectedDistrict || t.linkedTo === selectedDistrict.name)}
                 onSave={handleAddTaluka}
                 parentLabel="जिल्हा"
                 selectedParent={selectedDistrict}

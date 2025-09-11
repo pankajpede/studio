@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -124,13 +124,13 @@ function MasterDataCard({
       if (value === "none") {
           setExistingSelection("");
           // If this entity can be a parent, clear the global parent selection
-          if (!linkedEntity) {
+          if (Object.values(masterDataMap).some(e => e.linkedEntity === configKey)) {
               onParentSelect("", "");
           }
       } else {
           setExistingSelection(value);
           // If this entity can be a parent, set it as the global parent
-          if (!linkedEntity) {
+         if (Object.values(masterDataMap).some(e => e.linkedEntity === configKey)) {
               onParentSelect(configKey, value);
           }
       }
@@ -273,5 +273,3 @@ export default function NewMasterDataPage() {
     </React.Suspense>
   )
 }
-
-    

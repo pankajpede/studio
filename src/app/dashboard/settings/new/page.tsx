@@ -142,9 +142,18 @@ function MasterDataCard({
         <div className="flex justify-between items-center">
              <CardTitle>{label} व्यवस्थापन</CardTitle>
              {!existingSelection && (
-                <Button onClick={handleAddEntry}>
-                  <PlusCircle />
-                </Button>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button size="icon" onClick={handleAddEntry}>
+                                <PlusCircle className="text-primary-foreground" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>नवीन जोडा</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
              )}
         </div>
       </CardHeader>
@@ -264,3 +273,5 @@ export default function NewMasterDataPage() {
     </React.Suspense>
   )
 }
+
+    

@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
+  CardDescription,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -26,7 +27,7 @@ import {
 import { useToast } from "@/hooks/use-toast"
 import { masterDataMap, MasterDataKey } from "../page"
 import { cn } from "@/lib/utils"
-import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface NewEntry {
   id: number

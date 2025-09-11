@@ -83,9 +83,14 @@ function MasterDataCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{label} व्यवस्थापन</CardTitle>
+        <div className="flex justify-between items-center">
+            <CardTitle>{label} व्यवस्थापन</CardTitle>
+            <Button onClick={handleAddNew}>
+                <PlusCircle className="mr-2"/> नवीन {label} जोडा
+            </Button>
+        </div>
         <CardDescription>
-          नवीन {label} जोडा किंवा विद्यमान पहा.
+          विद्यमान {label} पहा किंवा नवीन जोडा.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -130,10 +135,7 @@ function MasterDataCard({
         )}
 
       </CardContent>
-       <CardFooter className="flex justify-between items-center border-t pt-6">
-            <Button onClick={handleAddNew}>
-                <PlusCircle className="mr-2"/> नवीन {label} जोडा
-            </Button>
+       <CardFooter className="flex justify-end border-t pt-6">
             {newEntries.length > 0 && (
                 <Button onClick={handleSave}>नवीन नोंदी जतन करा</Button>
             )}
@@ -156,13 +158,12 @@ function NewMasterDataContent() {
   return (
     <div className="flex flex-col gap-6">
         <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" asChild>
+            <Button variant="outline" asChild>
             <Link href="/dashboard/settings">
                 <ArrowLeft />
-                <span className="sr-only">सेटिंग्जवर परत जा</span>
+                <span className="ml-2">परत जा</span>
             </Link>
             </Button>
-            <h1 className="text-xl font-semibold font-headline">मास्टर डेटा जोडा</h1>
         </div>
         <div className="grid grid-cols-1 gap-6">
             <MasterDataCard

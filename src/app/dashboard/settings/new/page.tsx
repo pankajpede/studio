@@ -89,9 +89,6 @@ function MasterDataCard({
                 <PlusCircle className="mr-2"/> नवीन {label} जोडा
             </Button>
         </div>
-        <CardDescription>
-          विद्यमान {label} पहा किंवा नवीन जोडा.
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-end gap-2">

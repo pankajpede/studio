@@ -344,7 +344,6 @@ function NewMasterDataContent() {
   const handleAddCaneType = (entries: { name: string; nameEn: string }[]) => {
     const newItems = entries.map((entry, index) => ({
       id: (caneTypes.length + 1 + index).toString(),
-      linkedTo: selectedCaneVariety?.name,
       ...entry
     }))
     setCaneTypes(prev => [...prev, ...newItems]);
@@ -517,12 +516,9 @@ function NewMasterDataContent() {
                     />
                      <MasterDataCard
                         label="उसाचा प्रकार"
-                        options={caneTypes.filter(c => !selectedCaneVariety || c.linkedTo === selectedCaneVariety.name)}
+                        options={caneTypes}
                         onSave={handleAddCaneType}
-                        parentLabel="उसाची जात"
-                        selectedParent={selectedCaneVariety}
                         configKey="caneTypes"
-                        disabled={!selectedCaneVariety}
                     />
                      <MasterDataCard
                         label="सिंचनाचा प्रकार"

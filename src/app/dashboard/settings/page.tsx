@@ -129,7 +129,7 @@ export const masterDataMap = {
   shivars: { data: shivars, linkedEntity: "गाव", category: null, entityName: "शिवार", label: "शिवार" },
   surveyNumbers: { data: surveyNumbers, linkedEntity: "शिवार", category: null, entityName: "सर्वेक्षण नंबर", label: "सर्वेक्षण नंबर" },
   caneVarieties: { data: caneVarieties, linkedEntity: null, category: null, entityName: "उसाची जात", label: "उसाची जात" },
-  caneTypes: { data: caneTypes, linkedEntity: "उसाची जात", category: null, entityName: "उसाचा प्रकार", label: "उसाचा प्रकार" },
+  caneTypes: { data: caneTypes, linkedTo: "उसाची जात", category: null, entityName: "उसाचा प्रकार", label: "उसाचा प्रकार" },
   irrigationTypes: { data: irrigationTypes, linkedEntity: null, category: null, entityName: "सिंचनाचा प्रकार", label: "सिंचनाचा प्रकार" },
   irrigationSources: { data: irrigationSources, linkedEntity: null, category: null, entityName: "सिंचनाचा स्रोत", label: "सिंचनाचा स्रोत" },
   irrigationMethods: { data: irrigationMethods, linkedEntity: null, category: null, entityName: "सिंचन पद्धत", label: "सिंचन पद्धत" },
@@ -706,6 +706,22 @@ function SettingsPageComponent() {
 
   return (
     <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>मास्टर डेटा कॉन्फिगरेशन</CardTitle>
+          <div className="flex items-center gap-2">
+             <Button variant="outline"><Upload className="mr-2"/> बल्क अपलोड</Button>
+             <Button asChild>
+                <Link href="/dashboard/settings/new">
+                    <PlusCircle className="mr-2"/> जोडा
+                </Link>
+            </Button>
+          </div>
+        </div>
+        <CardDescription>
+          येथे तुम्ही प्रणालीसाठी आवश्यक असलेला सर्व मास्टर डेटा व्यवस्थापित करू शकता.
+        </CardDescription>
+      </CardHeader>
       <CardContent>
         <MasterDataTable 
             dataKey={selectedConfig} 

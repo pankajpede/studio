@@ -380,20 +380,6 @@ function MasterDataTable({
               }
               className="max-w-sm"
             />
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button asChild size="icon">
-                    <Link href={`/dashboard/settings/new?type=${selectedConfig}`}>
-                      <PlusCircle />
-                    </Link>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>नवीन जोडा</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
         </div>
       </div>
       <div className="rounded-md border">

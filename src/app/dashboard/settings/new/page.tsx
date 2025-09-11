@@ -449,13 +449,20 @@ function NewMasterDataContent() {
 
   return (
     <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between gap-4 border-b">
+            <Tabs defaultValue="location">
+                <TabsList className="bg-transparent p-0">
+                    <TabsTrigger value="location" className="data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">स्थान</TabsTrigger>
+                    <TabsTrigger value="farming" className="data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">शेती</TabsTrigger>
+                </TabsList>
+            </Tabs>
+            
             {hasUnsavedChanges ? (
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                         <Button variant="outline" size="icon">
-                            <ArrowLeft />
-                            <span className="sr-only">परत जा</span>
+                         <Button variant="outline">
+                            <ArrowLeft className="mr-2" />
+                            परत जा
                         </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
@@ -474,20 +481,15 @@ function NewMasterDataContent() {
                     </AlertDialogContent>
                 </AlertDialog>
             ) : (
-                <Button variant="outline" size="icon" asChild>
+                <Button variant="outline" asChild>
                     <Link href="/dashboard/settings">
-                        <ArrowLeft />
-                        <span className="sr-only">परत जा</span>
+                        <ArrowLeft className="mr-2" />
+                        परत जा
                     </Link>
                 </Button>
             )}
-            <h1 className="text-xl font-semibold">नवीन मास्टर डेटा जोडा</h1>
         </div>
         <Tabs defaultValue="location">
-            <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="location">स्थान</TabsTrigger>
-                <TabsTrigger value="farming">शेती</TabsTrigger>
-            </TabsList>
             <TabsContent value="location" className="pt-6">
                  <div className="grid grid-cols-1 gap-6">
                     <MasterDataCard
@@ -659,3 +661,5 @@ export default function NewMasterDataPage() {
     </React.Suspense>
   )
 }
+
+    

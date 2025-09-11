@@ -3,6 +3,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   Card,
   CardContent,
@@ -22,6 +23,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { cn } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 
 
 type NewEntry = {
@@ -114,6 +116,7 @@ function MasterDataCard({
   selectedParent,
   configKey,
   disabled = false,
+  onUnsavedChange,
 }: {
   label: string
   options: { id: string; name: string }[]
@@ -123,6 +126,7 @@ function MasterDataCard({
   selectedParent?: {id: string, name: string} | null
   configKey: MasterDataKey,
   disabled?: boolean
+  onUnsavedChange: (hasUnsaved: boolean) => void;
 }) {
   const { toast } = useToast()
   const [newEntries, setNewEntries] = React.useState<NewEntry[]>([])
@@ -138,6 +142,7 @@ function MasterDataCard({
       return
     }
     setNewEntries(prev => [...prev, { id: Date.now(), name: '', nameEn: '', route: '' }]);
+    onUnsavedChange(true);
   }
   
   const handleEntryChange = (id: number, field: 'name' | 'nameEn' | 'route', value: string) => {
@@ -145,7 +150,11 @@ function MasterDataCard({
   }
 
   const handleRemoveEntry = (id: number) => {
-      setNewEntries(prev => prev.filter(entry => entry.id !== id));
+      setNewEntries(prev => {
+        const updatedEntries = prev.filter(entry => entry.id !== id);
+        onUnsavedChange(updatedEntries.length > 0);
+        return updatedEntries;
+      });
   }
 
   const handleSave = () => {
@@ -162,6 +171,7 @@ function MasterDataCard({
 
     onSave(validEntries);
     setNewEntries([]);
+    onUnsavedChange(false);
     toast({
       title: "यशस्वी!",
       description: `${validEntries.length} ${label} नोंदी यशस्वीरित्या जोडल्या आहेत.`,
@@ -249,6 +259,20 @@ function MasterDataCard({
 }
 
 function NewMasterDataContent() {
+  const router = useRouter();
+  const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState(false);
+  const unsavedChangesRef = React.useRef(new Set<string>());
+
+  const handleUnsavedChange = (label: string, hasUnsaved: boolean) => {
+    if (hasUnsaved) {
+      unsavedChangesRef.current.add(label);
+    } else {
+      unsavedChangesRef.current.delete(label);
+    }
+    setHasUnsavedChanges(unsavedChangesRef.current.size > 0);
+  };
+
+
   const [states, setStates] = React.useState(masterDataMap.states.data)
   const [districts, setDistricts] = React.useState(masterDataMap.districts.data)
   const [talukas, setTalukas] = React.useState(masterDataMap.talukas.data)
@@ -269,7 +293,6 @@ function NewMasterDataContent() {
   const [selectedTaluka, setSelectedTaluka] = React.useState<{id: string, name: string} | null>(null);
   const [selectedVillage, setSelectedVillage] = React.useState<{id: string, name: string} | null>(null);
   const [selectedCircle, setSelectedCircle] = React.useState<{id: string, name: string} | null>(null);
-  const [selectedCaneVariety, setSelectedCaneVariety] = React.useState<{id: string, name: string} | null>(null);
 
 
   const handleAddState = (entries: { name: string; nameEn: string }[]) => {
@@ -417,21 +440,41 @@ function NewMasterDataContent() {
     }
   }
 
-  const handleCaneVarietySelect = (variety: {id: string, name: string} | null) => {
-    if (variety?.id !== selectedCaneVariety?.id) {
-        setSelectedCaneVariety(variety);
-    }
-  }
 
   return (
     <div className="flex flex-col gap-6">
         <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" asChild>
-                <Link href="/dashboard/settings">
-                    <ArrowLeft />
-                    <span className="sr-only">परत जा</span>
-                </Link>
-            </Button>
+            {hasUnsavedChanges ? (
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                         <Button variant="outline" size="icon">
+                            <ArrowLeft />
+                            <span className="sr-only">परत जा</span>
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                तुमच्याकडे न जतन केलेले बदल आहेत. तुम्ही सोडल्यास, तुमचे बदल हटवले जातील.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>रद्द करा</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => router.push('/dashboard/settings')}>
+                                पुष्टी करा
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            ) : (
+                <Button variant="outline" size="icon" asChild>
+                    <Link href="/dashboard/settings">
+                        <ArrowLeft />
+                        <span className="sr-only">परत जा</span>
+                    </Link>
+                </Button>
+            )}
             <h1 className="text-xl font-semibold">नवीन मास्टर डेटा जोडा</h1>
         </div>
         <Tabs defaultValue="location">
@@ -447,6 +490,7 @@ function NewMasterDataContent() {
                         onSave={handleAddState}
                         onParentSelect={handleStateSelect}
                         configKey="states"
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('राज्य', hasUnsaved)}
                     />
                     <MasterDataCard
                         label="जिल्हा"
@@ -457,6 +501,7 @@ function NewMasterDataContent() {
                         onParentSelect={handleDistrictSelect}
                         configKey="districts"
                         disabled={!selectedState}
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('जिल्हा', hasUnsaved)}
                     />
                     <MasterDataCard
                         label="तालुका"
@@ -467,6 +512,7 @@ function NewMasterDataContent() {
                         onParentSelect={handleTalukaSelect}
                         configKey="talukas"
                         disabled={!selectedDistrict}
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('तालुका', hasUnsaved)}
                     />
                     <MasterDataCard
                         label="गाव"
@@ -477,6 +523,7 @@ function NewMasterDataContent() {
                         onParentSelect={handleVillageSelect}
                         configKey="villages"
                         disabled={!selectedTaluka}
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('गाव', hasUnsaved)}
                     />
                     <MasterDataCard
                         label="शिवार"
@@ -486,6 +533,7 @@ function NewMasterDataContent() {
                         selectedParent={selectedVillage}
                         configKey="shivars"
                         disabled={!selectedVillage}
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('शिवार', hasUnsaved)}
                     />
                     <MasterDataCard
                         label="सर्कल"
@@ -493,6 +541,7 @@ function NewMasterDataContent() {
                         onSave={handleAddCircle}
                         onParentSelect={handleCircleSelect}
                         configKey="circles"
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('सर्कल', hasUnsaved)}
                     />
                     <MasterDataCard
                         label="गट"
@@ -502,6 +551,7 @@ function NewMasterDataContent() {
                         selectedParent={selectedCircle}
                         configKey="guts"
                         disabled={!selectedCircle}
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('गट', hasUnsaved)}
                     />
                 </div>
             </TabsContent>
@@ -511,38 +561,43 @@ function NewMasterDataContent() {
                         label="उसाची जात"
                         options={caneVarieties}
                         onSave={handleAddCaneVariety}
-                        onParentSelect={handleCaneVarietySelect}
                         configKey="caneVarieties"
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('उसाची जात', hasUnsaved)}
                     />
                      <MasterDataCard
                         label="उसाचा प्रकार"
                         options={caneTypes}
                         onSave={handleAddCaneType}
                         configKey="caneTypes"
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('उसाचा प्रकार', hasUnsaved)}
                     />
                      <MasterDataCard
                         label="सिंचनाचा प्रकार"
                         options={irrigationTypes}
                         onSave={handleAddIrrigationType}
                         configKey="irrigationTypes"
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('सिंचनाचा प्रकार', hasUnsaved)}
                     />
                      <MasterDataCard
                         label="सिंचनाचा स्रोत"
                         options={irrigationSources}
                         onSave={handleAddIrrigationSource}
                         configKey="irrigationSources"
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('सिंचनाचा स्रोत', hasUnsaved)}
                     />
                      <MasterDataCard
                         label="सिंचन पद्धत"
                         options={irrigationMethods}
                         onSave={handleAddIrrigationMethod}
                         configKey="irrigationMethods"
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('सिंचन पद्धत', hasUnsaved)}
                     />
                      <MasterDataCard
                         label="लागवड पद्धत"
                         options={plantationMethods}
                         onSave={handleAddPlantationMethod}
                         configKey="plantationMethods"
+                        onUnsavedChange={(hasUnsaved) => handleUnsavedChange('लागवड पद्धत', hasUnsaved)}
                     />
                 </div>
             </TabsContent>
@@ -558,3 +613,5 @@ export default function NewMasterDataPage() {
     </React.Suspense>
   )
 }
+
+    

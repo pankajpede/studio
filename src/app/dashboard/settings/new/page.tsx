@@ -99,9 +99,8 @@ function MasterDataCard({
       setExistingSelection(value);
       if (onParentSelect) {
           const selectedOption = options.find(opt => opt.id === value);
-          // Check if it's a parent card by seeing if its configKey is a linkedEntity for another card
           const isParentCard = Object.values(masterDataMap).some(config => config.linkedEntity === masterDataMap[configKey].entityName);
-          if (isParentCard) {
+          if (isParentCard || selectedOption) {
             onParentSelect(selectedOption ? { id: selectedOption.id, name: selectedOption.name } : null);
           }
       }
@@ -181,9 +180,11 @@ function NewMasterDataContent() {
   const [states, setStates] = React.useState(masterDataMap.states.data)
   const [districts, setDistricts] = React.useState(masterDataMap.districts.data)
   const [talukas, setTalukas] = React.useState(masterDataMap.talukas.data)
+  const [villages, setVillages] = React.useState(masterDataMap.villages.data)
 
   const [selectedState, setSelectedState] = React.useState<{id: string, name: string} | null>(null);
   const [selectedDistrict, setSelectedDistrict] = React.useState<{id: string, name: string} | null>(null);
+  const [selectedTaluka, setSelectedTaluka] = React.useState<{id: string, name: string} | null>(null);
 
   const handleAddState = (entries: { name: string; nameEn: string }[]) => {
     const newStates = entries.map((entry, index) => ({
@@ -210,17 +211,34 @@ function NewMasterDataContent() {
     }))
     setTalukas((prev) => [...prev, ...newTalukas])
   }
+  
+  const handleAddVillage = (entries: { name: string; nameEn: string }[]) => {
+    const newVillages = entries.map((entry, index) => ({
+      id: (villages.length + 1 + index).toString(),
+      linkedTo: selectedTaluka?.name,
+      ...entry,
+    }))
+    setVillages((prev) => [...prev, ...newVillages])
+  }
 
   const handleStateSelect = (state: {id: string, name: string} | null) => {
     if (state?.id !== selectedState?.id) {
         setSelectedState(state);
-        setSelectedDistrict(null); // Reset district when state changes
+        setSelectedDistrict(null);
+        setSelectedTaluka(null);
     }
   }
 
   const handleDistrictSelect = (district: {id: string, name: string} | null) => {
       if(district?.id !== selectedDistrict?.id) {
           setSelectedDistrict(district);
+          setSelectedTaluka(null);
+      }
+  }
+  
+   const handleTalukaSelect = (taluka: {id: string, name: string} | null) => {
+      if(taluka?.id !== selectedTaluka?.id) {
+          setSelectedTaluka(taluka);
       }
   }
 
@@ -259,8 +277,18 @@ function NewMasterDataContent() {
                 onSave={handleAddTaluka}
                 parentLabel="जिल्हा"
                 selectedParent={selectedDistrict}
+                onParentSelect={handleTalukaSelect}
                 configKey="talukas"
                 disabled={!selectedDistrict}
+            />
+             <MasterDataCard
+                label="गाव"
+                options={villages.filter(v => !selectedTaluka || v.linkedTo === selectedTaluka.name)}
+                onSave={handleAddVillage}
+                parentLabel="तालुका"
+                selectedParent={selectedTaluka}
+                configKey="villages"
+                disabled={!selectedTaluka}
             />
         </div>
     </div>

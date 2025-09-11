@@ -449,45 +449,44 @@ function NewMasterDataContent() {
 
   return (
     <div className="flex flex-col gap-6">
-        <div className="flex items-center justify-between gap-4 border-b">
-            <Tabs defaultValue="location">
+        <Tabs defaultValue="location" className="w-full">
+            <div className="flex items-center justify-between gap-4 border-b">
                 <TabsList className="bg-transparent p-0">
                     <TabsTrigger value="location" className="data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">स्थान</TabsTrigger>
                     <TabsTrigger value="farming" className="data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">शेती</TabsTrigger>
                 </TabsList>
-            </Tabs>
-            
-            {hasUnsavedChanges ? (
-                <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                         <Button variant="outline" size="icon">
+                
+                {hasUnsavedChanges ? (
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="outline" size="icon">
+                                <ArrowLeft />
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    तुमच्याकडे न जतन केलेले बदल आहेत. तुम्ही सोडल्यास, तुमचे बदल हटवले जातील.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>रद्द करा</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => router.push('/dashboard/settings')}>
+                                    पुष्टी करा
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                ) : (
+                    <Button variant="outline" asChild size="icon">
+                        <Link href="/dashboard/settings">
                             <ArrowLeft />
-                        </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                तुमच्याकडे न जतन केलेले बदल आहेत. तुम्ही सोडल्यास, तुमचे बदल हटवले जातील.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>रद्द करा</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => router.push('/dashboard/settings')}>
-                                पुष्टी करा
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            ) : (
-                <Button variant="outline" asChild size="icon">
-                    <Link href="/dashboard/settings">
-                        <ArrowLeft />
-                    </Link>
-                </Button>
-            )}
-        </div>
-        <Tabs defaultValue="location">
+                        </Link>
+                    </Button>
+                )}
+            </div>
+            
             <TabsContent value="location" className="pt-6">
                  <div className="grid grid-cols-1 gap-6">
                     <MasterDataCard
@@ -659,5 +658,3 @@ export default function NewMasterDataPage() {
     </React.Suspense>
   )
 }
-
-    

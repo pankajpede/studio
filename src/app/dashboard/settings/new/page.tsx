@@ -460,9 +460,8 @@ function NewMasterDataContent() {
             {hasUnsavedChanges ? (
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                         <Button variant="outline">
-                            <ArrowLeft className="mr-2" />
-                            परत जा
+                         <Button variant="outline" size="icon">
+                            <ArrowLeft />
                         </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
@@ -481,10 +480,9 @@ function NewMasterDataContent() {
                     </AlertDialogContent>
                 </AlertDialog>
             ) : (
-                <Button variant="outline" asChild>
+                <Button variant="outline" asChild size="icon">
                     <Link href="/dashboard/settings">
-                        <ArrowLeft className="mr-2" />
-                        परत जा
+                        <ArrowLeft />
                     </Link>
                 </Button>
             )}

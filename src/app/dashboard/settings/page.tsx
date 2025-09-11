@@ -119,7 +119,7 @@ const plantationMethods: MasterDataItem[] = [
   { id: "2", name: "पद्धत ब", nameEn: "Method B" },
 ]
 
-const masterDataMap = {
+export const masterDataMap = {
   states: { data: states, linkedEntity: null, category: null, entityName: "राज्य", label: "राज्य" },
   districts: { data: districts, linkedEntity: "राज्य", category: null, entityName: "जिल्हा", label: "जिल्हा" },
   talukas: { data: talukas, linkedEntity: "जिल्हा", category: null, entityName: "तालुका", label: "तालुका" },
@@ -136,7 +136,7 @@ const masterDataMap = {
   plantationMethods: { data: plantationMethods, linkedEntity: null, category: null, entityName: "लागवड पद्धत", label: "लागवड पद्धत" },
 }
 
-type MasterDataKey = keyof typeof masterDataMap
+export type MasterDataKey = keyof typeof masterDataMap
 
 const getColumns = (
   entityKey: MasterDataKey,
@@ -315,14 +315,12 @@ const getColumns = (
 
 function MasterDataTable({
   dataKey,
-  onAddNew,
   onEdit,
   selectedConfig,
   setSelectedConfig,
   configOptions,
 }: {
   dataKey: MasterDataKey
-  onAddNew: (entityName: string) => void
   onEdit: (entityName: string, item: MasterDataItem) => void
   selectedConfig: MasterDataKey
   setSelectedConfig: (value: MasterDataKey) => void
@@ -385,8 +383,10 @@ function MasterDataTable({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button onClick={() => onAddNew(entityName)} size="icon">
-                    <PlusCircle />
+                  <Button asChild size="icon">
+                    <Link href={`/dashboard/settings/new?type=${selectedConfig}`}>
+                      <PlusCircle />
+                    </Link>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -486,12 +486,6 @@ function MasterDataTable({
     </div>
   )
 }
-
-const RequiredLabel = ({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) => (
-    <Label htmlFor={htmlFor}>
-        {children} <span className="text-red-500">*</span>
-    </Label>
-);
 
 function MasterDataModal({
   isOpen,
@@ -621,7 +615,7 @@ function MasterDataModal({
     if (linkedEntityLabel && linkedEntityOptions.length > 0) {
         linkedEntityElement = (
             <div className="grid gap-2">
-                <RequiredLabel htmlFor="parent-entity">{linkedEntityLabel}</RequiredLabel>
+                <Label htmlFor="parent-entity">{linkedEntityLabel} <span className="text-red-500">*</span></Label>
                 <Select value={linkedTo} onValueChange={setLinkedTo}>
                     <SelectTrigger id="parent-entity"><SelectValue placeholder={placeholder} /></SelectTrigger>
                     <SelectContent>
@@ -635,17 +629,17 @@ function MasterDataModal({
     return (
       <div className="grid gap-4">
         <div className="grid gap-2">
-          <RequiredLabel htmlFor="name-mr">{entityType} नाव (मराठी)</RequiredLabel>
+          <Label htmlFor="name-mr">{entityType} नाव (मराठी) <span className="text-red-500">*</span></Label>
           <Input id="name-mr" placeholder="मराठी नाव प्रविष्ट करा" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
         <div className="grid gap-2">
-          <RequiredLabel htmlFor="name-en">{entityType} नाव (इंग्रजी)</RequiredLabel>
+          <Label htmlFor="name-en">{entityType} नाव (इंग्रजी) <span className="text-red-500">*</span></Label>
           <Input id="name-en" placeholder="इंग्रजी नाव प्रविष्ट करा" value={nameEn} onChange={(e) => setNameEn(e.target.value)} required />
         </div>
         {linkedEntityElement}
         {entityType === 'उसाची जात' && (
             <div className="grid gap-2">
-                <RequiredLabel htmlFor="maturity-months">उसाची पक्वता (months)</RequiredLabel>
+                <Label htmlFor="maturity-months">उसाची पक्वता (months) <span className="text-red-500">*</span></Label>
                 <Input
                     id="maturity-months"
                     type="number"
@@ -698,13 +692,6 @@ function SettingsPageComponent() {
   const [modalMode, setModalMode] = React.useState<'add' | 'edit'>('add');
   const [currentEntityType, setCurrentEntityType] = React.useState<string | null>(null);
   const [editingItem, setEditingItem] = React.useState<MasterDataItem | null>(null);
-
-  const handleAddNew = (entityName: string) => {
-    setCurrentEntityType(entityName);
-    setModalMode('add');
-    setEditingItem(null);
-    setIsModalOpen(true);
-  };
   
   const handleEdit = (entityName: string, item: MasterDataItem) => {
     setCurrentEntityType(entityName);
@@ -736,7 +723,6 @@ function SettingsPageComponent() {
       <CardContent>
         <MasterDataTable 
             dataKey={selectedConfig} 
-            onAddNew={handleAddNew} 
             onEdit={handleEdit}
             selectedConfig={selectedConfig}
             setSelectedConfig={setSelectedConfig}
@@ -763,3 +749,5 @@ export default function SettingsPage() {
         </React.Suspense>
     )
 }
+
+    

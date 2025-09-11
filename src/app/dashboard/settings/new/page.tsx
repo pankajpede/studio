@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import * as React from "react"
@@ -13,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-  CardDescription,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -139,12 +139,12 @@ function MasterDataCard({
              </TooltipProvider>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2">
         {linkedEntity && (
            <div className="grid gap-2">
                 <Label htmlFor={`parent-${configKey}`}>जोडलेले {linkedEntity} निवडा</Label>
                 <Select value={selectedParent} onValueChange={setSelectedParent}>
-                    <SelectTrigger id={`parent-${configKey}`}><SelectValue placeholder={`${linkedEntity} निवडा`} /></SelectTrigger>
+                    <SelectTrigger id={`parent-${configKey}`}><SelectValue placeholder={`${entityName} निवडा`} /></SelectTrigger>
                     <SelectContent>
                         {parentOptions.map(o => <SelectItem key={o.id} value={o.name}>{o.name}</SelectItem>)}
                     </SelectContent>
@@ -169,7 +169,7 @@ function MasterDataCard({
         </div>
 
         {newEntries.map((entry, index) => (
-          <div key={entry.id} className="grid grid-cols-[1fr_1fr_auto] md:grid-cols-[1fr_1fr_1fr_auto] items-end gap-2 p-3 border rounded-md bg-muted/50">
+          <div key={entry.id} className="grid grid-cols-[1fr_1fr_auto] md:grid-cols-[1fr_1fr_1fr_auto] items-end gap-2 p-2 border rounded-md bg-muted/50">
              <div className="grid gap-1.5">
                 {index === 0 && <Label>नाव (मराठी)</Label>}
                 <Input
@@ -225,7 +225,7 @@ function NewMasterDataContent() {
     const configKeys = Object.keys(masterDataMap) as MasterDataKey[];
     
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
             <div className="flex items-center gap-4">
                 <Button variant="outline" size="icon" asChild>
                     <Link href={`/dashboard/settings?config=${initialConfig || 'states'}`}>

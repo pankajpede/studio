@@ -236,10 +236,12 @@ function NewMasterDataContent() {
   const [districts, setDistricts] = React.useState(masterDataMap.districts.data)
   const [talukas, setTalukas] = React.useState(masterDataMap.talukas.data)
   const [villages, setVillages] = React.useState(masterDataMap.villages.data)
+  const [shivars, setShivars] = React.useState(masterDataMap.shivars.data)
 
   const [selectedState, setSelectedState] = React.useState<{id: string, name: string} | null>(null);
   const [selectedDistrict, setSelectedDistrict] = React.useState<{id: string, name: string} | null>(null);
   const [selectedTaluka, setSelectedTaluka] = React.useState<{id: string, name: string} | null>(null);
+  const [selectedVillage, setSelectedVillage] = React.useState<{id: string, name: string} | null>(null);
 
   const handleAddState = (entries: { name: string; nameEn: string }[]) => {
     const newStates = entries.map((entry, index) => ({
@@ -275,12 +277,22 @@ function NewMasterDataContent() {
     }))
     setVillages((prev) => [...prev, ...newVillages])
   }
+  
+  const handleAddShivar = (entries: { name: string; nameEn: string }[]) => {
+    const newShivars = entries.map((entry, index) => ({
+      id: (shivars.length + 1 + index).toString(),
+      linkedTo: selectedVillage?.name,
+      ...entry,
+    }))
+    setShivars((prev) => [...prev, ...newShivars])
+  }
 
   const handleStateSelect = (state: {id: string, name: string} | null) => {
     if (state?.id !== selectedState?.id) {
         setSelectedState(state);
         setSelectedDistrict(null);
         setSelectedTaluka(null);
+        setSelectedVillage(null);
     }
   }
 
@@ -288,12 +300,20 @@ function NewMasterDataContent() {
       if(district?.id !== selectedDistrict?.id) {
           setSelectedDistrict(district);
           setSelectedTaluka(null);
+          setSelectedVillage(null);
       }
   }
   
    const handleTalukaSelect = (taluka: {id: string, name: string} | null) => {
       if(taluka?.id !== selectedTaluka?.id) {
           setSelectedTaluka(taluka);
+          setSelectedVillage(null);
+      }
+  }
+  
+  const handleVillageSelect = (village: {id: string, name: string} | null) => {
+      if(village?.id !== selectedVillage?.id) {
+          setSelectedVillage(village);
       }
   }
 
@@ -343,8 +363,18 @@ function NewMasterDataContent() {
                 onSave={handleAddVillage}
                 parentLabel="तालुका"
                 selectedParent={selectedTaluka}
+                onParentSelect={handleVillageSelect}
                 configKey="villages"
                 disabled={!selectedTaluka}
+            />
+            <MasterDataCard
+                label="शिवार"
+                options={shivars.filter(s => !selectedVillage || s.linkedTo === selectedVillage.name)}
+                onSave={handleAddShivar}
+                parentLabel="गाव"
+                selectedParent={selectedVillage}
+                configKey="shivars"
+                disabled={!selectedVillage}
             />
         </div>
     </div>

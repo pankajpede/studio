@@ -121,16 +121,15 @@ function MasterDataCard({
   }
 
   const handleExistingSelectionChange = (value: string) => {
+      setExistingSelection(value);
+      const isParentEntity = Object.values(masterDataMap).some(e => e.linkedEntity === configKey);
+      
       if (value === "none") {
-          setExistingSelection("");
-          // If this entity can be a parent, clear the global parent selection
-          if (Object.values(masterDataMap).some(e => e.linkedEntity === configKey)) {
+          if (isParentEntity) {
               onParentSelect("", "");
           }
       } else {
-          setExistingSelection(value);
-          // If this entity can be a parent, set it as the global parent
-         if (Object.values(masterDataMap).some(e => e.linkedEntity === configKey)) {
+         if (isParentEntity) {
               onParentSelect(configKey, value);
           }
       }

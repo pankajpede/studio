@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -63,7 +64,7 @@ function MasterDataCard({
         toast({
             variant: "destructive",
             title: "त्रुटी",
-            description: `कृपया नवीन ${entityName} जोडण्यापूर्वी एक ${linkedEntity} निवडा.`
+            description: `कृपया नवीन ${entityName} जोडण्यापूर्वी एक ${masterDataMap[linkedEntity as MasterDataKey]?.label || linkedEntity} निवडा.`
         })
         return;
     }
@@ -130,7 +131,7 @@ function MasterDataCard({
           setExistingSelection(value);
           // If this entity can be a parent, set it as the global parent
           if (!linkedEntity) {
-              onParentSelect(entityName, value);
+              onParentSelect(configKey, value);
           }
       }
   };
@@ -141,18 +142,9 @@ function MasterDataCard({
         <div className="flex justify-between items-center">
              <CardTitle>{label} व्यवस्थापन</CardTitle>
              {!existingSelection && (
-              <TooltipProvider>
-                  <Tooltip>
-                      <TooltipTrigger asChild>
-                          <Button onClick={handleAddEntry}>
-                              <PlusCircle />
-                          </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                          <p>नवीन जोडा</p>
-                      </TooltipContent>
-                  </Tooltip>
-              </TooltipProvider>
+                <Button onClick={handleAddEntry}>
+                  <PlusCircle />
+                </Button>
              )}
         </div>
       </CardHeader>

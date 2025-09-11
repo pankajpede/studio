@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label"
 import { ArrowLeft, PlusCircle, Trash2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { masterDataMap } from "../page"
+import type { MasterDataKey } from "../page"
 
 type NewEntry = {
     id: number;
@@ -35,16 +36,32 @@ function MasterDataCard({
   label,
   options,
   onSave,
+  onParentSelect,
+  parentLabel,
+  selectedParent,
+  configKey,
 }: {
   label: string
   options: { id: string; name: string }[]
   onSave: (entries: { name: string; nameEn: string }[]) => void
+  onParentSelect?: (parent: {id: string, name: string} | null) => void
+  parentLabel?: string | null
+  selectedParent?: {id: string, name: string} | null
+  configKey: MasterDataKey
 }) {
   const { toast } = useToast()
   const [newEntries, setNewEntries] = React.useState<NewEntry[]>([])
   const [existingSelection, setExistingSelection] = React.useState("")
 
   const handleAddNew = () => {
+    if (parentLabel && !selectedParent) {
+      toast({
+        variant: "destructive",
+        title: "त्रुटी",
+        description: `कृपया नवीन ${label} जोडण्यापूर्वी एक ${parentLabel} निवडा.`,
+      })
+      return
+    }
     setNewEntries(prev => [...prev, { id: Date.now(), name: '', nameEn: '' }]);
   }
   
@@ -76,9 +93,22 @@ function MasterDataCard({
     })
   }
 
-  const handleSelectionChange = (value: string) => {
-    setExistingSelection(value);
-  }
+  const handleExistingSelectionChange = (value: string) => {
+      setExistingSelection(value);
+      if (onParentSelect) {
+        // This logic identifies if this card can act as a parent for another card.
+        const isParentCard = Object.values(masterDataMap).some(config => config.linkedEntity === label);
+        if (isParentCard) {
+            const selectedOption = options.find(opt => opt.id === value);
+             if (selectedOption) {
+                onParentSelect({ id: selectedOption.id, name: selectedOption.name });
+            } else {
+                onParentSelect(null);
+            }
+        }
+      }
+  };
+
 
   return (
     <Card>
@@ -94,7 +124,7 @@ function MasterDataCard({
         <div className="flex items-end gap-2">
           <div className="flex-grow grid gap-2">
             <Label htmlFor={`existing-${label}`}>विद्यमान {label} पहा</Label>
-            <Select onValueChange={handleSelectionChange} value={existingSelection}>
+            <Select onValueChange={handleExistingSelectionChange} value={existingSelection}>
               <SelectTrigger id={`existing-${label}`}>
                 <SelectValue placeholder={`${label} निवडा`} />
               </SelectTrigger>
@@ -143,6 +173,8 @@ function MasterDataCard({
 
 function NewMasterDataContent() {
   const [states, setStates] = React.useState(masterDataMap.states.data)
+  const [districts, setDistricts] = React.useState(masterDataMap.districts.data)
+  const [selectedParent, setSelectedParent] = React.useState<{id: string, name: string} | null>(null);
 
   const handleAddState = (entries: { name: string; nameEn: string }[]) => {
     const newStates = entries.map((entry, index) => ({
@@ -150,6 +182,15 @@ function NewMasterDataContent() {
       ...entry,
     }))
     setStates((prev) => [...prev, ...newStates])
+  }
+  
+  const handleAddDistrict = (entries: { name: string; nameEn: string }[]) => {
+    const newDistricts = entries.map((entry, index) => ({
+      id: (districts.length + 1 + index).toString(),
+      linkedTo: selectedParent?.name,
+      ...entry,
+    }))
+    setDistricts((prev) => [...prev, ...newDistricts])
   }
 
   return (
@@ -167,6 +208,16 @@ function NewMasterDataContent() {
                 label="राज्य"
                 options={states}
                 onSave={handleAddState}
+                onParentSelect={setSelectedParent}
+                configKey="states"
+            />
+             <MasterDataCard
+                label="जिल्हा"
+                options={districts.filter(d => d.linkedTo === selectedParent?.name)}
+                onSave={handleAddDistrict}
+                parentLabel="राज्य"
+                selectedParent={selectedParent}
+                configKey="districts"
             />
         </div>
     </div>

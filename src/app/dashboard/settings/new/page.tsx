@@ -13,7 +13,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -27,7 +26,7 @@ import {
 import { useToast } from "@/hooks/use-toast"
 import { masterDataMap, MasterDataKey } from "../page"
 import { cn } from "@/lib/utils"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 
 interface NewEntry {
   id: number
@@ -47,6 +46,12 @@ function MasterDataCard({
 
   const [newEntries, setNewEntries] = React.useState<NewEntry[]>([])
   const [selectedParent, setSelectedParent] = React.useState("")
+  const [existingSelection, setExistingSelection] = React.useState("")
+
+  React.useEffect(() => {
+    setExistingSelection("");
+  }, [selectedParent]);
+
   
   let parentOptions: { id: string; name: string }[] = []
   if (linkedEntity) {
@@ -125,18 +130,20 @@ function MasterDataCard({
       <CardHeader>
         <div className="flex justify-between items-center">
              <CardTitle>{label} व्यवस्थापन</CardTitle>
-             <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button size="icon" onClick={handleAddEntry}>
-                            <PlusCircle />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>नवीन जोडा</p>
-                    </TooltipContent>
-                </Tooltip>
-             </TooltipProvider>
+             {!existingSelection && (
+              <TooltipProvider>
+                  <Tooltip>
+                      <TooltipTrigger asChild>
+                           <Button size="icon" onClick={handleAddEntry}>
+                              <PlusCircle />
+                          </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                          <p>नवीन जोडा</p>
+                      </TooltipContent>
+                  </Tooltip>
+              </TooltipProvider>
+             )}
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -154,11 +161,12 @@ function MasterDataCard({
         
         <div className="grid gap-2">
             <Label htmlFor={`existing-${configKey}`}>विद्यमान {label}</Label>
-            <Select>
+            <Select value={existingSelection} onValueChange={setExistingSelection}>
                 <SelectTrigger id={`existing-${configKey}`}>
                 <SelectValue placeholder={`विद्यमान ${label} पहा`} />
                 </SelectTrigger>
                 <SelectContent>
+                 <SelectItem value="">None</SelectItem>
                 {data.map((item) => (
                     <SelectItem key={item.id} value={item.id}>
                         {item.name} ({item.nameEn})

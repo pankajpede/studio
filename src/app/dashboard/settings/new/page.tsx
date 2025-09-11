@@ -180,7 +180,7 @@ function MasterDataCard({
       <CardHeader>
         <div className="flex justify-between items-center">
             <CardTitle>{label} व्यवस्थापन</CardTitle>
-             <Button onClick={handleAddNew} disabled={!!existingSelection || disabled} size="icon" variant="ghost">
+             <Button onClick={handleAddNew} disabled={!!existingSelection || disabled} size="icon">
                 <PlusCircle className="h-6 w-6"/>
             </Button>
         </div>
@@ -202,7 +202,6 @@ function MasterDataCard({
 
         {newEntries.length > 0 && (
             <div className="space-y-4 pt-4 border-t">
-                <p className="text-sm text-muted-foreground">नवीन {label} जोडा</p>
                 {newEntries.map((entry, index) => (
                     <div key={entry.id} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-center">
                         <Input

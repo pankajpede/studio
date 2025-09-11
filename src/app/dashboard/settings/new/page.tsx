@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft, PlusCircle, Trash2, ChevronsUpDown, Check } from "lucide-react"
+import { ArrowLeft, PlusCircle, Trash2, ChevronsUpDown, Check, Save } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { masterDataMap } from "../page"
 import type { MasterDataKey } from "../page"
@@ -209,7 +209,7 @@ function MasterDataCard({
                 searchPlaceholder={`${label} शोधा...`}
                 disabled={disabled}
             />
-            <Button onClick={handleAddNew} disabled={!!existingSelection || disabled}>
+            <Button onClick={handleAddNew} disabled={!!existingSelection || disabled} size="icon">
                 <PlusCircle/>
             </Button>
         </div>
@@ -248,18 +248,13 @@ function MasterDataCard({
             </CardFooter>
         </>
        )}
-        {newEntries.length === 0 && !existingSelection && disabled && (
-             <CardContent>
-                <div className="text-center text-sm text-muted-foreground py-4">
-                </div>
-            </CardContent>
-        )}
     </Card>
   )
 }
 
 function NewMasterDataContent() {
   const router = useRouter();
+  const { toast } = useToast();
   const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState(false);
   const unsavedChangesRef = React.useRef(new Set<string>());
 
@@ -440,6 +435,17 @@ function NewMasterDataContent() {
     }
   }
 
+  const handleSubmit = () => {
+    // In a real app, you would collect all new data and send it to the server.
+    toast({
+        title: "यशस्वी!",
+        description: "सर्व मास्टर डेटा यशस्वीरित्या सबमिट केला आहे."
+    });
+    unsavedChangesRef.current.clear();
+    setHasUnsavedChanges(false);
+    router.push('/dashboard/settings');
+  }
+
 
   return (
     <div className="flex flex-col gap-6">
@@ -602,6 +608,46 @@ function NewMasterDataContent() {
                 </div>
             </TabsContent>
         </Tabs>
+        <div className="flex justify-end gap-4 mt-8 border-t pt-6">
+            <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button variant="outline">रद्द करा</Button>
+                </AlertDialogTrigger>
+                {hasUnsavedChanges && (
+                     <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                तुमच्याकडे न जतन केलेले बदल आहेत. तुम्ही रद्द केल्यास, तुमचे बदल हटवले जातील.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>थांबा</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => router.push('/dashboard/settings')}>
+                                रद्द करण्याची पुष्टी करा
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                )}
+            </AlertDialog>
+            <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button><Save className="mr-2"/> सबमिट करा</Button>
+                </AlertDialogTrigger>
+                 <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>सबमिशनची पुष्टी करा</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            तुम्ही सर्व मास्टर डेटा बदल सबमिट करू इच्छिता याची तुम्हाला खात्री आहे का?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>रद्द करा</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleSubmit}>सबमिट करा</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </div>
     </div>
   )
 }
@@ -613,5 +659,3 @@ export default function NewMasterDataPage() {
     </React.Suspense>
   )
 }
-
-    

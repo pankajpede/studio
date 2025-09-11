@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   CardFooter,
@@ -27,6 +26,7 @@ import {
 import { useToast } from "@/hooks/use-toast"
 import { masterDataMap, MasterDataKey } from "../page"
 import { cn } from "@/lib/utils"
+import { Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface NewEntry {
   id: number
@@ -124,13 +124,19 @@ function MasterDataCard({
       <CardHeader>
         <div className="flex justify-between items-center">
              <CardTitle>{label} व्यवस्थापन</CardTitle>
-             <Button variant="ghost" size="icon" onClick={handleAddEntry}>
-                <PlusCircle className="text-primary" />
-             </Button>
+             <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" onClick={handleAddEntry}>
+                            <PlusCircle className="text-primary" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>नवीन जोडा</p>
+                    </TooltipContent>
+                </Tooltip>
+             </TooltipProvider>
         </div>
-        <CardDescription>
-          विद्यमान {label} पहा किंवा नवीन जोडा.
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {linkedEntity && (
@@ -226,10 +232,6 @@ function NewMasterDataContent() {
                         <span className="sr-only">परत जा</span>
                     </Link>
                 </Button>
-                <div>
-                     <h1 className="text-2xl font-headline font-semibold">नवीन मास्टर डेटा जोडा</h1>
-                     <p className="text-muted-foreground">प्रत्येक विभागासाठी नवीन नोंदी जोडा.</p>
-                </div>
             </div>
              {configKeys.map(key => (
                 <MasterDataCard key={key} configKey={key} />

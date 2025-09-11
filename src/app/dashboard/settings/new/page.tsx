@@ -21,6 +21,8 @@ import type { MasterDataKey } from "../page"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { cn } from "@/lib/utils"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 
 type NewEntry = {
     id: number;
@@ -254,12 +256,20 @@ function NewMasterDataContent() {
   const [shivars, setShivars] = React.useState(masterDataMap.shivars.data)
   const [circles, setCircles] = React.useState(masterDataMap.circles.data)
   const [guts, setGuts] = React.useState(masterDataMap.guts.data)
+  const [caneVarieties, setCaneVarieties] = React.useState(masterDataMap.caneVarieties.data)
+  const [caneTypes, setCaneTypes] = React.useState(masterDataMap.caneTypes.data)
+  const [irrigationTypes, setIrrigationTypes] = React.useState(masterDataMap.irrigationTypes.data)
+  const [irrigationSources, setIrrigationSources] = React.useState(masterDataMap.irrigationSources.data)
+  const [irrigationMethods, setIrrigationMethods] = React.useState(masterDataMap.irrigationMethods.data)
+  const [plantationMethods, setPlantationMethods] = React.useState(masterDataMap.plantationMethods.data)
+
 
   const [selectedState, setSelectedState] = React.useState<{id: string, name: string} | null>(null);
   const [selectedDistrict, setSelectedDistrict] = React.useState<{id: string, name: string} | null>(null);
   const [selectedTaluka, setSelectedTaluka] = React.useState<{id: string, name: string} | null>(null);
   const [selectedVillage, setSelectedVillage] = React.useState<{id: string, name: string} | null>(null);
   const [selectedCircle, setSelectedCircle] = React.useState<{id: string, name: string} | null>(null);
+  const [selectedCaneVariety, setSelectedCaneVariety] = React.useState<{id: string, name: string} | null>(null);
 
 
   const handleAddState = (entries: { name: string; nameEn: string }[]) => {
@@ -323,6 +333,55 @@ function NewMasterDataContent() {
     setGuts((prev) => [...prev, ...newGuts]);
   };
 
+  const handleAddCaneVariety = (entries: { name: string; nameEn: string }[]) => {
+    const newItems = entries.map((entry, index) => ({
+      id: (caneVarieties.length + 1 + index).toString(),
+      ...entry
+    }))
+    setCaneVarieties(prev => [...prev, ...newItems]);
+  }
+
+  const handleAddCaneType = (entries: { name: string; nameEn: string }[]) => {
+    const newItems = entries.map((entry, index) => ({
+      id: (caneTypes.length + 1 + index).toString(),
+      linkedTo: selectedCaneVariety?.name,
+      ...entry
+    }))
+    setCaneTypes(prev => [...prev, ...newItems]);
+  }
+
+  const handleAddIrrigationType = (entries: { name: string; nameEn: string }[]) => {
+    const newItems = entries.map((entry, index) => ({
+      id: (irrigationTypes.length + 1 + index).toString(),
+      ...entry
+    }))
+    setIrrigationTypes(prev => [...prev, ...newItems]);
+  }
+
+  const handleAddIrrigationSource = (entries: { name: string; nameEn: string }[]) => {
+    const newItems = entries.map((entry, index) => ({
+      id: (irrigationSources.length + 1 + index).toString(),
+      ...entry
+    }))
+    setIrrigationSources(prev => [...prev, ...newItems]);
+  }
+
+  const handleAddIrrigationMethod = (entries: { name: string; nameEn: string }[]) => {
+    const newItems = entries.map((entry, index) => ({
+      id: (irrigationMethods.length + 1 + index).toString(),
+      ...entry
+    }))
+    setIrrigationMethods(prev => [...prev, ...newItems]);
+  }
+
+  const handleAddPlantationMethod = (entries: { name: string; nameEn: string }[]) => {
+    const newItems = entries.map((entry, index) => ({
+      id: (plantationMethods.length + 1 + index).toString(),
+      ...entry
+    }))
+    setPlantationMethods(prev => [...prev, ...newItems]);
+  }
+
   const handleStateSelect = (state: {id: string, name: string} | null) => {
     if (state?.id !== selectedState?.id) {
         setSelectedState(state);
@@ -359,6 +418,11 @@ function NewMasterDataContent() {
     }
   }
 
+  const handleCaneVarietySelect = (variety: {id: string, name: string} | null) => {
+    if (variety?.id !== selectedCaneVariety?.id) {
+        setSelectedCaneVariety(variety);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -371,70 +435,122 @@ function NewMasterDataContent() {
             </Button>
             <h1 className="text-xl font-semibold">नवीन मास्टर डेटा जोडा</h1>
         </div>
-        <div className="grid grid-cols-1 gap-6">
-            <MasterDataCard
-                label="राज्य"
-                options={states}
-                onSave={handleAddState}
-                onParentSelect={handleStateSelect}
-                configKey="states"
-            />
-             <MasterDataCard
-                label="जिल्हा"
-                options={districts.filter(d => !selectedState || d.linkedTo === selectedState.name)}
-                onSave={handleAddDistrict}
-                parentLabel="राज्य"
-                selectedParent={selectedState}
-                onParentSelect={handleDistrictSelect}
-                configKey="districts"
-                disabled={!selectedState}
-            />
-            <MasterDataCard
-                label="तालुका"
-                options={talukas.filter(t => !selectedDistrict || t.linkedTo === selectedDistrict.name)}
-                onSave={handleAddTaluka}
-                parentLabel="जिल्हा"
-                selectedParent={selectedDistrict}
-                onParentSelect={handleTalukaSelect}
-                configKey="talukas"
-                disabled={!selectedDistrict}
-            />
-             <MasterDataCard
-                label="गाव"
-                options={villages.filter(v => !selectedTaluka || v.linkedTo === selectedTaluka.name)}
-                onSave={handleAddVillage}
-                parentLabel="तालुका"
-                selectedParent={selectedTaluka}
-                onParentSelect={handleVillageSelect}
-                configKey="villages"
-                disabled={!selectedTaluka}
-            />
-            <MasterDataCard
-                label="शिवार"
-                options={shivars.filter(s => !selectedVillage || s.linkedTo === selectedVillage.name)}
-                onSave={handleAddShivar}
-                parentLabel="गाव"
-                selectedParent={selectedVillage}
-                configKey="shivars"
-                disabled={!selectedVillage}
-            />
-             <MasterDataCard
-                label="सर्कल"
-                options={circles}
-                onSave={handleAddCircle}
-                onParentSelect={handleCircleSelect}
-                configKey="circles"
-            />
-            <MasterDataCard
-                label="गट"
-                options={guts.filter(g => !selectedCircle || g.linkedTo === selectedCircle.name)}
-                onSave={handleAddGut}
-                parentLabel="सर्कल"
-                selectedParent={selectedCircle}
-                configKey="guts"
-                disabled={!selectedCircle}
-            />
-        </div>
+        <Tabs defaultValue="location">
+            <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="location">स्थान</TabsTrigger>
+                <TabsTrigger value="farming">शेती</TabsTrigger>
+            </TabsList>
+            <TabsContent value="location" className="pt-6">
+                 <div className="grid grid-cols-1 gap-6">
+                    <MasterDataCard
+                        label="राज्य"
+                        options={states}
+                        onSave={handleAddState}
+                        onParentSelect={handleStateSelect}
+                        configKey="states"
+                    />
+                    <MasterDataCard
+                        label="जिल्हा"
+                        options={districts.filter(d => !selectedState || d.linkedTo === selectedState.name)}
+                        onSave={handleAddDistrict}
+                        parentLabel="राज्य"
+                        selectedParent={selectedState}
+                        onParentSelect={handleDistrictSelect}
+                        configKey="districts"
+                        disabled={!selectedState}
+                    />
+                    <MasterDataCard
+                        label="तालुका"
+                        options={talukas.filter(t => !selectedDistrict || t.linkedTo === selectedDistrict.name)}
+                        onSave={handleAddTaluka}
+                        parentLabel="जिल्हा"
+                        selectedParent={selectedDistrict}
+                        onParentSelect={handleTalukaSelect}
+                        configKey="talukas"
+                        disabled={!selectedDistrict}
+                    />
+                    <MasterDataCard
+                        label="गाव"
+                        options={villages.filter(v => !selectedTaluka || v.linkedTo === selectedTaluka.name)}
+                        onSave={handleAddVillage}
+                        parentLabel="तालुका"
+                        selectedParent={selectedTaluka}
+                        onParentSelect={handleVillageSelect}
+                        configKey="villages"
+                        disabled={!selectedTaluka}
+                    />
+                    <MasterDataCard
+                        label="शिवार"
+                        options={shivars.filter(s => !selectedVillage || s.linkedTo === selectedVillage.name)}
+                        onSave={handleAddShivar}
+                        parentLabel="गाव"
+                        selectedParent={selectedVillage}
+                        configKey="shivars"
+                        disabled={!selectedVillage}
+                    />
+                    <MasterDataCard
+                        label="सर्कल"
+                        options={circles}
+                        onSave={handleAddCircle}
+                        onParentSelect={handleCircleSelect}
+                        configKey="circles"
+                    />
+                    <MasterDataCard
+                        label="गट"
+                        options={guts.filter(g => !selectedCircle || g.linkedTo === selectedCircle.name)}
+                        onSave={handleAddGut}
+                        parentLabel="सर्कल"
+                        selectedParent={selectedCircle}
+                        configKey="guts"
+                        disabled={!selectedCircle}
+                    />
+                </div>
+            </TabsContent>
+            <TabsContent value="farming" className="pt-6">
+                 <div className="grid grid-cols-1 gap-6">
+                     <MasterDataCard
+                        label="उसाची जात"
+                        options={caneVarieties}
+                        onSave={handleAddCaneVariety}
+                        onParentSelect={handleCaneVarietySelect}
+                        configKey="caneVarieties"
+                    />
+                     <MasterDataCard
+                        label="उसाचा प्रकार"
+                        options={caneTypes.filter(c => !selectedCaneVariety || c.linkedTo === selectedCaneVariety.name)}
+                        onSave={handleAddCaneType}
+                        parentLabel="उसाची जात"
+                        selectedParent={selectedCaneVariety}
+                        configKey="caneTypes"
+                        disabled={!selectedCaneVariety}
+                    />
+                     <MasterDataCard
+                        label="सिंचनाचा प्रकार"
+                        options={irrigationTypes}
+                        onSave={handleAddIrrigationType}
+                        configKey="irrigationTypes"
+                    />
+                     <MasterDataCard
+                        label="सिंचनाचा स्रोत"
+                        options={irrigationSources}
+                        onSave={handleAddIrrigationSource}
+                        configKey="irrigationSources"
+                    />
+                     <MasterDataCard
+                        label="सिंचन पद्धत"
+                        options={irrigationMethods}
+                        onSave={handleAddIrrigationMethod}
+                        configKey="irrigationMethods"
+                    />
+                     <MasterDataCard
+                        label="लागवड पद्धत"
+                        options={plantationMethods}
+                        onSave={handleAddPlantationMethod}
+                        configKey="plantationMethods"
+                    />
+                </div>
+            </TabsContent>
+        </Tabs>
     </div>
   )
 }

@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { masterDataMap, MasterDataKey } from "../page"
+import { cn } from "@/lib/utils"
 
 interface NewEntry {
   id: number
@@ -244,5 +245,3 @@ export default function NewMasterDataPage() {
     </React.Suspense>
   )
 }
-
-    

@@ -40,6 +40,7 @@ function MasterDataCard({
   parentLabel,
   selectedParent,
   configKey,
+  disabled = false,
 }: {
   label: string
   options: { id: string; name: string }[]
@@ -47,7 +48,8 @@ function MasterDataCard({
   onParentSelect?: (parent: {id: string, name: string} | null) => void
   parentLabel?: string | null
   selectedParent?: {id: string, name: string} | null
-  configKey: MasterDataKey
+  configKey: MasterDataKey,
+  disabled?: boolean
 }) {
   const { toast } = useToast()
   const [newEntries, setNewEntries] = React.useState<NewEntry[]>([])
@@ -96,18 +98,24 @@ function MasterDataCard({
   const handleExistingSelectionChange = (value: string) => {
       setExistingSelection(value);
       if (onParentSelect) {
-        // This logic identifies if this card can act as a parent for another card.
-        const isParentCard = Object.values(masterDataMap).some(config => config.linkedEntity === label);
+        const isParentCard = Object.values(masterDataMap).some(config => config.linkedEntity === masterDataMap[configKey].label);
         if (isParentCard) {
             const selectedOption = options.find(opt => opt.id === value);
-             if (selectedOption) {
+            if (selectedOption && selectedOption.id !== selectedParent?.id) {
                 onParentSelect({ id: selectedOption.id, name: selectedOption.name });
-            } else {
+            } else if (!selectedOption) {
                 onParentSelect(null);
             }
         }
       }
   };
+
+  React.useEffect(() => {
+    // Clear selection when the card becomes disabled (e.g., parent is unselected)
+    if (disabled) {
+        setExistingSelection("");
+    }
+  }, [disabled]);
 
 
   return (
@@ -115,7 +123,7 @@ function MasterDataCard({
       <CardHeader>
         <div className="flex justify-between items-center">
             <CardTitle>{label} व्यवस्थापन</CardTitle>
-            <Button onClick={handleAddNew}>
+             <Button onClick={handleAddNew} disabled={!!existingSelection || disabled}>
                 <PlusCircle className="mr-2"/> नवीन {label} जोडा
             </Button>
         </div>
@@ -124,11 +132,12 @@ function MasterDataCard({
         <div className="flex items-end gap-2">
           <div className="flex-grow grid gap-2">
             <Label htmlFor={`existing-${label}`}>विद्यमान {label} पहा</Label>
-            <Select onValueChange={handleExistingSelectionChange} value={existingSelection}>
+            <Select onValueChange={handleExistingSelectionChange} value={existingSelection} disabled={disabled}>
               <SelectTrigger id={`existing-${label}`}>
                 <SelectValue placeholder={`${label} निवडा`} />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="none">सर्व निवडा</SelectItem>
                 {options.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -162,11 +171,11 @@ function MasterDataCard({
         )}
 
       </CardContent>
-       <CardFooter className="flex justify-end border-t pt-6">
-            {newEntries.length > 0 && (
-                <Button onClick={handleSave}>नवीन नोंदी जतन करा</Button>
-            )}
-        </CardFooter>
+       {newEntries.length > 0 && (
+         <CardFooter className="flex justify-end border-t pt-6">
+            <Button onClick={handleSave}>नवीन नोंदी जतन करा</Button>
+         </CardFooter>
+       )}
     </Card>
   )
 }
@@ -174,7 +183,10 @@ function MasterDataCard({
 function NewMasterDataContent() {
   const [states, setStates] = React.useState(masterDataMap.states.data)
   const [districts, setDistricts] = React.useState(masterDataMap.districts.data)
-  const [selectedParent, setSelectedParent] = React.useState<{id: string, name: string} | null>(null);
+  const [talukas, setTalukas] = React.useState(masterDataMap.talukas.data)
+
+  const [selectedState, setSelectedState] = React.useState<{id: string, name: string} | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = React.useState<{id: string, name: string} | null>(null);
 
   const handleAddState = (entries: { name: string; nameEn: string }[]) => {
     const newStates = entries.map((entry, index) => ({
@@ -187,11 +199,26 @@ function NewMasterDataContent() {
   const handleAddDistrict = (entries: { name: string; nameEn: string }[]) => {
     const newDistricts = entries.map((entry, index) => ({
       id: (districts.length + 1 + index).toString(),
-      linkedTo: selectedParent?.name,
+      linkedTo: selectedState?.name,
       ...entry,
     }))
     setDistricts((prev) => [...prev, ...newDistricts])
   }
+
+  const handleAddTaluka = (entries: { name: string; nameEn: string }[]) => {
+    const newTalukas = entries.map((entry, index) => ({
+      id: (talukas.length + 1 + index).toString(),
+      linkedTo: selectedDistrict?.name,
+      ...entry,
+    }))
+    setTalukas((prev) => [...prev, ...newTalukas])
+  }
+
+  const handleStateSelect = (state: {id: string, name: string} | null) => {
+    setSelectedState(state);
+    setSelectedDistrict(null); // Reset district when state changes
+  }
+
 
   return (
     <div className="flex flex-col gap-6">
@@ -208,16 +235,27 @@ function NewMasterDataContent() {
                 label="राज्य"
                 options={states}
                 onSave={handleAddState}
-                onParentSelect={setSelectedParent}
+                onParentSelect={handleStateSelect}
                 configKey="states"
             />
              <MasterDataCard
                 label="जिल्हा"
-                options={districts.filter(d => d.linkedTo === selectedParent?.name)}
+                options={districts.filter(d => d.linkedTo === selectedState?.name)}
                 onSave={handleAddDistrict}
                 parentLabel="राज्य"
-                selectedParent={selectedParent}
+                selectedParent={selectedState}
+                onParentSelect={setSelectedDistrict}
                 configKey="districts"
+                disabled={!selectedState}
+            />
+            <MasterDataCard
+                label="तालुका"
+                options={talukas.filter(t => t.linkedTo === selectedDistrict?.name)}
+                onSave={handleAddTaluka}
+                parentLabel="जिल्हा"
+                selectedParent={selectedDistrict}
+                configKey="talukas"
+                disabled={!selectedDistrict}
             />
         </div>
     </div>

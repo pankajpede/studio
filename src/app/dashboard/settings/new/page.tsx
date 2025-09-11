@@ -26,6 +26,7 @@ type NewEntry = {
     id: number;
     name: string;
     nameEn: string;
+    route?: string;
 }
 
 const Combobox = ({
@@ -114,7 +115,7 @@ function MasterDataCard({
 }: {
   label: string
   options: { id: string; name: string }[]
-  onSave: (entries: { name: string; nameEn: string }[]) => void
+  onSave: (entries: { name: string; nameEn: string; route?: string }[]) => void
   onParentSelect?: (parent: {id: string, name: string} | null) => void
   parentLabel?: string | null
   selectedParent?: {id: string, name: string} | null
@@ -134,10 +135,10 @@ function MasterDataCard({
       })
       return
     }
-    setNewEntries(prev => [...prev, { id: Date.now(), name: '', nameEn: '' }]);
+    setNewEntries(prev => [...prev, { id: Date.now(), name: '', nameEn: '', route: '' }]);
   }
   
-  const handleEntryChange = (id: number, field: 'name' | 'nameEn', value: string) => {
+  const handleEntryChange = (id: number, field: 'name' | 'nameEn' | 'route', value: string) => {
       setNewEntries(prev => prev.map(entry => entry.id === id ? { ...entry, [field]: value } : entry));
   }
 
@@ -219,6 +220,14 @@ function MasterDataCard({
                          <Button variant="ghost" size="icon" onClick={() => handleRemoveEntry(entry.id)}>
                             <Trash2 className="text-destructive"/>
                         </Button>
+                        {configKey === 'villages' && (
+                             <Input
+                                value={entry.route}
+                                onChange={(e) => handleEntryChange(entry.id, 'route', e.target.value)}
+                                placeholder="मार्ग"
+                                className="md:col-span-2"
+                            />
+                        )}
                     </div>
                 ))}
             </CardContent>
@@ -227,6 +236,12 @@ function MasterDataCard({
             </CardFooter>
         </>
        )}
+        {newEntries.length === 0 && !existingSelection && disabled && (
+             <CardContent>
+                <div className="text-center text-sm text-muted-foreground py-4">
+                </div>
+            </CardContent>
+        )}
     </Card>
   )
 }
@@ -273,7 +288,7 @@ function NewMasterDataContent() {
     setTalukas((prev) => [...prev, ...newTalukas])
   }
   
-  const handleAddVillage = (entries: { name: string; nameEn: string }[]) => {
+  const handleAddVillage = (entries: { name: string; nameEn: string; route?: string }[]) => {
     const newVillages = entries.map((entry, index) => ({
       id: (villages.length + 1 + index).toString(),
       linkedTo: selectedTaluka?.name,

@@ -126,7 +126,7 @@ function MasterDataCard({
       const isParentEntity = Object.values(masterDataMap).some(e => e.linkedEntity === configKey);
       
       if (value === "none") {
-          if (isParentEntity) {
+          if (isParentEntity && selectedParent?.type === configKey) {
               onParentSelect("", "");
           }
       } else {

@@ -7,9 +7,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card"
 import {
   Select,
@@ -21,9 +21,15 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft, PlusCircle } from "lucide-react"
+import { ArrowLeft, PlusCircle, Trash2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { masterDataMap } from "../page"
+
+type NewEntry = {
+    id: number;
+    name: string;
+    nameEn: string;
+}
 
 function MasterDataCard({
   label,
@@ -32,45 +38,46 @@ function MasterDataCard({
 }: {
   label: string
   options: { id: string; name: string }[]
-  onSave: (name: string, nameEn: string) => void
+  onSave: (entries: { name: string; nameEn: string }[]) => void
 }) {
   const { toast } = useToast()
-  const [showNew, setShowNew] = React.useState(false)
-  const [newName, setNewName] = React.useState("")
-  const [newNameEn, setNewNameEn] = React.useState("")
+  const [newEntries, setNewEntries] = React.useState<NewEntry[]>([])
   const [existingSelection, setExistingSelection] = React.useState("")
 
   const handleAddNew = () => {
-    setShowNew(true)
+    setNewEntries(prev => [...prev, { id: Date.now(), name: '', nameEn: '' }]);
+  }
+  
+  const handleEntryChange = (id: number, field: 'name' | 'nameEn', value: string) => {
+      setNewEntries(prev => prev.map(entry => entry.id === id ? { ...entry, [field]: value } : entry));
+  }
+
+  const handleRemoveEntry = (id: number) => {
+      setNewEntries(prev => prev.filter(entry => entry.id !== id));
   }
 
   const handleSave = () => {
-    if (!newName.trim() || !newNameEn.trim()) {
-      toast({
+    const validEntries = newEntries.filter(e => e.name.trim() && e.nameEn.trim());
+
+    if (validEntries.length !== newEntries.length) {
+       toast({
         variant: "destructive",
         title: "त्रुटी",
-        description: "कृपया मराठी आणि इंग्रजी दोन्ही नावे प्रविष्ट करा.",
+        description: "कृपया सर्व नवीन नोंदींसाठी मराठी आणि इंग्रजी दोन्ही नावे प्रविष्ट करा.",
       })
       return
     }
-    onSave(newName, newNameEn)
-    setNewName("")
-    setNewNameEn("")
-    setShowNew(false)
+
+    onSave(validEntries);
+    setNewEntries([]);
     toast({
       title: "यशस्वी!",
-      description: `${label} यशस्वीरित्या जोडले आहे.`,
+      description: `${validEntries.length} ${label} नोंदी यशस्वीरित्या जोडल्या आहेत.`,
     })
   }
 
   const handleSelectionChange = (value: string) => {
-    if (value === "none") {
-      setExistingSelection("")
-      setShowNew(false)
-    } else {
-      setExistingSelection(value)
-      setShowNew(false)
-    }
+    setExistingSelection(value);
   }
 
   return (
@@ -90,7 +97,6 @@ function MasterDataCard({
                 <SelectValue placeholder={`${label} निवडा`} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">None</SelectItem>
                 {options.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -99,45 +105,39 @@ function MasterDataCard({
               </SelectContent>
             </Select>
           </div>
-          {!existingSelection && (
-             <Button size="icon" onClick={handleAddNew}>
-                <PlusCircle />
-             </Button>
-          )}
         </div>
 
-        {showNew && (
-          <div className="grid grid-cols-1 gap-4 pt-4 border-t">
-            <div className="grid gap-2">
-              <Label htmlFor={`new-name-mr-${label}`}>
-                नवीन {label} नाव (मराठी)
-              </Label>
-              <Input
-                id={`new-name-mr-${label}`}
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder={`${label} मराठी नाव`}
-              />
+        {newEntries.length > 0 && (
+            <div className="space-y-4 pt-4 border-t">
+                {newEntries.map((entry, index) => (
+                    <div key={entry.id} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-center">
+                        <Input
+                            value={entry.name}
+                            onChange={(e) => handleEntryChange(entry.id, 'name', e.target.value)}
+                            placeholder={`${label} मराठी नाव`}
+                        />
+                        <Input
+                            value={entry.nameEn}
+                            onChange={(e) => handleEntryChange(entry.id, 'nameEn', e.target.value)}
+                            placeholder={`${label} इंग्रजी नाव`}
+                        />
+                         <Button variant="ghost" size="icon" onClick={() => handleRemoveEntry(entry.id)}>
+                            <Trash2 className="text-destructive"/>
+                        </Button>
+                    </div>
+                ))}
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor={`new-name-en-${label}`}>
-                नवीन {label} नाव (इंग्रजी)
-              </Label>
-              <Input
-                id={`new-name-en-${label}`}
-                value={newNameEn}
-                onChange={(e) => setNewNameEn(e.target.value)}
-                placeholder={`${label} इंग्रजी नाव`}
-              />
-            </div>
-          </div>
         )}
+
       </CardContent>
-      {showNew && (
-        <CardFooter className="flex justify-end">
-          <Button onClick={handleSave}>नवीन {label} जतन करा</Button>
+       <CardFooter className="flex justify-between items-center border-t pt-6">
+            <Button onClick={handleAddNew}>
+                <PlusCircle className="mr-2"/> नवीन {label} जोडा
+            </Button>
+            {newEntries.length > 0 && (
+                <Button onClick={handleSave}>नवीन नोंदी जतन करा</Button>
+            )}
         </CardFooter>
-      )}
     </Card>
   )
 }
@@ -145,13 +145,12 @@ function MasterDataCard({
 function NewMasterDataContent() {
   const [states, setStates] = React.useState(masterDataMap.states.data)
 
-  const handleAddState = (name: string, nameEn: string) => {
-    const newState = {
-      id: (states.length + 1).toString(),
-      name,
-      nameEn,
-    }
-    setStates((prev) => [...prev, newState])
+  const handleAddState = (entries: { name: string; nameEn: string }[]) => {
+    const newStates = entries.map((entry, index) => ({
+      id: (states.length + 1 + index).toString(),
+      ...entry,
+    }))
+    setStates((prev) => [...prev, ...newStates])
   }
 
   return (

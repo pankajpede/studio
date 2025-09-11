@@ -2,6 +2,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import {
   Card,
   CardContent,
@@ -20,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { PlusCircle } from "lucide-react"
+import { ArrowLeft, PlusCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { masterDataMap } from "../page"
 
@@ -37,6 +38,7 @@ function MasterDataCard({
   const [showNew, setShowNew] = React.useState(false)
   const [newName, setNewName] = React.useState("")
   const [newNameEn, setNewNameEn] = React.useState("")
+  const [existingSelection, setExistingSelection] = React.useState("")
 
   const handleAddNew = () => {
     setShowNew(true)
@@ -61,6 +63,16 @@ function MasterDataCard({
     })
   }
 
+  const handleSelectionChange = (value: string) => {
+    if (value === "none") {
+      setExistingSelection("")
+      setShowNew(false)
+    } else {
+      setExistingSelection(value)
+      setShowNew(false)
+    }
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -73,11 +85,12 @@ function MasterDataCard({
         <div className="flex items-end gap-2">
           <div className="flex-grow grid gap-2">
             <Label htmlFor={`existing-${label}`}>विद्यमान {label} पहा</Label>
-            <Select>
+            <Select onValueChange={handleSelectionChange} value={existingSelection}>
               <SelectTrigger id={`existing-${label}`}>
                 <SelectValue placeholder={`${label} निवडा`} />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="none">None</SelectItem>
                 {options.map((option) => (
                   <SelectItem key={option.id} value={option.id}>
                     {option.name}
@@ -86,9 +99,11 @@ function MasterDataCard({
               </SelectContent>
             </Select>
           </div>
-          <Button variant="ghost" size="icon" onClick={handleAddNew}>
-            <PlusCircle />
-          </Button>
+          {!existingSelection && (
+             <Button size="icon" onClick={handleAddNew}>
+                <PlusCircle />
+             </Button>
+          )}
         </div>
 
         {showNew && (
@@ -140,12 +155,23 @@ function NewMasterDataContent() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <MasterDataCard
-        label="राज्य"
-        options={states}
-        onSave={handleAddState}
-      />
+    <div className="flex flex-col gap-6">
+        <div className="flex items-center gap-4">
+            <Button variant="outline" size="icon" asChild>
+            <Link href="/dashboard/settings">
+                <ArrowLeft />
+                <span className="sr-only">सेटिंग्जवर परत जा</span>
+            </Link>
+            </Button>
+            <h1 className="text-xl font-semibold font-headline">मास्टर डेटा जोडा</h1>
+        </div>
+        <div className="grid grid-cols-1 gap-6">
+            <MasterDataCard
+                label="राज्य"
+                options={states}
+                onSave={handleAddState}
+            />
+        </div>
     </div>
   )
 }

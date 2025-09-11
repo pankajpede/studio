@@ -36,37 +36,34 @@ interface NewEntry {
 
 function MasterDataCard({
   configKey,
+  selectedParent,
+  onParentSelect,
 }: {
   configKey: MasterDataKey
+  selectedParent: { type: string; id: string } | null
+  onParentSelect: (type: string, id: string) => void
 }) {
   const { toast } = useToast()
   const entityInfo = masterDataMap[configKey]
   const { data, linkedEntity, entityName, label } = entityInfo
 
   const [newEntries, setNewEntries] = React.useState<NewEntry[]>([])
-  const [selectedParent, setSelectedParent] = React.useState("")
   const [existingSelection, setExistingSelection] = React.useState("")
 
   React.useEffect(() => {
-    setExistingSelection("");
-  }, [selectedParent]);
-
-  
-  let parentOptions: { id: string; name: string }[] = []
-  if (linkedEntity) {
-      const parentKey = Object.keys(masterDataMap).find(key => masterDataMap[key as MasterDataKey].entityName === linkedEntity) as MasterDataKey | undefined;
-      if (parentKey) {
-          parentOptions = masterDataMap[parentKey].data
-      }
-  }
+    // When the global selected parent changes, clear local selections if they are no longer relevant
+    if (selectedParent && linkedEntity && selectedParent.type !== linkedEntity) {
+        setExistingSelection("");
+    }
+  }, [selectedParent, linkedEntity]);
 
 
   const handleAddEntry = () => {
-    if (linkedEntity && !selectedParent) {
+    if (linkedEntity && (!selectedParent || selectedParent.type !== linkedEntity)) {
         toast({
             variant: "destructive",
             title: "त्रुटी",
-            description: `कृपया नवीन ${entityName} जोडण्यापूर्वी ${linkedEntity} निवडा.`
+            description: `कृपया नवीन ${entityName} जोडण्यापूर्वी एक ${linkedEntity} निवडा.`
         })
         return;
     }
@@ -89,7 +86,6 @@ function MasterDataCard({
   }
 
   const handleSave = () => {
-    // Validation
     if(newEntries.length === 0) {
         toast({
             variant: "destructive",
@@ -121,8 +117,23 @@ function MasterDataCard({
       description: `${newEntries.length} नवीन ${entityName} यशस्वीरित्या जतन केले.`,
     })
     setNewEntries([])
-    // In a real app, you'd also refetch the master data.
   }
+
+  const handleExistingSelectionChange = (value: string) => {
+      if (value === "none") {
+          setExistingSelection("");
+          // If this entity can be a parent, clear the global parent selection
+          if (!linkedEntity) {
+              onParentSelect("", "");
+          }
+      } else {
+          setExistingSelection(value);
+          // If this entity can be a parent, set it as the global parent
+          if (!linkedEntity) {
+              onParentSelect(entityName, value);
+          }
+      }
+  };
 
   return (
     <Card>
@@ -133,7 +144,7 @@ function MasterDataCard({
               <TooltipProvider>
                   <Tooltip>
                       <TooltipTrigger asChild>
-                           <Button size="icon" onClick={handleAddEntry}>
+                          <Button onClick={handleAddEntry}>
                               <PlusCircle />
                           </Button>
                       </TooltipTrigger>
@@ -146,29 +157,11 @@ function MasterDataCard({
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
-        {linkedEntity && (
-           <div className="grid gap-2">
-                <Label htmlFor={`parent-${configKey}`}>जोडलेले {linkedEntity} निवडा</Label>
-                <Select value={selectedParent} onValueChange={setSelectedParent}>
-                    <SelectTrigger id={`parent-${configKey}`}><SelectValue placeholder={`${entityName} निवडा`} /></SelectTrigger>
-                    <SelectContent>
-                        {parentOptions.map(o => <SelectItem key={o.id} value={o.name}>{o.name}</SelectItem>)}
-                    </SelectContent>
-                </Select>
-            </div>
-        )}
-        
         <div className="grid gap-2">
             <Label htmlFor={`existing-${configKey}`}>विद्यमान {label}</Label>
             <Select 
                 value={existingSelection} 
-                onValueChange={(value) => {
-                    if (value === "none") {
-                        setExistingSelection("");
-                    } else {
-                        setExistingSelection(value);
-                    }
-                }}
+                onValueChange={handleExistingSelectionChange}
             >
                 <SelectTrigger id={`existing-${configKey}`}>
                 <SelectValue placeholder={`विद्यमान ${label} पहा`} />
@@ -238,6 +231,16 @@ function NewMasterDataContent() {
     const searchParams = useSearchParams();
     const initialConfig = searchParams.get('config') as MasterDataKey | null;
 
+    const [selectedParent, setSelectedParent] = React.useState<{ type: string; id: string } | null>(null);
+
+    const handleParentSelect = (type: string, id: string) => {
+        if (type && id) {
+            setSelectedParent({ type, id });
+        } else {
+            setSelectedParent(null);
+        }
+    };
+
     const configKeys = Object.keys(masterDataMap) as MasterDataKey[];
     
     return (
@@ -251,7 +254,12 @@ function NewMasterDataContent() {
                 </Button>
             </div>
              {configKeys.map(key => (
-                <MasterDataCard key={key} configKey={key} />
+                <MasterDataCard 
+                    key={key} 
+                    configKey={key} 
+                    selectedParent={selectedParent}
+                    onParentSelect={handleParentSelect}
+                />
              ))}
         </div>
     )

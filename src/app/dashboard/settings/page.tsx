@@ -45,12 +45,16 @@ type MasterDataItem = {
 // Mock Data
 const states: MasterDataItem[] = [
   { id: "1", name: "महाराष्ट्र", nameEn: "Maharashtra" },
+  { id: "2", name: "कर्नाटक", nameEn: "Karnataka" },
+  { id: "3", name: "गोवा", nameEn: "Goa" },
+  { id: "4", name: "गुजरात", nameEn: "Gujarat" },
 ]
 
 const districts: MasterDataItem[] = [
   { id: "1", name: "लातूर", nameEn: "Latur", linkedTo: "महाराष्ट्र" },
-  { id: "2", name: "पुणे", nameEn: "Pune", linkedTo: " महाराष्ट्र" },
+  { id: "2", name: "पुणे", nameEn: "Pune", linkedTo: "महाराष्ट्र" },
   { id: "3", name: "सातारा", nameEn: "Satara", linkedTo: "महाराष्ट्र" },
+  { id: "4", name: "धारवाड", nameEn: "Dharwad", linkedTo: "कर्नाटक" },
 ]
 
 const talukas: MasterDataItem[] = [

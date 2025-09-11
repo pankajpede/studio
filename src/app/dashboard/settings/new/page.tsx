@@ -11,26 +11,88 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft, PlusCircle, Trash2 } from "lucide-react"
+import { ArrowLeft, PlusCircle, Trash2, ChevronsUpDown, Check } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { masterDataMap } from "../page"
 import type { MasterDataKey } from "../page"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { cn } from "@/lib/utils"
 
 type NewEntry = {
     id: number;
     name: string;
     nameEn: string;
 }
+
+const Combobox = ({
+    options,
+    value,
+    onValueChange,
+    placeholder,
+    searchPlaceholder,
+    disabled = false,
+}: {
+    options: { value: string; label: string }[];
+    value: string;
+    onValueChange: (value: string) => void;
+    placeholder: string;
+    searchPlaceholder: string;
+    disabled?: boolean;
+}) => {
+    const [open, setOpen] = React.useState(false);
+
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between"
+                    disabled={disabled}
+                >
+                    <span className="truncate">
+                        {value ? options.find((option) => option.value === value)?.label : placeholder}
+                    </span>
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                <Command>
+                    <CommandInput placeholder={searchPlaceholder} />
+                    <CommandEmpty>कोणतेही परिणाम आढळले नाहीत.</CommandEmpty>
+                    <CommandList>
+                        <CommandGroup>
+                            {options.map((option) => (
+                                <CommandItem
+                                    key={option.value}
+                                    value={option.label}
+                                    onSelect={() => {
+                                        onValueChange(option.value === value ? "" : option.value);
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <Check
+                                        className={cn(
+                                            "mr-2 h-4 w-4",
+                                            value === option.value ? "opacity-100" : "opacity-0"
+                                        )}
+                                    />
+                                    {option.label}
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
+                    </CommandList>
+                </Command>
+            </PopoverContent>
+        </Popover>
+    );
+};
+
 
 function MasterDataCard({
   label,
@@ -99,10 +161,7 @@ function MasterDataCard({
       setExistingSelection(value);
       if (onParentSelect) {
           const selectedOption = options.find(opt => opt.id === value);
-          const isParentCard = Object.values(masterDataMap).some(config => config.linkedEntity === masterDataMap[configKey].entityName);
-          if (isParentCard || selectedOption) {
-            onParentSelect(selectedOption ? { id: selectedOption.id, name: selectedOption.name } : null);
-          }
+          onParentSelect(selectedOption ? { id: selectedOption.id, name: selectedOption.name } : null);
       }
   };
   
@@ -112,6 +171,8 @@ function MasterDataCard({
         setExistingSelection("");
     }
   }, [disabled]);
+  
+  const comboboxOptions = options.map(opt => ({ value: opt.id, label: opt.name }));
 
 
   return (
@@ -119,33 +180,29 @@ function MasterDataCard({
       <CardHeader>
         <div className="flex justify-between items-center">
             <CardTitle>{label} व्यवस्थापन</CardTitle>
-             <Button onClick={handleAddNew} disabled={!!existingSelection || disabled}>
-                <PlusCircle className="mr-2"/> नवीन {label} जोडा
+             <Button onClick={handleAddNew} disabled={!!existingSelection || disabled} size="icon" variant="ghost">
+                <PlusCircle className="h-6 w-6"/>
             </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-end gap-2">
           <div className="flex-grow grid gap-2">
-            <Label htmlFor={`existing-${label}`}>विद्यमान {label} पहा</Label>
-            <Select onValueChange={handleExistingSelectionChange} value={existingSelection} disabled={disabled}>
-              <SelectTrigger id={`existing-${label}`}>
-                <SelectValue placeholder={`${label} निवडा`} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">सर्व निवडा</SelectItem>
-                {options.map((option) => (
-                  <SelectItem key={option.id} value={option.id}>
-                    {option.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label htmlFor={`existing-${label}`}>विद्यमान {label}</Label>
+            <Combobox
+                options={comboboxOptions}
+                value={existingSelection}
+                onValueChange={handleExistingSelectionChange}
+                placeholder={`${label} निवडा...`}
+                searchPlaceholder={`${label} शोधा...`}
+                disabled={disabled}
+            />
           </div>
         </div>
 
         {newEntries.length > 0 && (
             <div className="space-y-4 pt-4 border-t">
+                <p className="text-sm text-muted-foreground">नवीन {label} जोडा</p>
                 {newEntries.map((entry, index) => (
                     <div key={entry.id} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2 items-center">
                         <Input
@@ -246,12 +303,13 @@ function NewMasterDataContent() {
   return (
     <div className="flex flex-col gap-6">
         <div className="flex items-center gap-4">
-            <Button variant="outline" asChild>
-            <Link href="/dashboard/settings">
-                <ArrowLeft />
-                <span className="ml-2">परत जा</span>
-            </Link>
+            <Button variant="outline" size="icon" asChild>
+                <Link href="/dashboard/settings">
+                    <ArrowLeft />
+                    <span className="sr-only">परत जा</span>
+                </Link>
             </Button>
+            <h1 className="text-xl font-semibold">नवीन मास्टर डेटा जोडा</h1>
         </div>
         <div className="grid grid-cols-1 gap-6">
             <MasterDataCard

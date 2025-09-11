@@ -2,194 +2,247 @@
 "use client"
 
 import * as React from "react"
-import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
+import { PlusCircle, Trash2, ArrowLeft } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { masterDataMap, MasterDataKey } from "../page"
-import { ArrowLeft } from "lucide-react"
 
-const RequiredLabel = ({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) => (
-    <Label htmlFor={htmlFor}>
-        {children} <span className="text-red-500">*</span>
-    </Label>
-);
+interface NewEntry {
+  id: number
+  name: string
+  nameEn: string
+  maturityMonths?: string
+}
+
+function MasterDataCard({
+  configKey,
+}: {
+  configKey: MasterDataKey
+}) {
+  const { toast } = useToast()
+  const entityInfo = masterDataMap[configKey]
+  const { data, linkedEntity, entityName, label } = entityInfo
+
+  const [newEntries, setNewEntries] = React.useState<NewEntry[]>([])
+  const [selectedParent, setSelectedParent] = React.useState("")
+  
+  let parentOptions: { id: string; name: string }[] = []
+  if (linkedEntity) {
+      const parentKey = Object.keys(masterDataMap).find(key => masterDataMap[key as MasterDataKey].entityName === linkedEntity) as MasterDataKey | undefined;
+      if (parentKey) {
+          parentOptions = masterDataMap[parentKey].data
+      }
+  }
+
+
+  const handleAddEntry = () => {
+    if (linkedEntity && !selectedParent) {
+        toast({
+            variant: "destructive",
+            title: "त्रुटी",
+            description: `कृपया नवीन ${entityName} जोडण्यापूर्वी ${linkedEntity} निवडा.`
+        })
+        return;
+    }
+    setNewEntries([
+      ...newEntries,
+      { id: Date.now(), name: "", nameEn: "", maturityMonths: "" },
+    ])
+  }
+
+  const handleRemoveEntry = (id: number) => {
+    setNewEntries(newEntries.filter((entry) => entry.id !== id))
+  }
+
+  const handleInputChange = (id: number, field: keyof NewEntry, value: string) => {
+    setNewEntries(
+      newEntries.map((entry) =>
+        entry.id === id ? { ...entry, [field]: value } : entry
+      )
+    )
+  }
+
+  const handleSave = () => {
+    // Validation
+    if(newEntries.length === 0) {
+        toast({
+            variant: "destructive",
+            title: "त्रुटी",
+            description: `कृपया जतन करण्यासाठी किमान एक नवीन ${entityName} जोडा.`
+        })
+        return
+    }
+
+    const areEntriesValid = newEntries.every(entry => {
+        let isValid = entry.name.trim() !== "" && entry.nameEn.trim() !== "";
+        if (configKey === 'caneVarieties') {
+            isValid = isValid && !!entry.maturityMonths && !isNaN(Number(entry.maturityMonths));
+        }
+        return isValid;
+    });
+
+    if (!areEntriesValid) {
+        toast({
+            variant: "destructive",
+            title: "त्रुटी",
+            description: `कृपया सर्व आवश्यक फील्ड भरा.`
+        })
+        return;
+    }
+
+    toast({
+      title: "यशस्वी!",
+      description: `${newEntries.length} नवीन ${entityName} यशस्वीरित्या जतन केले.`,
+    })
+    setNewEntries([])
+    // In a real app, you'd also refetch the master data.
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex justify-between items-center">
+             <CardTitle>{label} व्यवस्थापन</CardTitle>
+             <Button variant="ghost" size="icon" onClick={handleAddEntry}>
+                <PlusCircle className="text-primary" />
+             </Button>
+        </div>
+        <CardDescription>
+          विद्यमान {label} पहा किंवा नवीन जोडा.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {linkedEntity && (
+           <div className="grid gap-2">
+                <Label htmlFor={`parent-${configKey}`}>जोडलेले {linkedEntity} निवडा</Label>
+                <Select value={selectedParent} onValueChange={setSelectedParent}>
+                    <SelectTrigger id={`parent-${configKey}`}><SelectValue placeholder={`${linkedEntity} निवडा`} /></SelectTrigger>
+                    <SelectContent>
+                        {parentOptions.map(o => <SelectItem key={o.id} value={o.name}>{o.name}</SelectItem>)}
+                    </SelectContent>
+                </Select>
+            </div>
+        )}
+        
+        <div className="grid gap-2">
+            <Label htmlFor={`existing-${configKey}`}>विद्यमान {label}</Label>
+            <Select>
+                <SelectTrigger id={`existing-${configKey}`}>
+                <SelectValue placeholder={`विद्यमान ${label} पहा`} />
+                </SelectTrigger>
+                <SelectContent>
+                {data.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                        {item.name} ({item.nameEn})
+                    </SelectItem>
+                ))}
+                </SelectContent>
+            </Select>
+        </div>
+
+        {newEntries.map((entry, index) => (
+          <div key={entry.id} className="grid grid-cols-[1fr_1fr_auto] md:grid-cols-[1fr_1fr_1fr_auto] items-end gap-2 p-3 border rounded-md bg-muted/50">
+             <div className="grid gap-1.5">
+                {index === 0 && <Label>नाव (मराठी)</Label>}
+                <Input
+                    placeholder="मराठी नाव"
+                    value={entry.name}
+                    onChange={(e) => handleInputChange(entry.id, "name", e.target.value)}
+                />
+            </div>
+             <div className="grid gap-1.5">
+                {index === 0 && <Label>नाव (इंग्रजी)</Label>}
+                <Input
+                    placeholder="इंग्रजी नाव"
+                    value={entry.nameEn}
+                    onChange={(e) => handleInputChange(entry.id, "nameEn", e.target.value)}
+                />
+            </div>
+            {configKey === 'caneVarieties' && (
+                 <div className="grid gap-1.5">
+                    {index === 0 && <Label>पक्वता (महिने)</Label>}
+                    <Input
+                        type="number"
+                        placeholder="उदा. 12"
+                        value={entry.maturityMonths}
+                        onChange={(e) => handleInputChange(entry.id, "maturityMonths", e.target.value)}
+                    />
+                </div>
+            )}
+             <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleRemoveEntry(entry.id)}
+                className={cn(configKey !== 'caneVarieties' && 'md:col-start-4')}
+             >
+              <Trash2 className="text-destructive h-4 w-4" />
+            </Button>
+          </div>
+        ))}
+      </CardContent>
+       {newEntries.length > 0 && (
+            <CardFooter className="flex justify-end">
+                <Button onClick={handleSave}>नवीन {label} जतन करा</Button>
+            </CardFooter>
+        )}
+    </Card>
+  )
+}
+
 
 function NewMasterDataContent() {
-    const router = useRouter();
-    const { toast } = useToast();
     const searchParams = useSearchParams();
-    const initialConfig = searchParams.get('type') as MasterDataKey | null;
+    const initialConfig = searchParams.get('config') as MasterDataKey | null;
+
+    const configKeys = Object.keys(masterDataMap) as MasterDataKey[];
     
-    const [selectedConfig, setSelectedConfig] = React.useState<MasterDataKey | null>(initialConfig);
-
-    const [name, setName] = React.useState("");
-    const [nameEn, setNameEn] = React.useState("");
-    const [linkedTo, setLinkedTo] = React.useState("");
-    const [maturityMonths, setMaturityMonths] = React.useState("");
-    const [isSubmitting, setIsSubmitting] = React.useState(false);
-    
-    const configOptions = Object.keys(masterDataMap).map(key => ({
-        value: key as MasterDataKey,
-        label: masterDataMap[key as MasterDataKey].label,
-    }));
-
-    const entityInfo = selectedConfig ? masterDataMap[selectedConfig] : null;
-    const entityType = entityInfo?.entityName;
-
-    const getLinkedEntityInfo = () => {
-        if (!entityType) return { linkedEntityOptions: [], linkedEntityLabel: '', isLinkedEntityRequired: false, placeholder: '' };
-
-        let linkedEntityOptions: { id: string; name: string }[] = [];
-        let linkedEntityLabel = '';
-        let isLinkedEntityRequired = false;
-        let placeholder = `${entityType} निवडा`;
-        
-        const linkedEntityKey = entityInfo?.linkedEntity;
-        if(linkedEntityKey) {
-             const foundKey = Object.keys(masterDataMap).find(key => masterDataMap[key as MasterDataKey].entityName === linkedEntityKey) as MasterDataKey | undefined;
-             if(foundKey) {
-                linkedEntityOptions = masterDataMap[foundKey].data;
-                linkedEntityLabel = `जोडलेले ${linkedEntityKey}`;
-                isLinkedEntityRequired = true;
-                placeholder = `${linkedEntityKey} निवडा`;
-             }
-        }
-        return { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired, placeholder };
-    }
-
-    const { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired, placeholder } = getLinkedEntityInfo();
-
-    let isFormValid = !!selectedConfig && name.trim() !== "" && nameEn.trim() !== "" && (!isLinkedEntityRequired || linkedTo);
-    if (entityType === "उसाची जात") {
-        isFormValid = isFormValid && maturityMonths.trim() !== "" && !isNaN(Number(maturityMonths));
-    }
-  
-    const handleSaveClick = () => {
-      if (!isFormValid) {
-          toast({
-              variant: "destructive",
-              title: "त्रुटी",
-              description: "कृपया सर्व आवश्यक फील्ड भरा."
-          });
-          return;
-      }
-      setIsSubmitting(true);
-      // Simulate API call
-      setTimeout(() => {
-          toast({
-              title: "यशस्वी!",
-              description: `${entityType} यशस्वीरित्या तयार केले आहे.`
-          });
-          setIsSubmitting(false);
-          router.push(`/dashboard/settings?config=${selectedConfig}`);
-      }, 500);
-    }
-    
-    // Reset form fields when config changes
-    React.useEffect(() => {
-        setName("");
-        setNameEn("");
-        setLinkedTo("");
-        setMaturityMonths("");
-    }, [selectedConfig]);
-
-    const renderFormFields = () => {
-        if (!selectedConfig || !entityType) {
-            return <p className="text-muted-foreground text-center col-span-full">कृपया एक कॉन्फिगरेशन प्रकार निवडा.</p>;
-        }
-
-        let linkedEntityElement = null;
-
-        if (linkedEntityLabel && linkedEntityOptions.length > 0) {
-            linkedEntityElement = (
-                <div className="grid gap-2">
-                    <RequiredLabel htmlFor="parent-entity">{linkedEntityLabel}</RequiredLabel>
-                    <Select value={linkedTo} onValueChange={setLinkedTo}>
-                        <SelectTrigger id="parent-entity"><SelectValue placeholder={placeholder} /></SelectTrigger>
-                        <SelectContent>
-                            {linkedEntityOptions.map(o => <SelectItem key={o.id} value={o.name}>{o.name}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                </div>
-            );
-        }
-        
-        return (
-            <>
-                <div className="grid gap-2">
-                    <RequiredLabel htmlFor="name-mr">{entityType} नाव (मराठी)</RequiredLabel>
-                    <Input id="name-mr" placeholder="मराठी नाव प्रविष्ट करा" value={name} onChange={(e) => setName(e.target.value)} required />
-                </div>
-                <div className="grid gap-2">
-                    <RequiredLabel htmlFor="name-en">{entityType} नाव (इंग्रजी)</RequiredLabel>
-                    <Input id="name-en" placeholder="इंग्रजी नाव प्रविष्ट करा" value={nameEn} onChange={(e) => setNameEn(e.target.value)} required />
-                </div>
-                {linkedEntityElement}
-                {entityType === 'उसाची जात' && (
-                    <div className="grid gap-2">
-                        <RequiredLabel htmlFor="maturity-months">उसाची पक्वता (months)</RequiredLabel>
-                        <Input
-                            id="maturity-months"
-                            type="number"
-                            placeholder="उदा. 12"
-                            value={maturityMonths}
-                            onChange={(e) => setMaturityMonths(e.target.value)}
-                            required
-                        />
-                    </div>
-                )}
-            </>
-        );
-    };
-
-
     return (
-        <Card className="w-full max-w-2xl mx-auto">
-            <CardHeader>
-                <CardTitle>नवीन मास्टर डेटा</CardTitle>
-                <CardDescription>नवीन मास्टर डेटा एन्ट्री तयार करण्यासाठी तपशील भरा.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div className="grid gap-2">
-                    <RequiredLabel htmlFor="config-type">कॉन्फिगरेशन प्रकार</RequiredLabel>
-                    <Select value={selectedConfig || ''} onValueChange={(value) => setSelectedConfig(value as MasterDataKey)}>
-                        <SelectTrigger id="config-type">
-                            <SelectValue placeholder="एक प्रकार निवडा" />
-                        </SelectTrigger>
-                        <SelectContent>
-                             {configOptions.map(option => (
-                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                             ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {renderFormFields()}
-                </div>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-                <Button variant="outline" asChild>
+        <div className="space-y-6">
+            <div className="flex items-center gap-4">
+                <Button variant="outline" size="icon" asChild>
                     <Link href={`/dashboard/settings?config=${initialConfig || 'states'}`}>
-                        <ArrowLeft className="mr-2" /> रद्द करा
+                        <ArrowLeft />
+                        <span className="sr-only">परत जा</span>
                     </Link>
                 </Button>
-                <Button onClick={handleSaveClick} disabled={!isFormValid || isSubmitting}>
-                    {isSubmitting ? "जतन करत आहे..." : "नवीन जोडा"}
-                </Button>
-            </CardFooter>
-        </Card>
+                <div>
+                     <h1 className="text-2xl font-headline font-semibold">नवीन मास्टर डेटा जोडा</h1>
+                     <p className="text-muted-foreground">प्रत्येक विभागासाठी नवीन नोंदी जोडा.</p>
+                </div>
+            </div>
+             {configKeys.map(key => (
+                <MasterDataCard key={key} configKey={key} />
+             ))}
+        </div>
     )
 }
 
 export default function NewMasterDataPage() {
-    return (
-        <React.Suspense fallback={<div>Loading...</div>}>
-            <NewMasterDataContent />
-        </React.Suspense>
-    )
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <NewMasterDataContent />
+    </React.Suspense>
+  )
 }
+
+    

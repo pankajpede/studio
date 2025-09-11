@@ -128,8 +128,8 @@ function MasterDataCard({
              <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon" onClick={handleAddEntry}>
-                            <PlusCircle className="text-primary" />
+                        <Button size="icon" onClick={handleAddEntry}>
+                            <PlusCircle />
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>

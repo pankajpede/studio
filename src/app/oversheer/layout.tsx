@@ -23,11 +23,11 @@ export default function OversheerLayout({
   const getHeading = () => {
     const segments = pathname.split('/').filter(Boolean);
     if (segments.length > 1) {
-        if(segments[1] === 'dashboard' && !segments[2]) return 'साई शुगर';
-        if(segments[2] === 'new') return 'नवीन सर्वेक्षण नियुक्त करा';
-        if(segments[2] === 'survey' && segments[3]) return 'सर्वेक्षण पुनरावलोकन';
+        if(segments[1] === 'dashboard' && !segments[2]) return 'Sai Sugar';
+        if(segments[2] === 'new') return 'Assign New Survey';
+        if(segments[2] === 'survey' && segments[3]) return 'Survey Review';
     }
-    return 'ओव्हरशीअर डॅशबोर्ड';
+    return 'Overseer Dashboard';
   };
   
   const showBackButton = pathname !== '/oversheer/dashboard';

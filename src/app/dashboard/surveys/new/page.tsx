@@ -27,110 +27,110 @@ export default function NewSurveyPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-headline font-semibold">नवीन शेत सर्वेक्षण</h1>
-        <Button>जतन करा आणि सबमिट करा</Button>
+        <h1 className="text-2xl font-headline font-semibold">New Farm Survey</h1>
+        <Button>Save & Submit</Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 flex flex-col gap-6">
             <Card>
                 <CardHeader>
-                <CardTitle className="font-headline">स्थानाचा तपशील</CardTitle>
-                <CardDescription>शेताचे स्थान निवडा.</CardDescription>
+                <CardTitle className="font-headline">Location Details</CardTitle>
+                <CardDescription>Select the location of the farm.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                        <Label htmlFor="state">राज्य</Label>
+                        <Label htmlFor="state">State</Label>
                         <Select>
-                        <SelectTrigger id="state"><SelectValue placeholder="राज्य निवडा" /></SelectTrigger>
-                        <SelectContent><SelectItem value="maharashtra">महाराष्ट्र</SelectItem></SelectContent>
+                        <SelectTrigger id="state"><SelectValue placeholder="Select State" /></SelectTrigger>
+                        <SelectContent><SelectItem value="maharashtra">Maharashtra</SelectItem></SelectContent>
                         </Select>
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="district">जिल्हा</Label>
+                        <Label htmlFor="district">District</Label>
                         <Select>
-                        <SelectTrigger id="district"><SelectValue placeholder="जिल्हा निवडा" /></SelectTrigger>
-                        <SelectContent><SelectItem value="latur">लातूर</SelectItem></SelectContent>
+                        <SelectTrigger id="district"><SelectValue placeholder="Select District" /></SelectTrigger>
+                        <SelectContent><SelectItem value="latur">Latur</SelectItem></SelectContent>
                         </Select>
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="taluka">तालुका</Label>
+                        <Label htmlFor="taluka">Taluka</Label>
                         <Select>
-                        <SelectTrigger id="taluka"><SelectValue placeholder="तालुका निवडा" /></SelectTrigger>
+                        <SelectTrigger id="taluka"><SelectValue placeholder="Select Taluka" /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="latur">लातूर</SelectItem>
-                          <SelectItem value="ausa">औसा</SelectItem>
-                          <SelectItem value="ahmedpur">अहमदपूर</SelectItem>
-                          <SelectItem value="udgir">उदगीर</SelectItem>
-                          <SelectItem value="nilanga">निलंगा</SelectItem>
+                          <SelectItem value="latur">Latur</SelectItem>
+                          <SelectItem value="ausa">Ausa</SelectItem>
+                          <SelectItem value="ahmedpur">Ahmedpur</SelectItem>
+                          <SelectItem value="udgir">Udgir</SelectItem>
+                          <SelectItem value="nilanga">Nilanga</SelectItem>
                         </SelectContent>
                         </Select>
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="village">गाव</Label>
+                        <Label htmlFor="village">Village</Label>
                         <Select>
-                        <SelectTrigger id="village"><SelectValue placeholder="गाव निवडा" /></SelectTrigger>
+                        <SelectTrigger id="village"><SelectValue placeholder="Select Village" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="chakur">चाकूर</SelectItem>
-                            <SelectItem value="mohgaon">मोहगाव</SelectItem>
+                            <SelectItem value="chakur">Chakur</SelectItem>
+                            <SelectItem value="mohgaon">Mohgaon</SelectItem>
                         </SelectContent>
                         </Select>
                     </div>
                      <div className="grid gap-2">
-                        <Label htmlFor="gat-no">गट/ग्रुप नंबर</Label>
-                        <Input id="gat-no" placeholder="गट/ग्रुप नंबर टाका" />
+                        <Label htmlFor="gat-no">Gat/Group Number</Label>
+                        <Input id="gat-no" placeholder="Enter Gat/Group number" />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="survey_no">सर्वेक्षण नंबर</Label>
-                        <Input id="survey_no" placeholder="सर्वेक्षण नंबर टाका" />
+                        <Label htmlFor="survey_no">Survey Number</Label>
+                        <Input id="survey_no" placeholder="Enter survey number" />
                     </div>
                 </CardContent>
             </Card>
 
             <Card>
                 <CardHeader>
-                <CardTitle className="font-headline">शेत आणि पीक तपशील</CardTitle>
-                <CardDescription>शेत आणि पिकाबद्दल तपशील द्या.</CardDescription>
+                <CardTitle className="font-headline">Farm & Crop Details</CardTitle>
+                <CardDescription>Provide details about the farm and crop.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      <div className="grid gap-2">
-                        <Label htmlFor="farmer-name">शेतकऱ्याचे नाव</Label>
-                        <Input id="farmer-name" placeholder="शेतकऱ्याचे नाव टाका" />
+                        <Label htmlFor="farmer-name">Farmer Name</Label>
+                        <Input id="farmer-name" placeholder="Enter farmer name" />
                     </div>
                      <div className="grid gap-2">
-                        <Label htmlFor="farmer-contact">शेतकरी संपर्क</Label>
-                        <Input id="farmer-contact" type="tel" placeholder="संपर्क क्रमांक टाका" />
+                        <Label htmlFor="farmer-contact">Farmer Contact</Label>
+                        <Input id="farmer-contact" type="tel" placeholder="Enter contact number" />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="area">क्षेत्र (हेक्टर)</Label>
-                        <Input id="area" type="number" placeholder="उदा. २.१" />
+                        <Label htmlFor="area">Area (Hectare)</Label>
+                        <Input id="area" type="number" placeholder="e.g. 2.1" />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="cane-type">उसाचा प्रकार</Label>
+                        <Label htmlFor="cane-type">Cane Type</Label>
                         <Select>
-                        <SelectTrigger id="cane-type"><SelectValue placeholder="उसाचा प्रकार निवडा" /></SelectTrigger>
+                        <SelectTrigger id="cane-type"><SelectValue placeholder="Select cane type" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="adsali">अडसाली</SelectItem>
-                            <SelectItem value="preseasonal">पूर्व-हंगामी</SelectItem>
-                            <SelectItem value="sursali">सुरू</SelectItem>
+                            <SelectItem value="adsali">Adsali</SelectItem>
+                            <SelectItem value="preseasonal">Pre-seasonal</SelectItem>
+                            <SelectItem value="sursali">Suru</SelectItem>
                         </SelectContent>
                         </Select>
                     </div>
                      <div className="grid gap-2">
-                        <Label htmlFor="cane-variety">उसाची जात</Label>
+                        <Label htmlFor="cane-variety">Cane Variety</Label>
                         <Select>
-                        <SelectTrigger id="cane-variety"><SelectValue placeholder="उसाची जात निवडा" /></SelectTrigger>
+                        <SelectTrigger id="cane-variety"><SelectValue placeholder="Select cane variety" /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="co-86032">को-८६०३२</SelectItem>
-                            <SelectItem value="com-0265">कोएम-०२६५</SelectItem>
-                             <SelectItem value="ms-10001">एमएस-१०००१</SelectItem>
+                            <SelectItem value="co-86032">Co-86032</SelectItem>
+                            <SelectItem value="com-0265">CoM-0265</SelectItem>
+                             <SelectItem value="ms-10001">MS-10001</SelectItem>
                         </SelectContent>
                         </Select>
                     </div>
                     <div className="grid gap-2 md:col-span-2">
-                        <Label htmlFor="notes">शेताची स्थिती आणि नोट्स</Label>
+                        <Label htmlFor="notes">Farm Condition & Notes</Label>
                         <div className="relative">
-                            <Textarea id="notes" placeholder="शेताची स्थिती, सिंचन इत्यादींचे वर्णन करा." className="pr-10" />
+                            <Textarea id="notes" placeholder="Describe farm condition, irrigation, etc." className="pr-10" />
                             <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-7 w-7">
                                 <Mic className="h-4 w-4" />
                             </Button>
@@ -143,26 +143,26 @@ export default function NewSurveyPage() {
         <div className="flex flex-col gap-6">
             <Card>
                 <CardHeader>
-                    <CardTitle className="font-headline">शेताचे फोटो</CardTitle>
-                    <CardDescription>शेताचे फोटो अपलोड करा.</CardDescription>
+                    <CardTitle className="font-headline">Farm Photos</CardTitle>
+                    <CardDescription>Upload photos of the farm.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col items-center justify-center w-full p-6 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50">
                         <UploadCloud className="w-10 h-10 text-muted-foreground" />
                         <p className="mt-2 text-sm text-muted-foreground">
-                            <span className="font-semibold">अपलोड करण्यासाठी क्लिक करा</span> किंवा ड्रॅग आणि ड्रॉप करा
+                            <span className="font-semibold">Click to upload</span> or drag and drop
                         </p>
-                        <p className="text-xs text-muted-foreground">PNG, JPG, GIF 10MB पर्यंत</p>
+                        <p className="text-xs text-muted-foreground">PNG, JPG, GIF up to 10MB</p>
                         <Input id="picture" type="file" className="hidden" multiple />
                     </div>
-                     <Button variant="outline" className="w-full mt-4"><Camera className="mr-2 h-4 w-4"/>कॅमेरा उघडा</Button>
+                     <Button variant="outline" className="w-full mt-4"><Camera className="mr-2 h-4 w-4"/>Open Camera</Button>
                 </CardContent>
             </Card>
 
             <Card className="flex-grow">
                 <CardHeader>
-                    <CardTitle className="font-headline">शेताची सीमा</CardTitle>
-                    <CardDescription>नकाशावर शेताची सीमा चिन्हांकित करा.</CardDescription>
+                    <CardTitle className="font-headline">Farm Boundary</CardTitle>
+                    <CardDescription>Mark the farm boundary on the map.</CardDescription>
                 </CardHeader>
                 <CardContent className="h-full min-h-[200px]">
                     <div className="w-full h-full rounded-lg overflow-hidden relative bg-muted flex items-center justify-center">
@@ -173,7 +173,7 @@ export default function NewSurveyPage() {
                             objectFit="cover"
                             data-ai-hint="map plot"
                         />
-                        <Button className="z-10"><Map className="mr-2 h-4 w-4" />सीमा काढा</Button>
+                        <Button className="z-10"><Map className="mr-2 h-4 w-4" />Draw Boundary</Button>
                     </div>
                 </CardContent>
             </Card>
@@ -182,5 +182,3 @@ export default function NewSurveyPage() {
     </div>
   )
 }
-
-    

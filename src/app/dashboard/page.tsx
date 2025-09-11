@@ -59,17 +59,17 @@ import { Slider } from "@/components/ui/slider"
 
 const generateSurveyData = (count: number): Survey[] => {
   const data: Survey[] = [];
-  const fieldBoys = ["सुनील पवार", "अनिल शिंदे", "राजेश पाटील", "कविता जाधव"];
-  const warshirs = ["महेश देशमुख", "संजय गायकवाड", "विक्रम राठोड", "पूजा चव्हाण"];
-  const farmerFirstNames = ["रमेश", "सुरेश", "गणेश", "प्रिया", "प्रकाश", "अनिता", "सचिन", "दीपा"];
-  const farmerLastNames = ["कुलकर्णी", "पाटील", "जाधव", "शिंदे", "मोरे", "गायकवाड", "चव्हाण", "देशमुख"];
-  const plantationTypes = ["अडसाली", "पूर्व-हंगामी", "सुरू"];
+  const fieldBoys = ["Sunil Pawar", "Anil Shinde", "Rajesh Patil", "Kavita Jadhav"];
+  const warshirs = ["Mahesh Deshmukh", "Sanjay Gaikwad", "Vikram Rathod", "Pooja Chavan"];
+  const farmerFirstNames = ["Ramesh", "Suresh", "Ganesh", "Priya", "Prakash", "Anita", "Sachin", "Deepa"];
+  const farmerLastNames = ["Kulkarni", "Patil", "Jadhav", "Shinde", "More", "Gaikwad", "Chavan", "Deshmukh"];
+  const plantationTypes = ["Adsali", "Pre-seasonal", "Suru"];
 
 
   for (let i = 1; i <= count; i++) {
     const status = i % 3 === 0 ? "Rejected" : i % 2 === 0 ? "Pending" : "Approved";
-    const village = ["चाकूर", "अहमदपूर", "उदगीर", "निलंगा"][i % 4];
-    const taluka = ["लातूर", "औसा", "उदगीर", "निलंगा"][i % 4];
+    const village = ["Chakur", "Ahmedpur", "Udgir", "Nilanga"][i % 4];
+    const taluka = ["Latur", "Ausa", "Udgir", "Nilanga"][i % 4];
     data.push({
       surveyId: `SURV-${String(i).padStart(3, '0')}`,
       surveyDate: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
@@ -81,23 +81,23 @@ const generateSurveyData = (count: number): Survey[] => {
       lastUpdated: `2023-10-${String((i % 30) + 2).padStart(2, '0')}`,
       farmerName: `${farmerFirstNames[i % farmerFirstNames.length]} ${farmerLastNames[i % farmerLastNames.length]}`,
       farmerContact: `9876543${String(i).padStart(3, '0')}`,
-      state: "महाराष्ट्र",
-      district: "लातूर",
-      division: "पुणे विभाग",
+      state: "Maharashtra",
+      district: "Latur",
+      division: "Pune Division",
       taluka: taluka,
       village: village,
-      shiwar: `शिवार ${(i % 5) + 1}`,
+      shiwar: `Shiwar ${(i % 5) + 1}`,
       gatGroupNumber: `GAT-${String(123 + i)}`,
       surveyNumber: `SN-${String(456 + i)}`,
       areaHector: Number((Math.random() * 2 + 0.5).toFixed(2)),
       gpsCoordinates: `${(18.4088 + (Math.random() - 0.5) * 0.5).toFixed(4)}, ${(76.5702 + (Math.random() - 0.5) * 0.5).toFixed(4)}`,
-      caneType: ["अडसाली", "पूर्व-हंगामी", "सुरू"][i % 3],
-      caneVariety: ["को-86032", "कोएम-0265", "एमएस-10001"][i % 3],
-      cropCondition: ["चांगली", "मध्यम", "खराब"][i % 3],
+      caneType: ["Adsali", "Pre-seasonal", "Suru"][i % 3],
+      caneVariety: ["Co-86032", "CoM-0265", "MS-10001"][i % 3],
+      cropCondition: ["Good", "Average", "Poor"][i % 3],
       photoCount: Math.floor(Math.random() * 5) + 1,
-      approvedBy: status === "Approved" ? "प्रशासक" : "-",
+      approvedBy: status === "Approved" ? "Admin" : "-",
       approvalStatus: status,
-      rejectionReason: status === "Rejected" ? "चुकीची माहिती" : "-",
+      rejectionReason: status === "Rejected" ? "Incorrect Information" : "-",
       tokenNumber: status === "Approved" ? `TKN-${String(789 + i)}` : "-",
       tokenDate: status === "Approved" ? `2023-10-${String((i % 30) + 3).padStart(2, '0')}` : "-",
       otpVerified: i % 2 === 0 ? "Yes" : "No",
@@ -107,7 +107,7 @@ const generateSurveyData = (count: number): Survey[] => {
       submittedFrom: i % 2 === 0 ? "Mobile" : "Web",
       offlineSync: i % 3 === 0 ? "Yes" : "No",
       createdOn: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
-      updatedBy: ["सुनील पवार", "अनिल शिंदे", "प्रशासक"][i % 3],
+      updatedBy: ["Sunil Pawar", "Anil Shinde", "Admin"][i % 3],
       voiceNoteUploaded: i % 4 === 0 ? "Yes" : "No",
       aadhaarNumber: `XXXX-XXXX-${String(1000 + i)}`,
       saatBaaraNumber: `SB-${String(2000 + i)}`,
@@ -164,27 +164,27 @@ export type Survey = {
 }
 
 const statusOptions = [
-    { value: "Approved", label: "मंजूर" },
-    { value: "Pending", label: "प्रलंबित" },
-    { value: "Rejected", label: "नाकारलेले" },
+    { value: "Approved", label: "Approved" },
+    { value: "Pending", label: "Pending" },
+    { value: "Rejected", label: "Rejected" },
 ];
 
 export const columns: ColumnDef<Survey>[] = [
   {
     accessorKey: "district",
-    header: "जिल्हा",
+    header: "District",
   },
   {
     accessorKey: "taluka",
-    header: "तालुका",
+    header: "Taluka",
   },
   {
     accessorKey: "village",
-    header: "गाव",
+    header: "Village",
   },
   {
     accessorKey: "farmerName",
-    header: "शेतकऱ्याचे नाव",
+    header: "Farmer Name",
     cell: ({ row }) => {
         const survey = row.original
         return (
@@ -196,35 +196,35 @@ export const columns: ColumnDef<Survey>[] = [
   },
   {
     accessorKey: "farmerContact",
-    header: "मोबाईल नंबर",
+    header: "Mobile Number",
   },
    {
     accessorKey: "aadhaarNumber",
-    header: "आधार नंबर",
+    header: "Aadhaar Number",
   },
   {
     accessorKey: "surveyNumber",
-    header: "सर्वे नंबर",
+    header: "Survey Number",
   },
   {
     accessorKey: "saatBaaraNumber",
-    header: "सातबारा नंबर",
+    header: "7/12 Number",
   },
   {
     accessorKey: "areaHector",
-    header: "एकूण नोंद क्षेत्र",
+    header: "Total Reg. Area",
   },
   {
     accessorKey: "plantationType",
-    header: "लागवड प्रकार",
+    header: "Plantation Type",
   },
   {
     accessorKey: "caneVariety",
-    header: "उसाची जात",
+    header: "Cane Variety",
   },
   {
     accessorKey: "surveyDate",
-    header: "लागवड दिनांक",
+    header: "Plantation Date",
      cell: ({ row }) => {
       const date = new Date(row.getValue("surveyDate"))
       return <div>{format(date, "dd/MM/yyyy")}</div>
@@ -232,19 +232,14 @@ export const columns: ColumnDef<Survey>[] = [
   },
   {
     accessorKey: "cuttingNumber",
-    header: "तोडणी क्र.",
+    header: "Cutting No.",
   },
   {
     accessorKey: "surveyStatus",
-    header: "सर्वेक्षण स्थिती",
+    header: "Survey Status",
     cell: ({ row }) => {
         const status = row.getValue("surveyStatus") as string;
-        const statusTranslations: Record<string, string> = {
-            "Approved": "मंजूर",
-            "Pending": "प्रलंबित",
-            "Rejected": "नाकारलेले"
-        }
-        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{statusTranslations[status] || status}</Badge>;
+        return <Badge variant={status === "Approved" ? "default" : status === "Pending" ? "secondary" : "destructive"}>{status}</Badge>;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
@@ -260,7 +255,7 @@ export const columns: ColumnDef<Survey>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">मेनू उघडा</span>
+              <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -268,12 +263,12 @@ export const columns: ColumnDef<Survey>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(survey.surveyId)}
             >
-              सर्वेक्षण आयडी कॉपी करा
+              Copy Survey ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
                 <Link href={`/dashboard/farmer/${survey.surveyId}`}>
-                    तपशील पहा
+                    View Details
                 </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -320,19 +315,19 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="outline"><Filter className="mr-2"/> अधिक फिल्टर</Button>
+                <Button variant="outline"><Filter className="mr-2"/> More Filters</Button>
             </SheetTrigger>
             <SheetContent className="flex flex-col">
                 <SheetHeader>
-                    <SheetTitle>अधिक फिल्टर</SheetTitle>
+                    <SheetTitle>Advanced Filters</SheetTitle>
                 </SheetHeader>
                 <div className="flex-grow overflow-y-auto p-1">
                     <div className="grid gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="farmerName">शेतकऱ्याचे नाव</Label>
+                            <Label htmlFor="farmerName">Farmer Name</Label>
                             <Input
                                 id="farmerName"
-                                placeholder="शेतकऱ्याच्या नावाने फिल्टर करा..."
+                                placeholder="Filter by farmer name..."
                                 value={farmerName}
                                 onChange={(event) => setFarmerName(event.target.value)}
                             />
@@ -347,12 +342,12 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                     max={100}
                                     step={1}
                                 />
-                                <span className="text-sm font-medium w-16 text-right">{radius[0] === 100 ? 'सर्व' : `${radius[0]} km`}</span>
+                                <span className="text-sm font-medium w-16 text-right">{radius[0] === 100 ? 'All' : `${radius[0]} km`}</span>
                             </div>
                         </div>
                         
                         <div className="grid gap-2">
-                            <Label>सर्वेक्षण तारीख</Label>
+                            <Label>Survey Date</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                 <Button
@@ -369,7 +364,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                         format(surveyDate.from, "LLL dd, y")
                                     )
                                     ) : (
-                                    <span>एक तारीख निवडा</span>
+                                    <span>Pick a date</span>
                                     )}
                                 </Button>
                                 </PopoverTrigger>
@@ -385,7 +380,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                             </Popover>
                         </div>
                          <div className="grid gap-2">
-                            <Label>तोडणी तारीख</Label>
+                            <Label>Cutting Date</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                 <Button
@@ -402,7 +397,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                         format(cuttingDate.from, "LLL dd, y")
                                     )
                                     ) : (
-                                    <span>एक तारीख निवडा</span>
+                                    <span>Pick a date</span>
                                     )}
                                 </Button>
                                 </PopoverTrigger>
@@ -419,15 +414,15 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                         </div>
 
                         <div className="grid gap-2">
-                            <Label>सर्वेक्षण स्थिती</Label>
+                            <Label>Survey Status</Label>
                              <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="outline" className="w-full justify-between">
                                         <span>
-                                            स्थितीनुसार फिल्टर करा
+                                            Filter by status
                                             {selectedStatuses.length > 0 && (
                                                 <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
-                                                    {selectedStatuses.length} निवडले
+                                                    {selectedStatuses.length} selected
                                                 </Badge>
                                             )}
                                         </span>
@@ -435,7 +430,7 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
-                                    <DropdownMenuLabel>स्थितीनुसार फिल्टर करा</DropdownMenuLabel>
+                                    <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     {statusOptions.map((option) => (
                                         <DropdownMenuCheckboxItem
@@ -456,20 +451,20 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                         </div>
 
                          <div className="grid gap-2">
-                            <Label>क्षेत्र (हेक्टर)</Label>
+                            <Label>Area (Hectare)</Label>
                             <div className="flex items-center gap-2">
-                                <Input type="number" placeholder="किमान" value={minArea} onChange={e => setMinArea(e.target.value)} />
+                                <Input type="number" placeholder="Min" value={minArea} onChange={e => setMinArea(e.target.value)} />
                                 <span className="text-muted-foreground">-</span>
-                                <Input type="number" placeholder="कमाल" value={maxArea} onChange={e => setMaxArea(e.target.value)} />
+                                <Input type="number" placeholder="Max" value={maxArea} onChange={e => setMaxArea(e.target.value)} />
                             </div>
                         </div>
 
                          <div className="grid gap-2">
-                            <Label htmlFor="taluka">तालुका</Label>
+                            <Label htmlFor="taluka">Taluka</Label>
                              <Select value={taluka} onValueChange={setTaluka}>
-                                <SelectTrigger><SelectValue placeholder="तालुकानुसार फिल्टर करा" /></SelectTrigger>
+                                <SelectTrigger><SelectValue placeholder="Filter by taluka" /></SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">सर्व तालुके</SelectItem>
+                                    <SelectItem value="all">All Talukas</SelectItem>
                                     {uniqueTalukas.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                                 </SelectContent>
                             </Select>
@@ -477,8 +472,8 @@ function AdvancedFilters({ table, data }: { table: ReturnType<typeof useReactTab
                     </div>
                 </div>
                 <SheetFooter>
-                    <Button variant="ghost" onClick={handleClear}>स्वच्छ करा</Button>
-                    <Button onClick={handleApply}>फिल्टर लागू करा</Button>
+                    <Button variant="ghost" onClick={handleClear}>Clear Filters</Button>
+                    <Button onClick={handleApply}>Apply Filters</Button>
                 </SheetFooter>
             </SheetContent>
         </Sheet>
@@ -581,9 +576,9 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-            <CardTitle className="font-headline">सर्वेक्षण</CardTitle>
+            <CardTitle className="font-headline">Surveys</CardTitle>
             <CardDescription>
-            प्रणालीतील सर्व शेत सर्वेक्षणांची विस्तृत यादी.
+            A detailed list of all farm surveys in the system.
             </CardDescription>
         </div>
         <AdvancedFilters table={table} data={data} />
@@ -592,7 +587,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
         <div className="w-full">
              {activeFilters.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 pb-4">
-                    <p className="text-sm text-muted-foreground">सक्रिय फिल्टर:</p>
+                    <p className="text-sm text-muted-foreground">Active Filters:</p>
                     {activeFilters.map(filter => {
                         let valueText: string | null = null;
                         if (filter.id === 'surveyStatus' && Array.isArray(filter.value)) {
@@ -604,9 +599,9 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                            else if (end) valueText = `to ${format(end, 'dd/MM/yy')}`;
                         } else if (filter.id === 'areaHector' && Array.isArray(filter.value)) {
                             const [min, max] = filter.value as string[];
-                            if(min && max) valueText = `${min}-${max} हेक्टर`;
-                            else if (min) valueText = `>= ${min} हेक्टर`;
-                            else if (max) valueText = `<= ${max} हेक्टर`;
+                            if(min && max) valueText = `${min}-${max} Ha`;
+                            else if (min) valueText = `>= ${min} Ha`;
+                            else if (max) valueText = `<= ${max} Ha`;
                         } else if (filter.id === 'gpsCoordinates' && typeof filter.value === 'number') {
                            valueText = `<= ${filter.value} km`;
                         }
@@ -627,7 +622,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                         </Badge>)
                     })}
                     <Button variant="ghost" size="sm" onClick={() => table.resetColumnFilters()}>
-                        सर्व साफ करा
+                        Clear All
                     </Button>
                 </div>
             )}
@@ -683,7 +678,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                           colSpan={columns.length}
                           className="h-24 text-center"
                           >
-                          परिणाम नाहीत.
+                          No results.
                           </TableCell>
                       </TableRow>
                     )}
@@ -693,11 +688,11 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">
-                {table.getFilteredSelectedRowModel().rows.length} पैकी{" "}
-                {table.getFilteredRowModel().rows.length} पंक्ती निवडल्या.
+                {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
                 <div className="space-x-2 flex items-center">
-                    <span className="text-sm text-muted-foreground">प्रति पृष्ठ पंक्ती</span>
+                    <span className="text-sm text-muted-foreground">Rows per page</span>
                      <Select
                         onValueChange={(value) => {
                             table.setPageSize(Number(value))
@@ -717,7 +712,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                     </Select>
                 </div>
                 <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-                    पृष्ठ {table.getState().pagination.pageIndex + 1} पैकी{" "}
+                    Page {table.getState().pagination.pageIndex + 1} of{" "}
                     {table.getPageCount()}
                 </div>
                 <div className="space-x-2">
@@ -727,7 +722,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    मागील
+                    Previous
                 </Button>
                 <Button
                     variant="outline"
@@ -735,7 +730,7 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    पुढील
+                    Next
                 </Button>
                 </div>
             </div>
@@ -747,54 +742,54 @@ function SurveyDataTable({data, isLoading}: {data: Survey[], isLoading: boolean}
 
 const stats = [
   {
-    title: "स्वीकारलेली ऊस नोंदणी",
+    title: "Accepted Cane Registration",
     icon: <CheckCircle2 className="h-6 w-6 text-muted-foreground" />,
     details: [
-      { label: "एकूण ऊस नोंदी", value: "3,396" },
-      { label: "एकूण ऊस क्षेत्र (हेक्टर)", value: "3,341.86" },
+      { label: "Total Cane Registrations", value: "3,396" },
+      { label: "Total Cane Area (Hectare)", value: "3,341.86" },
     ],
   },
   {
-    title: "ऊस तोड (झालेली)",
+    title: "Cane Cutting (Done)",
     icon: <Scissors className="h-6 w-6 text-muted-foreground" />,
     details: [
-      { label: "एकूण ऊस तोड नोंदी", value: "0" },
-      { label: "एकूण ऊस तोड क्षेत्र (हेक्टर)", value: "0" },
+      { label: "Total Cane Cutting Slips", value: "0" },
+      { label: "Total Cane Cutting Area (Hectare)", value: "0" },
     ],
   },
   {
-    title: "प्रलंबित ऊस तोडणी",
+    title: "Pending Cane Cutting",
     icon: <CalendarClock className="h-6 w-6 text-muted-foreground" />,
     details: [
-      { label: "एकूण बाकी ऊस नोंदी", value: "3,396" },
-      { label: "एकूण बाकी ऊस क्षेत्र (हेक्टर)", value: "3,341.86" },
+      { label: "Total Pending Cane Slips", value: "3,396" },
+      { label: "Total Pending Cane Area (Hectare)", value: "3,341.86" },
     ],
   },
    {
-    title: "दुबार ऊस नोंदणी",
+    title: "Duplicate Cane Registration",
     icon: <Copy className="h-6 w-6 text-muted-foreground" />,
     details: [
-      { label: "एकूण ऊस नोंदी", value: "0" },
-      { label: "एकूण ऊस क्षेत्र (हेक्टर)", value: "0" },
+      { label: "Total Cane Slips", value: "0" },
+      { label: "Total Cane Area (Hectare)", value: "0" },
     ],
   },
 ];
 
 const simpleStats = [
  {
-    title: "ऊस क्षेत्र (हेक्टर)",
+    title: "Cane Area (Hectare)",
     value: "3,342",
     icon: <Ruler className="h-6 w-6 text-muted-foreground" />,
     change: "+2.6% than last week",
   },
   {
-    title: "ऊस नोंदी",
+    title: "Cane Registrations",
     value: "3,396",
     icon: <Leaf className="h-6 w-6 text-muted-foreground" />,
     change: "+0.6% than last week",
   },
    {
-    title: "ऊस तोड (हेक्टर)",
+    title: "Cane Cutting (Hectare)",
     value: "0",
     icon: <Scissors className="h-6 w-6 text-muted-foreground" />,
     change: "-0.1% than last week",

@@ -28,7 +28,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from "@/hooks/use-toast";
 
 type UserRole = "none" | "agri-head" | "warshir" | "field-boy" | "farmer";
-type UserRoleLabel = "कृषी प्रमुख" | "वारशिर" | "फील्ड बॉय" | "शेतकरी" | "वापरकर्ता";
+type UserRoleLabel = "Agri Head" | "Warshir" | "Field Boy" | "Farmer" | "User";
 
 export default function NewUserPage() {
   const router = useRouter();
@@ -36,17 +36,17 @@ export default function NewUserPage() {
   const [role, setRole] = React.useState<UserRole>("none");
 
   const roleLabels: Record<UserRole, UserRoleLabel> = {
-      "none": "वापरकर्ता",
-      "agri-head": "कृषी प्रमुख",
-      "warshir": "वारशिर",
-      "field-boy": "फील्ड बॉय",
-      "farmer": "शेतकरी",
+      "none": "User",
+      "agri-head": "Agri Head",
+      "warshir": "Warshir",
+      "field-boy": "Field Boy",
+      "farmer": "Farmer",
   }
 
   const handleCreateUser = () => {
     toast({
-      title: "यशस्वी!",
-      description: `${roleLabels[role]} यशस्वीरित्या तयार केले.`,
+      title: "Success!",
+      description: `${roleLabels[role]} created successfully.`,
     });
     router.push('/dashboard/users');
   };
@@ -57,24 +57,24 @@ export default function NewUserPage() {
         return (
           <>
             <div className="grid gap-2">
-              <Label htmlFor="name">नाव</Label>
-              <Input id="name" placeholder="पूर्ण नाव प्रविष्ट करा" required />
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" placeholder="Enter full name" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">ईमेल</Label>
-              <Input id="email" type="email" placeholder="ईमेल पत्ता प्रविष्ट करा" required />
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" placeholder="Enter email address" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="mobile">मोबाइल नंबर</Label>
-              <Input id="mobile" type="tel" placeholder="मोबाइल नंबर प्रविष्ट करा" required />
+              <Label htmlFor="mobile">Mobile Number</Label>
+              <Input id="mobile" type="tel" placeholder="Enter mobile number" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="state">राज्य</Label>
-              <Input id="state" placeholder="उदा. महाराष्ट्र" />
+              <Label htmlFor="state">State</Label>
+              <Input id="state" placeholder="e.g. Maharashtra" />
             </div>
             <div className="grid gap-2 md:col-span-2">
-              <Label htmlFor="district">जिल्हा</Label>
-              <Input id="district" placeholder="उदा. लातूर" />
+              <Label htmlFor="district">District</Label>
+              <Input id="district" placeholder="e.g. Latur" />
             </div>
           </>
         );
@@ -82,36 +82,36 @@ export default function NewUserPage() {
         return (
           <>
             <div className="grid gap-2">
-              <Label htmlFor="name">नाव</Label>
-              <Input id="name" placeholder="पूर्ण नाव प्रविष्ट करा" required />
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" placeholder="Enter full name" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">ईमेल</Label>
-              <Input id="email" type="email" placeholder="ईमेल पत्ता प्रविष्ट करा" required />
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" placeholder="Enter email address" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="mobile">मोबाइल नंबर</Label>
-              <Input id="mobile" type="tel" placeholder="मोबाइल नंबर प्रविष्ट करा" required />
+              <Label htmlFor="mobile">Mobile Number</Label>
+              <Input id="mobile" type="tel" placeholder="Enter mobile number" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="state">राज्य</Label>
-              <Input id="state" placeholder="उदा. महाराष्ट्र" />
+              <Label htmlFor="state">State</Label>
+              <Input id="state" placeholder="e.g. Maharashtra" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="district">जिल्हा</Label>
-              <Input id="district" placeholder="उदा. लातूर" />
+              <Label htmlFor="district">District</Label>
+              <Input id="district" placeholder="e.g. Latur" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="taluka">तालुका</Label>
-              <Input id="taluka" placeholder="उदा. अहमदपूर" />
+              <Label htmlFor="taluka">Taluka</Label>
+              <Input id="taluka" placeholder="e.g. Ahmedpur" />
             </div>
             <div className="grid gap-2 md:col-span-2">
-                <Label htmlFor="assigned-agri-head">नियुक्त कृषी प्रमुख</Label>
+                <Label htmlFor="assigned-agri-head">Assigned Agri Head</Label>
                 <Select>
-                    <SelectTrigger><SelectValue placeholder="कृषी प्रमुख निवडा" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="Select Agri Head" /></SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="agri-head-1">राजेश कुमार</SelectItem>
-                        <SelectItem value="agri-head-2">सुनीता शर्मा</SelectItem>
+                        <SelectItem value="agri-head-1">Rajesh Kumar</SelectItem>
+                        <SelectItem value="agri-head-2">Sunita Sharma</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
@@ -121,40 +121,40 @@ export default function NewUserPage() {
         return (
           <>
             <div className="grid gap-2">
-              <Label htmlFor="name">नाव</Label>
-              <Input id="name" placeholder="पूर्ण नाव प्रविष्ट करा" required />
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" placeholder="Enter full name" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">ईमेल</Label>
-              <Input id="email" type="email" placeholder="ईमेल पत्ता प्रविष्ट करा" required />
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" placeholder="Enter email address" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="mobile">मोबाइल नंबर</Label>
-              <Input id="mobile" type="tel" placeholder="मोबाइल नंबर प्रविष्ट करा" required />
+              <Label htmlFor="mobile">Mobile Number</Label>
+              <Input id="mobile" type="tel" placeholder="Enter mobile number" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="state">राज्य</Label>
-              <Input id="state" placeholder="उदा. महाराष्ट्र" />
+              <Label htmlFor="state">State</Label>
+              <Input id="state" placeholder="e.g. Maharashtra" />
             </div>
              <div className="grid gap-2">
-              <Label htmlFor="district">जिल्हा</Label>
-              <Input id="district" placeholder="उदा. लातूर" />
+              <Label htmlFor="district">District</Label>
+              <Input id="district" placeholder="e.g. Latur" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="taluka">तालुका</Label>
-              <Input id="taluka" placeholder="उदा. अहमदपूर" />
+              <Label htmlFor="taluka">Taluka</Label>
+              <Input id="taluka" placeholder="e.g. Ahmedpur" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="village">गाव</Label>
-              <Input id="village" placeholder="उदा. चाकूर" />
+              <Label htmlFor="village">Village</Label>
+              <Input id="village" placeholder="e.g. Chakur" />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="assigned-warshir">नियुक्त वारशिर</Label>
+                <Label htmlFor="assigned-warshir">Assigned Warshir</Label>
                 <Select>
-                    <SelectTrigger><SelectValue placeholder="वारशिर निवडा" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="Select Warshir" /></SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="warshir-1">अमित गायकवाड</SelectItem>
-                        <SelectItem value="warshir-2">प्रिया सिंग</SelectItem>
+                        <SelectItem value="warshir-1">Amit Gaikwad</SelectItem>
+                        <SelectItem value="warshir-2">Priya Singh</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
@@ -164,47 +164,47 @@ export default function NewUserPage() {
         return (
           <>
             <div className="grid gap-2">
-              <Label htmlFor="name">नाव</Label>
-              <Input id="name" placeholder="पूर्ण नाव प्रविष्ट करा" required />
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" placeholder="Enter full name" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="mobile">मोबाइल नंबर</Label>
-              <Input id="mobile" type="tel" placeholder="मोबाइल नंबर प्रविष्ट करा" required />
+              <Label htmlFor="mobile">Mobile Number</Label>
+              <Input id="mobile" type="tel" placeholder="Enter mobile number" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="village">गाव</Label>
-              <Input id="village" placeholder="उदा. चाकूर" />
+              <Label htmlFor="village">Village</Label>
+              <Input id="village" placeholder="e.g. Chakur" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="taluka">तालुका</Label>
-              <Input id="taluka" placeholder="उदा. अहमदपूर" />
+              <Label htmlFor="taluka">Taluka</Label>
+              <Input id="taluka" placeholder="e.g. Ahmedpur" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="district">जिल्हा</Label>
-              <Input id="district" placeholder="उदा. लातूर" />
+              <Label htmlFor="district">District</Label>
+              <Input id="district" placeholder="e.g. Latur" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="state">राज्य</Label>
-              <Input id="state" placeholder="उदा. महाराष्ट्र" />
+              <Label htmlFor="state">State</Label>
+              <Input id="state" placeholder="e.g. Maharashtra" />
             </div>
              <div className="grid gap-2">
-              <Label htmlFor="election-id">निवडणूक ओळखपत्र क्रमांक</Label>
-              <Input id="election-id" placeholder="निवडणूक ओळखपत्र क्रमांक प्रविष्ट करा" />
+              <Label htmlFor="election-id">Election ID Number</Label>
+              <Input id="election-id" placeholder="Enter Election ID number" />
             </div>
              <div className="grid gap-2">
-              <Label htmlFor="pan">पॅन नंबर</Label>
-              <Input id="pan" placeholder="पॅन क्रमांक प्रविष्ट करा" />
+              <Label htmlFor="pan">PAN Number</Label>
+              <Input id="pan" placeholder="Enter PAN number" />
             </div>
              <div className="grid gap-2 md:col-span-2">
-              <Label htmlFor="aadhaar">आधार क्रमांक</Label>
-              <Input id="aadhaar" placeholder="आधार क्रमांक प्रविष्ट करा" />
+              <Label htmlFor="aadhaar">Aadhaar Number</Label>
+              <Input id="aadhaar" placeholder="Enter Aadhaar number" />
             </div>
           </>
         );
       default:
         return (
             <div className="text-center text-muted-foreground p-8 md:col-span-2">
-                <p>आवश्यक फील्ड पाहण्यासाठी कृपया वापरकर्ता प्रकार निवडा.</p>
+                <p>Please select a user type to see the required fields.</p>
             </div>
         )
     }
@@ -216,32 +216,32 @@ export default function NewUserPage() {
         <Button variant="outline" size="icon" asChild>
           <Link href="/dashboard/users">
             <ArrowLeft />
-            <span className="sr-only">वापरकर्त्यांकडे परत जा</span>
+            <span className="sr-only">Back to Users</span>
           </Link>
         </Button>
-        <h1 className="text-2xl font-headline font-semibold">नवीन वापरकर्ता तयार करा</h1>
+        <h1 className="text-2xl font-headline font-semibold">Create New User</h1>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>वापरकर्ता भूमिका आणि तपशील</CardTitle>
+          <CardTitle>User Role & Details</CardTitle>
           <CardDescription>
-            नवीन वापरकर्त्यासाठी भूमिका निवडा आणि त्यांचे तपशील भरा. तुमच्या निवडीनुसार फॉर्म बदलेल.
+            Select a role for the new user and fill in their details. The form will change based on your selection.
           </CardDescription>
         </CardHeader>
         <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
                  <div className="grid gap-2">
-                    <Label htmlFor="user-type">वापरकर्ता प्रकार</Label>
+                    <Label htmlFor="user-type">User Type</Label>
                     <Select onValueChange={(value: UserRole) => setRole(value)}>
                         <SelectTrigger id="user-type">
-                            <SelectValue placeholder="वापरकर्ता प्रकार निवडा" />
+                            <SelectValue placeholder="Select user type" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="agri-head">कृषी प्रमुख</SelectItem>
-                            <SelectItem value="warshir">वारशिर</SelectItem>
-                            <SelectItem value="field-boy">फील्ड बॉय</SelectItem>
-                            <SelectItem value="farmer">शेतकरी</SelectItem>
+                            <SelectItem value="agri-head">Agri Head</SelectItem>
+                            <SelectItem value="warshir">Warshir</SelectItem>
+                            <SelectItem value="field-boy">Field Boy</SelectItem>
+                            <SelectItem value="farmer">Farmer</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -249,7 +249,7 @@ export default function NewUserPage() {
                 { role !== "none" && (
                      <div className="flex items-center space-x-2 justify-self-start md:justify-self-end">
                         <Switch id="status" defaultChecked />
-                        <Label htmlFor="status">वापरकर्ता स्थिती: सक्रिय</Label>
+                        <Label htmlFor="status">User Status: Active</Label>
                     </div>
                 )}
             </div>
@@ -262,11 +262,11 @@ export default function NewUserPage() {
         </CardContent>
         <CardFooter className="flex justify-end gap-2">
             <Button variant="outline" asChild>
-                <Link href="/dashboard/users">रद्द करा</Link>
+                <Link href="/dashboard/users">Cancel</Link>
             </Button>
             <Button disabled={role === "none"} onClick={handleCreateUser}>
                 <UserPlus className="mr-2" />
-                वापरकर्ता तयार करा
+                Create User
             </Button>
         </CardFooter>
       </Card>

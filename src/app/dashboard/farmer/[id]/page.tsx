@@ -62,20 +62,20 @@ const generateSurveyData = (count: number): Survey[] => {
       caneVariety: ['को-86032', 'कोएम-0265', 'एमएस-10001'][i % 3],
       cropCondition: ['चांगली', 'मध्यम', 'खराब'][i % 3],
       photoCount: Math.floor(Math.random() * 5) + 1,
-      approvedBy: status === 'Approved' ? 'प्रशासक' : '-',
+      approvedBy: status === 'Approved' ? 'Administrator' : '-',
       approvalStatus: status,
-      rejectionReason: status === 'Rejected' ? 'चुकीची माहिती' : '-',
+      rejectionReason: status === 'Rejected' ? 'Incorrect Information' : '-',
       tokenNumber: status === 'Approved' ? `TKN-${String(789 + i)}` : '-',
       tokenDate: status === 'Approved' ? `2023-10-${String((i % 30) + 3).padStart(2, '0')}` : '-',
-      otpVerified: i % 2 === 0 ? 'होय' : 'नाही',
-      cuttingPhotoUploaded: i % 2 === 0 ? 'होय' : 'नाही',
+      otpVerified: i % 2 === 0 ? 'Yes' : 'No',
+      cuttingPhotoUploaded: i % 2 === 0 ? 'Yes' : 'No',
       tonnageReceived: status === 'Approved' ? Math.floor(Math.random() * 100 + 150) : 0,
       gatePassEntryDate: status === 'Approved' ? `2023-11-${String((i % 28) + 1).padStart(2, '0')}` : '-',
-      submittedFrom: i % 2 === 0 ? 'मोबाइल' : 'वेब',
-      offlineSync: i % 3 === 0 ? 'होय' : 'नाही',
+      submittedFrom: i % 2 === 0 ? 'Mobile' : 'Web',
+      offlineSync: i % 3 === 0 ? 'Yes' : 'No',
       createdOn: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
-      updatedBy: ['सुनील पवार', 'अनिल शिंदे', 'प्रशासक'][i % 3],
-      voiceNoteUploaded: i % 4 === 0 ? 'होय' : 'नाही',
+      updatedBy: ['सुनील पवार', 'अनिल शिंदे', 'Administrator'][i % 3],
+      voiceNoteUploaded: i % 4 === 0 ? 'Yes' : 'No',
     });
   }
   return data;
@@ -101,7 +101,7 @@ const DocumentDetailItem = ({ label, value, imageUrl }: { label: string; value: 
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>{label} कागदपत्र</DialogTitle>
+                        <DialogTitle>{label} Document</DialogTitle>
                     </DialogHeader>
                     <div className="mt-4">
                         <Image src={imageUrl} alt={`${label} document`} width={500} height={300} className="rounded-md w-full" data-ai-hint="document photo"/>
@@ -180,14 +180,14 @@ export default function FarmerDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center p-4">
         <FileText className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-2xl font-bold mb-2">सर्वेक्षण डेटा लोड होत आहे...</h2>
+        <h2 className="text-2xl font-bold mb-2">Loading Survey Data...</h2>
         <p className="text-muted-foreground mb-4">
-          जर "{id}" आयडी असलेले सर्वेक्षण लोड झाले नाही, तर ते अस्तित्वात नसू शकते.
+          If the survey with ID "{id}" doesn't load, it might not exist.
         </p>
         <Button asChild>
           <Link href="/dashboard">
             <ArrowLeft className="mr-2" />
-            डॅशबोर्डवर परत जा
+            Back to Dashboard
           </Link>
         </Button>
       </div>
@@ -198,12 +198,12 @@ export default function FarmerDetailPage() {
   const farmerData = {
       profile: {
           farmerName: surveyData.farmerName,
-          fatherHusbandName: "सुरेश कुलकर्णी",
+          fatherHusbandName: "Suresh Kulkarni",
           dob: "1985-05-20",
           mobile: surveyData.farmerContact,
           altMobile: "9876543211",
           email: "ramesh.kulkarni@example.com",
-          address: "१२३, मुख्य रस्ता, चाकूर",
+          address: "123, Main Road, Chakur",
           village: surveyData.village,
           taluka: surveyData.taluka,
           district: surveyData.district,
@@ -215,68 +215,64 @@ export default function FarmerDetailPage() {
           pan: "ABCDE1234F",
           drivingLicense: "MH1420110012345",
           farmerRegId: "FARMER-LATUR-123",
-          nameAsPerPassbook: "रमेश सुरेश कुलकर्णी",
+          nameAsPerPassbook: "Ramesh Suresh Kulkarni",
           bankAccount: "XXXX-XXXX-XX-12345",
           ifsc: "SBIN0000123",
       },
       farmDetails: {
           surveyNumber: surveyData.surveyNumber,
           gatGroupNumber: surveyData.gatGroupNumber,
-          area: `${surveyData.areaHector} हेक्टर`,
+          area: `${surveyData.areaHector} Ha`,
           gpsCoordinates: surveyData.gpsCoordinates,
           caneType: surveyData.caneType,
           caneVariety: surveyData.caneVariety,
           cropCondition: surveyData.cropCondition,
-          irrigationSource: "कालवा",
-          soilType: "काळी कापूस",
+          irrigationSource: "Canal",
+          soilType: "Black Cotton",
       },
       cuttingToken: {
           tokenNumber: surveyData.tokenNumber,
           tokenDate: surveyData.tokenDate,
           approvedBy: surveyData.approvedBy,
           cuttingPhotoUploaded: surveyData.cuttingPhotoUploaded,
-          tonnageReceived: `${surveyData.tonnageReceived} टन`,
+          tonnageReceived: `${surveyData.tonnageReceived} Ton`,
           gatePassEntryDate: surveyData.gatePassEntryDate,
       },
       media: {
           voiceNotes: allSurveys
-            .filter(survey => survey.voiceNoteUploaded === 'होय')
+            .filter(survey => survey.voiceNoteUploaded === 'Yes')
             .map(survey => ({
-                name: `सर्वेक्षण ${survey.surveyId}`,
+                name: `Survey ${survey.surveyId}`,
                 file: `voice_note_${survey.surveyId}.mp3`,
                 src: silentAudio
             })),
           photos: selectedSurveyForMedia.photoCount > 0 ? [
-            { category: "शेताचे फोटो", url: `https://placehold.co/400x300.png`, hint: "sugarcane farm" },
-            { category: "उसाची जात", url: `https://placehold.co/400x300.png`, hint: "sugarcane plant" },
-            { category: "तोडणी टोकन", url: `https://placehold.co/400x300.png`, hint: "document paper" },
-            { category: "तोडणी चालू", url: `https://placehold.co/400x300.png`, hint: "farm harvest" },
+            { category: "Farm Photos", url: `https://placehold.co/400x300.png`, hint: "sugarcane farm" },
+            { category: "Cane Variety", url: `https://placehold.co/400x300.png`, hint: "sugarcane plant" },
+            { category: "Cutting Token", url: `https://placehold.co/400x300.png`, hint: "document paper" },
+            { category: "Cutting In Progress", url: `https://placehold.co/400x300.png`, hint: "farm harvest" },
           ] : []
       }
   }
-  const statusTranslations: Record<string, string> = {
-    "Approved": "मंजूर",
-    "Pending": "प्रलंबित",
-    "Rejected": "नाकारलेले"
-  }
+  
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
        <div className="flex items-center justify-between">
         <Button variant="outline" asChild>
           <Link href="/dashboard">
             <ArrowLeft />
-            <span className="ml-2 hidden sm:inline">डॅशबोर्डवर परत जा</span>
+            <span className="ml-2 hidden sm:inline">Back to Dashboard</span>
           </Link>
         </Button>
         <div className="flex gap-2">
-            <Button variant="outline"><Edit /> <span className="ml-2 hidden sm:inline">अपडेट करा</span></Button>
+            <Button variant="outline"><Edit /> <span className="ml-2 hidden sm:inline">Update</span></Button>
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button><Map /> <span className="ml-2 hidden sm:inline">नकाशा पहा</span></Button>
+                    <Button><Map /> <span className="ml-2 hidden sm:inline">View on Map</span></Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl h-4/5 flex flex-col">
                     <DialogHeader>
-                        <DialogTitle>शेत नकाशा</DialogTitle>
+                        <DialogTitle>Farm Map</DialogTitle>
                     </DialogHeader>
                     <div className="flex-grow w-full py-4">
                         <SurveyMap surveys={[surveyData]} />
@@ -294,16 +290,16 @@ export default function FarmerDetailPage() {
               <User className="w-8 h-8 text-primary" />
               <div>
                 <CardTitle className="font-headline text-xl">{farmerData.profile.farmerName}</CardTitle>
-                <CardDescription>शेतकरी प्रोफाइल आणि संपर्क माहिती</CardDescription>
+                <CardDescription>Farmer profile and contact information</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <DetailItem label="वडील/पतीचे नाव" value={farmerData.profile.fatherHusbandName} />
-              <DetailItem label="जन्म तारीख" value={farmerData.profile.dob} />
-              <DetailItem label="मोबाइल नंबर" value={farmerData.profile.mobile} />
-              <DetailItem label="पर्यायी नंबर" value={farmerData.profile.altMobile} />
-              <DetailItem label="ईमेल आयडी" value={farmerData.profile.email} />
-              <DetailItem label="पूर्ण पत्ता" value={`${farmerData.profile.address}, ${farmerData.profile.taluka}, ${farmerData.profile.district} - ${farmerData.profile.pincode}`} />
+              <DetailItem label="Father/Husband's Name" value={farmerData.profile.fatherHusbandName} />
+              <DetailItem label="Date of Birth" value={farmerData.profile.dob} />
+              <DetailItem label="Mobile Number" value={farmerData.profile.mobile} />
+              <DetailItem label="Alternate Number" value={farmerData.profile.altMobile} />
+              <DetailItem label="Email ID" value={farmerData.profile.email} />
+              <DetailItem label="Full Address" value={`${farmerData.profile.address}, ${farmerData.profile.taluka}, ${farmerData.profile.district} - ${farmerData.profile.pincode}`} />
             </CardContent>
           </Card>
 
@@ -311,18 +307,18 @@ export default function FarmerDetailPage() {
             <CardHeader className="flex flex-row items-center gap-4">
                 <Fingerprint className="w-8 h-8 text-primary" />
                 <div>
-                    <CardTitle className="font-headline">ओळख</CardTitle>
-                    <CardDescription>शेतकरी ओळख आणि बँक तपशील.</CardDescription>
+                    <CardTitle className="font-headline">Identification</CardTitle>
+                    <CardDescription>Farmer identification and bank details.</CardDescription>
                 </div>
             </CardHeader>
             <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <DocumentDetailItem label="निवडणूक ओळखपत्र" value={maskDocument(farmerData.identification.electionId)} imageUrl="https://placehold.co/600x400.png" />
-                <DocumentDetailItem label="पॅन कार्ड" value={maskDocument(farmerData.identification.pan)} imageUrl="https://placehold.co/600x400.png" />
-                <DocumentDetailItem label="ड्रायविंग लायसन्स" value={maskDocument(farmerData.identification.drivingLicense)} imageUrl="https://placehold.co/600x400.png" />
-                <DetailItem label="शेतकरी नोंदणी आयडी" value={farmerData.identification.farmerRegId} />
-                <DetailItem label="पासबुक वरील नाव" value={farmerData.identification.nameAsPerPassbook} />
-                <DetailItem label="बँक खाते क्रमांक" value={farmerData.identification.bankAccount} />
-                <DetailItem label="IFSC कोड" value={farmerData.identification.ifsc} />
+                <DocumentDetailItem label="Election ID" value={maskDocument(farmerData.identification.electionId)} imageUrl="https://placehold.co/600x400.png" />
+                <DocumentDetailItem label="PAN Card" value={maskDocument(farmerData.identification.pan)} imageUrl="https://placehold.co/600x400.png" />
+                <DocumentDetailItem label="Driving License" value={maskDocument(farmerData.identification.drivingLicense)} imageUrl="https://placehold.co/600x400.png" />
+                <DetailItem label="Farmer Reg. ID" value={farmerData.identification.farmerRegId} />
+                <DetailItem label="Name as per Passbook" value={farmerData.identification.nameAsPerPassbook} />
+                <DetailItem label="Bank Account Number" value={farmerData.identification.bankAccount} />
+                <DetailItem label="IFSC Code" value={farmerData.identification.ifsc} />
             </CardContent>
           </Card>
 
@@ -330,19 +326,19 @@ export default function FarmerDetailPage() {
             <CardHeader className="flex flex-row items-center gap-4">
                 <BookUser className="w-8 h-8 text-primary" />
                 <div>
-                    <CardTitle className="font-headline">सर्वेक्षण इतिहास</CardTitle>
-                    <CardDescription>या शेतकऱ्यासाठी केलेल्या सर्व सर्वेक्षणांची नोंद.</CardDescription>
+                    <CardTitle className="font-headline">Survey History</CardTitle>
+                    <CardDescription>Record of all surveys conducted for this farmer.</CardDescription>
                 </div>
             </CardHeader>
             <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>सर्वेक्षण आयडी</TableHead>
-                            <TableHead>तारीख</TableHead>
-                            <TableHead>स्थिती</TableHead>
-                            <TableHead>सर्वेक्षक</TableHead>
-                            <TableHead>क्षेत्र</TableHead>
+                            <TableHead>Survey ID</TableHead>
+                            <TableHead>Date</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Surveyor</TableHead>
+                            <TableHead>Area</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -352,11 +348,11 @@ export default function FarmerDetailPage() {
                                 <TableCell>{survey.surveyDate}</TableCell>
                                 <TableCell>
                                     <Badge variant={survey.surveyStatus === "Approved" ? "default" : survey.surveyStatus === "Pending" ? "secondary" : "destructive"}>
-                                        {statusTranslations[survey.surveyStatus] || survey.surveyStatus}
+                                        {survey.surveyStatus}
                                     </Badge>
                                 </TableCell>
                                 <TableCell>{survey.surveyedBy}</TableCell>
-                                <TableCell>{survey.areaHector} हेक्टर</TableCell>
+                                <TableCell>{survey.areaHector} Ha</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -371,19 +367,19 @@ export default function FarmerDetailPage() {
                 <CardHeader className="flex flex-row items-center gap-4">
                     <Tractor className="w-8 h-8 text-primary" />
                     <div>
-                        <CardTitle className="font-headline">शेत तपशील</CardTitle>
-                        <CardDescription>प्लॉट आणि पीक विशिष्ट माहिती.</CardDescription>
+                        <CardTitle className="font-headline">Farm Details</CardTitle>
+                        <CardDescription>Plot and crop specific information.</CardDescription>
                     </div>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-4">
-                    <DetailItem label="सर्वेक्षण नं." value={farmerData.farmDetails.surveyNumber} />
-                    <DetailItem label="गट/ग्रुप नं." value={farmerData.farmDetails.gatGroupNumber} />
-                    <DetailItem label="क्षेत्र" value={farmerData.farmDetails.area} />
-                    <DetailItem label="उसाचा प्रकार" value={farmerData.farmDetails.caneType} />
-                    <DetailItem label="उसाची जात" value={farmerData.farmDetails.caneVariety} />
-                    <DetailItem label="पिकाची स्थिती" value={farmerData.farmDetails.cropCondition} />
-                    <DetailItem label="सिंचन" value={farmerData.farmDetails.irrigationSource} />
-                    <DetailItem label="मातीचा प्रकार" value={farmerData.farmDetails.soilType} />
+                    <DetailItem label="Survey No." value={farmerData.farmDetails.surveyNumber} />
+                    <DetailItem label="Gat/Group No." value={farmerData.farmDetails.gatGroupNumber} />
+                    <DetailItem label="Area" value={farmerData.farmDetails.area} />
+                    <DetailItem label="Cane Type" value={farmerData.farmDetails.caneType} />
+                    <DetailItem label="Cane Variety" value={farmerData.farmDetails.caneVariety} />
+                    <DetailItem label="Crop Condition" value={farmerData.farmDetails.cropCondition} />
+                    <DetailItem label="Irrigation" value={farmerData.farmDetails.irrigationSource} />
+                    <DetailItem label="Soil Type" value={farmerData.farmDetails.soilType} />
                 </CardContent>
                 <CardContent>
                     <div className="w-full h-48 rounded-lg overflow-hidden relative bg-muted flex items-center justify-center">
@@ -397,11 +393,11 @@ export default function FarmerDetailPage() {
                     <div className='flex flex-row items-center gap-4 w-full'>
                         <ImageIcon className="w-8 h-8 text-primary" />
                         <div className='flex-grow'>
-                            <CardTitle className="font-headline">मीडिया</CardTitle>
+                            <CardTitle className="font-headline">Media</CardTitle>
                         </div>
                         <Select onValueChange={handleMediaSurveyChange} value={selectedSurveyForMedia.surveyId}>
                             <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="सर्वेक्षण निवडा" />
+                                <SelectValue placeholder="Select Survey" />
                             </SelectTrigger>
                             <SelectContent>
                                 {allSurveys.map(s => (
@@ -414,7 +410,7 @@ export default function FarmerDetailPage() {
                     </div>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
-                    <h4 className="font-semibold text-sm">फोटो</h4>
+                    <h4 className="font-semibold text-sm">Photos</h4>
                     {farmerData.media.photos.length > 0 ? (
                         <div className="grid grid-cols-2 gap-4">
                             {farmerData.media.photos.map((photo, i) => (
@@ -425,10 +421,10 @@ export default function FarmerDetailPage() {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-sm text-muted-foreground text-center">या सर्वेक्षणासाठी फोटो नाहीत.</p>
+                        <p className="text-sm text-muted-foreground text-center">No photos for this survey.</p>
                     )}
                     <Separator />
-                    <h4 className="font-semibold text-sm">व्हॉइस नोट्स</h4>
+                    <h4 className="font-semibold text-sm">Voice Notes</h4>
                      {farmerData.media.voiceNotes.length > 0 ? (
                         <TooltipProvider>
                             {farmerData.media.voiceNotes.map((note, i) => (
@@ -445,14 +441,14 @@ export default function FarmerDetailPage() {
                                             </Button>
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p>{playingAudio === note.name ? 'विराम' : 'प्ले'}</p>
+                                            <p>{playingAudio === note.name ? 'Pause' : 'Play'}</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
                             ))}
                         </TooltipProvider>
                      ) : (
-                        <p className="text-sm text-muted-foreground text-center">या शेतकऱ्यासाठी व्हॉइस नोट्स नाहीत.</p>
+                        <p className="text-sm text-muted-foreground text-center">No voice notes for this farmer.</p>
                      )}
                 </CardContent>
             </Card>
@@ -461,25 +457,25 @@ export default function FarmerDetailPage() {
                 <CardHeader className="flex flex-row items-center gap-4">
                     <Receipt className="w-8 h-8 text-primary" />
                     <div>
-                        <CardTitle className="font-headline">तोडणी टोकन आणि गेट पास</CardTitle>
-                        <CardDescription>कापणी आणि वितरण माहिती.</CardDescription>
+                        <CardTitle className="font-headline">Cutting Token & Gate Pass</CardTitle>
+                        <CardDescription>Harvesting and delivery information.</CardDescription>
                     </div>
                 </CardHeader>
                 <CardContent>
                 {showTokenDetails ? (
                     <div className="grid grid-cols-2 gap-4">
-                        <DetailItem label="टोकन नंबर" value={farmerData.cuttingToken.tokenNumber} />
-                        <DetailItem label="टोकन तारीख" value={farmerData.cuttingToken.tokenDate} />
-                        <DetailItem label="मंजूर करणारा" value={farmerData.cuttingToken.approvedBy} />
-                        <DetailItem label="प्राप्त टनेज" value={farmerData.cuttingToken.tonnageReceived} />
-                        <DetailItem label="तोडणी फोटो" value={farmerData.cuttingToken.cuttingPhotoUploaded} />
-                        <DetailItem label="गेट पास तारीख" value={farmerData.cuttingToken.gatePassEntryDate} />
+                        <DetailItem label="Token Number" value={farmerData.cuttingToken.tokenNumber} />
+                        <DetailItem label="Token Date" value={farmerData.cuttingToken.tokenDate} />
+                        <DetailItem label="Approved By" value={farmerData.cuttingToken.approvedBy} />
+                        <DetailItem label="Tonnage Received" value={farmerData.cuttingToken.tonnageReceived} />
+                        <DetailItem label="Cutting Photo" value={farmerData.cuttingToken.cuttingPhotoUploaded} />
+                        <DetailItem label="Gate Pass Date" value={farmerData.cuttingToken.gatePassEntryDate} />
                     </div>
                 ) : (
                     <div className="flex items-center justify-center p-4">
                         <Button onClick={handleGenerateToken}>
                             <Ticket className="mr-2" />
-                            टोकन तयार करा
+                            Generate Token
                         </Button>
                     </div>
                 )}
@@ -490,5 +486,3 @@ export default function FarmerDetailPage() {
     </div>
   );
 }
-
-    

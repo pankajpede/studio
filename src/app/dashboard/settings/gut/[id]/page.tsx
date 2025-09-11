@@ -61,15 +61,15 @@ const gutVillagesData: { [key: string]: Village[] } = {
 const columns: ColumnDef<Village>[] = [
   {
     accessorKey: "name",
-    header: "गाव नाव (मराठी)",
+    header: "Village Name (Marathi)",
   },
   {
     accessorKey: "nameEn",
-    header: "गाव नाव (इंग्रजी)",
+    header: "Village Name (English)",
   },
   {
     id: "actions",
-    header: () => <div className="text-right">क्रिया</div>,
+    header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => (
       <TooltipProvider>
         <div className="flex items-center justify-end gap-2">
@@ -80,7 +80,7 @@ const columns: ColumnDef<Village>[] = [
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>हटवा</p>
+              <p>Delete</p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -142,7 +142,7 @@ const MultiSelect = ({
               </Badge>
             ))}
              {selected.length === 0 && (
-              <span className="text-muted-foreground">गावे निवडा...</span>
+              <span className="text-muted-foreground">Select villages...</span>
             )}
           </div>
           <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
@@ -150,8 +150,8 @@ const MultiSelect = ({
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
         <Command>
-          <CommandInput placeholder="गाव शोधा..." />
-          <CommandEmpty>कोणतेही गाव आढळले नाही.</CommandEmpty>
+          <CommandInput placeholder="Search village..." />
+          <CommandEmpty>No village found.</CommandEmpty>
           <CommandGroup>
             <CommandList>
                 {options.map((option) => (
@@ -196,7 +196,7 @@ function AddVillageModal({ onAdd }: { onAdd: (selectedVillages: string[]) => voi
     return (
         <DialogContent className="sm:max-w-md">
             <DialogHeader>
-                <DialogTitle>गावे जोडा</DialogTitle>
+                <DialogTitle>Add Villages</DialogTitle>
             </DialogHeader>
             <div className="py-4">
                 <MultiSelect
@@ -206,7 +206,7 @@ function AddVillageModal({ onAdd }: { onAdd: (selectedVillages: string[]) => voi
                 />
             </div>
             <DialogFooter>
-                <Button type="button" onClick={handleSave}>जतन करा</Button>
+                <Button type="button" onClick={handleSave}>Save</Button>
             </DialogFooter>
         </DialogContent>
     );
@@ -218,7 +218,7 @@ export default function GutDetailsPage() {
   const { toast } = useToast();
   const gutId = params.id as string
   const [villages, setVillages] = React.useState(gutVillagesData[gutId] || [])
-  const gutName = gutId === "1" ? "गट १०१" : "गट १०२";
+  const gutName = gutId === "1" ? "Gut 101" : "Gut 102";
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const table = useReactTable({
@@ -238,8 +238,8 @@ export default function GutDetailsPage() {
       });
 
       toast({
-          title: "यशस्वी!",
-          description: `${newVillages.length} गावे यशस्वीरित्या जोडली आहेत.`,
+          title: "Success!",
+          description: `${newVillages.length} villages added successfully.`,
       });
       setIsModalOpen(false);
   }
@@ -248,23 +248,23 @@ export default function GutDetailsPage() {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-             <CardTitle>गट तपशील: {gutName}</CardTitle>
+             <CardTitle>Gut Details: {gutName}</CardTitle>
              <div className="flex items-center gap-2">
                 <Button variant="outline" asChild>
                     <Link href="/dashboard/settings?config=guts">
-                        <ArrowLeft className="mr-2" /> परत जा
+                        <ArrowLeft className="mr-2" /> Back
                     </Link>
                 </Button>
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                     <DialogTrigger asChild>
-                        <Button><PlusCircle className="mr-2"/>गाव जोडा</Button>
+                        <Button><PlusCircle className="mr-2"/>Add Village</Button>
                     </DialogTrigger>
                     <AddVillageModal onAdd={handleAddVillages}/>
                 </Dialog>
              </div>
         </div>
         <CardDescription>
-            या गटाशी संबंधित गावांची यादी.
+            List of villages associated with this Gut.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -300,7 +300,7 @@ export default function GutDetailsPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center">
-                    या गटासाठी गावे नाहीत.
+                    No villages for this Gut.
                   </TableCell>
                 </TableRow>
               )}

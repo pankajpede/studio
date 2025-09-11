@@ -128,15 +128,15 @@ export default function LoginPage() {
       else {
         toast({
           variant: "destructive",
-          title: "लॉगिन अयशस्वी",
-          description: "कृपया आपले वापरकर्ता नाव आणि पासवर्ड तपासा.",
+          title: "Login Failed",
+          description: "Please check your username and password.",
         });
       }
     } else {
        toast({
           variant: "destructive",
-          title: "लॉगिन अयशस्वी",
-          description: "कृपया आपले वापरकर्ता नाव आणि पासवर्ड प्रविष्ट करा.",
+          title: "Login Failed",
+          description: "Please enter your username and password.",
         });
     }
   };
@@ -149,19 +149,19 @@ export default function LoginPage() {
             <div className="flex items-center justify-center mb-4">
               <Leaf className="h-8 w-8 text-primary" />
             </div>
-            <CardTitle className="text-2xl font-headline text-center">साई शुगर</CardTitle>
+            <CardTitle className="text-2xl font-headline text-center">Sai Sugar</CardTitle>
             <CardDescription className="text-center">
-              तुमच्या खात्यात प्रवेश करण्यासाठी क्रेडेन्शियल्स प्रविष्ट करा
+              Enter your credentials to access your account
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="username">वापरकर्ता नाव</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
                   type="text"
-                  placeholder="वापरकर्ता नाव प्रविष्ट करा"
+                  placeholder="Enter your username"
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -169,7 +169,7 @@ export default function LoginPage() {
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">पासवर्ड</Label>
+                  <Label htmlFor="password">Password</Label>
                 </div>
                 <div className="relative">
                   <Input
@@ -198,7 +198,7 @@ export default function LoginPage() {
                 </div>
               </div>
               <Button type="submit" className="w-full" onClick={handleLogin}>
-                लॉगिन
+                Login
               </Button>
             </div>
           </CardContent>

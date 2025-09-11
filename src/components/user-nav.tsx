@@ -33,19 +33,19 @@ export function UserNav() {
   let profileLink: string;
 
   if (isFieldBoy) {
-    userName = "सुनील पवार";
+    userName = "Sunil Pawar";
     userDetail = "9876543210";
-    userFallback = "सुप";
+    userFallback = "SP";
     profileLink = "/field-boy/profile";
   } else if (isOversheer) {
-    userName = "संजय गायकवाड";
+    userName = "Sanjay Gaikwad";
     userDetail = "sanjay.gaikwad@example.com";
-    userFallback = "संग";
+    userFallback = "SG";
     profileLink = "/oversheer/profile";
   } else {
-    userName = "महेश देशमुख";
+    userName = "Mahesh Deshmukh";
     userDetail = "mahesh.deshmukh@canevision.com";
-    userFallback = "मदे";
+    userFallback = "MD";
     profileLink = "/dashboard/settings";
   }
 
@@ -74,7 +74,7 @@ export function UserNav() {
           <DropdownMenuItem asChild>
              <Link href={profileLink}>
               <User className="mr-2 h-4 w-4" />
-              <span>प्रोफाइल</span>
+              <span>Profile</span>
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
@@ -83,7 +83,7 @@ export function UserNav() {
         <DropdownMenuItem asChild>
           <Link href="/">
             <LogOut className="mr-2 h-4 w-4" />
-            <span>लॉग आउट</span>
+            <span>Log out</span>
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </Link>
         </DropdownMenuItem>

@@ -10,17 +10,17 @@ import type { Survey } from '../page';
 // In a real application, you would fetch this data from a shared service or API.
 const generateSurveyData = (count: number): Survey[] => {
   const data: Survey[] = [];
-  const fieldBoys = ["सुनील पवार", "अनिल शिंदे", "राजेश पाटील", "कविता जाधव"];
-  const warshirs = ["महेश देशमुख", "संजय गायकवाड", "विक्रम राठोड", "पूजा चव्हाण"];
-  const farmerFirstNames = ["रमेश", "सुरेश", "गणेश", "प्रिया", "प्रकाश", "अनिता", "सचिन", "दीपा"];
-  const farmerLastNames = ["कुलकर्णी", "पाटील", "जाधव", "शिंदे", "मोरे", "गायकवाड", "चव्हाण", "देशमुख"];
-  const plantationTypes = ["अडसाली", "पूर्व-हंगामी", "सुरू"];
+  const fieldBoys = ["Sunil Pawar", "Anil Shinde", "Rajesh Patil", "Kavita Jadhav"];
+  const warshirs = ["Mahesh Deshmukh", "Sanjay Gaikwad", "Vikram Rathod", "Pooja Chavan"];
+  const farmerFirstNames = ["Ramesh", "Suresh", "Ganesh", "Priya", "Prakash", "Anita", "Sachin", "Deepa"];
+  const farmerLastNames = ["Kulkarni", "Patil", "Jadhav", "Shinde", "More", "Gaikwad", "Chavan", "Deshmukh"];
+  const plantationTypes = ["Adsali", "Pre-seasonal", "Suru"];
 
 
   for (let i = 1; i <= count; i++) {
     const status = i % 3 === 0 ? "Rejected" : i % 2 === 0 ? "Pending" : "Approved";
-    const village = ["चाकूर", "अहमदपूर", "उदगीर", "निलंगा"][i % 4];
-    const taluka = ["लातूर", "औसा", "उदगीर", "निलंगा"][i % 4];
+    const village = ["Chakur", "Ahmedpur", "Udgir", "Nilanga"][i % 4];
+    const taluka = ["Latur", "Ausa", "Udgir", "Nilanga"][i % 4];
     data.push({
       surveyId: `SURV-${String(i).padStart(3, '0')}`,
       surveyDate: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
@@ -32,23 +32,23 @@ const generateSurveyData = (count: number): Survey[] => {
       lastUpdated: `2023-10-${String((i % 30) + 2).padStart(2, '0')}`,
       farmerName: `${farmerFirstNames[i % farmerFirstNames.length]} ${farmerLastNames[i % farmerLastNames.length]}`,
       farmerContact: `9876543${String(i).padStart(3, '0')}`,
-      state: "महाराष्ट्र",
-      district: "लातूर",
-      division: "पुणे विभाग",
+      state: "Maharashtra",
+      district: "Latur",
+      division: "Pune Division",
       taluka: taluka,
       village: village,
-      shiwar: `शिवार ${(i % 5) + 1}`,
+      shiwar: `Shiwar ${(i % 5) + 1}`,
       gatGroupNumber: `GAT-${String(123 + i)}`,
       surveyNumber: `SN-${String(456 + i)}`,
       areaHector: Number((Math.random() * 2 + 0.5).toFixed(2)),
       gpsCoordinates: `${(18.4088 + (Math.random() - 0.5) * 0.5).toFixed(4)}, ${(76.5702 + (Math.random() - 0.5) * 0.5).toFixed(4)}`,
-      caneType: ["अडसाली", "पूर्व-हंगामी", "सुरू"][i % 3],
-      caneVariety: ["को-86032", "कोएम-0265", "एमएस-10001"][i % 3],
-      cropCondition: ["चांगली", "मध्यम", "खराब"][i % 3],
+      caneType: ["Adsali", "Pre-seasonal", "Suru"][i % 3],
+      caneVariety: ["Co-86032", "CoM-0265", "MS-10001"][i % 3],
+      cropCondition: ["Good", "Average", "Poor"][i % 3],
       photoCount: Math.floor(Math.random() * 5) + 1,
-      approvedBy: status === "Approved" ? "प्रशासक" : "-",
+      approvedBy: status === "Approved" ? "Admin" : "-",
       approvalStatus: status,
-      rejectionReason: status === "Rejected" ? "चुकीची माहिती" : "-",
+      rejectionReason: status === "Rejected" ? "Incorrect Information" : "-",
       tokenNumber: status === "Approved" ? `TKN-${String(789 + i)}` : "-",
       tokenDate: status === "Approved" ? `2023-10-${String((i % 30) + 3).padStart(2, '0')}` : "-",
       otpVerified: i % 2 === 0 ? "Yes" : "No",
@@ -58,7 +58,7 @@ const generateSurveyData = (count: number): Survey[] => {
       submittedFrom: i % 2 === 0 ? "Mobile" : "Web",
       offlineSync: i % 3 === 0 ? "Yes" : "No",
       createdOn: `2023-10-${String((i % 30) + 1).padStart(2, '0')}`,
-      updatedBy: ["सुनील पवार", "अनिल शिंदे", "प्रशासक"][i % 3],
+      updatedBy: ["Sunil Pawar", "Anil Shinde", "Admin"][i % 3],
       voiceNoteUploaded: i % 4 === 0 ? "Yes" : "No",
       aadhaarNumber: `XXXX-XXXX-${String(1000 + i)}`,
       saatBaaraNumber: `SB-${String(2000 + i)}`,
@@ -81,8 +81,8 @@ export default function SurveyMapPage() {
     return (
         <Card className="h-[calc(100vh-10rem)] flex flex-col">
             <CardHeader>
-                <CardTitle className="font-headline">सर्वेक्षण क्षेत्र नकाशा</CardTitle>
-                <CardDescription>लातूर, महाराष्ट्र मधील सर्वेक्षण घनतेचे दृश्य प्रतिनिधित्व.</CardDescription>
+                <CardTitle className="font-headline">Survey Area Map</CardTitle>
+                <CardDescription>A visual representation of survey density in Latur, Maharashtra.</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
                 <div className="w-full h-full rounded-lg overflow-hidden relative bg-muted flex items-center justify-center">

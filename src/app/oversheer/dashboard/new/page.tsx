@@ -22,37 +22,37 @@ import { useToast } from "@/hooks/use-toast"
 
 
 const mockStates = [
-    { value: "maharashtra", label: "महाराष्ट्र" },
+    { value: "maharashtra", label: "Maharashtra" },
 ];
 
 const mockDistricts = [
-    { value: "latur", label: "लातूर" },
+    { value: "latur", label: "Latur" },
 ];
 
 const mockTalukas = [
-    { value: "ahmedpur", label: "अहमदपूर" },
-    { value: "ausa", label: "औसा" },
-    { value: "latur", label: "लातूर" },
+    { value: "ahmedpur", label: "Ahmedpur" },
+    { value: "ausa", label: "Ausa" },
+    { value: "latur", label: "Latur" },
 ];
 
 const mockCircles = [
-    { value: "circle-1", label: "सर्कल १" },
-    { value: "circle-2", label: "सर्कल २" },
+    { value: "circle-1", label: "Circle 1" },
+    { value: "circle-2", label: "Circle 2" },
 ];
 
 const mockGuts = [
-    { value: "gut-101", label: "गट १०१" },
-    { value: "gut-102", label: "गट १०२" },
+    { value: "gut-101", label: "Gut 101" },
+    { value: "gut-102", label: "Gut 102" },
 ];
 
 const mockVillages = [
-    { value: "chakur", label: "चाकूर" },
-    { value: "mohgaon", label: "मोहगाव" },
-    { value: "lamjana", label: "लामजना" },
+    { value: "chakur", label: "Chakur" },
+    { value: "mohgaon", label: "Mohgaon" },
+    { value: "lamjana", label: "Lamjana" },
 ];
 
 const mockShivars = [
-    { value: "shivar-a", label: "शिवार अ" },
+    { value: "shivar-a", label: "Shivar A" },
 ];
 
 const mockSurveyNumbers = [
@@ -60,15 +60,15 @@ const mockSurveyNumbers = [
 ];
 
 const mockFarmers = [
-    { value: "farmer-1", label: "रमेश कुलकर्णी" },
-    { value: "farmer-2", label: "सुरेश पाटील" },
-    { value: "farmer-3", label: "गणेश जाधव" },
+    { value: "farmer-1", label: "Ramesh Kulkarni" },
+    { value: "farmer-2", label: "Suresh Patil" },
+    { value: "farmer-3", label: "Ganesh Jadhav" },
 ];
 
 const mockFieldBoys = [
-    { value: "fb-1", label: "सुनील पवार" },
-    { value: "fb-2", label: "अनिल शिंदे" },
-    { value: "fb-3", label: "राजेश पाटील" },
+    { value: "fb-1", label: "Sunil Pawar" },
+    { value: "fb-2", label: "Anil Shinde" },
+    { value: "fb-3", label: "Rajesh Patil" },
 ];
 
 const Combobox = ({
@@ -104,10 +104,10 @@ const Combobox = ({
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
                 <Command>
                     <CommandInput placeholder={searchPlaceholder} />
-                    <CommandEmpty>कोणतेही परिणाम आढळले नाहीत.</CommandEmpty>
+                    <CommandEmpty>No results found.</CommandEmpty>
                     <CommandList>
                         <CommandGroup>
                             {options.map((option) => (
@@ -154,8 +154,8 @@ export default function AssignNewSurveyPage() {
     
     const handleAssignSurvey = () => {
         toast({
-            title: "सर्वेक्षण नियुक्त केले!",
-            description: "सर्वेक्षण यशस्वीरित्या फील्ड बॉयला नियुक्त केले आहे.",
+            title: "Survey Assigned!",
+            description: "The survey has been successfully assigned to the field boy.",
         });
         router.push('/oversheer/dashboard');
     }
@@ -163,117 +163,117 @@ export default function AssignNewSurveyPage() {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="font-headline text-xl">नवीन सर्वेक्षण नियुक्त करा</CardTitle>
-        <CardDescription>सर्वेक्षणासाठी तपशील भरा आणि फील्ड बॉय निवडा.</CardDescription>
+        <CardTitle className="font-headline text-xl">Assign New Survey</CardTitle>
+        <CardDescription>Fill in the details and select a field boy for the survey.</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="grid gap-2">
-                <Label htmlFor="state">राज्य</Label>
+                <Label htmlFor="state">State</Label>
                 <Combobox
                     options={mockStates}
                     value={selectedState}
                     onValueChange={setSelectedState}
-                    placeholder="राज्य निवडा..."
-                    searchPlaceholder="राज्य शोधा..."
+                    placeholder="Select state..."
+                    searchPlaceholder="Search state..."
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="district">जिल्हा</Label>
+                <Label htmlFor="district">District</Label>
                 <Combobox
                     options={mockDistricts}
                     value={district}
                     onValueChange={setDistrict}
-                    placeholder="जिल्हा निवडा..."
-                    searchPlaceholder="जिल्हा शोधा..."
+                    placeholder="Select district..."
+                    searchPlaceholder="Search district..."
                     disabled={!selectedState}
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="taluka">तालुका</Label>
+                <Label htmlFor="taluka">Taluka</Label>
                 <Combobox
                     options={mockTalukas}
                     value={taluka}
                     onValueChange={setTaluka}
-                    placeholder="तालुका निवडा..."
-                    searchPlaceholder="तालुका शोधा..."
+                    placeholder="Select taluka..."
+                    searchPlaceholder="Search taluka..."
                     disabled={!district}
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="circle">सर्कल</Label>
+                <Label htmlFor="circle">Circle</Label>
                 <Combobox
                     options={mockCircles}
                     value={circle}
                     onValueChange={setCircle}
-                    placeholder="सर्कल निवडा..."
-                    searchPlaceholder="सर्कल शोधा..."
+                    placeholder="Select circle..."
+                    searchPlaceholder="Search circle..."
                     disabled={!taluka}
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="gut">गट</Label>
+                <Label htmlFor="gut">Gut</Label>
                 <Combobox
                     options={mockGuts}
                     value={gut}
                     onValueChange={setGut}
-                    placeholder="गट निवडा..."
-                    searchPlaceholder="गट शोधा..."
+                    placeholder="Select gut..."
+                    searchPlaceholder="Search gut..."
                     disabled={!circle}
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="village">गाव</Label>
+                <Label htmlFor="village">Village</Label>
                 <Combobox
                     options={mockVillages}
                     value={village}
                     onValueChange={setVillage}
-                    placeholder="गाव निवडा..."
-                    searchPlaceholder="गाव शोधा..."
+                    placeholder="Select village..."
+                    searchPlaceholder="Search village..."
                     disabled={!gut}
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="shivar">शिवार</Label>
+                <Label htmlFor="shivar">Shivar</Label>
                 <Combobox
                     options={mockShivars}
                     value={shivar}
                     onValueChange={setShivar}
-                    placeholder="शिवार निवडा..."
-                    searchPlaceholder="शिवार शोधा..."
+                    placeholder="Select shivar..."
+                    searchPlaceholder="Search shivar..."
                     disabled={!village}
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="survey-number">सर्वेक्षण क्र.</Label>
+                <Label htmlFor="survey-number">Survey No.</Label>
                 <Combobox
                     options={mockSurveyNumbers}
                     value={surveyNumber}
                     onValueChange={setSurveyNumber}
-                    placeholder="सर्वेक्षण क्र. निवडा..."
-                    searchPlaceholder="सर्वेक्षण क्र. शोधा..."
+                    placeholder="Select survey no..."
+                    searchPlaceholder="Search survey no..."
                     disabled={!shivar}
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="farmer">शेतकरी</Label>
+                <Label htmlFor="farmer">Farmer</Label>
                 <Combobox
                     options={mockFarmers}
                     value={farmer}
                     onValueChange={setFarmer}
-                    placeholder="शेतकरी निवडा..."
-                    searchPlaceholder="शेतकरी शोधा..."
+                    placeholder="Select farmer..."
+                    searchPlaceholder="Search farmer..."
                     disabled={!surveyNumber}
                 />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="field-boy">फील्ड बॉय</Label>
+                <Label htmlFor="field-boy">Field Boy</Label>
                 <Combobox
                     options={mockFieldBoys}
                     value={fieldBoy}
                     onValueChange={setFieldBoy}
-                    placeholder="फील्ड बॉय निवडा..."
-                    searchPlaceholder="फील्ड बॉय शोधा..."
+                    placeholder="Select field boy..."
+                    searchPlaceholder="Search field boy..."
                     disabled={!farmer}
                 />
             </div>
@@ -281,9 +281,9 @@ export default function AssignNewSurveyPage() {
       </CardContent>
       <CardFooter className="flex justify-end gap-2 mt-4">
         <Button variant="outline" asChild>
-            <Link href="/oversheer/dashboard">रद्द करा</Link>
+            <Link href="/oversheer/dashboard">Cancel</Link>
         </Button>
-        <Button onClick={handleAssignSurvey}>सर्वेक्षण नियुक्त करा</Button>
+        <Button onClick={handleAssignSurvey}>Assign Survey</Button>
       </CardFooter>
     </Card>
   )

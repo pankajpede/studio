@@ -78,10 +78,10 @@ const generateUserData = (count: number): User[] => {
   const data: User[] = []
   const roles: User["role"][] = ["Agri Head", "Warshir", "Field Boy", "Farmer"]
   const statuses: User["status"][] = ["Active", "Inactive"]
-  const firstNames = ["राजेश", "सुनीता", "अमित", "प्रिया", "विक्रम", "अंजली", "सुरेश", "कविता"]
-  const lastNames = ["कुमार", "पाटील", "शर्मा", "गायकवाड", "सिंग", "रेड्डी", "जोशी", "मेहता"]
-  const talukas = ["लातूर", "औसा", "उदगीर", "निलंगा"]
-  const villages = ["चाकूर", "अहमदपूर", "मोहगाव", "लामजना"]
+  const firstNames = ["Rajesh", "Sunita", "Amit", "Priya", "Vikram", "Anjali", "Suresh", "Kavita"]
+  const lastNames = ["Kumar", "Patil", "Sharma", "Gaikwad", "Singh", "Reddy", "Joshi", "Mehta"]
+  const talukas = ["Latur", "Ausa", "Udgir", "Nilanga"]
+  const villages = ["Chakur", "Ahmedpur", "Mohgaon", "Lamjana"]
 
   for (let i = 1; i <= count; i++) {
     const role = roles[i % roles.length]
@@ -108,10 +108,10 @@ const generateUserData = (count: number): User[] => {
 }
 
 const roleTranslations: Record<User["role"], string> = {
-    "Agri Head": "कृषी प्रमुख",
-    "Warshir": "वारशिर",
-    "Field Boy": "फील्ड बॉय",
-    "Farmer": "शेतकरी"
+    "Agri Head": "Agri Head",
+    "Warshir": "Warshir",
+    "Field Boy": "Field Boy",
+    "Farmer": "Farmer"
 }
 
 // Columns definition for the react-table
@@ -123,7 +123,7 @@ export const columns: ColumnDef<User>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        वापरकर्ता
+        User
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -145,7 +145,7 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "role",
-    header: "भूमिका",
+    header: "Role",
     cell: ({ row }) => {
       const role = row.getValue("role") as User["role"];
       const variant: "default" | "secondary" | "destructive" | "outline" = 
@@ -160,7 +160,7 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "location",
-    header: "स्थान",
+    header: "Location",
     cell: ({ row }) => {
       const location = row.original.location
       return `${location.village}, ${location.taluka}`
@@ -168,15 +168,15 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "reportsTo",
-    header: "रिपोर्ट्स",
+    header: "Reports To",
   },
   {
     accessorKey: "status",
-    header: "स्थिती",
+    header: "Status",
     cell: ({ row }) => {
       const user = row.original
       const [isActive, setIsActive] = React.useState(user.status === "Active")
-      return <Switch checked={isActive} onCheckedChange={setIsActive} aria-label="वापरकर्ता स्थिती" />
+      return <Switch checked={isActive} onCheckedChange={setIsActive} aria-label="User Status" />
     }
   },
   {
@@ -187,17 +187,17 @@ export const columns: ColumnDef<User>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">मेनू उघडा</span>
+              <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>क्रिया</DropdownMenuLabel>
-            <DropdownMenuItem>वापरकर्ता संपादित करा</DropdownMenuItem>
-            <DropdownMenuItem>पदानुक्रम पहा</DropdownMenuItem>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem>Edit User</DropdownMenuItem>
+            <DropdownMenuItem>View Hierarchy</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-destructive">
-              वापरकर्ता निष्क्रिय करा
+              Deactivate User
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -250,16 +250,16 @@ export default function UserManagementPage() {
       <CardHeader>
         <div className="flex items-center justify-between">
             <div>
-                <CardTitle className="font-headline">वापरकर्ता व्यवस्थापन</CardTitle>
+                <CardTitle className="font-headline">User Management</CardTitle>
                 <CardDescription>
-                प्रणालीमध्ये वापरकर्ते जोडा, व्यवस्थापित करा आणि भूमिका नियुक्त करा.
+                Add, manage users, and assign roles in the system.
                 </CardDescription>
             </div>
             <div className="flex gap-2">
-                <Button variant="outline"><Upload className="mr-2"/> बल्क अपलोड</Button>
+                <Button variant="outline"><Upload className="mr-2"/> Bulk Upload</Button>
                 <Button asChild>
                   <Link href="/dashboard/users/new">
-                    <PlusCircle className="mr-2"/> वापरकर्ता जोडा
+                    <PlusCircle className="mr-2"/> Add User
                   </Link>
                 </Button>
             </div>
@@ -269,7 +269,7 @@ export default function UserManagementPage() {
         <div className="w-full">
           <div className="flex items-center gap-4 py-4">
             <Input
-              placeholder="नावाने फिल्टर करा..."
+              placeholder="Filter by name..."
               value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
               onChange={(event) =>
                 table.getColumn("name")?.setFilterValue(event.target.value)
@@ -286,14 +286,14 @@ export default function UserManagementPage() {
                 }}
             >
                 <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="भूमिकेनुसार फिल्टर करा" />
+                    <SelectValue placeholder="Filter by role" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="all">सर्व भूमिका</SelectItem>
-                    <SelectItem value="Agri Head">कृषी प्रमुख</SelectItem>
-                    <SelectItem value="Warshir">वारशिर</SelectItem>
-                    <SelectItem value="Field Boy">फील्ड बॉय</SelectItem>
-                    <SelectItem value="Farmer">शेतकरी</SelectItem>
+                    <SelectItem value="all">All Roles</SelectItem>
+                    <SelectItem value="Agri Head">Agri Head</SelectItem>
+                    <SelectItem value="Warshir">Warshir</SelectItem>
+                    <SelectItem value="Field Boy">Field Boy</SelectItem>
+                    <SelectItem value="Farmer">Farmer</SelectItem>
                 </SelectContent>
             </Select>
           </div>
@@ -347,7 +347,7 @@ export default function UserManagementPage() {
                         colSpan={columns.length}
                         className="h-24 text-center"
                       >
-                        परिणाम नाहीत.
+                        No results.
                       </TableCell>
                     </TableRow>
                   )}
@@ -357,10 +357,10 @@ export default function UserManagementPage() {
           </div>
           <div className="flex items-center justify-end space-x-2 py-4">
             <div className="flex-1 text-sm text-muted-foreground">
-              {table.getFilteredRowModel().rows.length} वापरकर्ते आढळले.
+              {table.getFilteredRowModel().rows.length} user(s) found.
             </div>
             <div className="space-x-2 flex items-center">
-                <span className="text-sm text-muted-foreground">प्रति पृष्ठ पंक्ती</span>
+                <span className="text-sm text-muted-foreground">Rows per page</span>
                  <Select
                     onValueChange={(value) => {
                         table.setPageSize(Number(value))
@@ -380,7 +380,7 @@ export default function UserManagementPage() {
                 </Select>
             </div>
             <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-                पृष्ठ {table.getState().pagination.pageIndex + 1} पैकी{" "}
+                Page {table.getState().pagination.pageIndex + 1} of{" "}
                 {table.getPageCount()}
             </div>
             <div className="space-x-2">
@@ -390,7 +390,7 @@ export default function UserManagementPage() {
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
-                मागील
+                Previous
               </Button>
               <Button
                 variant="outline"
@@ -398,7 +398,7 @@ export default function UserManagementPage() {
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >
-                पुढील
+                Next
               </Button>
             </div>
           </div>

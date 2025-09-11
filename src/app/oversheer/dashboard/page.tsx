@@ -52,11 +52,11 @@ type Survey = {
 
 const generateSurveyData = (count: number): Survey[] => {
   const data: Survey[] = [];
-  const fieldBoys = ["सुनील पवार", "अनिल शिंदे", "राजेश पाटील", "कविता जाधव", "विक्रम राठोड", "संजय गायकवाड"];
-  const farmerFirstNames = ["रमेश", "सुरेश", "गणेश", "प्रिया", "प्रकाश", "अनिता"];
-  const farmerLastNames = ["कुलकर्णी", "पाटील", "जाधव", "शिंदे", "मोरे", "गायकवाड"];
-  const villages = ["चाकूर", "अहमदपूर", "उदगीर", "निलंगा"];
-  const talukas = ["लातूर", "औसा", "उदगीर", "निलंगा"];
+  const fieldBoys = ["Sunil Pawar", "Anil Shinde", "Rajesh Patil", "Kavita Jadhav", "Vikram Rathod", "Sanjay Gaikwad"];
+  const farmerFirstNames = ["Ramesh", "Suresh", "Ganesh", "Priya", "Prakash", "Anita"];
+  const farmerLastNames = ["Kulkarni", "Patil", "Jadhav", "Shinde", "More", "Gaikwad"];
+  const villages = ["Chakur", "Ahmedpur", "Udgir", "Nilanga"];
+  const talukas = ["Latur", "Ausa", "Udgir", "Nilanga"];
   const statuses: SurveyStatus[] = ["Pending", "Approved", "Rejected", "Assigned"];
 
   for (let i = 1; i <= count; i++) {
@@ -79,10 +79,10 @@ const generateSurveyData = (count: number): Survey[] => {
 
 
 const statusTranslations: Record<SurveyStatus, string> = {
-    "Pending": "प्रलंबित",
-    "Approved": "मंजूर",
-    "Rejected": "नाकारलेले",
-    "Assigned": "नियुक्त"
+    "Pending": "Pending",
+    "Approved": "Approved",
+    "Rejected": "Rejected",
+    "Assigned": "Assigned"
 }
 const statusTextStyles: Record<SurveyStatus, string> = {
     "Pending": "text-yellow-600",
@@ -98,10 +98,10 @@ const statusIcon: Record<SurveyStatus, React.ReactNode> = {
 }
 
 const statusOptions: { value: SurveyStatus, label: string }[] = [
-    { value: "Pending", label: "प्रलंबित" },
-    { value: "Assigned", label: "नियुक्त" },
-    { value: "Approved", label: "मंजूर" },
-    { value: "Rejected", label: "नाकारलेले" },
+    { value: "Pending", label: "Pending" },
+    { value: "Assigned", label: "Assigned" },
+    { value: "Approved", label: "Approved" },
+    { value: "Rejected", label: "Rejected" },
 ];
 
 
@@ -121,8 +121,8 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                 </div>
 
                 <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>फील्ड बॉय: <span className="font-medium text-foreground">{survey.fieldBoy}</span></span>
-                    <span>क्षेत्र: <span className="font-medium text-foreground">{survey.area} हेक्टर</span></span>
+                    <span>Field Boy: <span className="font-medium text-foreground">{survey.fieldBoy}</span></span>
+                    <span>Area: <span className="font-medium text-foreground">{survey.area} Ha</span></span>
                 </div>
             </Link>
 
@@ -132,18 +132,18 @@ const SurveyCard = ({ survey }: { survey: Survey }) => {
                         <Clock className="h-3 w-3 mr-1"/>
                         <span>
                             {survey.status === 'Assigned' 
-                                ? `${survey.daysLeft} दिवस बाकी` 
-                                : `${survey.daysLeft} दिवसांपासून प्रलंबित`
+                                ? `${survey.daysLeft} days left` 
+                                : `Pending for ${survey.daysLeft} days`
                             }
                         </span>
                     </div>
                     {survey.status === 'Pending' && (
                         <div className="flex gap-2">
                             <Button variant="outline" size="sm" className="h-8 border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700">
-                                <Check className="h-4 w-4 mr-1"/> मंजूर करा
+                                <Check className="h-4 w-4 mr-1"/> Approve
                             </Button>
                             <Button variant="outline" size="sm" className="h-8 border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
-                                <X className="h-4 w-4 mr-1"/> नाकारा
+                                <X className="h-4 w-4 mr-1"/> Reject
                             </Button>
                         </div>
                     )}
@@ -164,7 +164,7 @@ export default function OversheerDashboard() {
   
   // Mock Agri Officer Data
   const agriOfficer = {
-      name: "श्री. राजेश कुमार",
+      name: "Mr. Rajesh Kumar",
       mobile: "9123456789"
   }
 
@@ -204,7 +204,7 @@ export default function OversheerDashboard() {
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                     type="search"
-                    placeholder="शेतकरी, फील्ड बॉय, गाव शोधा..."
+                    placeholder="Search farmer, field boy, village..."
                     className="w-full rounded-lg bg-background pl-8 h-9"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -213,13 +213,13 @@ export default function OversheerDashboard() {
              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="h-9">
-                        <span>फील्ड बॉय</span>
+                        <span>Field Boy</span>
                         {fieldBoyFilter.length > 0 && <Badge variant="secondary" className="ml-2">{fieldBoyFilter.length}</Badge>}
                         <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
-                    <DropdownMenuLabel>फील्ड बॉयनुसार फिल्टर करा</DropdownMenuLabel>
+                    <DropdownMenuLabel>Filter by Field Boy</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {uniqueFieldBoys.map(boy => (
                         <DropdownMenuCheckboxItem
@@ -242,13 +242,13 @@ export default function OversheerDashboard() {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                      <Button variant="outline" className="h-9">
-                        <span>स्थिती</span>
+                        <span>Status</span>
                         {statusFilter.length > 0 && <Badge variant="secondary" className="ml-2">{statusFilter.length}</Badge>}
                         <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
-                    <DropdownMenuLabel>स्थितीनुसार फिल्टर करा</DropdownMenuLabel>
+                    <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {statusOptions.filter(o => o.value === 'Pending' || o.value === 'Assigned').map(option => (
                          <DropdownMenuCheckboxItem
@@ -277,7 +277,7 @@ export default function OversheerDashboard() {
                 ))
             ) : (
                 <div className="flex-grow flex items-center justify-center">
-                    <p className="text-muted-foreground">सर्वेक्षण आढळले नाहीत.</p>
+                    <p className="text-muted-foreground">No surveys found.</p>
                 </div>
             )}
         </div>
@@ -286,7 +286,7 @@ export default function OversheerDashboard() {
             <Button asChild className="h-16 w-auto px-6 rounded-full shadow-lg text-lg bg-primary hover:bg-primary/90">
                 <Link href="/oversheer/dashboard/new">
                     <UserPlus className="mr-2 h-6 w-6" />
-                    सर्वेक्षण नियुक्त करा
+                    Assign Survey
                 </Link>
             </Button>
         </div>
@@ -294,9 +294,9 @@ export default function OversheerDashboard() {
     <Dialog open={isOfficerModalOpen} onOpenChange={setIsOfficerModalOpen}>
         <DialogContent className="sm:max-w-md">
             <DialogHeader>
-                <DialogTitle className="text-center font-headline text-2xl">नवीन कृषी अधिकारी नियुक्त</DialogTitle>
+                <DialogTitle className="text-center font-headline text-2xl">New Agri Officer Assigned</DialogTitle>
                 <DialogDescription className="text-center">
-                    तुमच्या माहितीसाठी, तुमचे रिपोर्टिंग कृषी अधिकारी बदलले आहेत.
+                    For your information, your reporting Agri Officer has changed.
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col items-center gap-4 py-4">
@@ -310,7 +310,7 @@ export default function OversheerDashboard() {
             </div>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button type="button" className="w-full">ठीक आहे</Button>
+                    <Button type="button" className="w-full">OK</Button>
                 </DialogClose>
             </DialogFooter>
         </DialogContent>

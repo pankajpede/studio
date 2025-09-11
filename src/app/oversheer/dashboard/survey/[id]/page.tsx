@@ -45,31 +45,31 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 
 
 const mockStates = [
-    { value: "maharashtra", label: "महाराष्ट्र" },
+    { value: "maharashtra", label: "Maharashtra" },
 ];
 
 const mockDistricts = [
-    { value: "latur", label: "लातूर" },
+    { value: "latur", label: "Latur" },
 ];
 
 const mockTalukas = [
-    { value: "ahmedpur", label: "अहमदपूर" },
+    { value: "ahmedpur", label: "Ahmedpur" },
 ];
 
 const mockCircles = [
-    { value: "circle-1", label: "सर्कल १" },
+    { value: "circle-1", label: "Circle 1" },
 ];
 
 const mockGuts = [
-    { value: "gut-101", label: "गट १०१" },
+    { value: "gut-101", label: "Gut 101" },
 ];
 
 const mockVillages = [
-    { value: "mohgaon", label: "मोहगाव" },
+    { value: "mohgaon", label: "Mohgaon" },
 ];
 
 const mockShivars = [
-    { value: "shivar-a", label: "शिवार अ" },
+    { value: "shivar-a", label: "Shivar A" },
 ];
 
 const mockSurveyNumbers = [
@@ -77,7 +77,7 @@ const mockSurveyNumbers = [
 ];
 
 const mockFarmers = [
-    { value: "farmer-1", label: "सचिन कुलकर्णी", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], bankName: "स्टेट बँक ऑफ इंडिया", branchName: "लातूर शाखा", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234", sabNumber: "SAB-A001", khataNumber: "KH-112233" },
+    { value: "farmer-1", label: "Sachin Kulkarni", mobile: "9876543210", docs: [{type: 'voter-id', number: 'ABC1234567'}], bankName: "State Bank of India", branchName: "Latur Branch", accountNumber: "XXXX-XXXX-1234", ifsc: "SBIN0001234", sabNumber: "SAB-A001", khataNumber: "KH-112233" },
 ];
 
 type OtherMedia = {
@@ -189,7 +189,7 @@ const VerifiableMediaItem = ({
                 ) : (
                     <div className="h-full w-full bg-muted/50 flex flex-col items-center justify-center p-4 text-center">
                         {type === 'audio' ? <AudioLines className="h-10 w-10 text-muted-foreground" /> : <FileImage className="h-10 w-10 text-muted-foreground" />}
-                        <p className="text-xs mt-2 text-muted-foreground">पाहण्यासाठी क्लिक करा</p>
+                        <p className="text-xs mt-2 text-muted-foreground">Click to view</p>
                     </div>
                 )}
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -234,10 +234,10 @@ const Combobox = ({
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
                 <Command>
                     <CommandInput placeholder={searchPlaceholder} />
-                    <CommandEmpty>कोणतेही परिणाम आढळले नाहीत.</CommandEmpty>
+                    <CommandEmpty>No results found.</CommandEmpty>
                     <CommandList>
                         <CommandGroup>
                             {options.map((option) => (
@@ -349,8 +349,8 @@ export default function SurveyReviewPage() {
         if (!finalModalAction) return;
 
         toast({
-            title: `सर्वेक्षण ${finalModalAction === 'approve' ? 'मंजूर' : 'नाकारले'}!`,
-            description: `शेती सर्वेक्षण यशस्वीरित्या ${finalModalAction === 'approve' ? 'मंजूर' : 'नाकारले'} आहे.`,
+            title: `Survey ${finalModalAction === 'approve' ? 'Approved' : 'Rejected'}!`,
+            description: `The farm survey has been successfully ${finalModalAction === 'approve' ? 'approved' : 'rejected'}.`,
         });
         setIsFinalReviewModalOpen(false);
         setRemark("");
@@ -402,7 +402,7 @@ export default function SurveyReviewPage() {
     
     const selectedFarmer = mockFarmers.find(f => f.value === partyName);
     
-    const farmPhotoLabels = ["शेताचे फोटो", "उसाची जात", "मातीचा प्रकार", "सिंचनाचा प्रकार"];
+    const farmPhotoLabels = ["Farm Photo", "Cane Variety", "Soil Type", "Irrigation Type"];
     
     const isFirstTab = activeTab === tabs[0];
     const isLastTab = activeTab === tabs[tabs.length - 1];
@@ -416,7 +416,7 @@ export default function SurveyReviewPage() {
           <>
             <CardTitle className="font-headline text-xl">{selectedFarmer.label} - {id}</CardTitle>
             <div className="flex items-center justify-between">
-                <CardDescription>फील्ड बॉय: सुनील पवार</CardDescription>
+                <CardDescription>Field Boy: Sunil Pawar</CardDescription>
                  <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1.5">
                         <CheckCircle className="h-5 w-5 text-green-600" />
@@ -428,11 +428,11 @@ export default function SurveyReviewPage() {
                     </div>
                     {rejectedCount > 0 ? (
                         <Button variant="destructive" size="sm" onClick={() => handleOpenFinalModal('reject')}>
-                            <X className="mr-2 h-4 w-4"/> नाकारा
+                            <X className="mr-2 h-4 w-4"/> Reject
                         </Button>
                     ) : acceptedCount === totalFields ? (
                         <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleOpenFinalModal('approve')}>
-                            <Check className="mr-2 h-4 w-4"/> मंजूर करा
+                            <Check className="mr-2 h-4 w-4"/> Approve
                         </Button>
                     ) : null}
                 </div>
@@ -440,42 +440,42 @@ export default function SurveyReviewPage() {
           </>
         ) : (
           <>
-            <CardTitle className="font-headline text-xl">शेती सर्वेक्षण तपशील</CardTitle>
-            <CardDescription>फील्ड बॉयने सबमिट केलेल्या सर्वेक्षणाचे पुनरावलोकन करा.</CardDescription>
+            <CardTitle className="font-headline text-xl">Farm Survey Details</CardTitle>
+            <CardDescription>Review the survey submitted by the field boy.</CardDescription>
           </>
         )}
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="farmer-selection">शेतकरी</TabsTrigger>
-            <TabsTrigger value="farmer-info">माहिती</TabsTrigger>
-            <TabsTrigger value="farm-info">शेत</TabsTrigger>
-            <TabsTrigger value="media">मीडिया</TabsTrigger>
-            <TabsTrigger value="map">नकाशा</TabsTrigger>
+            <TabsTrigger value="farmer-selection">Farmer</TabsTrigger>
+            <TabsTrigger value="farmer-info">Information</TabsTrigger>
+            <TabsTrigger value="farm-info">Farm</TabsTrigger>
+            <TabsTrigger value="media">Media</TabsTrigger>
+            <TabsTrigger value="map">Map</TabsTrigger>
           </TabsList>
           
           <TabsContent value="farmer-selection" className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ReadOnlyInput label="राज्य" value="महाराष्ट्र" />
-                <ReadOnlyInput label="जिल्हा" value="लातूर" />
-                <ReadOnlyInput label="तालुका" value="अहमदपूर" />
-                <ReadOnlyInput label="सर्कल" value="सर्कल १" />
-                <ReadOnlyInput label="गट" value="गट १०१" />
-                <ReadOnlyInput label="गाव" value="मोहगाव" />
-                <ReadOnlyInput label="शिवार" value="शिवार अ" />
-                <ReadOnlyInput label="सर्वेक्षण क्र." value="SN-123" />
-                <ReadOnlyInput label="शेतकरी" value="सचिन कुलकर्णी" />
-                <ReadOnlyInput label="उत्पादक प्रकार" value="सभासद" />
+                <ReadOnlyInput label="State" value="Maharashtra" />
+                <ReadOnlyInput label="District" value="Latur" />
+                <ReadOnlyInput label="Taluka" value="Ahmedpur" />
+                <ReadOnlyInput label="Circle" value="Circle 1" />
+                <ReadOnlyInput label="Gut" value="Gut 101" />
+                <ReadOnlyInput label="Village" value="Mohgaon" />
+                <ReadOnlyInput label="Shivar" value="Shivar A" />
+                <ReadOnlyInput label="Survey No." value="SN-123" />
+                <ReadOnlyInput label="Farmer" value="Sachin Kulkarni" />
+                <ReadOnlyInput label="Grower Type" value="Member" />
                 <VerifiableInput 
-                    label="सब नंबर" 
+                    label="Sab Number" 
                     value="SAB-A001" 
                     status={verificationStatus.sabNumber}
                     onAccept={() => toggleVerification('sabNumber', 'accept')}
                     onReject={() => toggleVerification('sabNumber', 'reject')}
                 />
                 <VerifiableInput 
-                    label="खाता नंबर" 
+                    label="Khata Number" 
                     value="KH-112233" 
                     status={verificationStatus.khataNumber}
                     onAccept={() => toggleVerification('khataNumber', 'accept')}
@@ -487,103 +487,103 @@ export default function SurveyReviewPage() {
           <TabsContent value="farmer-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  <VerifiableInput 
-                    label="मोबाइल नंबर" 
+                    label="Mobile Number" 
                     value="9876543210" 
                     status={verificationStatus.mobileNumber}
                     onAccept={() => toggleVerification('mobileNumber', 'accept')}
                     onReject={() => toggleVerification('mobileNumber', 'reject')}
                 />
                  <VerifiableInput 
-                    label="लिंक नंबर" 
+                    label="Link Number" 
                     value="LNK-54321" 
                     status={verificationStatus.linkNumber}
                     onAccept={() => toggleVerification('linkNumber', 'accept')}
                     onReject={() => toggleVerification('linkNumber', 'reject')}
                 />
                  <VerifiableInput 
-                    label="NAP नंबर" 
+                    label="NAP Number" 
                     value="NAP-98765" 
                     status={verificationStatus.napNumber}
                     onAccept={() => toggleVerification('napNumber', 'accept')}
                     onReject={() => toggleVerification('napNumber', 'reject')}
                 />
-                <ReadOnlyInput label="बँकेचे नाव" value="स्टेट बँक ऑफ इंडिया" />
-                <ReadOnlyInput label="शाखा" value="लातूर शाखा" />
-                <ReadOnlyInput label="खाते क्रमांक" value="XXXX-XXXX-1234" />
-                <ReadOnlyInput label="IFSC कोड" value="SBIN0001234" />
+                <ReadOnlyInput label="Bank Name" value="State Bank of India" />
+                <ReadOnlyInput label="Branch" value="Latur Branch" />
+                <ReadOnlyInput label="Account Number" value="XXXX-XXXX-1234" />
+                <ReadOnlyInput label="IFSC Code" value="SBIN0001234" />
             </div>
           </TabsContent>
 
           <TabsContent value="farm-info" className="pt-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <VerifiableInput 
-                    label="क्षेत्र (हेक्टर)" 
+                    label="Area (Hectare)" 
                     value="1.0" 
                     status={verificationStatus.area}
                     onAccept={() => toggleVerification('area', 'accept')}
                     onReject={() => toggleVerification('area', 'reject')}
                 />
                 <VerifiableInput 
-                    label="लागवड तारीख" 
+                    label="Plantation Date" 
                     value={format(new Date('2023-08-12'), "PPP")} 
                     status={verificationStatus.plantationDate}
                     onAccept={() => toggleVerification('plantationDate', 'accept')}
                     onReject={() => toggleVerification('plantationDate', 'reject')}
                 />
                 <VerifiableInput 
-                    label="उसाची जात" 
-                    value="जात १" 
+                    label="Cane Variety" 
+                    value="Variety 1" 
                     status={verificationStatus.caneVariety}
                     onAccept={() => toggleVerification('caneVariety', 'accept')}
                     onReject={() => toggleVerification('caneVariety', 'reject')}
                 />
                 <VerifiableInput 
-                    label="उसाचा प्रकार" 
-                    value="प्रकार १ (12 महिने)" 
+                    label="Cane Type" 
+                    value="Type 1 (12 months)" 
                     status={verificationStatus.caneType}
                     onAccept={() => toggleVerification('caneType', 'accept')}
                     onReject={() => toggleVerification('caneType', 'reject')}
                 />
-                <ReadOnlyInput label="उसाची पक्वता" value={format(addMonths(new Date('2023-08-12'), 12), "PPP")} />
+                <ReadOnlyInput label="Cane Maturity" value={format(addMonths(new Date('2023-08-12'), 12), "PPP")} />
                 <VerifiableInput 
-                    label="सिंचनाचा प्रकार" 
-                    value="ठिबक" 
+                    label="Irrigation Type" 
+                    value="Drip" 
                     status={verificationStatus.irrigationType}
                     onAccept={() => toggleVerification('irrigationType', 'accept')}
                     onReject={() => toggleVerification('irrigationType', 'reject')}
                 />
                 <VerifiableInput 
-                    label="सिंचनाचा स्रोत" 
-                    value="विहीर" 
+                    label="Irrigation Source" 
+                    value="Well" 
                     status={verificationStatus.irrigationSource}
                     onAccept={() => toggleVerification('irrigationSource', 'accept')}
                     onReject={() => toggleVerification('irrigationSource', 'reject')}
                 />
                 <VerifiableInput 
-                    label="सिंचन पद्धत" 
-                    value="पद्धत १" 
+                    label="Irrigation Method" 
+                    value="Method 1" 
                     status={verificationStatus.irrigationMethod}
                     onAccept={() => toggleVerification('irrigationMethod', 'accept')}
                     onReject={() => toggleVerification('irrigationMethod', 'reject')}
                 />
                 <VerifiableInput 
-                    label="लागवड पद्धत" 
-                    value="पद्धत अ" 
+                    label="Plantation Method" 
+                    value="Method A" 
                     status={verificationStatus.plantationMethod}
                     onAccept={() => toggleVerification('plantationMethod', 'accept')}
                     onReject={() => toggleVerification('plantationMethod', 'reject')}
                 />
-                <ReadOnlyInput label="पूर्व" value="शेजारील शेत" />
-                <ReadOnlyInput label="पश्चिम" value="रस्ता" />
-                <ReadOnlyInput label="उत्तर" value="ओढा" />
-                <ReadOnlyInput label="दक्षिण" value="पडीक जमीन" />
+                <ReadOnlyInput label="East" value="Neighboring Farm" />
+                <ReadOnlyInput label="West" value="Road" />
+                <ReadOnlyInput label="North" value="Stream" />
+                <ReadOnlyInput label="South" value="Fallow Land" />
             </div>
           </TabsContent>
 
            <TabsContent value="media" className="pt-6">
                 <div className="flex flex-col gap-6">
                     <div>
-                        <Label className="text-base font-medium">शेताचे फोटो</Label>
+                        <Label className="text-base font-medium">Farm Photos</Label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
                             {farmPhotoLabels.map((label, index) => {
                                 const mediaId = `farm-photo-${index}`;
@@ -602,41 +602,41 @@ export default function SurveyReviewPage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
                         <VerifiableMediaItem 
-                            label="शेतकरी फोटो"
+                            label="Farmer Photo"
                             src="https://placehold.co/400x300.png"
                             type="image"
                             status={mediaVerification['farmer-photo']}
-                            onClick={() => handleOpenMediaModal({id: 'farmer-photo', label: 'शेतकरी फोटो', src: 'https://placehold.co/800x600.png', type: 'image'})}
+                            onClick={() => handleOpenMediaModal({id: 'farmer-photo', label: 'Farmer Photo', src: 'https://placehold.co/800x600.png', type: 'image'})}
                         />
                          <VerifiableMediaItem 
-                            label="फील्ड बॉय फोटो"
+                            label="Field Boy Photo"
                             src="https://placehold.co/400x300.png"
                             type="image"
                             status={mediaVerification['field-boy-photo']}
-                            onClick={() => handleOpenMediaModal({id: 'field-boy-photo', label: 'फील्ड बॉय फोटो', src: 'https://placehold.co/800x600.png', type: 'image'})}
+                            onClick={() => handleOpenMediaModal({id: 'field-boy-photo', label: 'Field Boy Photo', src: 'https://placehold.co/800x600.png', type: 'image'})}
                         />
                          <VerifiableMediaItem 
-                            label="७/१२ कागदपत्र"
+                            label="7/12 Document"
                             src="https://placehold.co/400x300.png"
                             type="image"
                             status={mediaVerification['saat-baara-photo']}
-                            onClick={() => handleOpenMediaModal({id: 'saat-baara-photo', label: '७/१२ कागदपत्र', src: 'https://placehold.co/600x800.png', type: 'image'})}
+                            onClick={() => handleOpenMediaModal({id: 'saat-baara-photo', label: '7/12 Document', src: 'https://placehold.co/600x800.png', type: 'image'})}
                         />
                     </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                         <VerifiableMediaItem 
-                            label="ऑडिओ नोट"
+                            label="Audio Note"
                             src="data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA="
                             type="audio"
                             status={otherMediaVerification['audio-note'] || 'pending'}
-                            onClick={() => handleOpenMediaModal({id: 'audio-note', label: 'ऑडिओ नोट', src: 'data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=', type: 'audio'})}
+                            onClick={() => handleOpenMediaModal({id: 'audio-note', label: 'Audio Note', src: 'data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhIAAAAAA=', type: 'audio'})}
                         />
                         <VerifiableMediaItem 
-                            label="इतर मीडिया (नोंदणी)"
+                            label="Other Media (Registration)"
                             src="https://placehold.co/200x100.png"
                             type="other"
                             status={otherMediaVerification['other-media-0'] || 'pending'}
-                            onClick={() => handleOpenMediaModal({id: 'other-media-0', label: 'इतर मीडिया (नोंदणी)', src: 'https://placehold.co/800x400.png', type: 'image'})}
+                            onClick={() => handleOpenMediaModal({id: 'other-media-0', label: 'Other Media (Registration)', src: 'https://placehold.co/800x400.png', type: 'image'})}
                         />
                     </div>
                 </div>
@@ -649,10 +649,10 @@ export default function SurveyReviewPage() {
                         <div className="space-y-1.5">
                            <CardTitle className="font-headline text-lg flex items-center gap-2">
                                 <LocateFixed className="w-5 h-5 text-primary"/>
-                                फील्ड बॉयचे स्थान
+                                Field Boy Location
                             </CardTitle>
                              <CardDescription>
-                                शेतापासून अंदाजित अंतर: <strong>0.2 km</strong>
+                                Estimated distance from farm: <strong>0.2 km</strong>
                             </CardDescription>
                         </div>
                         <div className="flex items-center gap-2">
@@ -688,8 +688,8 @@ export default function SurveyReviewPage() {
                  <Card>
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
-                            <CardTitle className="font-headline text-lg">शेताची सीमा</CardTitle>
-                            <CardDescription>नोंदलेले क्षेत्र: 0.95 हेक्टर (फरक: -0.05 हेक्टर)</CardDescription>
+                            <CardTitle className="font-headline text-lg">Farm Boundary</CardTitle>
+                            <CardDescription>Registered area: 0.95 Ha (Difference: -0.05 Ha)</CardDescription>
                         </div>
                          <div className="flex items-center gap-2">
                             <Button 
@@ -729,30 +729,30 @@ export default function SurveyReviewPage() {
             {isFirstTab ? (
                  <AlertDialog>
                     <AlertDialogTrigger asChild>
-                         <Button variant="outline"><ArrowLeft className="mr-2" /> मागे</Button>
+                         <Button variant="outline"><ArrowLeft className="mr-2" /> Back</Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>
-                            <AlertDialogTitle>तुम्ही निश्चित आहात का?</AlertDialogTitle>
+                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                             <AlertDialogDescription>
-                                तुम्ही पुनरावलोकनातून बाहेर पडल्यास, तुम्ही केलेले कोणतेही बदल जतन होणार नाहीत. तुम्हाला खात्री आहे का?
+                                If you leave the review, any changes you made will not be saved. Are you sure?
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel>रद्द करा</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => router.push('/oversheer/dashboard')}>पुष्टी करा</AlertDialogAction>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => router.push('/oversheer/dashboard')}>Confirm</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
             ) : (
                 <Button variant="outline" onClick={handleBack}>
-                    <ArrowLeft className="mr-2" /> मागे
+                    <ArrowLeft className="mr-2" /> Back
                 </Button>
             )}
             
             {!isLastTab && (
                  <Button onClick={handleNext}>
-                    पुढे <ArrowRight className="ml-2" />
+                    Next <ArrowRight className="ml-2" />
                 </Button>
             )}
         </CardFooter>
@@ -772,22 +772,22 @@ export default function SurveyReviewPage() {
                  )}
                  {currentMedia?.type === 'other' && (
                      <div className="text-center p-8">
-                         <p className="text-muted-foreground">या प्रकारच्या मीडियासाठी पूर्वावलोकन उपलब्ध नाही.</p>
+                         <p className="text-muted-foreground">Preview not available for this media type.</p>
                          <Button asChild variant="link" className="mt-2">
-                             <a href={currentMedia.src} target="_blank" rel="noopener noreferrer">नवीन टॅबमध्ये उघडा</a>
+                             <a href={currentMedia.src} target="_blank" rel="noopener noreferrer">Open in new tab</a>
                          </Button>
                      </div>
                  )}
             </div>
             <DialogFooter>
                 <Button variant={currentMediaStatus === 'rejected' ? 'destructive' : 'outline'} onClick={() => handleMediaVerification('rejected')} className="border-red-500 text-red-600 hover:bg-red-50 hover:text-red-700">
-                    <XCircle className="mr-2" /> नाकारा
+                    <XCircle className="mr-2" /> Reject
                 </Button>
                 <Button onClick={() => handleMediaVerification('accepted')} className={cn(
                     currentMediaStatus === 'accepted' ? 'bg-green-700 hover:bg-green-800' : 'bg-green-600 hover:bg-green-700',
                     'text-white'
                 )}>
-                    <CheckCircle className="mr-2" /> स्वीकारा
+                    <CheckCircle className="mr-2" /> Accept
                 </Button>
             </DialogFooter>
         </DialogContent>
@@ -797,33 +797,33 @@ export default function SurveyReviewPage() {
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>
-                    {finalModalAction === 'approve' ? 'सर्वेक्षण मंजूर करा' : 'सर्वेक्षण नाकारा'}
+                    {finalModalAction === 'approve' ? 'Approve Survey' : 'Reject Survey'}
                 </DialogTitle>
                 <DialogDescription>
-                  {finalModalAction === 'approve' ? 'हे सर्वेक्षण मंजूर करण्यापूर्वी तुम्ही कोणताही अतिरिक्त शेरा जोडू शकता.' : 'कृपया हे सर्वेक्षण नाकारण्याचे कारण द्या.'}
+                  {finalModalAction === 'approve' ? 'You can add an optional remark before approving this survey.' : 'Please provide a reason for rejecting this survey.'}
                 </DialogDescription>
             </DialogHeader>
             <div className="space-y-6 py-4">
                 <div className="grid gap-2">
-                    <Label htmlFor="remark">शेरा</Label>
+                    <Label htmlFor="remark">Remark</Label>
                     <Textarea 
                         id="remark" 
-                        placeholder="तुमचा शेरा येथे लिहा..." 
+                        placeholder="Write your remark here..." 
                         value={remark}
                         onChange={(e) => setRemark(e.target.value)}
                     />
                 </div>
                  <div className="grid gap-2">
-                    <Label htmlFor="audio-review" className="flex items-center gap-2"><AudioLines /> ऑडिओ शेरा</Label>
+                    <Label htmlFor="audio-review" className="flex items-center gap-2"><AudioLines /> Audio Remark</Label>
                     <AudioRecorder onRecordingComplete={(file) => setReviewAudio(file)} />
                 </div>
             </div>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button variant="ghost">रद्द करा</Button>
+                    <Button variant="ghost">Cancel</Button>
                 </DialogClose>
                 <Button onClick={handleFinalSubmit}>
-                    {finalModalAction === 'approve' ? 'मंजुरीची पुष्टी करा' : 'नकारची पुष्टी करा'}
+                    {finalModalAction === 'approve' ? 'Confirm Approval' : 'Confirm Rejection'}
                 </Button>
             </DialogFooter>
         </DialogContent>

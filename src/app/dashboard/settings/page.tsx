@@ -1,5 +1,4 @@
 
-
 "use client"
 
 import * as React from "react"
@@ -125,20 +124,20 @@ const plantationMethods: MasterDataItem[] = [
 ]
 
 export const masterDataMap = {
-  states: { data: states, linkedEntity: null, category: null, entityName: "राज्य", label: "राज्य" },
-  districts: { data: districts, linkedEntity: "राज्य", category: null, entityName: "जिल्हा", label: "जिल्हा" },
-  talukas: { data: talukas, linkedEntity: "जिल्हा", category: null, entityName: "तालुका", label: "तालुका" },
-  villages: { data: villages, linkedEntity: "तालुका", category: null, entityName: "गाव", label: "गाव" },
-  shivars: { data: shivars, linkedEntity: "गाव", category: null, entityName: "शिवार", label: "शिवार" },
-  circles: { data: circles, linkedEntity: null, category: null, entityName: "सर्कल", label: "सर्कल" },
-  guts: { data: guts, linkedEntity: "सर्कल", category: null, entityName: "गट", label: "गट" },
-  surveyNumbers: { data: surveyNumbers, linkedEntity: "शिवार", category: null, entityName: "सर्वेक्षण नंबर", label: "सर्वेक्षण नंबर" },
-  caneVarieties: { data: caneVarieties, linkedEntity: null, category: null, entityName: "उसाची जात", label: "उसाची जात" },
-  caneTypes: { data: caneTypes, linkedTo: "उसाची जात", category: null, entityName: "उसाचा प्रकार", label: "उसाचा प्रकार" },
-  irrigationTypes: { data: irrigationTypes, linkedEntity: null, category: null, entityName: "सिंचनाचा प्रकार", label: "सिंचनाचा प्रकार" },
-  irrigationSources: { data: irrigationSources, linkedEntity: null, category: null, entityName: "सिंचनाचा स्रोत", label: "सिंचनाचा स्रोत" },
-  irrigationMethods: { data: irrigationMethods, linkedEntity: null, category: null, entityName: "सिंचन पद्धत", label: "सिंचन पद्धत" },
-  plantationMethods: { data: plantationMethods, linkedEntity: null, category: null, entityName: "लागवड पद्धत", label: "लागवड पद्धत" },
+  states: { data: states, linkedEntity: null, category: "Location", entityName: "State", label: "State" },
+  districts: { data: districts, linkedEntity: "State", category: "Location", entityName: "District", label: "District" },
+  talukas: { data: talukas, linkedEntity: "District", category: "Location", entityName: "Taluka", label: "Taluka" },
+  villages: { data: villages, linkedEntity: "Taluka", category: "Location", entityName: "Village", label: "Village" },
+  shivars: { data: shivars, linkedEntity: "Village", category: "Location", entityName: "Shivar", label: "Shivar" },
+  circles: { data: circles, linkedEntity: null, category: "Location", entityName: "Circle", label: "Circle" },
+  guts: { data: guts, linkedEntity: "Circle", category: "Location", entityName: "Gut", label: "Gut" },
+  surveyNumbers: { data: surveyNumbers, linkedEntity: "Shivar", category: "Location", entityName: "Survey Number", label: "Survey Number" },
+  caneVarieties: { data: caneVarieties, linkedEntity: null, category: "Farming", entityName: "Cane Variety", label: "Cane Variety" },
+  caneTypes: { data: caneTypes, linkedTo: "Cane Variety", category: "Farming", entityName: "Cane Type", label: "Cane Type" },
+  irrigationTypes: { data: irrigationTypes, linkedEntity: null, category: "Farming", entityName: "Irrigation Type", label: "Irrigation Type" },
+  irrigationSources: { data: irrigationSources, linkedEntity: null, category: "Farming", entityName: "Irrigation Source", label: "Irrigation Source" },
+  irrigationMethods: { data: irrigationMethods, linkedEntity: null, category: "Farming", entityName: "Irrigation Method", label: "Irrigation Method" },
+  plantationMethods: { data: plantationMethods, linkedEntity: null, category: "Farming", entityName: "Plantation Method", label: "Plantation Method" },
 }
 
 export type MasterDataKey = keyof typeof masterDataMap
@@ -153,52 +152,52 @@ const getColumns = (
   const columns: ColumnDef<MasterDataItem>[] = [
     {
       accessorKey: "name",
-      header: `${entityName} नाव (मराठी)`,
+      header: `${entityName} Name (Marathi)`,
     },
     {
       accessorKey: "nameEn",
-      header: `${entityName} नाव (इंग्रजी)`,
+      header: `${entityName} Name (English)`,
     },
   ]
 
   if (linkedEntity) {
     columns.push({
       accessorKey: "linkedTo",
-      header: `जोडलेले ${linkedEntity}`,
+      header: `Linked ${linkedEntity}`,
     })
   }
 
   if (entityKey === 'caneVarieties') {
     columns.push({
         accessorKey: "maturityMonths",
-        header: "उसाची पक्वता (months)",
+        header: "Maturity (months)",
     });
   }
 
   if (entityKey === 'circles') {
       columns.push({
           accessorKey: "totalGuts",
-          header: "एकूण गट",
+          header: "Total Guts",
       });
       columns.push({
           accessorKey: "totalGavs",
-          header: "एकूण गाव",
+          header: "Total Villages",
       });
       columns.push({
           accessorKey: "totalFarmers",
-          header: "एकूण शेतकरी",
+          header: "Total Farmers",
       });
       columns.push({
           accessorKey: "totalFieldboys",
-          header: "एकूण फील्डबॉय",
+          header: "Total Fieldboys",
       });
       columns.push({
           accessorKey: "totalOversheers",
-          header: "एकूण ओव्हरसीर",
+          header: "Total Overseers",
       });
        columns.push({
           id: "ratio",
-          header: "गुणोत्तर",
+          header: "Ratio",
           cell: ({ row }) => {
               const farmers = row.original.totalFarmers;
               const fieldboys = row.original.totalFieldboys;
@@ -213,23 +212,23 @@ const getColumns = (
   if (entityKey === 'guts') {
       columns.push({
           accessorKey: "totalGavs",
-          header: "एकूण गाव",
+          header: "Total Villages",
       });
       columns.push({
           accessorKey: "totalFarmers",
-          header: "एकूण शेतकरी",
+          header: "Total Farmers",
       });
       columns.push({
           accessorKey: "totalFieldboys",
-          header: "एकूण फील्डबॉय",
+          header: "Total Fieldboys",
       });
       columns.push({
           accessorKey: "totalOversheers",
-          header: "एकूण ओव्हरसीर",
+          header: "Total Overseers",
       });
        columns.push({
           id: "ratio",
-          header: "गुणोत्तर",
+          header: "Ratio",
           cell: ({ row }) => {
               const farmers = row.original.totalFarmers;
               const fieldboys = row.original.totalFieldboys;
@@ -244,23 +243,23 @@ const getColumns = (
   if (entityKey === 'villages') {
     columns.push({
         accessorKey: "gut",
-        header: "गट",
+        header: "Gut",
     });
     columns.push({
         accessorKey: "circle",
-        header: "सर्कल",
+        header: "Circle",
     });
     columns.push({
         accessorKey: "totalFarmers",
-        header: "एकूण शेतकरी",
+        header: "Total Farmers",
     });
     columns.push({
         accessorKey: "totalFieldboys",
-        header: "एकूण फील्डबॉय",
+        header: "Total Fieldboys",
     });
     columns.push({
         accessorKey: "totalOversheers",
-        header: "एकूण ओव्हरसीर",
+        header: "Total Overseers",
     });
   }
 
@@ -273,7 +272,7 @@ const getColumns = (
   
   columns.push({
     id: "actions",
-    header: () => <div className="text-right">क्रिया</div>,
+    header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => (
       <TooltipProvider>
         <div className="flex items-center justify-end gap-2">
@@ -285,7 +284,7 @@ const getColumns = (
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>गट पहा</p>
+                        <p>View Gut</p>
                     </TooltipContent>
                 </Tooltip>
             )}
@@ -296,7 +295,7 @@ const getColumns = (
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                    <p>संपादित करा</p>
+                    <p>Edit</p>
                 </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -306,7 +305,7 @@ const getColumns = (
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                    <p>हटवा</p>
+                    <p>Delete</p>
                 </TooltipContent>
             </Tooltip>
         </div>
@@ -368,7 +367,7 @@ function MasterDataTable({
       <div className="flex items-center justify-between gap-4 py-4">
         <Select value={selectedConfig} onValueChange={(value) => setSelectedConfig(value as MasterDataKey)}>
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="कॉन्फिगरेशन प्रकार निवडा" />
+            <SelectValue placeholder="Select config type" />
           </SelectTrigger>
           <SelectContent>
             {configOptions.map(option => (
@@ -378,7 +377,7 @@ function MasterDataTable({
         </Select>
         <div className="flex items-center gap-2">
             <Input
-              placeholder={`${entityName.toLowerCase()} नावाने फिल्टर करा...`}
+              placeholder={`Filter by ${entityName.toLowerCase()} name...`}
               value={globalFilter}
               onChange={(event) =>
                 setGlobalFilter(event.target.value)
@@ -419,7 +418,7 @@ function MasterDataTable({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  परिणाम नाहीत.
+                  No results.
                 </TableCell>
               </TableRow>
             )}
@@ -428,11 +427,11 @@ function MasterDataTable({
       </div>
        <div className="flex items-center justify-end space-x-2 py-4">
             <div className="flex-1 text-sm text-muted-foreground">
-                {table.getFilteredSelectedRowModel().rows.length} पैकी{" "}
-                {table.getFilteredRowModel().rows.length} पंक्ती निवडल्या.
+                {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                {table.getFilteredRowModel().rows.length} row(s) selected.
             </div>
             <div className="space-x-2 flex items-center">
-                <span className="text-sm text-muted-foreground">प्रति पृष्ठ पंक्ती</span>
+                <span className="text-sm text-muted-foreground">Rows per page</span>
                     <Select
                     onValueChange={(value) => {
                         table.setPageSize(Number(value))
@@ -452,7 +451,7 @@ function MasterDataTable({
                 </Select>
             </div>
             <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-                पृष्ठ {table.getState().pagination.pageIndex + 1} पैकी{" "}
+                Page {table.getState().pagination.pageIndex + 1} of{" "}
                 {table.getPageCount()}
             </div>
             <div className="space-x-2">
@@ -462,7 +461,7 @@ function MasterDataTable({
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
             >
-                मागील
+                Previous
             </Button>
             <Button
                 variant="outline"
@@ -470,7 +469,7 @@ function MasterDataTable({
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
             >
-                पुढील
+                Next
             </Button>
             </div>
         </div>
@@ -520,57 +519,57 @@ function MasterDataModal({
         return null;
     }
 
-  const title = mode === 'add' ? `नवीन ${entityType} जोडा` : `${entityType} अपडेट करा`;
-  const buttonText = mode === 'add' ? 'नवीन जोडा' : 'अपडेट करा';
+  const title = mode === 'add' ? `Add New ${entityType}` : `Update ${entityType}`;
+  const buttonText = mode === 'add' ? 'Add New' : 'Update';
 
   const getLinkedEntityInfo = () => {
     let linkedEntityOptions: MasterDataItem[] = [];
     let linkedEntityLabel = '';
     let isLinkedEntityRequired = false;
-    let placeholder = `${entityType} निवडा`;
+    let placeholder = `Select ${entityType}`;
 
     switch (entityType) {
-        case "जिल्हा":
+        case "District":
             linkedEntityOptions = states;
-            linkedEntityLabel = 'जोडलेले राज्य';
+            linkedEntityLabel = 'Linked State';
             isLinkedEntityRequired = true;
-            placeholder = "राज्य निवडा";
+            placeholder = "Select State";
             break;
-        case "तालुका":
+        case "Taluka":
             linkedEntityOptions = districts;
-            linkedEntityLabel = 'जोडलेला जिल्हा';
+            linkedEntityLabel = 'Linked District';
             isLinkedEntityRequired = true;
-            placeholder = "जिल्हा निवडा";
+            placeholder = "Select District";
             break;
-        case "गाव":
-            linkedEntityOptions = talukas; // Can also be linked to 'गट' but we need to handle that logic. For now, taluka.
-            linkedEntityLabel = 'जोडलेला तालुका';
+        case "Village":
+            linkedEntityOptions = talukas; // Can also be linked to 'Gut' but we need to handle that logic. For now, taluka.
+            linkedEntityLabel = 'Linked Taluka';
             isLinkedEntityRequired = true;
-            placeholder = "तालुका निवडा";
+            placeholder = "Select Taluka";
             break;
-        case "शिवार":
+        case "Shivar":
             linkedEntityOptions = villages;
-            linkedEntityLabel = 'जोडलेले गाव';
+            linkedEntityLabel = 'Linked Village';
             isLinkedEntityRequired = true;
-            placeholder = "गाव निवडा";
+            placeholder = "Select Village";
             break;
-        case "गट":
+        case "Gut":
             linkedEntityOptions = circles;
-            linkedEntityLabel = 'जोडलेले सर्कल';
+            linkedEntityLabel = 'Linked Circle';
             isLinkedEntityRequired = true;
-            placeholder = "सर्कल निवडा";
+            placeholder = "Select Circle";
             break;
-        case "सर्वेक्षण नंबर":
+        case "Survey Number":
             linkedEntityOptions = shivars;
-            linkedEntityLabel = 'जोडलेले शिवार';
+            linkedEntityLabel = 'Linked Shivar';
             isLinkedEntityRequired = true;
-            placeholder = "शिवार निवडा";
+            placeholder = "Select Shivar";
             break;
-        case "उसाचा प्रकार":
+        case "Cane Type":
             linkedEntityOptions = caneVarieties;
-            linkedEntityLabel = 'जोडलेली उसाची जात';
+            linkedEntityLabel = 'Linked Cane Variety';
             isLinkedEntityRequired = true;
-            placeholder = "उसाची जात निवडा";
+            placeholder = "Select Cane Variety";
             break;
     }
     return { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired, placeholder };
@@ -579,7 +578,7 @@ function MasterDataModal({
   const { linkedEntityOptions, linkedEntityLabel, isLinkedEntityRequired, placeholder } = getLinkedEntityInfo();
   
   let isFormValid = name.trim() !== "" && nameEn.trim() !== "" && (!isLinkedEntityRequired || linkedTo);
-  if (entityType === "उसाची जात") {
+  if (entityType === "Cane Variety") {
     isFormValid = isFormValid && maturityMonths.trim() !== "" && !isNaN(Number(maturityMonths));
   }
   
@@ -587,8 +586,8 @@ function MasterDataModal({
       if (!isFormValid) {
           toast({
               variant: "destructive",
-              title: "त्रुटी",
-              description: "कृपया सर्व आवश्यक फील्ड भरा."
+              title: "Error",
+              description: "Please fill all required fields."
           });
           return;
       }
@@ -620,21 +619,21 @@ function MasterDataModal({
     return (
       <div className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="name-mr">{entityType} नाव (मराठी) <span className="text-red-500">*</span></Label>
-          <Input id="name-mr" placeholder="मराठी नाव प्रविष्ट करा" value={name} onChange={(e) => setName(e.target.value)} required />
+          <Label htmlFor="name-mr">{entityType} Name (Marathi) <span className="text-red-500">*</span></Label>
+          <Input id="name-mr" placeholder="Enter Marathi name" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="name-en">{entityType} नाव (इंग्रजी) <span className="text-red-500">*</span></Label>
-          <Input id="name-en" placeholder="इंग्रजी नाव प्रविष्ट करा" value={nameEn} onChange={(e) => setNameEn(e.target.value)} required />
+          <Label htmlFor="name-en">{entityType} Name (English) <span className="text-red-500">*</span></Label>
+          <Input id="name-en" placeholder="Enter English name" value={nameEn} onChange={(e) => setNameEn(e.target.value)} required />
         </div>
         {linkedEntityElement}
-        {entityType === 'उसाची जात' && (
+        {entityType === 'Cane Variety' && (
             <div className="grid gap-2">
-                <Label htmlFor="maturity-months">उसाची पक्वता (months) <span className="text-red-500">*</span></Label>
+                <Label htmlFor="maturity-months">Maturity (months) <span className="text-red-500">*</span></Label>
                 <Input
                     id="maturity-months"
                     type="number"
-                    placeholder="उदा. 12"
+                    placeholder="e.g., 12"
                     value={maturityMonths}
                     onChange={(e) => setMaturityMonths(e.target.value)}
                     required
@@ -656,10 +655,10 @@ function MasterDataModal({
             </div>
             <DialogFooter>
             <DialogClose asChild>
-                <Button type="button" variant="secondary">रद्द करा</Button>
+                <Button type="button" variant="secondary">Cancel</Button>
             </DialogClose>
             <Button type="submit" onClick={handleSaveClick} disabled={!isFormValid || isSubmitting}>
-              {isSubmitting ? "जतन करत आहे..." : buttonText}
+              {isSubmitting ? "Saving..." : buttonText}
             </Button>
             </DialogFooter>
         </DialogContent>
@@ -700,8 +699,8 @@ function SettingsPageComponent() {
   const handleSave = (data: Omit<MasterDataItem, 'id'>) => {
     if (currentEntityType) {
       toast({
-        title: "यशस्वी!",
-        description: `${currentEntityType} यशस्वीरित्या ${modalMode === 'add' ? 'तयार' : 'अद्यतनित'} केले आहे.`,
+        title: "Success!",
+        description: `${currentEntityType} has been successfully ${modalMode === 'add' ? 'created' : 'updated'}.`,
       });
     }
     // Here you would typically call an API to save the data
@@ -713,18 +712,18 @@ function SettingsPageComponent() {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>मास्टर डेटा कॉन्फिगरेशन</CardTitle>
+          <CardTitle>Master Data Configuration</CardTitle>
           <div className="flex items-center gap-2">
-             <Button variant="outline"><Upload className="mr-2"/> बल्क अपलोड</Button>
+             <Button variant="outline"><Upload className="mr-2"/> Bulk Upload</Button>
              <Button asChild>
                 <Link href="/dashboard/settings/new">
-                    <PlusCircle className="mr-2"/> जोडा
+                    <PlusCircle className="mr-2"/> Add
                 </Link>
             </Button>
           </div>
         </div>
         <CardDescription>
-          येथे तुम्ही प्रणालीसाठी आवश्यक असलेला सर्व मास्टर डेटा व्यवस्थापित करू शकता.
+          Manage all the master data required for the system here.
         </CardDescription>
       </CardHeader>
       <CardContent>

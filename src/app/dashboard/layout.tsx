@@ -34,31 +34,31 @@ export default function DashboardLayout({
   const getHeading = () => {
     const segments = pathname.split('/').filter(Boolean);
     if (segments.length === 1 && segments[0] === 'dashboard') {
-      return 'डॅशबोर्ड';
+      return 'Dashboard';
     }
     if (segments.length > 1) {
         if(segments[1] === 'farmer' && segments[2]){
-            return 'शेतकरी तपशील'
+            return 'Farmer Details'
         }
         if(segments[1] === 'users' && segments[2] === 'new'){
-            return 'नवीन वापरकर्ता तयार करा'
+            return 'Create New User'
         }
          if (segments[1] === 'settings' && segments[2] === 'gut' && segments[3]) {
-            return 'गट तपशील';
+            return 'Gut Details';
         }
         if (segments[1] === 'settings' && segments[2] === 'new') {
-            return 'नवीन मास्टर डेटा जोडा';
+            return 'Add New Master Data';
         }
         
         const segmentTranslations: { [key: string]: string } = {
-            'users': 'वापरकर्ता व्यवस्थापन',
-            'settings': 'सेटिंग्ज',
-            'map': 'सर्वेक्षण नकाशा'
+            'users': 'User Management',
+            'settings': 'Settings',
+            'map': 'Survey Map'
         };
         
         return segmentTranslations[segments[1]] || capitalize(segments[1]);
     }
-    return 'डॅशबोर्ड';
+    return 'Dashboard';
   };
 
   return (
@@ -73,41 +73,41 @@ export default function DashboardLayout({
             </Button>
             <h1 className="font-headline text-xl font-semibold text-sidebar-foreground">
               <Leaf className="inline-block mr-2 h-6 w-6" />
-              साई शुगर
+              Sai Sugar
             </h1>
           </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="डॅशबोर्ड" isActive={pathname === '/dashboard'}>
+              <SidebarMenuButton asChild tooltip="Dashboard" isActive={pathname === '/dashboard'}>
                 <Link href="/dashboard">
                   <LayoutGrid />
-                  <span>डॅशबोर्ड</span>
+                  <span>Dashboard</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="सर्वेक्षण नकाशा" isActive={pathname.startsWith('/dashboard/map')}>
+              <SidebarMenuButton asChild tooltip="Survey Map" isActive={pathname.startsWith('/dashboard/map')}>
                 <Link href="/dashboard/map">
                   <Map />
-                  <span>सर्वेक्षण नकाशा</span>
+                  <span>Survey Map</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="वापरकर्ता व्यवस्थापन" isActive={pathname.startsWith('/dashboard/users')}>
+              <SidebarMenuButton asChild tooltip="User Management" isActive={pathname.startsWith('/dashboard/users')}>
                 <Link href="/dashboard/users">
                   <Users />
-                  <span>वापरकर्ता व्यवस्थापन</span>
+                  <span>User Management</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="अहवाल" disabled>
+              <SidebarMenuButton asChild tooltip="Reports" disabled>
                 <Link href="#">
                   <BarChart3 />
-                  <span>अहवाल</span>
+                  <span>Reports</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -116,10 +116,10 @@ export default function DashboardLayout({
         <SidebarFooter>
            <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="सेटिंग्ज" isActive={pathname.startsWith('/dashboard/settings')}>
+                <SidebarMenuButton asChild tooltip="Settings" isActive={pathname.startsWith('/dashboard/settings')}>
                     <Link href="/dashboard/settings">
                         <Settings />
-                        <span>सेटिंग्ज</span>
+                        <span>Settings</span>
                     </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>

@@ -196,8 +196,8 @@ function MasterDataCard({
                 searchPlaceholder={`${label} शोधा...`}
                 disabled={disabled}
             />
-            <Button onClick={handleAddNew} disabled={!!existingSelection || disabled} size="icon">
-                <PlusCircle className="h-6 w-6"/>
+            <Button onClick={handleAddNew} disabled={!!existingSelection || disabled}>
+                <PlusCircle/>
             </Button>
         </div>
       </CardHeader>
@@ -237,11 +237,15 @@ function NewMasterDataContent() {
   const [talukas, setTalukas] = React.useState(masterDataMap.talukas.data)
   const [villages, setVillages] = React.useState(masterDataMap.villages.data)
   const [shivars, setShivars] = React.useState(masterDataMap.shivars.data)
+  const [circles, setCircles] = React.useState(masterDataMap.circles.data)
+  const [guts, setGuts] = React.useState(masterDataMap.guts.data)
 
   const [selectedState, setSelectedState] = React.useState<{id: string, name: string} | null>(null);
   const [selectedDistrict, setSelectedDistrict] = React.useState<{id: string, name: string} | null>(null);
   const [selectedTaluka, setSelectedTaluka] = React.useState<{id: string, name: string} | null>(null);
   const [selectedVillage, setSelectedVillage] = React.useState<{id: string, name: string} | null>(null);
+  const [selectedCircle, setSelectedCircle] = React.useState<{id: string, name: string} | null>(null);
+
 
   const handleAddState = (entries: { name: string; nameEn: string }[]) => {
     const newStates = entries.map((entry, index) => ({
@@ -287,6 +291,23 @@ function NewMasterDataContent() {
     setShivars((prev) => [...prev, ...newShivars])
   }
 
+  const handleAddCircle = (entries: { name: string; nameEn: string }[]) => {
+    const newCircles = entries.map((entry, index) => ({
+      id: (circles.length + 1 + index).toString(),
+      ...entry,
+    }));
+    setCircles((prev) => [...prev, ...newCircles]);
+  };
+  
+  const handleAddGut = (entries: { name: string; nameEn: string }[]) => {
+    const newGuts = entries.map((entry, index) => ({
+      id: (guts.length + 1 + index).toString(),
+      linkedTo: selectedCircle?.name,
+      ...entry,
+    }));
+    setGuts((prev) => [...prev, ...newGuts]);
+  };
+
   const handleStateSelect = (state: {id: string, name: string} | null) => {
     if (state?.id !== selectedState?.id) {
         setSelectedState(state);
@@ -315,6 +336,12 @@ function NewMasterDataContent() {
       if(village?.id !== selectedVillage?.id) {
           setSelectedVillage(village);
       }
+  }
+
+  const handleCircleSelect = (circle: {id: string, name: string} | null) => {
+    if (circle?.id !== selectedCircle?.id) {
+        setSelectedCircle(circle);
+    }
   }
 
 
@@ -375,6 +402,22 @@ function NewMasterDataContent() {
                 selectedParent={selectedVillage}
                 configKey="shivars"
                 disabled={!selectedVillage}
+            />
+             <MasterDataCard
+                label="सर्कल"
+                options={circles}
+                onSave={handleAddCircle}
+                onParentSelect={handleCircleSelect}
+                configKey="circles"
+            />
+            <MasterDataCard
+                label="गट"
+                options={guts.filter(g => !selectedCircle || g.linkedTo === selectedCircle.name)}
+                onSave={handleAddGut}
+                parentLabel="सर्कल"
+                selectedParent={selectedCircle}
+                configKey="guts"
+                disabled={!selectedCircle}
             />
         </div>
     </div>

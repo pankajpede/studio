@@ -1,5 +1,4 @@
 
-
 "use client"
 
 import * as React from "react"
@@ -161,12 +160,21 @@ function MasterDataCard({
         
         <div className="grid gap-2">
             <Label htmlFor={`existing-${configKey}`}>विद्यमान {label}</Label>
-            <Select value={existingSelection} onValueChange={setExistingSelection}>
+            <Select 
+                value={existingSelection} 
+                onValueChange={(value) => {
+                    if (value === "none") {
+                        setExistingSelection("");
+                    } else {
+                        setExistingSelection(value);
+                    }
+                }}
+            >
                 <SelectTrigger id={`existing-${configKey}`}>
                 <SelectValue placeholder={`विद्यमान ${label} पहा`} />
                 </SelectTrigger>
                 <SelectContent>
-                 <SelectItem value="">None</SelectItem>
+                 <SelectItem value="none">None</SelectItem>
                 {data.map((item) => (
                     <SelectItem key={item.id} value={item.id}>
                         {item.name} ({item.nameEn})
